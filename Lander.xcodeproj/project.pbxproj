@@ -1,0 +1,534 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXApplicationTarget section */
+		29B97326FDCFA39411CA2CEA /* Lander */ = {
+			isa = PBXApplicationTarget;
+			buildConfigurationList = 01CAD29D0B07BEB700C32A7E /* Build configuration list for PBXApplicationTarget "Lander" */;
+			buildPhases = (
+				29B97327FDCFA39411CA2CEA /* Headers */,
+				29B97328FDCFA39411CA2CEA /* Resources */,
+				29B9732BFDCFA39411CA2CEA /* Sources */,
+				29B9732DFDCFA39411CA2CEA /* Frameworks */,
+				01F660980B08627F00F6B8CD /* Copy Frameworks */,
+				01F661030B08634100F6B8CD /* Copy Game Files */,
+			);
+			dependencies = (
+			);
+			name = Lander;
+			productInstallPath = "$(HOME)/Applications";
+			productName = Lander;
+			productReference = 17587328FF379C6511CA2CBB /* Lander.app */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>Lander</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>
+";
+		};
+/* End PBXApplicationTarget section */
+
+/* Begin PBXBuildFile section */
+		01CAD2D80B07BF5900C32A7E /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2CC0B07BF5900C32A7E /* Bitmap.cpp */; };
+		01CAD2D90B07BF5900C32A7E /* DataFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2CD0B07BF5900C32A7E /* DataFile.cpp */; };
+		01CAD2DA0B07BF5900C32A7E /* Emitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2CE0B07BF5900C32A7E /* Emitter.cpp */; };
+		01CAD2DB0B07BF5900C32A7E /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2CF0B07BF5900C32A7E /* File.cpp */; };
+		01CAD2DC0B07BF5900C32A7E /* FreeType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D00B07BF5900C32A7E /* FreeType.cpp */; };
+		01CAD2DD0B07BF5900C32A7E /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D10B07BF5900C32A7E /* Game.cpp */; };
+		01CAD2DE0B07BF5900C32A7E /* HighScores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D20B07BF5900C32A7E /* HighScores.cpp */; };
+		01CAD2DF0B07BF5900C32A7E /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D30B07BF5900C32A7E /* Input.cpp */; };
+		01CAD2E00B07BF5900C32A7E /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D40B07BF5900C32A7E /* Main.cpp */; };
+		01CAD2E10B07BF5900C32A7E /* Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D50B07BF5900C32A7E /* Menu.cpp */; };
+		01CAD2E20B07BF5900C32A7E /* OpenGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D60B07BF5900C32A7E /* OpenGL.cpp */; };
+		01CAD2E30B07BF5900C32A7E /* Screens.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01CAD2D70B07BF5900C32A7E /* Screens.cpp */; };
+		01CAD3050B07C01D00C32A7E /* Bitmap.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2F90B07C01D00C32A7E /* Bitmap.hpp */; };
+		01CAD3060B07C01D00C32A7E /* DataFile.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FA0B07C01D00C32A7E /* DataFile.hpp */; };
+		01CAD3070B07C01D00C32A7E /* Emitter.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FB0B07C01D00C32A7E /* Emitter.hpp */; };
+		01CAD3080B07C01D00C32A7E /* File.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FC0B07C01D00C32A7E /* File.hpp */; };
+		01CAD3090B07C01D00C32A7E /* FreeType.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FD0B07C01D00C32A7E /* FreeType.hpp */; };
+		01CAD30A0B07C01D00C32A7E /* Input.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FE0B07C01D00C32A7E /* Input.hpp */; };
+		01CAD30B0B07C01D00C32A7E /* Lander.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD2FF0B07C01D00C32A7E /* Lander.hpp */; };
+		01CAD30C0B07C01D00C32A7E /* Menu.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD3000B07C01D00C32A7E /* Menu.hpp */; };
+		01CAD30D0B07C01D00C32A7E /* OpenGL.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD3010B07C01D00C32A7E /* OpenGL.hpp */; };
+		01CAD30E0B07C01D00C32A7E /* Platform.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD3020B07C01D00C32A7E /* Platform.hpp */; };
+		01CAD30F0B07C01D00C32A7E /* Screens.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD3030B07C01D00C32A7E /* Screens.hpp */; };
+		01CAD3100B07C01D00C32A7E /* Strings.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01CAD3040B07C01D00C32A7E /* Strings.hpp */; };
+		01CAD4E80B07C26800C32A7E /* FreeType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01CAD4E70B07C26800C32A7E /* FreeType.framework */; };
+		01F660A00B0862E200F6B8CD /* FreeType.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01CAD4E70B07C26800C32A7E /* FreeType.framework */; };
+		01F660D00B0862F700F6B8CD /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F660CF0B0862F700F6B8CD /* SDL.framework */; };
+		01F660D30B0862F900F6B8CD /* SDL.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 01F660CF0B0862F700F6B8CD /* SDL.framework */; };
+		01F661080B08636800F6B8CD /* Default_Font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01F661050B08636800F6B8CD /* Default_Font.ttf */; };
+		01F661090B08636800F6B8CD /* Hollow_Font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01F661060B08636800F6B8CD /* Hollow_Font.ttf */; };
+		01F6610A0B08636800F6B8CD /* Lander.dat in Resources */ = {isa = PBXBuildFile; fileRef = 01F661070B08636800F6B8CD /* Lander.dat */; };
+		01F6610B0B08636E00F6B8CD /* Lander.dat in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 01F661070B08636800F6B8CD /* Lander.dat */; };
+		01F6610C0B08637400F6B8CD /* Hollow_Font.ttf in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 01F661060B08636800F6B8CD /* Hollow_Font.ttf */; };
+		01F6610D0B08637800F6B8CD /* Default_Font.ttf in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 01F661050B08636800F6B8CD /* Default_Font.ttf */; };
+		01F664650B09354A00F6B8CD /* HighScores.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 01F664640B09354A00F6B8CD /* HighScores.hpp */; };
+		01F6652F0B0A6F5800F6B8CD /* Highscores.dat in Resources */ = {isa = PBXBuildFile; fileRef = 01F6652E0B0A6F5800F6B8CD /* Highscores.dat */; };
+		01F665360B0A6F5C00F6B8CD /* Highscores.dat in Copy Game Files */ = {isa = PBXBuildFile; fileRef = 01F6652E0B0A6F5800F6B8CD /* Highscores.dat */; };
+		01F665980B0E38AB00F6B8CD /* MakeDataFile.py in Resources */ = {isa = PBXBuildFile; fileRef = 01F665970B0E38A900F6B8CD /* MakeDataFile.py */; };
+		089C165EFE840E0CC02AAC07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		1058C7A3FEA54F0111CA2CBB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B2F67ED804C74A3F00A80002 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F67ED704C74A3F00A80002 /* OpenGL.framework */; };
+		B2F67F1F04C773E400A80002 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2F67F1E04C773E400A80002 /* GLUT.framework */; };
+		F5A47AA101A0483001D3D55B /* SDLMain.h in Headers */ = {isa = PBXBuildFile; fileRef = F5A47A9D01A0482F01D3D55B /* SDLMain.h */; };
+		F5A47AA301A0483001D3D55B /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A47A9E01A0483001D3D55B /* SDLMain.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		01F660980B08627F00F6B8CD /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				01F660D30B0862F900F6B8CD /* SDL.framework in Copy Frameworks */,
+				01F660A00B0862E200F6B8CD /* FreeType.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01F661030B08634100F6B8CD /* Copy Game Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				01F665360B0A6F5C00F6B8CD /* Highscores.dat in Copy Game Files */,
+				01F6610D0B08637800F6B8CD /* Default_Font.ttf in Copy Game Files */,
+				01F6610C0B08637400F6B8CD /* Hollow_Font.ttf in Copy Game Files */,
+				01F6610B0B08636E00F6B8CD /* Lander.dat in Copy Game Files */,
+			);
+			name = "Copy Game Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		01CAD2CC0B07BF5900C32A7E /* Bitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Bitmap.cpp; sourceTree = "<group>"; };
+		01CAD2CD0B07BF5900C32A7E /* DataFile.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = DataFile.cpp; sourceTree = "<group>"; };
+		01CAD2CE0B07BF5900C32A7E /* Emitter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Emitter.cpp; sourceTree = "<group>"; };
+		01CAD2CF0B07BF5900C32A7E /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = File.cpp; sourceTree = "<group>"; };
+		01CAD2D00B07BF5900C32A7E /* FreeType.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = FreeType.cpp; sourceTree = "<group>"; };
+		01CAD2D10B07BF5900C32A7E /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
+		01CAD2D20B07BF5900C32A7E /* HighScores.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = HighScores.cpp; sourceTree = "<group>"; };
+		01CAD2D30B07BF5900C32A7E /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Input.cpp; sourceTree = "<group>"; };
+		01CAD2D40B07BF5900C32A7E /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		01CAD2D50B07BF5900C32A7E /* Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Menu.cpp; sourceTree = "<group>"; };
+		01CAD2D60B07BF5900C32A7E /* OpenGL.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OpenGL.cpp; sourceTree = "<group>"; };
+		01CAD2D70B07BF5900C32A7E /* Screens.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Screens.cpp; sourceTree = "<group>"; };
+		01CAD2F90B07C01D00C32A7E /* Bitmap.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Bitmap.hpp; sourceTree = "<group>"; };
+		01CAD2FA0B07C01D00C32A7E /* DataFile.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = DataFile.hpp; sourceTree = "<group>"; };
+		01CAD2FB0B07C01D00C32A7E /* Emitter.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Emitter.hpp; sourceTree = "<group>"; };
+		01CAD2FC0B07C01D00C32A7E /* File.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = File.hpp; sourceTree = "<group>"; };
+		01CAD2FD0B07C01D00C32A7E /* FreeType.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = FreeType.hpp; sourceTree = "<group>"; };
+		01CAD2FE0B07C01D00C32A7E /* Input.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
+		01CAD2FF0B07C01D00C32A7E /* Lander.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Lander.hpp; sourceTree = "<group>"; };
+		01CAD3000B07C01D00C32A7E /* Menu.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Menu.hpp; sourceTree = "<group>"; };
+		01CAD3010B07C01D00C32A7E /* OpenGL.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = OpenGL.hpp; sourceTree = "<group>"; };
+		01CAD3020B07C01D00C32A7E /* Platform.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Platform.hpp; sourceTree = "<group>"; };
+		01CAD3030B07C01D00C32A7E /* Screens.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Screens.hpp; sourceTree = "<group>"; };
+		01CAD3040B07C01D00C32A7E /* Strings.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = Strings.hpp; sourceTree = "<group>"; };
+		01CAD4E70B07C26800C32A7E /* FreeType.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreeType.framework; path = /Library/Frameworks/FreeType.framework; sourceTree = "<absolute>"; };
+		01F660CF0B0862F700F6B8CD /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = /Library/Frameworks/SDL.framework; sourceTree = "<absolute>"; };
+		01F661050B08636800F6B8CD /* Default_Font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Default_Font.ttf; sourceTree = "<group>"; };
+		01F661060B08636800F6B8CD /* Hollow_Font.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hollow_Font.ttf; sourceTree = "<group>"; };
+		01F661070B08636800F6B8CD /* Lander.dat */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lander.dat; sourceTree = "<group>"; };
+		01F664640B09354A00F6B8CD /* HighScores.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HighScores.hpp; sourceTree = "<group>"; };
+		01F6652E0B0A6F5800F6B8CD /* Highscores.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = Highscores.dat; path = Clean/Highscores.dat; sourceTree = "<group>"; };
+		01F665970B0E38A900F6B8CD /* MakeDataFile.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; path = MakeDataFile.py; sourceTree = "<group>"; };
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		17587328FF379C6511CA2CBB /* Lander.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = Lander.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		B2F67ED704C74A3F00A80002 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		B2F67F1E04C773E400A80002 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		F5A47A9D01A0482F01D3D55B /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = SOURCE_ROOT; };
+		F5A47A9E01A0483001D3D55B /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		29B9732DFDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01CAD4E80B07C26800C32A7E /* FreeType.framework in Frameworks */,
+				1058C7A3FEA54F0111CA2CBB /* Cocoa.framework in Frameworks */,
+				B2F67ED804C74A3F00A80002 /* OpenGL.framework in Frameworks */,
+				B2F67F1F04C773E400A80002 /* GLUT.framework in Frameworks */,
+				01F660D00B0862F700F6B8CD /* SDL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01CAD2A80B07BEC200C32A7E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				01CAD2CC0B07BF5900C32A7E /* Bitmap.cpp */,
+				01CAD2CD0B07BF5900C32A7E /* DataFile.cpp */,
+				01CAD2CE0B07BF5900C32A7E /* Emitter.cpp */,
+				01CAD2CF0B07BF5900C32A7E /* File.cpp */,
+				01CAD2D00B07BF5900C32A7E /* FreeType.cpp */,
+				01CAD2D10B07BF5900C32A7E /* Game.cpp */,
+				01CAD2D20B07BF5900C32A7E /* HighScores.cpp */,
+				01CAD2D30B07BF5900C32A7E /* Input.cpp */,
+				01CAD2D40B07BF5900C32A7E /* Main.cpp */,
+				01CAD2D50B07BF5900C32A7E /* Menu.cpp */,
+				01CAD2D60B07BF5900C32A7E /* OpenGL.cpp */,
+				01CAD2D70B07BF5900C32A7E /* Screens.cpp */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		01CAD2F80B07BFFD00C32A7E /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				01CAD2F90B07C01D00C32A7E /* Bitmap.hpp */,
+				01CAD2FA0B07C01D00C32A7E /* DataFile.hpp */,
+				01CAD2FB0B07C01D00C32A7E /* Emitter.hpp */,
+				01CAD2FC0B07C01D00C32A7E /* File.hpp */,
+				01CAD2FD0B07C01D00C32A7E /* FreeType.hpp */,
+				01CAD2FE0B07C01D00C32A7E /* Input.hpp */,
+				01CAD2FF0B07C01D00C32A7E /* Lander.hpp */,
+				01CAD3000B07C01D00C32A7E /* Menu.hpp */,
+				01CAD3010B07C01D00C32A7E /* OpenGL.hpp */,
+				01CAD3020B07C01D00C32A7E /* Platform.hpp */,
+				01CAD3030B07C01D00C32A7E /* Screens.hpp */,
+				01CAD3040B07C01D00C32A7E /* Strings.hpp */,
+				01F664640B09354A00F6B8CD /* HighScores.hpp */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F5A47A9D01A0482F01D3D55B /* SDLMain.h */,
+				F5A47A9E01A0483001D3D55B /* SDLMain.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				01F660CF0B0862F700F6B8CD /* SDL.framework */,
+				01CAD4E70B07C26800C32A7E /* FreeType.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				B2F67ED704C74A3F00A80002 /* OpenGL.framework */,
+				B2F67F1E04C773E400A80002 /* GLUT.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				17587328FF379C6511CA2CBB /* Lander.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* Lander */ = {
+			isa = PBXGroup;
+			children = (
+				01CAD2F80B07BFFD00C32A7E /* Include */,
+				01CAD2A80B07BEC200C32A7E /* Sources */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = Lander;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				01F665970B0E38A900F6B8CD /* MakeDataFile.py */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				01F6652E0B0A6F5800F6B8CD /* Highscores.dat */,
+				01F661050B08636800F6B8CD /* Default_Font.ttf */,
+				01F661060B08636800F6B8CD /* Hollow_Font.ttf */,
+				01F661070B08636800F6B8CD /* Lander.dat */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		29B97327FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5A47AA101A0483001D3D55B /* SDLMain.h in Headers */,
+				01CAD3050B07C01D00C32A7E /* Bitmap.hpp in Headers */,
+				01CAD3060B07C01D00C32A7E /* DataFile.hpp in Headers */,
+				01CAD3070B07C01D00C32A7E /* Emitter.hpp in Headers */,
+				01CAD3080B07C01D00C32A7E /* File.hpp in Headers */,
+				01CAD3090B07C01D00C32A7E /* FreeType.hpp in Headers */,
+				01CAD30A0B07C01D00C32A7E /* Input.hpp in Headers */,
+				01CAD30B0B07C01D00C32A7E /* Lander.hpp in Headers */,
+				01CAD30C0B07C01D00C32A7E /* Menu.hpp in Headers */,
+				01CAD30D0B07C01D00C32A7E /* OpenGL.hpp in Headers */,
+				01CAD30E0B07C01D00C32A7E /* Platform.hpp in Headers */,
+				01CAD30F0B07C01D00C32A7E /* Screens.hpp in Headers */,
+				01CAD3100B07C01D00C32A7E /* Strings.hpp in Headers */,
+				01F664650B09354A00F6B8CD /* HighScores.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 01CAD2A10B07BEB700C32A7E /* Build configuration list for PBXProject "Lander" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* Lander */;
+			projectDirPath = "";
+			targets = (
+				29B97326FDCFA39411CA2CEA /* Lander */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		29B97328FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				089C165EFE840E0CC02AAC07 /* InfoPlist.strings in Resources */,
+				01F661080B08636800F6B8CD /* Default_Font.ttf in Resources */,
+				01F661090B08636800F6B8CD /* Hollow_Font.ttf in Resources */,
+				01F6610A0B08636800F6B8CD /* Lander.dat in Resources */,
+				01F6652F0B0A6F5800F6B8CD /* Highscores.dat in Resources */,
+				01F665980B0E38AB00F6B8CD /* MakeDataFile.py in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		29B9732BFDCFA39411CA2CEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5A47AA301A0483001D3D55B /* SDLMain.m in Sources */,
+				01CAD2D80B07BF5900C32A7E /* Bitmap.cpp in Sources */,
+				01CAD2D90B07BF5900C32A7E /* DataFile.cpp in Sources */,
+				01CAD2DA0B07BF5900C32A7E /* Emitter.cpp in Sources */,
+				01CAD2DB0B07BF5900C32A7E /* File.cpp in Sources */,
+				01CAD2DC0B07BF5900C32A7E /* FreeType.cpp in Sources */,
+				01CAD2DD0B07BF5900C32A7E /* Game.cpp in Sources */,
+				01CAD2DE0B07BF5900C32A7E /* HighScores.cpp in Sources */,
+				01CAD2DF0B07BF5900C32A7E /* Input.cpp in Sources */,
+				01CAD2E00B07BF5900C32A7E /* Main.cpp in Sources */,
+				01CAD2E10B07BF5900C32A7E /* Menu.cpp in Sources */,
+				01CAD2E20B07BF5900C32A7E /* OpenGL.cpp in Sources */,
+				01CAD2E30B07BF5900C32A7E /* Screens.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		01CAD29E0B07BEB700C32A7E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"/Library/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					/usr/X11R6/include,
+					/Library/Frameworks/FreeType.framework/Versions/A/Headers,
+					/usr/include/SDL,
+					/Library/Frameworks/SDL.framework/Headers,
+				);
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = (
+					"-DUNIX",
+					"-DMACOSX",
+					"-DBIG_ENDIAN",
+				);
+				OTHER_LDFLAGS = (
+					"-framework",
+					SDL,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Lander;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		01CAD29F0B07BEB700C32A7E /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"/Library/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				HEADER_SEARCH_PATHS = "\"/Library/Frameworks/SDL.framework/Headers\"";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SDL,
+				);
+				PRODUCT_NAME = Lander;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		01CAD2A00B07BEB700C32A7E /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"/Library/Frameworks\"";
+				HEADER_SEARCH_PATHS = "\"/Library/Frameworks/SDL.framework/Headers\"";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SDL,
+				);
+				PRODUCT_NAME = Lander;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+		01CAD2A20B07BEB700C32A7E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Development;
+		};
+		01CAD2A30B07BEB700C32A7E /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Deployment;
+		};
+		01CAD2A40B07BEB700C32A7E /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		01CAD29D0B07BEB700C32A7E /* Build configuration list for PBXApplicationTarget "Lander" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01CAD29E0B07BEB700C32A7E /* Development */,
+				01CAD29F0B07BEB700C32A7E /* Deployment */,
+				01CAD2A00B07BEB700C32A7E /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		01CAD2A10B07BEB700C32A7E /* Build configuration list for PBXProject "Lander" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01CAD2A20B07BEB700C32A7E /* Development */,
+				01CAD2A30B07BEB700C32A7E /* Deployment */,
+				01CAD2A40B07BEB700C32A7E /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
