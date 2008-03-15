@@ -30,7 +30,7 @@
 #define MAX_PAD_SIZE		    3
 #define LAND_SPEED		      2.0f
 //#define OBJ_GRID_SIZE		    32
-#define SHIP_START_Y		    100
+//#define SHIP_START_Y		    100
 #define KEY_ROTATION_SPEED  2
 #define MINE_ROTATION_SPEED 5
 #define GATEWAY_ACTIVE		  30
@@ -285,14 +285,6 @@ void Game::Process()
 
       // Move the ship (and exhaust and explosion)
       ship.Move();
-      exhaust.xpos = ship.xpos + ship.tq.width/2
-         - (ship.tq.width/2)*(float)sin(ship.angle*(PI/180));
-      exhaust.ypos = ship.ypos + ship.tq.height/2
-         + (ship.tq.height/2)*(float)cos(ship.angle*(PI/180));
-      exhaust.yg = ship.speedY + (flGravity * 10);
-      exhaust.xg = ship.speedX;
-      explosion.xpos = ship.xpos + ship.tq.width/2;
-      explosion.ypos = ship.ypos + ship.tq.height/2;
    }
 
    // Move mines
@@ -369,30 +361,7 @@ void Game::Process()
          }
          mines[i].movedelay = MINE_MOVE_SPEED;
       }
-   }
-   
-   // Check bounds
-   if (ship.xpos <= 0.0f) {
-      ship.xpos = 0.0f;
-      ship.speedX *= -0.5f;
-   }
-   else if (ship.xpos + ship.tq.width > viewport.GetLevelWidth()) {
-      ship.xpos = (float)(viewport.GetLevelWidth() - ship.tq.width);
-      ship.speedX *= -0.5f;
-   }
-   if (ship.ypos <= 0.0f) {
-      ship.ypos = 0.0f;
-      ship.speedY *= -0.5f;
-   }
-   else if (ship.ypos + ship.tq.height > viewport.GetLevelHeight()) {
-      ship.ypos = (float)(viewport.GetLevelHeight() - ship.tq.height);
-      ship.speedY *= -0.5f;
-      
-      if (state == gsExplode) {
-         state = gsDeathWait; 
-         death_timeout = DEATH_TIMEOUT;
-      }
-   }
+   }   
    
    // Calculate view adjusts
    int centrex = (int)ship.xpos + (ship.tq.width/2);
@@ -452,11 +421,11 @@ void Game::Process()
             else {
                // Crashed - destroy the ship
                ExplodeShip();
-               BounceShip();
+               ship.Bounce();
             }
          }
          else if (state == gsExplode) {
-            BounceShip();
+            ship.Bounce();
             
             // See if we need to stop the madness
             if (state == gsExplode && ship.speedY*-1 < 0.05f) {
@@ -471,7 +440,7 @@ void Game::Process()
    LineSegment l1, l2;
    for (i = 0; i < asteroidcount; i++) {
       if (viewport.ObjectInScreen(asteroids[i].GetXPos(), 
-                         asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE,
+                                  asteroids[i].GetYPos() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
          // Look at polys
          for (k = 0; k < asteroids[i].GetWidth(); k++) {
@@ -484,10 +453,10 @@ void Game::Process()
                if (state == gsInGame) {
                   // Destroy the ship
                   ExplodeShip();
-                  BounceShip();
+                  ship.Bounce();
                }
                else if (state == gsExplode) {
-                     BounceShip();
+                     ship.Bounce();
                      
                                  // See if we need to stop the madness
                                  if (state == gsExplode && ship.speedY*-1 < 0.05f)
@@ -511,14 +480,14 @@ void Game::Process()
                bool collide1 = ship.BoxCollision
                   (
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE,
-                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
                    ObjectGrid::OBJ_GRID_SIZE,
                    ObjectGrid::OBJ_GRID_SIZE);
 			
                bool collide2 = ship.BoxCollision
                   (
                    (gateways[i].xpos + dx)*ObjectGrid::OBJ_GRID_SIZE,
-                   (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
                    ObjectGrid::OBJ_GRID_SIZE,
                    ObjectGrid::OBJ_GRID_SIZE  );
 		
@@ -528,11 +497,11 @@ void Game::Process()
                         {
                            // Destroy the ship
                            ExplodeShip();
-                           BounceShip();
+                           ship.Bounce();
                         }
                      else if (state == gsExplode)
                         {
-                           BounceShip();
+                           ship.Bounce();
 
                            // See if we need to stop the madness
                            if (state == gsExplode && ship.speedY*-1 < 0.05f)
@@ -548,7 +517,7 @@ void Game::Process()
                bool collide = ship.BoxCollision
                   (
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE, 
-                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
                    (dx + 1)*ObjectGrid::OBJ_GRID_SIZE,
                    (dy + 1)*ObjectGrid::OBJ_GRID_SIZE
                    ); 
@@ -559,7 +528,7 @@ void Game::Process()
                         {
                            // Destroy the ship
                            ExplodeShip();
-                           BounceShip();
+                           ship.Bounce();
                         }
                      else if (state == gsExplode)
                         {
@@ -577,7 +546,7 @@ void Game::Process()
          bool collide = ship.BoxCollision
             (
              mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3 + mines[i].displace_x,
-             mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
+             mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 6 + mines[i].displace_y,
              ObjectGrid::OBJ_GRID_SIZE*2 - 6,
              ObjectGrid::OBJ_GRID_SIZE*2 - 12
              ); 
@@ -588,11 +557,11 @@ void Game::Process()
                   {
                      // Destroy the ship
                      ExplodeShip();
-                     BounceShip();
+                     ship.Bounce();
                   }
                else if (state == gsExplode)
                   {
-                     BounceShip();
+                     ship.Bounce();
 
                      // See if we need to stop the madness
                      if (state == gsExplode && -ship.speedY < 0.05f)
@@ -610,7 +579,7 @@ void Game::Process()
          bool collide = ship.BoxCollision
             (
              keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3,
-             keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 3,
+             keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 3,
              ObjectGrid::OBJ_GRID_SIZE - 6,
              ObjectGrid::OBJ_GRID_SIZE - 6
              );	
@@ -754,7 +723,7 @@ void Game::StartLevel(int level)
 
    // Create the object grid
    int grid_w = viewport.GetLevelWidth() / ObjectGrid::OBJ_GRID_SIZE;
-   int grid_h = (viewport.GetLevelHeight() - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
+   int grid_h = (viewport.GetLevelHeight() - ObjectGrid::OBJ_GRID_TOP - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
    objgrid.Reset(grid_w, grid_h);
 
    // Create background stars
@@ -1022,18 +991,13 @@ void Game::StartLevel(int level)
       }
 
    // Set ship starting position
-   ship.xpos = (float)viewport.GetLevelWidth()/2;
-   ship.ypos = SHIP_START_Y - 40;
+   ship.Reset();
 
    // Reset data
    ship.angle = 0.0f;
    ship.speedX = 0.0f;
    ship.speedY = 0.0f;
    leveltext_timeout = LEVEL_TEXT_TIMEOUT;
-
-   // Reset emitters
-   exhaust.Reset();
-   explosion.Reset();
 
    // Set fuel
    fuel = maxfuel = 750 + 50*level;
@@ -1057,23 +1021,10 @@ void Game::ExplodeShip()
    life_alpha = LIFE_ALPHA_BASE - 1.0f;
 }
 
-
-/*
- * Bounces a ship after an impact with a surface.
- */
-void Game::BounceShip()
-{
-   ship.speedY *= -1;
-   ship.speedX *= -1;
-   ship.speedX /= 2;
-   ship.speedY /= 2;
-}
-
 /* Displays frame to user */
 void Game::Display()
 {
    int i, j, k, offset;
-   static float xlast, ylast;
 
    FreeType &ft = FreeType::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
@@ -1098,7 +1049,7 @@ void Game::Display()
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
       {
-         if (viewport.ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 
+         if (viewport.ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 
                             asteroids[i].GetWidth(), asteroids[i].GetHeight()))
             {
                asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
@@ -1111,7 +1062,7 @@ void Game::Display()
          if (keys[i].active)
             {
                keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y;		
+               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;		
                opengl.Draw(&keys[i].frame[keys[i].current]);
                if (--keys[i].rotcount == 0)
                   {
@@ -1125,7 +1076,7 @@ void Game::Display()
                if (keys[i].alpha > 0.0f)
                   {
                      keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y;	
+                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;	
                      opengl.DrawBlend(&keys[i].frame[keys[i].current], keys[i].alpha);
                      keys[i].alpha -= 0.02f;
                      if (--keys[i].rotcount == 0)
@@ -1143,19 +1094,19 @@ void Game::Display()
       {
          // Draw first sphere
          gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
+         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
          opengl.Draw(&gateways[i].icon);
 
          // Draw second sphere
          if (gateways[i].vertical)
             {
                gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
+               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
             }
          else
             {
                gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
+               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
             }
          opengl.Draw(&gateways[i].icon);
 
@@ -1183,7 +1134,7 @@ void Game::Display()
                            if (gateways[i].vertical)
                               {
                                  x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - viewport.GetXAdjust();
-                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 - viewport.GetYAdjust();
+                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 - viewport.GetYAdjust();
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
@@ -1196,13 +1147,13 @@ void Game::Display()
                            else
                               {
                                  x = (gateways[i].xpos+k)*ObjectGrid::OBJ_GRID_SIZE + 16 - viewport.GetXAdjust();
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - viewport.GetYAdjust();
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 + deviation - viewport.GetYAdjust();
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
                                  else
                                     deviation += rand()%20 - 10;
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - viewport.GetYAdjust();
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 + deviation - viewport.GetYAdjust();
                                  x += ObjectGrid::OBJ_GRID_SIZE;
                                  glVertex2i(x, y);
                               }
@@ -1220,7 +1171,7 @@ void Game::Display()
    for (i = 0; i < minecount; i++)
       {
          mines[i].frame[mines[i].current].x = mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_x - viewport.GetXAdjust();
-         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - viewport.GetYAdjust() + SHIP_START_Y;		
+         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;		
          opengl.Draw(&mines[i].frame[mines[i].current]);
          if (--mines[i].rotcount == 0)
             {
@@ -1246,10 +1197,10 @@ void Game::Display()
                         {
                            glLoadIdentity();
                            glBegin(GL_QUADS);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
                            glEnd();
                         }
                   }
@@ -1263,37 +1214,18 @@ void Game::Display()
       }
 
    // Draw the exhaust
+   ship.DrawExhaust(bThrusting, state == gsPaused);
    
-   if (bThrusting)
-      {
-         if (sqrt(ship.speedX*ship.speedX + ship.speedY*ship.speedY) > 2.0f)
-            {
-               exhaust.NewCluster
-                  (
-                   (int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
-                   (int)(exhaust.ypos + (exhaust.ypos - ylast)/2)
-                   );
-            }
-         exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), true);
-      }
-   else if (state == gsPaused)
-      exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false, false);
-   else
-      exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false);
-	
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart)
       {
          ship.Display();
       }
-	
-   xlast = exhaust.xpos;
-   ylast = exhaust.ypos;
 
    // Draw the explosion if necessary
    if (state == gsExplode)
       {
-         explosion.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), true);
+         ship.DrawExplosion(true);
          opengl.Colour(0.0f, 1.0f, 0.0f);
          ft.Print
             (
@@ -1306,14 +1238,14 @@ void Game::Display()
    else if (state == gsDeathWait || state == gsGameOver 
             || state == gsFadeToDeath || state == gsFadeToRestart)
       {
-         explosion.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false);
+         ship.DrawExplosion(false);
       }
 	
    // Draw the arrows
    for (i = 0; i < nKeys; i++)	{
-      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
+      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
          int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
+         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
          double angle = 0.0;
 
          if (ax < 0) { 

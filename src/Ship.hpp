@@ -22,6 +22,7 @@
 #include "OpenGL.hpp"
 #include "Geometry.hpp"
 #include "Viewport.hpp"
+#include "Emitter.hpp"
 
 class Ship {
 public:
@@ -29,9 +30,14 @@ public:
 
    static void Load();
 
+   void Reset();
+
    void Display();
+   void DrawExhaust(bool thrusting, bool paused);
+   void DrawExplosion(bool createNew);
    void Move();
    void Thrust(float speed);
+   void Bounce();
    void ApplyGravity(float gravity);
    
    bool CheckCollision(LineSegment &l, float dx=0, float dy=0);
@@ -41,6 +47,8 @@ public:
    float xpos, ypos;
    float speedX, speedY, angle;
    TextureQuad tq;
+   
+   static const int SHIP_START_Y = 100;
 
 private:
    void RotatePoints(const Point *pPoints, Point *pDest, int nCount,
@@ -52,6 +60,8 @@ private:
    static GLuint uShipTexture;
 
    Viewport *viewport;
+   Explosion explosion;
+   SmokeTrail exhaust;
    
    static const int NUM_HOTSPOTS = 8;
    Point points[NUM_HOTSPOTS];
