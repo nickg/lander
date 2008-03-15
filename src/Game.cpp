@@ -83,7 +83,6 @@ void Game::Load()
       uGreenArrow = opengl.LoadTextureAlpha(g_pData, "GreenArrow.bmp");
       uYellowArrow = opengl.LoadTextureAlpha(g_pData, "YellowArrow.bmp");
       uPinkArrow = opengl.LoadTextureAlpha(g_pData, "PinkArrow.bmp");
-      uGatewayTexture = opengl.LoadTextureAlpha(g_pData, "Gateway.bmp");
       uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
       uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
@@ -112,6 +111,7 @@ void Game::Load()
       LandingPad::Load();
       Surface::Load();
       Mine::Load();
+      ElectricGate::Load();
       
       hasloaded = true;
    }
@@ -196,7 +196,6 @@ void Game::NewGame()
    StartLevel(level);
 }
 
-/* Processes events */
 void Game::Process()
 {
    Input &input = Input::GetInstance();
@@ -348,74 +347,20 @@ void Game::Process()
       }
 
    // Check for collision with gateways
-   for (int i = 0; i < gatewaycount; i++)
-      {
-         int dx = gateways[i].vertical ? 0 : gateways[i].length;
-         int dy = gateways[i].vertical ? gateways[i].length : 0;
-         if (gateways[i].timer > GATEWAY_ACTIVE)
-            {
-               bool collide1 = ship.BoxCollision
-                  (
-                   gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE,
-                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
-                   ObjectGrid::OBJ_GRID_SIZE,
-                   ObjectGrid::OBJ_GRID_SIZE);
-			
-               bool collide2 = ship.BoxCollision
-                  (
-                   (gateways[i].xpos + dx)*ObjectGrid::OBJ_GRID_SIZE,
-                   (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
-                   ObjectGrid::OBJ_GRID_SIZE,
-                   ObjectGrid::OBJ_GRID_SIZE  );
-		
-               if (collide1 || collide2)
-                  {
-                     if (state == gsInGame)
-                        {
-                           // Destroy the ship
-                           ExplodeShip();
-                           ship.Bounce();
-                        }
-                     else if (state == gsExplode)
-                        {
-                           ship.Bounce();
-
-                           // See if we need to stop the madness
-                           if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
-                              {
-                                 state = gsDeathWait; 
-                                 death_timeout = DEATH_TIMEOUT;
-                              }
-                        }
-                  }
-            }
-         else
-            {
-               bool collide = ship.BoxCollision
-                  (
-                   gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE, 
-                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
-                   (dx + 1)*ObjectGrid::OBJ_GRID_SIZE,
-                   (dy + 1)*ObjectGrid::OBJ_GRID_SIZE
-                   ); 
-		
-               if (collide)
-                  {
-                     if (state == gsInGame)
-                        {
-                           // Destroy the ship
-                           ExplodeShip();
-                           ship.Bounce();
-                        }
-                     else if (state == gsExplode)
-                        {
-                           // Destroy the ship anyway
-                           state = gsDeathWait; 
-                           death_timeout = DEATH_TIMEOUT;
-                        }
-                  }
-            }
+   for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it) {
+      if ((*it).CheckCollision(ship)) {
+         if (state == gsInGame) {
+            // Destroy the ship
+            ExplodeShip();
+            ship.Bounce();
+         }
+         else if (state == gsExplode) {
+            // Destroy the ship anyway
+            state = gsDeathWait; 
+            death_timeout = DEATH_TIMEOUT;
+         }
       }
+   }
 
    // Check for collisions with mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
@@ -642,7 +587,8 @@ void Game::StartLevel(int level)
    int surftex = rand() % Surface::NUM_SURF_TEX;
    surface.Generate(surftex, pads);
     
-   // Create the keys (must be created first because no success check is made on AllocFreeSpace call)
+   // Create the keys (must be created first because no success check
+   // is made on AllocFreeSpace call)
    nKeys = (level / 2) + (level % 2);
    if (nKeys > MAX_KEYS)
       nKeys = MAX_KEYS;
@@ -715,7 +661,6 @@ void Game::StartLevel(int level)
          if (!objgrid.AllocFreeSpace(x, y, width, 4))
             {
                // Failed to allocate space so don't make any more asteroids
-               asteroidcount = i + 1;
                break;
             }
 
@@ -724,36 +669,33 @@ void Game::StartLevel(int level)
       }
 
    // Create gateways
-   gatewaycount = level/2 + rand()%(level);
+   int gatewaycount = level/2 + rand()%(level);
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
    for (i = 0; i < gatewaycount; i++)
       {
          // Allocate space for gateway
-         gateways[i].length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
+         int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
+         bool vertical;
          switch(rand() % 2)
             {
-            case 0: gateways[i].vertical = true; break;
-            case 1: gateways[i].vertical = false; break;
+            case 0: vertical = true; break;
+            case 1: vertical = false; break;
             }
 		
          bool result;
-         if (gateways[i].vertical)
-            result = objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, 1, gateways[i].length+1);
+         int xpos, ypos;
+         if (vertical)
+            result = objgrid.AllocFreeSpace(xpos, ypos, 1, length+1);
          else
-            result = objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, gateways[i].length+1, 1);
+            result = objgrid.AllocFreeSpace(xpos, ypos, length+1, 1);
          if (!result)
             {
                // Failed to allocate space so don't make any more gateways
-               gatewaycount = i + 1;
                break;
             }
 
-         // Set texture, etc.
-         gateways[i].icon.width = ObjectGrid::OBJ_GRID_SIZE;
-         gateways[i].icon.height = ObjectGrid::OBJ_GRID_SIZE;
-         gateways[i].icon.uTexture = uGatewayTexture;
-         gateways[i].timer = rand() % 70 + 10;
+         gateways.push_back(ElectricGate(&viewport, length, vertical, xpos, ypos));
       }
 
    // Create mines (MUST BE CREATED LAST)
@@ -863,83 +805,9 @@ void Game::Display()
       }
 
    // Draw gateways
-   for (i = 0; i < gatewaycount; i++)
-      {
-         // Draw first sphere
-         gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
-         opengl.Draw(&gateways[i].icon);
-
-         // Draw second sphere
-         if (gateways[i].vertical)
-            {
-               gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
-            }
-         else
-            {
-               gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
-            }
-         opengl.Draw(&gateways[i].icon);
-
-         // Draw the electricity stuff
-         if (--gateways[i].timer < GATEWAY_ACTIVE)
-            {
-               float r, g, b; 
-               int x, y, deviation;
-
-               opengl.DisableBlending();
-               opengl.DisableTexture();
-
-               for (j = 0; j < 10; j++)
-                  {
-                     deviation = 0;
-                     for (k = 0; k < gateways[i].length; k++)
-                        {
-                           glLoadIdentity();
-                           glBegin(GL_LINE_STRIP);
-                           r = 0.0f + (float)(rand()%5)/10.0f;
-                           g = 0.0f + (float)(rand()%5)/10.0f;
-                           b = 1.0f - (float)(rand()%5)/10.0f;
-
-                           glColor3f(r, g, b);
-                           if (gateways[i].vertical)
-                              {
-                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - viewport.GetXAdjust();
-                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 - viewport.GetYAdjust();
-                                 glVertex2i(x, y);
-                                 if (k == gateways[i].length-1)
-                                    deviation = 0;
-                                 else
-                                    deviation += rand()%20 - 10;
-                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - viewport.GetXAdjust();
-                                 y += ObjectGrid::OBJ_GRID_SIZE;
-                                 glVertex2i(x, y);
-                              }
-                           else
-                              {
-                                 x = (gateways[i].xpos+k)*ObjectGrid::OBJ_GRID_SIZE + 16 - viewport.GetXAdjust();
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 + deviation - viewport.GetYAdjust();
-                                 glVertex2i(x, y);
-                                 if (k == gateways[i].length-1)
-                                    deviation = 0;
-                                 else
-                                    deviation += rand()%20 - 10;
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 16 + deviation - viewport.GetYAdjust();
-                                 x += ObjectGrid::OBJ_GRID_SIZE;
-                                 glVertex2i(x, y);
-                              }
-                           glEnd();
-                        }
-                  }
-
-               // Reset timer 
-               if (gateways[i].timer < 0)
-                  gateways[i].timer = 100;
-            }
-      }
-
+   for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it)
+      (*it).Draw();
+   
    // Draw mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       (*it).Draw();

@@ -11,6 +11,7 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Emitter.hpp Screens.cpp Screens.hpp Strings.hpp \
 	ObjectGrid.hpp ObjectGrid.cpp Asteroid.hpp Asteroid.cpp \
 	Ship.hpp Ship.cpp Viewport.hpp Viewport.cpp LandingPad.hpp \
-	LandingPad.cpp Surface.hpp Surface.cpp Mine.hpp Mine.cpp
+	LandingPad.cpp Surface.hpp Surface.cpp Mine.hpp Mine.cpp \
+	ElectricGate.hpp ElectricGate.cpp
 
 dist_pkgdata_DATA = ../lander.dat ../Default_Font.ttf ../Hollow_Font.ttf
