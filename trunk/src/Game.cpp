@@ -62,7 +62,11 @@ const Point Game::hotspots[] = {{1, 31}, {1, 26}, {3, 14}, {15, 0},
  * Sets the inital state of the Game object.
  */
 Game::Game()
-  : hasloaded(false), bThrusting(false), surface(NULL), state(gsNone)
+  : hasloaded(false),
+    bThrusting(false),
+    surface(NULL),
+    state(gsNone),
+    ship(&viewport)
 {
 
 }
@@ -79,8 +83,6 @@ void Game::Load()
 
    // Load textures
    if (!hasloaded) {
-      // Load textures
-      uShipTexture = opengl.LoadTextureAlpha(g_pData, "Ship.bmp");
       uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
       uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
       uLevComTexture = opengl.LoadTextureAlpha(g_pData, "LevelComplete.bmp");
@@ -127,17 +129,13 @@ void Game::Load()
          snprintf(buf, TEX_NAME_LEN, "mine%d.bmp", i*5);
          uMineTexture[i] = opengl.LoadTextureAlpha(g_pData, buf);
       }
-      
+
+      Ship::Load();
       LandingPad::Load();
       
       // Toggle loaded flag
       hasloaded = true;
    }
-
-   // Create the ship
-   ship.tq.width = 32;
-   ship.tq.height = 32;
-   ship.tq.uTexture = uShipTexture;
 
    // Create the fade
    fade.x = 0;
@@ -195,9 +193,6 @@ void Game::Load()
    paused.height = 64;
    paused.uTexture = uPausedTexture;
 
-   // Set default values
-   nViewAdjustX = 0;
-   nViewAdjustY = 0;
    starrotate = 0.0f;
    death_timeout = 0;
    state = gsNone;
@@ -257,8 +252,8 @@ void Game::Process()
    if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
        && fuel > 0 && state == gsInGame) {
       // Thrusting
-      ship.flSpeedX += SHIP_SPEED * (float)sin(ship.angle*(PI/180));
-      ship.flSpeedY -= SHIP_SPEED * (float)cos(ship.angle*(PI/180));
+      ship.speedX += SHIP_SPEED * (float)sin(ship.angle*(PI/180));
+      ship.speedY -= SHIP_SPEED * (float)cos(ship.angle*(PI/180));
       bThrusting = true;
       fuel--;
    }
@@ -300,17 +295,17 @@ void Game::Process()
    // Move only if not in game over (prevent bugs)
    if (state == gsInGame || state == gsExplode) {
       // Apply gravity
-      ship.flSpeedY += flGravity;
+      ship.speedY += flGravity;
 
       // Move the ship (and exhaust and explosion)
-      ship.xpos += ship.flSpeedX;
-      ship.ypos += ship.flSpeedY;
+      ship.xpos += ship.speedX;
+      ship.ypos += ship.speedY;
       exhaust.xpos = ship.xpos + ship.tq.width/2
          - (ship.tq.width/2)*(float)sin(ship.angle*(PI/180));
       exhaust.ypos = ship.ypos + ship.tq.height/2
          + (ship.tq.height/2)*(float)cos(ship.angle*(PI/180));
-      exhaust.yg = ship.flSpeedY + (flGravity * 10);
-      exhaust.xg = ship.flSpeedX;
+      exhaust.yg = ship.speedY + (flGravity * 10);
+      exhaust.xg = ship.speedX;
       explosion.xpos = ship.xpos + ship.tq.width/2;
       explosion.ypos = ship.ypos + ship.tq.height/2;
    }
@@ -394,19 +389,19 @@ void Game::Process()
    // Check bounds
    if (ship.xpos <= 0.0f) {
       ship.xpos = 0.0f;
-      ship.flSpeedX *= -0.5f;
+      ship.speedX *= -0.5f;
    }
-   else if (ship.xpos + ship.tq.width > levelwidth) {
-      ship.xpos = (float)(levelwidth - ship.tq.width);
-      ship.flSpeedX *= -0.5f;
+   else if (ship.xpos + ship.tq.width > viewport.GetLevelWidth()) {
+      ship.xpos = (float)(viewport.GetLevelWidth() - ship.tq.width);
+      ship.speedX *= -0.5f;
    }
    if (ship.ypos <= 0.0f) {
       ship.ypos = 0.0f;
-      ship.flSpeedY *= -0.5f;
+      ship.speedY *= -0.5f;
    }
-   else if (ship.ypos + ship.tq.height > levelheight) {
-      ship.ypos = (float)(levelheight - ship.tq.height);
-      ship.flSpeedY *= -0.5f;
+   else if (ship.ypos + ship.tq.height > viewport.GetLevelHeight()) {
+      ship.ypos = (float)(viewport.GetLevelHeight() - ship.tq.height);
+      ship.speedY *= -0.5f;
       
       // Bug fix
       if (state == gsExplode) {
@@ -418,31 +413,23 @@ void Game::Process()
    // Calculate view adjusts
    int centrex = (int)ship.xpos + (ship.tq.width/2);
    int centrey = (int)ship.ypos + (ship.tq.height/2);
-   nViewAdjustX = centrex - (opengl.GetWidth()/2);
-   nViewAdjustY = centrey - (opengl.GetHeight()/2);
-   if (nViewAdjustX < 0)
-      nViewAdjustX = 0;
-   else if (nViewAdjustX > levelwidth - opengl.GetWidth())
-      nViewAdjustX = levelwidth - opengl.GetWidth();
-   if (nViewAdjustY < 0)
-      nViewAdjustY = 0;
-   else if (nViewAdjustY > levelheight - opengl.GetHeight())
-      nViewAdjustY = levelheight - opengl.GetHeight();
+   viewport.SetXAdjust(centrex - (opengl.GetWidth()/2));
+   viewport.SetYAdjust(centrey - (opengl.GetHeight()/2));
 
    // Check for collisions with surface
    LineSegment l;
    int lookmin = (int)(ship.xpos/SURFACE_SIZE) - 2;
    int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
-   if (lookmax >= levelwidth/SURFACE_SIZE) lookmax = (levelwidth / SURFACE_SIZE) - 1;
+   if (lookmax >= viewport.GetLevelWidth()/SURFACE_SIZE) lookmax = (viewport.GetLevelWidth() / SURFACE_SIZE) - 1;
    for (i = lookmin; i <= lookmax; i++) {
       l.p1.x = i*SURFACE_SIZE;
-      l.p1.y = levelheight - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
+      l.p1.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
       l.p2.x = (i+1)*SURFACE_SIZE;
-      l.p2.y = levelheight - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
+      l.p2.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
       
       // Look through each hot spot and check for collisions
-      if (HotSpotCollision(ship, l, points, NUM_HOTSPOTS, ship.xpos, ship.ypos)) {
+      if (ship.HotSpotCollision(l, points, NUM_HOTSPOTS)) {
          // Collided - see which game state we're in
          if (state == gsInGame) {
             bool bLanded = false;
@@ -455,7 +442,7 @@ void Game::Process()
                      // We landed
                      int nDAngle = ((int)ship.angle) % 360;
                      if ((nDAngle >= 350 || nDAngle <= 30) 
-                         && ship.flSpeedY < LAND_SPEED && !nKeysRemaining) {
+                         && ship.speedY < LAND_SPEED && !nKeysRemaining) {
                            // Landed safely
                         bLanded = true;
                         nPadOn = k;
@@ -488,7 +475,7 @@ void Game::Process()
             BounceShip();
             
             // See if we need to stop the madness
-            if (state == gsExplode && ship.flSpeedY*-1 < 0.05f) {
+            if (state == gsExplode && ship.speedY*-1 < 0.05f) {
                state = gsDeathWait; 
                death_timeout = DEATH_TIMEOUT;
             }
@@ -499,7 +486,7 @@ void Game::Process()
    // Check for collisions with asteroids
    LineSegment l1, l2;
    for (i = 0; i < asteroidcount; i++) {
-      if (ObjectInScreen(asteroids[i].GetXPos(), 
+      if (viewport.ObjectInScreen(asteroids[i].GetXPos(), 
                          asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
          // Look at polys
@@ -507,8 +494,8 @@ void Game::Process()
             l1 = asteroids[i].GetUpBoundary(k);
             l2 = asteroids[i].GetDownBoundary(k);
             
-            if (HotSpotCollision(ship, l1, points, NUM_HOTSPOTS, ship.xpos, ship.ypos) 
-                || HotSpotCollision(ship, l2, points, NUM_HOTSPOTS, ship.xpos, ship.ypos)) {
+            if (ship.HotSpotCollision(l1, points, NUM_HOTSPOTS) 
+                || ship.HotSpotCollision(l2, points, NUM_HOTSPOTS)) {
                // Crashed
                if (state == gsInGame) {
                   // Destroy the ship
@@ -519,7 +506,7 @@ void Game::Process()
                      BounceShip();
                      
                                  // See if we need to stop the madness
-                                 if (state == gsExplode && ship.flSpeedY*-1 < 0.05f)
+                                 if (state == gsExplode && ship.speedY*-1 < 0.05f)
                                     {
                                        state = gsDeathWait; 
                                        death_timeout = DEATH_TIMEOUT;
@@ -537,9 +524,8 @@ void Game::Process()
          int dy = gateways[i].vertical ? gateways[i].length : 0;
          if (gateways[i].timer > GATEWAY_ACTIVE)
             {
-               bool collide1 = BoxCollision
+               bool collide1 = ship.BoxCollision
                   (
-                   ship,
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE,
                    gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    ObjectGrid::OBJ_GRID_SIZE,
@@ -548,9 +534,8 @@ void Game::Process()
                    NUM_HOTSPOTS
                    );
 			
-               bool collide2 = BoxCollision
+               bool collide2 = ship.BoxCollision
                   (
-                   ship,
                    (gateways[i].xpos + dx)*ObjectGrid::OBJ_GRID_SIZE,
                    (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    ObjectGrid::OBJ_GRID_SIZE,
@@ -572,7 +557,7 @@ void Game::Process()
                            BounceShip();
 
                            // See if we need to stop the madness
-                           if (state == gsExplode && ship.flSpeedY*-1 < 0.05f)
+                           if (state == gsExplode && ship.speedY*-1 < 0.05f)
                               {
                                  state = gsDeathWait; 
                                  death_timeout = DEATH_TIMEOUT;
@@ -582,9 +567,8 @@ void Game::Process()
             }
          else
             {
-               bool collide = BoxCollision
+               bool collide = ship.BoxCollision
                   (
-                   ship,
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE, 
                    gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    (dx + 1)*ObjectGrid::OBJ_GRID_SIZE,
@@ -614,9 +598,8 @@ void Game::Process()
    // Check for collisions with mines
    for (i = 0; i < minecount; i++)
       {
-         bool collide = BoxCollision
+         bool collide = ship.BoxCollision
             (
-             ship,
              mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3 + mines[i].displace_x,
              mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
              ObjectGrid::OBJ_GRID_SIZE*2 - 6,
@@ -638,7 +621,7 @@ void Game::Process()
                      BounceShip();
 
                      // See if we need to stop the madness
-                     if (state == gsExplode && -ship.flSpeedY < 0.05f)
+                     if (state == gsExplode && -ship.speedY < 0.05f)
                         {
                            state = gsDeathWait; 
                            death_timeout = DEATH_TIMEOUT;
@@ -650,9 +633,8 @@ void Game::Process()
    // See if the player collected a key
    for (i = 0; i < nKeys; i++)
       {
-         bool collide = BoxCollision
+         bool collide = ship.BoxCollision
             (
-             ship,
              keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3,
              keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 3,
              ObjectGrid::OBJ_GRID_SIZE - 6,
@@ -777,7 +759,7 @@ void Game::Process()
 
    // Resize the speed bar
    float flSpeed1 = 30.0f / LAND_SPEED;
-   int width = (int)((float)ship.flSpeedY * flSpeed1); 
+   int width = (int)((float)ship.speedY * flSpeed1); 
    if (width < 0) 
       width = 0;
    if (width > 124) 
@@ -794,23 +776,23 @@ void Game::StartLevel(int level)
    int i, change, texloop=0, j, k, nPadHere;
 
    // Set level size
-   levelwidth = 2000 + 2*SURFACE_SIZE*level;
-   levelheight = 1500 + 2*SURFACE_SIZE*level;
+   viewport.SetLevelWidth(2000 + 2*SURFACE_SIZE*level);
+   viewport.SetLevelHeight(1500 + 2*SURFACE_SIZE*level);
    flGravity = GRAVITY;
 
    // Create the object grid
-   int grid_w = levelwidth / ObjectGrid::OBJ_GRID_SIZE;
-   int grid_h = (levelheight - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
+   int grid_w = viewport.GetLevelWidth() / ObjectGrid::OBJ_GRID_SIZE;
+   int grid_h = (viewport.GetLevelHeight() - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
    objgrid.Reset(grid_w, grid_h);
 
    // Create background stars
-   nStarCount = (levelwidth * levelheight) / 10000;
+   nStarCount = (viewport.GetLevelWidth() * viewport.GetLevelHeight()) / 10000;
    if (nStarCount > MAX_GAME_STARS)
       nStarCount = MAX_GAME_STARS;
    for (i = 0; i < nStarCount; i++)
       {
-         stars[i].xpos = (int)(rand()%(levelwidth/20))*20;
-         stars[i].ypos = (int)(rand()%(levelheight/20))*20;
+         stars[i].xpos = (int)(rand()%(viewport.GetLevelWidth()/20))*20;
+         stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
          stars[i].quad.uTexture = uStarTexture;
          stars[i].quad.width = stars[i].quad.height = rand()%15;
       }
@@ -818,7 +800,7 @@ void Game::StartLevel(int level)
    // Create the planet surface 
    if (surface)
       delete[] surface;
-   surface = new Poly[levelwidth/SURFACE_SIZE];
+   surface = new Poly[viewport.GetLevelWidth()/SURFACE_SIZE];
 	
    // Generate landing pads
    nLandingPads = rand()%MAX_PADS + 1;
@@ -828,12 +810,12 @@ void Game::StartLevel(int level)
          bool overlap;
          do
             {
-               index = rand() % (levelwidth / SURFACE_SIZE);
+               index = rand() % (viewport.GetLevelWidth() / SURFACE_SIZE);
                length = rand() % MAX_PAD_SIZE + 3;
 
                // Check for overlap
                overlap = false;
-               if (index + length > (levelwidth / SURFACE_SIZE))
+               if (index + length > (viewport.GetLevelWidth() / SURFACE_SIZE))
                   overlap = true;
                for (int j = 0; j < i; j++)
                   {
@@ -851,11 +833,11 @@ void Game::StartLevel(int level)
 
    // Generate surface
    int surftex = rand()%NUM_SURF_TEX;
-   for (i = 0; i < levelwidth/SURFACE_SIZE; i++)
+   for (i = 0; i < viewport.GetLevelWidth()/SURFACE_SIZE; i++)
       {
          surface[i].pointcount = 4;
          surface[i].xpos = i * SURFACE_SIZE;
-         surface[i].ypos = levelheight - MAX_SURFACE_HEIGHT;
+         surface[i].ypos = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT;
          surface[i].uTexture = uSurfaceTexture[surftex];
          surface[i].texX = ((float)texloop)/10;
          if (texloop++ == 10)
@@ -1068,13 +1050,13 @@ void Game::StartLevel(int level)
       }
 
    // Set ship starting position
-   ship.xpos = (float)levelwidth/2;
+   ship.xpos = (float)viewport.GetLevelWidth()/2;
    ship.ypos = SHIP_START_Y - 40;
 
    // Reset data
    ship.angle = 0.0f;
-   ship.flSpeedX = 0.0f;
-   ship.flSpeedY = 0.0f;
+   ship.speedX = 0.0f;
+   ship.speedY = 0.0f;
    leveltext_timeout = LEVEL_TEXT_TIMEOUT;
 
    // Reset emitters
@@ -1109,10 +1091,10 @@ void Game::ExplodeShip()
  */
 void Game::BounceShip()
 {
-   ship.flSpeedY *= -1;
-   ship.flSpeedX *= -1;
-   ship.flSpeedX /= 2;
-   ship.flSpeedY /= 2;
+   ship.speedY *= -1;
+   ship.speedX *= -1;
+   ship.speedX /= 2;
+   ship.speedY /= 2;
 }
 
 
@@ -1131,103 +1113,6 @@ void Game::RotatePoints(const Point *pPoints, Point *pDest, int nCount, float an
       }
 }
 
-/* Does a collision based on hot spots */
-bool Game::HotSpotCollision(ActiveObject &a, LineSegment &l, Point *points, int nPoints, float dx, float dy)
-{
-   for (int i = 0; i < nPoints; i++)
-      {
-         if (CheckCollision(a, l, dx + points[i].x, dy + points[i].y))
-            return true;
-      }
-
-   return false;
-}
-
-/* 
- * Works out whether or not an object is visible.
- *	xpos, ypos -> Grid co-ordinates.
- *	width, height -> Size of object in grid squares.
- */
-bool Game::ObjectInScreen(int xpos, int ypos, int width, int height)
-{
-   return PointInScreen(xpos * ObjectGrid::OBJ_GRID_SIZE, ypos * ObjectGrid::OBJ_GRID_SIZE,
-                        width * ObjectGrid::OBJ_GRID_SIZE, height * ObjectGrid::OBJ_GRID_SIZE);
-}
-
-
-/* 
- * Works out whether or not a point is visible.
- *	xpos, ypos -> Absolute co-ordinates.
- *	width, height -> Size of object.
- */
-bool Game::PointInScreen(int xpos, int ypos, int width, int height)
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   int sw = opengl.GetWidth();
-   int sh = opengl.GetHeight();
-
-   if (xpos + width > nViewAdjustX && xpos - nViewAdjustX < sw &&
-       ypos + height > nViewAdjustY && ypos - nViewAdjustY < sh)
-      return true;
-   else
-      return false;
-}
-
-
-/* Does simple box collision */
-bool Game::BoxCollision(ActiveObject &a, int x, int y, int w, int h, Point *points, int nPoints)
-{
-   if (!PointInScreen(x, y, w, h))
-      return false;
-
-   LineSegment l1(x, y, x + w, y);
-   LineSegment l2(x + w, y, x + w, y + h);
-   LineSegment l3(x + w, y + h, x, y + h);
-   LineSegment l4(x, y + h, x, y);
-
-   return HotSpotCollision(a, l1, points, nPoints, a.xpos, a.ypos) ||
-      HotSpotCollision(a, l2, points, nPoints, a.xpos, a.ypos) ||
-      HotSpotCollision(a, l3, points, nPoints, a.xpos, a.ypos) ||
-      HotSpotCollision(a, l4, points, nPoints, a.xpos, a.ypos);
-}
-
-/* Checks for collision between a vector and a line segment */
-bool Game::CheckCollision(ActiveObject &a, LineSegment &l, float xpos, float ypos)
-{
-   if (xpos == -1 || ypos == -1)
-      {
-         xpos = a.xpos;
-         ypos = a.ypos;
-      }
-
-   // Get position after next move
-   float cX = xpos + a.flSpeedX;
-   float cY = ypos + a.flSpeedY;
-
-   // Get displacement
-   float vecX = cX - xpos;
-   float vecY = cY - ypos;
-
-   // Get line position
-   float wallX = (float)(l.p2.x - l.p1.x);
-   float wallY = (float)(l.p2.y - l.p1.y);
-
-   // Work out numerator and denominator (used parametric equations)
-   float numT = wallX * (ypos - l.p1.y) - wallY * (xpos - l.p1.x);
-   float numU = vecX * (ypos - l.p1.y) - vecY * (xpos - l.p1.x);
-
-   // Work out denominator
-   float denom = wallY * (cX - xpos) - wallX * (cY - ypos);
-
-   // Work out u and t
-   float u = numU / denom;
-   float t = numT / denom;
-
-   // Collision occured if (0 < t < 1) and (0 < u < 1)
-   return (t > 0.0f) && (t < 1.0f) && (u > 0.0f) && (u < 1.0f);
-}
-
 /* Displays frame to user */
 void Game::Display()
 {
@@ -1240,27 +1125,27 @@ void Game::Display()
    // Draw the stars
    for (i = 0; i < nStarCount; i++)
       {
-         stars[i].quad.x = stars[i].xpos - nViewAdjustX;
-         stars[i].quad.y = stars[i].ypos - nViewAdjustY;
+         stars[i].quad.x = stars[i].xpos - viewport.GetXAdjust();
+         stars[i].quad.y = stars[i].ypos - viewport.GetYAdjust();
          opengl.DrawRotate(&stars[i].quad, starrotate);
          starrotate += 0.005f;
       }
 
    // Draw the planet surface
-   for (i = 0; i < levelwidth/SURFACE_SIZE; i++)
+   for (i = 0; i < viewport.GetLevelWidth()/SURFACE_SIZE; i++)
       {
-         surface[i].xpos = i*SURFACE_SIZE - nViewAdjustX;
-         surface[i].ypos = levelheight - nViewAdjustY - MAX_SURFACE_HEIGHT;
+         surface[i].xpos = i*SURFACE_SIZE - viewport.GetXAdjust();
+         surface[i].ypos = viewport.GetLevelHeight() - viewport.GetYAdjust() - MAX_SURFACE_HEIGHT;
          opengl.Draw(&surface[i]);
       }
 
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
       {
-         if (ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 
+         if (viewport.ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 
                             asteroids[i].GetWidth(), asteroids[i].GetHeight()))
             {
-               asteroids[i].Draw(nViewAdjustX, nViewAdjustY);			
+               asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
             }
       }
 
@@ -1269,8 +1154,8 @@ void Game::Display()
       {
          if (keys[i].active)
             {
-               keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;		
+               keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y;		
                opengl.Draw(&keys[i].frame[keys[i].current]);
                if (--keys[i].rotcount == 0)
                   {
@@ -1283,8 +1168,8 @@ void Game::Display()
             {
                if (keys[i].alpha > 0.0f)
                   {
-                     keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;	
+                     keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y;	
                      opengl.DrawBlend(&keys[i].frame[keys[i].current], keys[i].alpha);
                      keys[i].alpha -= 0.02f;
                      if (--keys[i].rotcount == 0)
@@ -1301,20 +1186,20 @@ void Game::Display()
    for (i = 0; i < gatewaycount; i++)
       {
          // Draw first sphere
-         gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+         gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
          opengl.Draw(&gateways[i].icon);
 
          // Draw second sphere
          if (gateways[i].vertical)
             {
-               gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+               gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
             }
          else
             {
-               gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+               gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
             }
          opengl.Draw(&gateways[i].icon);
 
@@ -1341,27 +1226,27 @@ void Game::Display()
                            glColor3f(r, g, b);
                            if (gateways[i].vertical)
                               {
-                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
-                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 - nViewAdjustY;
+                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - viewport.GetXAdjust();
+                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 - viewport.GetYAdjust();
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
                                  else
                                     deviation += rand()%20 - 10;
-                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
+                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - viewport.GetXAdjust();
                                  y += ObjectGrid::OBJ_GRID_SIZE;
                                  glVertex2i(x, y);
                               }
                            else
                               {
-                                 x = (gateways[i].xpos+k)*ObjectGrid::OBJ_GRID_SIZE + 16 - nViewAdjustX;
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
+                                 x = (gateways[i].xpos+k)*ObjectGrid::OBJ_GRID_SIZE + 16 - viewport.GetXAdjust();
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - viewport.GetYAdjust();
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
                                  else
                                     deviation += rand()%20 - 10;
-                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - viewport.GetYAdjust();
                                  x += ObjectGrid::OBJ_GRID_SIZE;
                                  glVertex2i(x, y);
                               }
@@ -1378,8 +1263,8 @@ void Game::Display()
    // Draw mines
    for (i = 0; i < minecount; i++)
       {
-         mines[i].frame[mines[i].current].x = mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_x - nViewAdjustX;
-         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - nViewAdjustY + SHIP_START_Y;		
+         mines[i].frame[mines[i].current].x = mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_x - viewport.GetXAdjust();
+         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - viewport.GetYAdjust() + SHIP_START_Y;		
          opengl.Draw(&mines[i].frame[mines[i].current]);
          if (--mines[i].rotcount == 0)
             {
@@ -1405,10 +1290,10 @@ void Game::Display()
                         {
                            glLoadIdentity();
                            glBegin(GL_QUADS);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, y*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, y*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, (y+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, (y+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + SHIP_START_Y);
                            glEnd();
                         }
                   }
@@ -1418,15 +1303,14 @@ void Game::Display()
    // Draw the landing pads
    for (i = 0; i < nLandingPads; i++)
       {
-         pads[i].Draw(nViewAdjustX, nViewAdjustY, levelheight, nKeysRemaining > 0);
+         pads[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust(), viewport.GetLevelHeight(), nKeysRemaining > 0);
       }
 
-   // Draw the ship
-   ship.tq.x = (int)ship.xpos - nViewAdjustX;
-   ship.tq.y = (int)ship.ypos - nViewAdjustY;
+   // Draw the exhaust
+   
    if (bThrusting)
       {
-         if (sqrt(ship.flSpeedX*ship.flSpeedX + ship.flSpeedY*ship.flSpeedY) > 2.0f)
+         if (sqrt(ship.speedX*ship.speedX + ship.speedY*ship.speedY) > 2.0f)
             {
                exhaust.NewCluster
                   (
@@ -1434,17 +1318,17 @@ void Game::Display()
                    (int)(exhaust.ypos + (exhaust.ypos - ylast)/2)
                    );
             }
-         exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, true);
+         exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), true);
       }
    else if (state == gsPaused)
-      exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, false, false);
+      exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false, false);
    else
-      exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, false);
+      exhaust.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false);
 	
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart)
       {
-         opengl.DrawRotate(&ship.tq, ship.angle);
+         ship.Display();
       }
 	
    xlast = exhaust.xpos;
@@ -1453,7 +1337,7 @@ void Game::Display()
    // Draw the explosion if necessary
    if (state == gsExplode)
       {
-         explosion.Draw((float)nViewAdjustX, (float)nViewAdjustY, true);
+         explosion.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), true);
          opengl.Colour(0.0f, 1.0f, 0.0f);
          ft.Print
             (
@@ -1466,14 +1350,14 @@ void Game::Display()
    else if (state == gsDeathWait || state == gsGameOver 
             || state == gsFadeToDeath || state == gsFadeToRestart)
       {
-         explosion.Draw((float)nViewAdjustX, (float)nViewAdjustY, false);
+         explosion.Draw((float)viewport.GetXAdjust(), (float)viewport.GetYAdjust(), false);
       }
 	
    // Draw the arrows
    for (i = 0; i < nKeys; i++)	{
-      if (keys[i].active && !ObjectInScreen(keys[i].xpos, keys[i].ypos + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
-         int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
-         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
+         int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
+         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - viewport.GetYAdjust();
          double angle = 0.0;
 
          if (ax < 0) { 

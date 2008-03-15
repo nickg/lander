@@ -40,15 +40,14 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y)
    int timeout = 10000;
 	
    // Keep generating points until we find a free space
-   do
-      {
-         if (--timeout == 0)
-            return false;
-		
-         x = rand() % width;
-         y = rand() % height;
-      } while (grid[x + (y * width)]);
-	
+   do {
+      if (--timeout == 0)
+         return false;
+      
+      x = rand() % width;
+      y = rand() % height;
+   } while (grid[x + (y * width)]);
+   
    grid[x + (y * width)] = true;
 	
    return true;
@@ -67,31 +66,27 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
    int timeout = 10000;
 	
    // Keep generating points until we find a free space
-   do
-      {
-         if (--timeout == 0)
-            return false;
-		
-         x = rand() % (this->width - width);
-         y = rand() % (this->height - height);
-		
-         // Check this position
-         isOk = true;
-         for (counter_x = x; counter_x < x + width; counter_x++)
-            {
-               for (counter_y = y; counter_y < y + height; counter_y++)
-                  {
-                     if (grid[counter_x + (counter_y * this->width)])
-                        isOk = false;
-                  }
-            }
-      } while (!isOk);
-	
-   for (counter_x = x; counter_x < x + width; counter_x++)
-      {
-         for (counter_y = y; counter_y < y + height; counter_y++)
-            grid[counter_x + (counter_y * this->width)] = true;
+   do {
+      if (--timeout == 0)
+         return false;
+      
+      x = rand() % (this->width - width);
+      y = rand() % (this->height - height);
+      
+      // Check this position
+      isOk = true;
+      for (counter_x = x; counter_x < x + width; counter_x++) {
+         for (counter_y = y; counter_y < y + height; counter_y++) {
+            if (grid[counter_x + (counter_y * this->width)])
+               isOk = false;
+         }
       }
+   } while (!isOk);
+   
+   for (counter_x = x; counter_x < x + width; counter_x++) {
+      for (counter_y = y; counter_y < y + height; counter_y++)
+         grid[counter_x + (counter_y * this->width)] = true;
+   }
 	
    return true;
 }
