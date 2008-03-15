@@ -39,16 +39,20 @@ public:
    void ThrustOn();
    void ThrustOff();
    void Thrust(float speed);
+   void Turn(float delta);
    void Bounce();
    void ApplyGravity(float gravity);
+   void CentreInViewport();
    
    bool CheckCollision(LineSegment &l, float dx=0, float dy=0);
    bool HotSpotCollision(LineSegment &l, float dx=0, float dy=0);
    bool BoxCollision(int x, int y, int w, int h);
-   
-   float xpos, ypos;
-   float speedX, speedY, angle;
-   TextureQuad tq;
+
+   int GetX() const { return xpos; }
+   int GetY() const { return ypos; }
+   float GetXSpeed() const { return speedX; }
+   float GetYSpeed() const { return speedY; }
+   float GetAngle() const { return angle; }
    
    static const int SHIP_START_Y = 100;
 
@@ -60,6 +64,10 @@ private:
    static const int SHIP_TEX_HEIGHT = 32;
    
    static GLuint uShipTexture;
+   
+   float xpos, ypos;
+   float speedX, speedY, angle;
+   TextureQuad tq;
 
    Viewport *viewport;
    Explosion explosion;

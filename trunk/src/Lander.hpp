@@ -62,6 +62,8 @@ public:
    void StartLevel(int nLevel);
 
 private:
+
+   static const float TURN_ANGLE = 3.0f;
    
    void ExplodeShip();
 

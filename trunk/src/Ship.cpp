@@ -135,6 +135,11 @@ void Ship::Thrust(float speed)
    speedY -= speed * cosf(angle*(PI/180));
 }
 
+void Ship::Turn(float delta)
+{
+   angle += delta;
+}
+
 void Ship::ApplyGravity(float gravity)
 {
    speedY += gravity;
@@ -148,6 +153,15 @@ void Ship::Bounce()
    speedY /= 2;
 }
 
+void Ship::CentreInViewport()
+{
+   int centrex = (int)xpos + (tq.width/2);
+   int centrey = (int)ypos + (tq.height/2);
+   OpenGL &opengl = OpenGL::GetInstance();
+   viewport->SetXAdjust(centrex - (opengl.GetWidth()/2));
+   viewport->SetYAdjust(centrey - (opengl.GetHeight()/2));
+}
+
 /*
  * Reset at the start of a new level.
  */
@@ -158,6 +172,10 @@ void Ship::Reset()
 
    xpos = (float)viewport->GetLevelWidth()/2;
    ypos = SHIP_START_Y - 40;
+
+   angle = 0.0f;
+   speedX = 0.0f;
+   speedY = 0.0f;
 }
 
 void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,

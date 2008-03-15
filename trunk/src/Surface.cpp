@@ -132,8 +132,8 @@ void Surface::Display()
 bool Surface::CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex)
 {
    LineSegment l;
-   int lookmin = (int)(ship.xpos/SURFACE_SIZE) - 2;
-   int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
+   int lookmin = (int)(ship.GetX()/SURFACE_SIZE) - 2;
+   int lookmax = (int)(ship.GetY()/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
    if (lookmax >= viewport->GetLevelWidth()/SURFACE_SIZE)
       lookmax = viewport->GetLevelWidth()/SURFACE_SIZE - 1;
