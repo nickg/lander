@@ -62,8 +62,9 @@ bool Viewport::PointInScreen(int xpos, int ypos, int width, int height)
  */
 bool Viewport::ObjectInScreen(int xpos, int ypos, int width, int height)
 {
+   int yoff = ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE;
    return PointInScreen(xpos * ObjectGrid::OBJ_GRID_SIZE,
-                        ypos * ObjectGrid::OBJ_GRID_SIZE,
+                        ypos * ObjectGrid::OBJ_GRID_SIZE + yoff,
                         width * ObjectGrid::OBJ_GRID_SIZE,
                         height * ObjectGrid::OBJ_GRID_SIZE);
 }

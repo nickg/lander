@@ -33,7 +33,7 @@
 //#define SHIP_START_Y		    100
 #define KEY_ROTATION_SPEED  2
 //#define MINE_ROTATION_SPEED 5
-#define GATEWAY_ACTIVE		  30
+//#define GATEWAY_ACTIVE		  30
 //#define MINE_MOVE_SPEED		  1
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
@@ -315,36 +315,26 @@ void Game::Process()
    // Check for collisions with asteroids
    LineSegment l1, l2;
    for (int i = 0; i < asteroidcount; i++) {
-      if (viewport.ObjectInScreen(asteroids[i].GetX(), 
-                                  asteroids[i].GetY() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE,
-                         asteroids[i].GetWidth(), 4)) {
-         // Look at polys
-         for (int k = 0; k < asteroids[i].GetWidth(); k++) {
-            l1 = asteroids[i].GetUpBoundary(k);
-            l2 = asteroids[i].GetDownBoundary(k);
-            
-            if (ship.HotSpotCollision(l1) 
-                || ship.HotSpotCollision(l2)) {
-               // Crashed
-               if (state == gsInGame) {
-                  // Destroy the ship
-                  ExplodeShip();
-                  ship.Bounce();
-               }
-               else if (state == gsExplode) {
-                     ship.Bounce();
-                     
-                                 // See if we need to stop the madness
-                     if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
-                                    {
-                                       state = gsDeathWait; 
-                                       death_timeout = DEATH_TIMEOUT;
-                                    }
-                              }
-                        }
-                  }
+      if (asteroids[i].ObjectInScreen(&viewport)) {
+         if (asteroids[i].CheckCollision(ship)) {
+            // Crashed
+            if (state == gsInGame) {
+               // Destroy the ship
+               ExplodeShip();
+               ship.Bounce();
             }
+            else if (state == gsExplode) {
+               ship.Bounce();
+               
+               // See if we need to stop the madness
+               if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
+                  state = gsDeathWait; 
+                  death_timeout = DEATH_TIMEOUT;
+               }
+            }
+         }
       }
+   }
 
    // Check for collision with gateways
    for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it) {
@@ -764,8 +754,7 @@ void Game::Display()
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
       {
-         if (viewport.ObjectInScreen(asteroids[i].GetX(), asteroids[i].GetY() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 
-                            asteroids[i].GetWidth(), asteroids[i].GetHeight()))
+         if (asteroids[i].ObjectInScreen(&viewport))
             {
                asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
             }
@@ -873,7 +862,7 @@ void Game::Display()
 	
    // Draw the arrows
    for (i = 0; i < nKeys; i++)	{
-      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
+      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos, 1, 1))	{
          int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
          int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
          double angle = 0.0;

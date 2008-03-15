@@ -144,3 +144,15 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y)
    }
 } 
 
+bool Asteroid::CheckCollision(Ship &ship)
+{
+   // Look at polys
+   for (int k = 0; k < GetWidth(); k++) {
+      LineSegment l1 = GetUpBoundary(k);
+      LineSegment l2 = GetDownBoundary(k);
+      
+      if (ship.HotSpotCollision(l1) || ship.HotSpotCollision(l2))
+         return true;
+   }
+   return false;         
+}
