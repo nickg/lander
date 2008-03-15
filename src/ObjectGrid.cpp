@@ -125,3 +125,8 @@ bool ObjectGrid::IsFilled(int x, int y) const
 {
    return grid[x + (width * y)];
 }
+
+bool StaticObject::ObjectInScreen(Viewport *viewport)
+{
+   return viewport->ObjectInScreen(xpos, ypos, width, height);
+}

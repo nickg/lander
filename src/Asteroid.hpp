@@ -21,6 +21,7 @@
 #include "Platform.hpp"
 #include "ObjectGrid.hpp"
 #include "OpenGL.hpp"
+#include "Ship.hpp"
 
 class Asteroid : public StaticObject {
 public:
@@ -29,6 +30,7 @@ public:
 	
    void ConstructAsteroid(int x, int y, int width, Texture texture);
    void Draw(int viewadjust_x, int viewadjust_y);
+   bool CheckCollision(Ship &ship);
    LineSegment GetUpBoundary(int poly);
    LineSegment GetDownBoundary(int poly);
 

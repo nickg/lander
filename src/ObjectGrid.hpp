@@ -20,6 +20,7 @@
 
 #include "Platform.hpp"
 #include "Geometry.hpp"
+#include "Viewport.hpp"
 
 class ObjectGrid {
 public:
@@ -47,7 +48,9 @@ private:
 class StaticObject {
 public:
    StaticObject() : xpos(0), ypos(0), width(0), height(0) {}
-    
+
+   bool ObjectInScreen(Viewport *viewport);
+   
    int GetX() const { return xpos; }
    int GetY() const { return ypos; }
    int GetWidth() const { return width; }
