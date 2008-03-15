@@ -33,9 +33,11 @@ public:
    void Reset();
 
    void Display();
-   void DrawExhaust(bool thrusting, bool paused);
+   void DrawExhaust(bool paused);
    void DrawExplosion(bool createNew);
    void Move();
+   void ThrustOn();
+   void ThrustOff();
    void Thrust(float speed);
    void Bounce();
    void ApplyGravity(float gravity);
@@ -62,6 +64,7 @@ private:
    Viewport *viewport;
    Explosion explosion;
    SmokeTrail exhaust;
+   bool thrusting;
    
    static const int NUM_HOTSPOTS = 8;
    Point points[NUM_HOTSPOTS];

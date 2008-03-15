@@ -31,7 +31,8 @@ const Point Ship::hotspots[] = {
 
 
 Ship::Ship(Viewport *v)
-   : xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v)
+   : xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
+     thrusting(false)
 {
    tq.width = SHIP_TEX_WIDTH;
    tq.height = SHIP_TEX_HEIGHT;
@@ -53,7 +54,7 @@ void Ship::Display()
    OpenGL::GetInstance().DrawRotate(&tq, angle);
 }
 
-void Ship::DrawExhaust(bool thrusting, bool paused)
+void Ship::DrawExhaust(bool paused)
 {
    static float xlast, ylast;
    
@@ -116,6 +117,16 @@ void Ship::Move()
     exhaust.xg = speedX;
     explosion.xpos = xpos + tq.width/2;
     explosion.ypos = ypos + tq.height/2;
+}
+
+void Ship::ThrustOn()
+{
+   thrusting = true;
+}
+
+void Ship::ThrustOff()
+{
+   thrusting = false;
 }
 
 void Ship::Thrust(float speed)
