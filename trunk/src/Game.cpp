@@ -56,7 +56,6 @@ extern DataFile *g_pData;
  */
 Game::Game()
   : hasloaded(false),
-    bThrusting(false),
     surface(NULL),
     state(gsNone),
     ship(&viewport)
@@ -216,8 +215,7 @@ void Game::Process()
 {
    Input &input = Input::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
-   int i, k, m;
-  
+   
    // Check keys
    if (input.GetKeyState(SDLK_p)) {
       if (state == gsPaused) {
@@ -229,7 +227,7 @@ void Game::Process()
          // Pause the game
          state = gsPaused;
          input.ResetKey(SDLK_p);
-         bThrusting = false;
+         ship.ThrustOff();
       }
    }
 
@@ -240,12 +238,12 @@ void Game::Process()
    if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
        && fuel > 0 && state == gsInGame) {
       // Thrusting
+      ship.ThrustOn();
       ship.Thrust(SHIP_SPEED);
-      bThrusting = true;
       fuel--;
    }
    else
-      bThrusting = false;
+      ship.ThrustOff();
    
    if ((input.GetKeyState(SDLK_RIGHT) || input.QueryJoystickAxis(0) > 0)
        && state == gsInGame) {
@@ -288,7 +286,7 @@ void Game::Process()
    }
 
    // Move mines
-   for (i = 0; i < minecount; i++) {
+   for (int i = 0; i < minecount; i++) {
       if (mines[i].displace_x%ObjectGrid::OBJ_GRID_SIZE == 0
           && mines[i].displace_y%ObjectGrid::OBJ_GRID_SIZE == 0) {
          switch (mines[i].dir) {
@@ -375,7 +373,7 @@ void Game::Process()
    int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
    if (lookmax >= viewport.GetLevelWidth()/SURFACE_SIZE) lookmax = (viewport.GetLevelWidth() / SURFACE_SIZE) - 1;
-   for (i = lookmin; i <= lookmax; i++) {
+   for (int i = lookmin; i <= lookmax; i++) {
       l.p1.x = i*SURFACE_SIZE;
       l.p1.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
       l.p2.x = (i+1)*SURFACE_SIZE;
@@ -386,25 +384,25 @@ void Game::Process()
          // Collided - see which game state we're in
          if (state == gsInGame) {
             bool bLanded = false;
-            int nPadOn = -1;
+            LandingPad *padOn = NULL;
 
             // See if this is a landing pad
-            for (k = 0; k < nLandingPads; k++) {
-               for (m = 0; m < pads[k].GetLength(); m++) {
-                  if (pads[k].GetIndex() + m == i) {
+            for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
+               LandingPad &pad = *it;
+               for (int m = 0; m < pad.GetLength(); m++) {
+                  if (pad.GetIndex() + m == i) {
                      // We landed
                      int nDAngle = ((int)ship.angle) % 360;
                      if ((nDAngle >= 350 || nDAngle <= 30) 
                          && ship.speedY < LAND_SPEED && !nKeysRemaining) {
                            // Landed safely
                         bLanded = true;
-                        nPadOn = k;
+                        padOn = &pad;
                         break;
                      }
                      else {
                         // Crash landed
                         bLanded = false;
-                        nPadOn = -1;
                         break;
                      }
                   }
@@ -415,7 +413,7 @@ void Game::Process()
                // Landed - go to next level
                state = gsLevelComplete;
                newscore = (level * 100) + 
-                  (((MAX_PAD_SIZE+2)-pads[nPadOn].GetLength())*10*level);
+                  (((MAX_PAD_SIZE+2)-padOn->GetLength())*10*level);
                countdown_timeout = 70;
             }
             else {
@@ -438,12 +436,12 @@ void Game::Process()
    
    // Check for collisions with asteroids
    LineSegment l1, l2;
-   for (i = 0; i < asteroidcount; i++) {
+   for (int i = 0; i < asteroidcount; i++) {
       if (viewport.ObjectInScreen(asteroids[i].GetXPos(), 
                                   asteroids[i].GetYPos() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
          // Look at polys
-         for (k = 0; k < asteroids[i].GetWidth(); k++) {
+         for (int k = 0; k < asteroids[i].GetWidth(); k++) {
             l1 = asteroids[i].GetUpBoundary(k);
             l2 = asteroids[i].GetDownBoundary(k);
             
@@ -471,7 +469,7 @@ void Game::Process()
       }
 
    // Check for collision with gateways
-   for (i = 0; i < gatewaycount; i++)
+   for (int i = 0; i < gatewaycount; i++)
       {
          int dx = gateways[i].vertical ? 0 : gateways[i].length;
          int dy = gateways[i].vertical ? gateways[i].length : 0;
@@ -541,7 +539,7 @@ void Game::Process()
       }
 
    // Check for collisions with mines
-   for (i = 0; i < minecount; i++)
+   for (int i = 0; i < minecount; i++)
       {
          bool collide = ship.BoxCollision
             (
@@ -574,7 +572,7 @@ void Game::Process()
       }
 
    // See if the player collected a key
-   for (i = 0; i < nKeys; i++)
+   for (int i = 0; i < nKeys; i++)
       {
          bool collide = ship.BoxCollision
             (
@@ -744,7 +742,8 @@ void Game::StartLevel(int level)
    surface = new Poly[viewport.GetLevelWidth()/SURFACE_SIZE];
 	
    // Generate landing pads
-   nLandingPads = rand()%MAX_PADS + 1;
+   pads.clear();
+   int nLandingPads = rand()%MAX_PADS + 1;
    for (int i = 0; i < nLandingPads; i++)
       {
          int index, length;
@@ -769,7 +768,7 @@ void Game::StartLevel(int level)
                   }
             } while (overlap);
 		
-         pads[i].Reset(index, length);
+         pads.push_back(LandingPad(&viewport, index, length));
       }
 
    // Generate surface
@@ -1208,13 +1207,12 @@ void Game::Display()
       }
 
    // Draw the landing pads
-   for (i = 0; i < nLandingPads; i++)
-      {
-         pads[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust(), viewport.GetLevelHeight(), nKeysRemaining > 0);
-      }
+   for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
+      (*it).Draw(nKeysRemaining > 0);
+   }
 
    // Draw the exhaust
-   ship.DrawExhaust(bThrusting, state == gsPaused);
+   ship.DrawExhaust(state == gsPaused);
    
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart)
@@ -1397,50 +1395,4 @@ void Game::Display()
    // Draw paused message
    if (state == gsPaused)
       opengl.Draw(&paused);
-}
-
-
-/*
- * Static members of LandingPad.
- */
-Texture LandingPad::s_landtex, LandingPad::s_nolandtex;
-
-
-/*
- * Loads landing pad graphics.
- */
-void LandingPad::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   s_landtex = opengl.LoadTextureAlpha(g_pData, "LandingPad.bmp");
-   s_nolandtex = opengl.LoadTextureAlpha(g_pData, "LandingPadRed.bmp");
-} 
-
-
-/*
- * Draws the landing pad in the current frame.
- *	locked -> If true, pads a drawn with the red texture.
- */
-void LandingPad::Draw(int viewadjust_x, int viewadjust_y, int levelheight, bool locked)
-{
-   quad.uTexture = locked ? s_nolandtex : s_landtex;
-   quad.x = index * SURFACE_SIZE - viewadjust_x;
-   quad.y = levelheight - viewadjust_y - MAX_SURFACE_HEIGHT + ypos;
-   OpenGL::GetInstance().Draw(&quad);
-}
- 
-
-/*
- * Resets the state of a landing pad.
- */
-void LandingPad::Reset(int index, int length)
-{
-   this->index = index;
-   this->length = length;
-	
-   quad.x = index * SURFACE_SIZE;
-   quad.width = length * SURFACE_SIZE;
-   quad.height = 16;
-   quad.uTexture = s_landtex;
 }

@@ -35,6 +35,7 @@
 #include "ObjectGrid.hpp"
 #include "Asteroid.hpp"
 #include "Ship.hpp"
+#include "LandingPad.hpp"
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
@@ -45,32 +46,6 @@ enum DIRECTIONS { UP, RIGHT, DOWN, LEFT, NODIR };
 /* Macros */
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
-
-
-/*
- * A landing pad where the player tries to land.
- */
-class LandingPad
-{
-public:
-   LandingPad() {}
-   ~LandingPad() {}
-	
-   static void Load();
-	
-   void Reset(int index, int length); 
-   void Draw(int viewadjust_x, int viewadjust_y, int levelheight, bool locked);
-   void SetYPos(int ypos) { this->ypos = ypos; }
-	
-   int GetLength() const { return length; }
-   int GetIndex() const { return index; }
-
-private:
-   TextureQuad quad;
-   int index, length, ypos;
-    
-   static Texture s_landtex, s_nolandtex;
-};
 
 
 class Game : public Screen
@@ -92,7 +67,7 @@ private:
    Viewport viewport;
    Ship ship;
    int death_timeout, level, fuel, maxfuel, lives;
-   bool hasloaded, bThrusting, bDebugMode;
+   bool hasloaded, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
    Poly *surface;
    TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship, gameover, paused;
@@ -129,8 +104,9 @@ private:
 
    // Landing pads
    static const int MAX_PADS = 3;
-   LandingPad pads[MAX_PADS];
-   int nLandingPads;
+   typedef vector<LandingPad> LandingPadList;
+   typedef LandingPadList::iterator LandingPadListIt;
+   LandingPadList pads;
     
    // Keys
    static const int MAX_KEYS = 5;
