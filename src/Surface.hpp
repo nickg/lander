@@ -1,4 +1,4 @@
-/*  LandingPad.hpp -- Where the player can land.
+/*  Surface.hpp -- Randomly generated planet surface.
  *  Copyright (C) 2008  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,34 +15,35 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INC_LANDINGPAD_HPP
-#define INC_LANDINGPAD_HPP
+#ifndef INC_SURFACE_HPP
+#define INC_SURFACE_HPP
 
-#include "Viewport.hpp"
 #include "OpenGL.hpp"
+#include "Viewport.hpp"
+#include "LandingPad.hpp"
+#include "Ship.hpp"
 
-class LandingPad
-{
+class Surface {
 public:
-   LandingPad(Viewport *v, int index, int length);
-	
+   Surface(Viewport *v);
+   ~Surface();
+
    static void Load();
-	
-   void Draw(bool locked);
-   void SetYPos(int ypos) { this->ypos = ypos; }
-	
-   int GetLength() const { return length; }
-   int GetIndex() const { return index; }
 
-private:
-   TextureQuad quad;
-   int index, length, ypos;
-   Viewport *viewport;
+   void Generate(int surftex, LandingPadList &pads);
+   bool CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex);
+   void Display();
+
+   static const int NUM_SURF_TEX = 5;  // Number of available surface textures
+   static const int SURFACE_SIZE = 20;
+   static const int MAX_SURFACE_HEIGHT = 300;
+   static const int VARIANCE = 50;     // Bumpyness of landscape
    
-   static Texture s_landtex, s_nolandtex;
+private:
+   static GLuint uSurfaceTexture[NUM_SURF_TEX];
+   
+   Viewport *viewport;
+   Poly *surface;
 };
-
-typedef vector<LandingPad> LandingPadList;
-typedef LandingPadList::iterator LandingPadListIt;
 
 #endif

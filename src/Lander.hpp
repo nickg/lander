@@ -36,6 +36,7 @@
 #include "Asteroid.hpp"
 #include "Ship.hpp"
 #include "LandingPad.hpp"
+#include "Surface.hpp"
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
@@ -66,10 +67,11 @@ private:
 
    Viewport viewport;
    Ship ship;
+   Surface surface;
+   ObjectGrid objgrid;
    int death_timeout, level, fuel, maxfuel, lives;
    bool hasloaded, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   Poly *surface;
    TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship, gameover, paused;
    ColourQuad speedbar;
    int score, newscore, nextnewlife;
@@ -79,13 +81,9 @@ private:
                     gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete, gsPaused };
    GameState state;
 
-   ObjectGrid objgrid;
-	
-   // Number of available _surface textures
-   static const int NUM_SURF_TEX = 5;
 
    // Textures
-   GLuint uStarTexture, uSurfaceTexture[NUM_SURF_TEX], uSurf2Texture[NUM_SURF_TEX], uFadeTexture;
+   GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture, uSpeedTexture, uBlueKey[18], uRedKey[18], uGreenKey[18], uPinkKey[18], uYellowKey[18];
    GLuint uBlueArrow, uPinkArrow, uRedArrow, uYellowArrow, uGreenArrow;
    GLuint uGatewayTexture, uFuelMeterTexture, uFuelBarTexture, uMineTexture[36], uShipSmallTexture;
@@ -104,8 +102,6 @@ private:
 
    // Landing pads
    static const int MAX_PADS = 3;
-   typedef vector<LandingPad> LandingPadList;
-   typedef LandingPadList::iterator LandingPadListIt;
    LandingPadList pads;
     
    // Keys
