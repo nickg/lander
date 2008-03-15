@@ -22,6 +22,14 @@ extern DataFile *g_pData;
 
 GLuint Ship::uShipTexture = 0;
 
+/*
+ * Defines a simplified polygon representing the ship.
+ */
+const Point Ship::hotspots[] = {
+   {1, 31}, {1, 26}, {3, 14}, {15, 0}, 
+   {28, 14}, {30, 26}, {30, 31}, {16, 31} };
+
+
 Ship::Ship(Viewport *v)
    : xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v)
 {
@@ -45,12 +53,46 @@ void Ship::Display()
    OpenGL::GetInstance().DrawRotate(&tq, angle);
 }
 
+void Ship::Move()
+{
+    RotatePoints(hotspots, points, NUM_HOTSPOTS, angle*PI/180, -16, 16);
+
+    xpos += speedX;
+    ypos += speedY;
+}
+
+void Ship::Thrust(float speed)
+{
+   speedX += speed * sinf(angle*(PI/180));
+   speedY -= speed * cosf(angle*(PI/180));
+}
+
+void Ship::ApplyGravity(float gravity)
+{
+   speedY += gravity;
+}
+
+
+void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
+                        float angle, int adjustx, int adjusty)
+{
+   for (int i = 0; i < nCount; i++) {
+      int x = pPoints[i].x + adjustx;
+      int y = pPoints[i].y*-1 + adjusty;
+      pDest[i].x = (int)(x*cos(angle)) + (int)(y*sin(angle));
+      pDest[i].y = (int)(y*cos(angle)) - (int)(x*sin(angle));
+      pDest[i].y -= adjusty;
+      pDest[i].x -= adjustx;
+      pDest[i].y *= -1;
+   }
+}
+
 /*
  * Check for collision between the ship and a polygon.
  */
-bool Ship::HotSpotCollision(LineSegment &l, Point *points, int nPoints, float dx, float dy)
+bool Ship::HotSpotCollision(LineSegment &l, float dx, float dy)
 {
-   for (int i = 0; i < nPoints; i++) {
+   for (int i = 0; i < NUM_HOTSPOTS; i++) {
       if (CheckCollision(l, dx + points[i].x, dy + points[i].y))
          return true;
    }
@@ -61,7 +103,7 @@ bool Ship::HotSpotCollision(LineSegment &l, Point *points, int nPoints, float dx
 /*
  * Checks for collision between the ship and a box.
  */
-bool Ship::BoxCollision(int x, int y, int w, int h, Point *points, int nPoints)
+bool Ship::BoxCollision(int x, int y, int w, int h)
 {
    if (!viewport->PointInScreen(x, y, w, h))
       return false;
@@ -71,10 +113,8 @@ bool Ship::BoxCollision(int x, int y, int w, int h, Point *points, int nPoints)
    LineSegment l3(x + w, y + h, x, y + h);
    LineSegment l4(x, y + h, x, y);
 
-   return HotSpotCollision(l1, points, nPoints)
-      || HotSpotCollision(l2, points, nPoints)
-      || HotSpotCollision(l3, points, nPoints)
-      || HotSpotCollision(l4, points, nPoints);
+   return HotSpotCollision(l1) || HotSpotCollision(l2)
+      || HotSpotCollision(l3) || HotSpotCollision(l4);
 }
 
 /*
