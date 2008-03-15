@@ -54,13 +54,13 @@ FreeType &FreeType::GetInstance()
  */
 void FreeType::LoadFont(int index, string face, unsigned int height)
 {
-    if (m_fonts.find(index) != m_fonts.end())
+    if (fonts.find(index) != fonts.end())
         throw runtime_error("Font index in use");
 
     FreeTypeFont *fnt = new FreeTypeFont;
     CreateFont(fnt, face, height);
 
-    m_fonts[index] = fnt;
+    fonts[index] = fnt;
 }
 
 
@@ -202,9 +202,9 @@ void FreeType::Print(int index, int x, int y, const char *fmt, ...)
 {
     vector<string> lines;
 
-    assert(m_fonts.find(index) != m_fonts.end());
+    assert(fonts.find(index) != fonts.end());
 
-    FreeTypeFont *ft_font = m_fonts[index];
+    FreeTypeFont *ft_font = fonts[index];
 
     // Store the current matrix
     glPushMatrix();
@@ -281,9 +281,9 @@ void FreeType::PrintRotate(int index, int width, float x, float y, float xrot, f
     const int MAX_TEXT_LEN = 256;
     char text[MAX_TEXT_LEN];
 
-    assert(m_fonts.find(index) != m_fonts.end());
+    assert(fonts.find(index) != fonts.end());
 
-    FreeTypeFont *ft_font = m_fonts[index];
+    FreeTypeFont *ft_font = fonts[index];
 
     OpenGL &opengl = OpenGL::GetInstance();
 
@@ -359,9 +359,9 @@ void FreeType::PrintRotate(int index, int width, float x, float y, float xrot, f
 /* Returns the width of a string printed with the specified font */
 int FreeType::GetStringWidth(int index, const char *s)
 {
-    assert(m_fonts.find(index) != m_fonts.end());
+    assert(fonts.find(index) != fonts.end());
 
-    FreeTypeFont *font = m_fonts[index];
+    FreeTypeFont *font = fonts[index];
 
     size_t i = strlen(s);
     int result = 0;

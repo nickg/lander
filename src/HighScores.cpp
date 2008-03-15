@@ -32,11 +32,11 @@ void HighScores::Load()
 	OpenGL &opengl = OpenGL::GetInstance();
 
 	// Load graphics
-	if (!m_hasloaded)
+	if (!hasloaded)
 	{
 		uHighScore = opengl.LoadTextureAlpha(g_pData, "HighScore.bmp");
 
-		m_hasloaded = true;
+		hasloaded = true;
 	}
 
 	// High score label
@@ -47,7 +47,7 @@ void HighScores::Load()
 	hscore.uTexture = uHighScore;
 
 	// Set state
-	m_state = hssDisplay;
+	state = hssDisplay;
 }
 
 
@@ -61,7 +61,7 @@ void HighScores::Process()
 	int i;
 
 	// Check for input
-	if (m_state == hssDisplay)
+	if (state == hssDisplay)
 	{
 		if (input.GetKeyState(SDLK_SPACE) 
 			|| input.QueryJoystickButton(0)
@@ -70,20 +70,20 @@ void HighScores::Process()
 			|| input.GetKeyState(SDLK_ESCAPE))
 		{
 			// Go back to main menu
-			m_fade = HS_FADE_OUT_SPEED;
+			fade = HS_FADE_OUT_SPEED;
 			for (i = 0; i < MAX_FIREWORKS; i++)
 			{
-				fw[i].em->m_maxspeed = 200;
+				fw[i].em->maxspeed = 200;
 				fw[i].speed = 0;
-				fw[i].em->m_createrate = 2.0f;
+				fw[i].em->createrate = 2.0f;
 				fw[i].timeout = 5;
-				fw[i].em->m_life = 1.0f;
+				fw[i].em->life = 1.0f;
 				input.ResetKey(SDLK_RETURN);
 				input.ResetKey(SDLK_SPACE);
 			}
 		}
 	}
-	else if (m_state == hssEnterName)
+	else if (state == hssEnterName)
 	{
 		if ((input.GetKeyState(SDLK_RETURN) 
 			 || input.QueryJoystickButton(0) 
@@ -91,14 +91,14 @@ void HighScores::Process()
 			&& strlen(input.GetInput()) > 0)
 		{
 			// Enter name into high score chart
-			scores[9].score = m_newscore;
+			scores[9].score = newscore;
 			strncpy(scores[9].name, input.GetInput(), ScoreEntry::MAX_NAME_LEN);
 			input.CloseCharBuffer();
 			WriteHighScores();
 			SortScores();
-			m_state = hssDisplay;
+			state = hssDisplay;
 			flAlpha = 0.0f;
-			m_fade = HS_FADE_IN_SPEED;
+			fade = HS_FADE_IN_SPEED;
 			
 			input.ResetKey(SDLK_RETURN);
 			input.ResetJoystickButton(0);
@@ -112,17 +112,17 @@ void HighScores::Process()
 		if (fw[i].active)
 		{
 			fw[i].y-=fw[i].speed;
-			fw[i].em->m_xpos = (float)fw[i].x;
-			fw[i].em->m_ypos = (float)fw[i].y;
+			fw[i].em->xpos = (float)fw[i].x;
+			fw[i].em->ypos = (float)fw[i].y;
 			
 			if (fw[i].y < fw[i].life && fw[i].timeout < 0)
 			{
 				// Blow it up
-				fw[i].em->m_maxspeed = 200;
+				fw[i].em->maxspeed = 200;
 				fw[i].speed = 0;
-				fw[i].em->m_createrate = 2.0f;
+				fw[i].em->createrate = 2.0f;
 				fw[i].timeout = 5;
-				fw[i].em->m_life = 1.0f;
+				fw[i].em->life = 1.0f;
 			}
 			else if (fw[i].timeout > 0)
 			{
@@ -130,41 +130,41 @@ void HighScores::Process()
 					fw[i].active = false;
 			}
 		}
-		else if (rand() % 30 == 0 && m_fade >= -0.005f)
+		else if (rand() % 30 == 0 && fade >= -0.005f)
 		{
 			fw[i].x = rand() % (opengl.GetWidth());
 			fw[i].y = opengl.GetHeight();
-			fw[i].em->m_r = (rand() % 100) / 100.0f;
-			fw[i].em->m_g = (rand() % 100) / 100.0f;
-			fw[i].em->m_b = (rand() % 100) / 100.0f;
-			fw[i].em->m_life = 0.5f;
+			fw[i].em->r = (rand() % 100) / 100.0f;
+			fw[i].em->g = (rand() % 100) / 100.0f;
+			fw[i].em->b = (rand() % 100) / 100.0f;
+			fw[i].em->life = 0.5f;
 			fw[i].speed = 2 + rand() % 2;
 			fw[i].life = rand() % (opengl.GetHeight()-100) + 100;
 			fw[i].timeout = -1;
-			fw[i].em->m_createrate = 64.0f;
-			fw[i].em->m_maxspeed = 10.0f;
-			fw[i].em->m_xpos = (float)fw[i].x;
-			fw[i].em->m_ypos = (float)fw[i].y;
+			fw[i].em->createrate = 64.0f;
+			fw[i].em->maxspeed = 10.0f;
+			fw[i].em->xpos = (float)fw[i].x;
+			fw[i].em->ypos = (float)fw[i].y;
 			fw[i].active = true;
 		}
 	}
 
 	// Fade in or out
-	if (m_fade >= 0.001f)
+	if (fade >= 0.001f)
 	{
-		flAlpha += m_fade;
+		flAlpha += fade;
 		if (flAlpha >= 1.0f)
-			m_fade = 0.000000f;
+			fade = 0.000000f;
 	}
-	else if (m_fade <= -0.001f)
+	else if (fade <= -0.001f)
 	{
-		flAlpha += m_fade;
+		flAlpha += fade;
 		if (flAlpha < 0.0f)
 		{
-			m_fade = 0.000000f;
+			fade = 0.000000f;
 
 			// Fade to something else
-			if (m_state == hssDisplay)
+			if (state == hssDisplay)
 				ScreenManager::GetInstance().SelectScreen("MAIN MENU");
 		}
 	}
@@ -189,7 +189,7 @@ void HighScores::Display()
 	}
 
 	// Draw scores
-	if (m_state == hssDisplay)
+	if (state == hssDisplay)
 	{
 		int x = (opengl.GetWidth() - 280) / 2;
 		int y = (opengl.GetHeight() - 250) / 2;
@@ -203,7 +203,7 @@ void HighScores::Display()
 	}
 
 	// Draw other stuff
-	if (m_state == hssDisplay)
+	if (state == hssDisplay)
 	{
 		opengl.DrawBlend(&hscore, flAlpha);
 		opengl.Colour(0.0f, 0.5f, 1.0f, flAlpha);
@@ -215,7 +215,7 @@ void HighScores::Display()
 			S_HSNEXT
 		);
 	}
-	else if (m_state == hssEnterName)
+	else if (state == hssEnterName)
 	{
 		Input &input = Input::GetInstance();
 
@@ -327,7 +327,7 @@ void HighScores::DisplayScores()
 {
 	LoadHighScores();
 	ScreenManager::GetInstance().SelectScreen("HIGH SCORES");
-	m_state = hssDisplay;
+	state = hssDisplay;
 
 	for (int i = 0; i < MAX_FIREWORKS; i++)
 	{
@@ -337,7 +337,7 @@ void HighScores::DisplayScores()
 
 	// Fade in
 	flAlpha = 0.0f;
-	m_fade = HS_FADE_IN_SPEED;
+	fade = HS_FADE_IN_SPEED;
 }
 
 
@@ -352,12 +352,12 @@ void HighScores::CheckScore(int score)
 	if (score > scores[9].score)
 	{
 		// New high score
-		m_state = hssEnterName;
+		state = hssEnterName;
 		Input::GetInstance().OpenCharBuffer(ScoreEntry::MAX_NAME_LEN - 1);
-		m_newscore = score;
+		newscore = score;
 	}
 	else 
-		m_state = hssDisplay;
+		state = hssDisplay;
 
 	for (int i = 0; i < MAX_FIREWORKS; i++)
 	{
@@ -367,5 +367,5 @@ void HighScores::CheckScore(int score)
 
 	// Fade in
 	flAlpha = 0.0f;
-	m_fade = HS_FADE_IN_SPEED;
+	fade = HS_FADE_IN_SPEED;
 }

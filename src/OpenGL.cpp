@@ -23,9 +23,9 @@
 
 /* OpenGL constructor */
 OpenGL::OpenGL()
-    : m_screen_width(0), m_screen_height(0), m_screen_depth(0), m_fullscreen(false), m_running(false),
-      m_active(true), m_dodisplay(true), m_textureon(false), m_blendon(false), m_depthon(false),
-      m_fps_lastcheck(0), m_fps_framesdrawn(0), m_fps_rate(0)
+    : screen_width(0), screen_height(0), screen_depth(0), fullscreen(false), running(false),
+      active(true), dodisplay(true), textureon(false), blendon(false), depthon(false),
+      fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0)
 {
     // Start random number generator
     srand((unsigned)time(NULL));
@@ -42,7 +42,7 @@ OpenGL &OpenGL::GetInstance()
 }
 
 /* 
- * Called before the game is started. Creates a new window and performs am_y 
+ * Called before the game is started. Creates a new window and performs ay 
  * necessary initialisation.
  *   width -> Width of window in pixels.
  *   height -> Height of window in pixels.
@@ -53,10 +53,10 @@ OpenGL &OpenGL::GetInstance()
 void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 {
     // Store parameters
-    m_screen_height = height;
-    m_screen_width = width;
-    m_screen_depth = depth;
-    m_fullscreen = fullscreen;
+    screen_height = height;
+    screen_width = width;
+    screen_depth = depth;
+    this->fullscreen = fullscreen;
 
     // Start SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -68,7 +68,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
         flags |= SDL_FULLSCREEN;
     
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    if (SDL_SetVideoMode(m_screen_width, m_screen_height, 0, flags) == NULL)
+    if (SDL_SetVideoMode(screen_width, screen_height, 0, flags) == NULL)
         RuntimeError("Unable to create OpenGL screen: " + SDLErrorString());;
 
     SDL_WM_SetCaption(WINDOW_TITLE, NULL);
@@ -76,7 +76,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
     if (fullscreen)
         SDL_ShowCursor(0);
     
-    ResizeGLScene(m_screen_width, m_screen_height);
+    ResizeGLScene(screen_width, screen_height);
 
     // Start OpenGL
     if (!InitGL())
@@ -107,8 +107,8 @@ void OpenGL::Run()
 {
     unsigned int tick_start, tick_now;
 
-    m_running = true;
-    m_active = true;
+    running = true;
+    active = true;
 
     // Loop until program ends
     do
@@ -121,7 +121,7 @@ void OpenGL::Run()
             ScreenManager::GetInstance().Process();
 
             // Draw the next frame
-            if (m_active)
+            if (active)
 		{
                     DrawGLScene();
                     SDL_GL_SwapBuffers();
@@ -134,7 +134,7 @@ void OpenGL::Run()
                     msleep(tick_start + 1000/FRAME_RATE - tick_now);
                     tick_now = SDL_GetTicks();
 		}
-	} while (m_running);
+	} while (running);
 }
 
 /* Draws the current scene */
@@ -145,30 +145,30 @@ void OpenGL::DrawGLScene()
     glLoadIdentity();
 
     // Render the scene
-    if (m_dodisplay)
+    if (dodisplay)
         ScreenManager::GetInstance().Display();
     else
-        m_dodisplay = true;
+        dodisplay = true;
 
     // Calculate frame rate
-    if (SDL_GetTicks() - m_fps_lastcheck >= 1000)
+    if (SDL_GetTicks() - fps_lastcheck >= 1000)
 	{
-            m_fps_lastcheck = SDL_GetTicks();
-            m_fps_rate = m_fps_framesdrawn;
-            m_fps_framesdrawn = 0;
+            fps_lastcheck = SDL_GetTicks();
+            fps_rate = fps_framesdrawn;
+            fps_framesdrawn = 0;
 
 #ifdef _DEBUG
             const int TITLE_BUF_LEN = 256;
             char buf[TITLE_BUF_LEN];
 
-            if (!m_fullscreen)
+            if (!fullscreen)
 		{
-                    snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, m_fps_rate);
-                    SDL_WM_SetCaption(buf, NULL);
+                    snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, fps_rate);
+                    SDL_WSetCaption(buf, NULL);
 		}
 #endif /* #ifdef _DEBUG */
 	}
-    m_fps_framesdrawn++;
+    fps_framesdrawn++;
 }
 
 /* Switches the viewport */
@@ -184,13 +184,13 @@ void OpenGL::Draw(ColourQuad *cq)
     DisableBlending();
     DisableTexture();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
-    glColor3f(cq->m_red, cq->m_green, cq->m_blue);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
+    glColor3f(cq->red, cq->green, cq->blue);
     glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 1.0f); glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glTexCoord2f(0.0f, 0.0f); glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glTexCoord2f(1.0f, 0.0f); glVertex2i(cq->m_width/2, cq->m_height/2);
-    glTexCoord2f(1.0f, 1.0f); glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(-(cq->width/2), -(cq->height/2));
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(-(cq->width/2), cq->height/2);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(cq->width/2, cq->height/2);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -238,14 +238,14 @@ void OpenGL::DrawRotate(ColourQuad *cq, float angle)
     DisableBlending();
     DisableTexture();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    glColor3f(cq->m_red, cq->m_green, cq->m_blue);
+    glColor3f(cq->red, cq->green, cq->blue);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -278,13 +278,13 @@ void OpenGL::DrawBlend(ColourQuad *cq, float alpha)
     DisableDepthBuffer();
     EnableBlending();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
-    glColor4f(cq->m_red, cq->m_green, cq->m_blue, alpha);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
+    glColor4f(cq->red, cq->green, cq->blue, alpha);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -317,14 +317,14 @@ void OpenGL::DrawRotateBlend(ColourQuad *cq, float angle, float alpha)
     DisableDepthBuffer();
     EnableBlending();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    glColor4f(cq->m_red, cq->m_green, cq->m_blue, alpha);
+    glColor4f(cq->red, cq->green, cq->blue, alpha);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -357,14 +357,14 @@ void OpenGL::DrawScale(ColourQuad *cq, float factor)
     DisableBlending();
     DisableTexture();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glScalef(factor, factor, 0);
-    glColor3f(cq->m_red, cq->m_green, cq->m_blue);
+    glColor3f(cq->red, cq->green, cq->blue);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -396,15 +396,15 @@ void OpenGL::DrawRotateScale(ColourQuad *cq, float angle, float factor)
     DisableBlending();
     DisableTexture();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glScalef(factor, factor, 0);
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    glColor3f(cq->m_red, cq->m_green, cq->m_blue);
+    glColor3f(cq->red, cq->green, cq->blue);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -434,14 +434,14 @@ void OpenGL::DrawBlendScale(ColourQuad *cq, float alpha, float factor)
     DisableDepthBuffer();
     EnableBlending();
     glLoadIdentity();
-    glTranslatef(cq->m_x, cq->m_y, 0.0f);
+    glTranslatef(cq->x, cq->y, 0.0f);
     glScalef(factor, factor, 0);
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -471,15 +471,15 @@ void OpenGL::DrawRotateBlendScale(ColourQuad *cq, float angle, float alpha, floa
     DisableDepthBuffer();
     EnableBlending();
     glLoadIdentity();
-    glTranslatef(cq->m_x + (cq->m_width/2), cq->m_y + (cq->m_height/2), 0.0f);
+    glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
     glScalef(factor, factor, 0);
     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-    glColor4f(cq->m_red, cq->m_green, cq->m_blue, alpha);
+    glColor4f(cq->red, cq->green, cq->blue, alpha);
     glBegin(GL_QUADS);
-    glVertex2i(-(cq->m_width/2), -(cq->m_height/2));
-    glVertex2i(-(cq->m_width/2), cq->m_height/2);
-    glVertex2i(cq->m_width/2, cq->m_height/2);
-    glVertex2i(cq->m_width/2, -(cq->m_height/2));
+    glVertex2i(-(cq->width/2), -(cq->height/2));
+    glVertex2i(-(cq->width/2), cq->height/2);
+    glVertex2i(cq->width/2, cq->height/2);
+    glVertex2i(cq->width/2, -(cq->height/2));
     glEnd();
 }
 
@@ -716,7 +716,7 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
     // Set it to 2D mode
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0.0f, (GLfloat)m_screen_width, (GLfloat)m_screen_height, 0.0f);
+    gluOrtho2D(0.0f, (GLfloat)screen_width, (GLfloat)screen_height, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glPushMatrix();
@@ -761,7 +761,7 @@ void OpenGL::ErrorMsg(const char *text, const char *title)
  */
 int OpenGL::GetFPS()
 {
-    return m_fps_rate;
+    return fps_rate;
 }
 
 
@@ -770,7 +770,7 @@ int OpenGL::GetFPS()
  */
 void OpenGL::Stop()
 {
-    m_running = false;
+    running = false;
 }
 
 
@@ -779,5 +779,5 @@ void OpenGL::Stop()
  */
 void OpenGL::SkipDisplay()
 {
-    m_dodisplay = false;
+    dodisplay = false;
 }

@@ -37,11 +37,11 @@ class ColourQuad
 {
     public:
     ColourQuad(int x=0, int y=0, int width=0, int height=0, float r=1, float g=1, float b=1)
-        : m_x(x), m_y(y), m_width(width), m_height(height), m_red(r), 
-          m_green(g), m_blue(b)
+        : x(x), y(y), width(width), height(height), red(r), 
+          green(g), blue(b)
     { }
-    int m_x, m_y, m_width, m_height;
-    float m_red, m_green, m_blue;
+    int x, y, width, height;
+    float red, green, blue;
 };
 
 
@@ -128,12 +128,12 @@ public:
 
     inline int GetWidth()
     { 
-        return m_screen_width;
+        return screen_width;
     }
 
     inline int GetHeight()
     { 
-        return m_screen_height;
+        return screen_height;
     }
 
     inline void SelectTexture(GLuint uTexture)
@@ -158,55 +158,55 @@ public:
 
     inline void EnableTexture() 
     { 
-        if (!m_textureon)
+        if (!textureon)
             { 
                 glEnable(GL_TEXTURE_2D); 
-                m_textureon = true; 
+                textureon = true; 
             } 
     }
 
     inline void DisableTexture() 
     { 
-        if (m_textureon)
+        if (textureon)
             { 
                 glDisable(GL_TEXTURE_2D); 
-                m_textureon = false; 
+                textureon = false; 
             } 
     }
 
     inline void EnableBlending() 
     { 
-        if (!m_blendon)
+        if (!blendon)
             { 
                 glEnable(GL_BLEND); 
-                m_blendon = true; 
+                blendon = true; 
             } 
     }
 
     inline void DisableBlending() 
     { 
-        if (m_blendon)
+        if (blendon)
             { 
                 glDisable(GL_BLEND);
-                m_blendon = false;
+                blendon = false;
             }
     } 
 	
     inline void EnableDepthBuffer() 
     { 
-        if (!m_depthon)
+        if (!depthon)
             {
                 glEnable(GL_DEPTH_TEST); 
-                m_depthon = true; 
+                depthon = true; 
             } 
     }
 	
     inline void DisableDepthBuffer() 
     { 
-        if (m_depthon)
+        if (depthon)
             { 
                 glDisable(GL_DEPTH_TEST); 
-                m_depthon = false; 
+                depthon = false; 
             } 
     } 
 	
@@ -223,15 +223,15 @@ private:
     void RuntimeError(string mess);
 
     // Window related variables
-    int m_screen_width, m_screen_height, m_screen_depth;
-    bool m_fullscreen;
-    bool m_running, m_active, m_dodisplay;
+    int screen_width, screen_height, screen_depth;
+    bool fullscreen;
+    bool running, active, dodisplay;
 
     // State variables
-    bool m_textureon, m_blendon, m_depthon;
+    bool textureon, blendon, depthon;
 
     // Frame rate variables
-    int m_fps_lastcheck, m_fps_framesdrawn, m_fps_rate;
+    int fps_lastcheck, fps_framesdrawn, fps_rate;
 };
 
 #endif

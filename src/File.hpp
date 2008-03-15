@@ -40,8 +40,8 @@ public:
 private:
   static const int MAX_RES_PATH = 256;
   
-  FILE *m_stream;
-  string m_path;
+  FILE *stream;
+  string path;
 };
 
 #endif

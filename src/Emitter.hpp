@@ -42,8 +42,8 @@ public:
 
 	virtual void ProcessEffect(int particle) { }
 
-	float m_partsize, m_r, m_g, m_b, m_deviation, m_xg, m_yg, m_life, m_maxspeed, flSize;
-	float m_xpos, m_ypos, m_slowdown, m_createrate;
+	float partsize, r, g, b, deviation, xg, yg, life, maxspeed, flSize;
+	float xpos, ypos, slowdown, createrate;
 
 protected:
 	void NewParticle(int index);

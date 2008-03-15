@@ -55,7 +55,7 @@ class FreeType
     void DeleteFont(FreeTypeFont *font);
 
     FT_Library library;
-    map<int, FreeTypeFont *> m_fonts; 
+    map<int, FreeTypeFont *> fonts; 
 };
 
 #endif

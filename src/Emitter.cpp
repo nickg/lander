@@ -35,8 +35,8 @@ extern DataFile *g_pData;
  */
 Emitter::Emitter(int x, int y, float r, float g, float b, bool createnew, float deviation, float xg, float yg,
 		float life, float max_speed, float size, float slowdown)
-: m_partsize(size), m_r(r), m_g(g), m_b(b), m_deviation(deviation), m_xg(xg), m_yg(yg), m_life(life), 
-	m_maxspeed(max_speed), m_xpos((float)x), m_ypos((float)y), m_slowdown(slowdown), m_createrate(64.0f), 
+: partsize(size), r(r), g(g), b(b), deviation(deviation), xg(xg), yg(yg), life(life), 
+	maxspeed(max_speed), xpos((float)x), ypos((float)y), slowdown(slowdown), createrate(64.0f), 
 	uTexture(-1)
 {
 	// Set up the particles
@@ -74,22 +74,22 @@ void Emitter::NewCluster(int x, int y)
 	int i, created=0;
 	float oldx, oldy;
 
-	oldx = m_xpos;
-	oldy = m_ypos;
-	m_xpos = (float)x;
-	m_ypos = (float)y;
+	oldx = xpos;
+	oldy = ypos;
+	xpos = (float)x;
+	ypos = (float)y;
 
 	for (i = 0; i < MAX_PARTICLES; i++)
 	{
-		if ((particle[i].life < 0.0f || !particle[i].active) && created < MAX_PARTICLES/m_createrate)
+		if ((particle[i].life < 0.0f || !particle[i].active) && created < MAX_PARTICLES/createrate)
 		{
 			NewParticle(i);
 			created++;
 		}
 	}
 
-	m_xpos = oldx;
-	m_ypos = oldy;
+	xpos = oldx;
+	ypos = oldy;
 }
 
 
@@ -119,17 +119,17 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 			glColor4f(particle[i].r, particle[i].g, particle[i].b, particle[i].life);
 			glBindTexture(GL_TEXTURE_2D, uTexture);
 			glBegin(GL_TRIANGLE_STRIP);	
-				glTexCoord2d(1, 1); glVertex3f(x+m_partsize, y+m_partsize, 0);
-				glTexCoord2d(0, 1); glVertex3f(x-m_partsize, y+m_partsize, 0);
-				glTexCoord2d(1, 0); glVertex3f(x+m_partsize, y-m_partsize, 0);
-				glTexCoord2d(0, 0); glVertex3f(x-m_partsize, y-m_partsize, 0); 
+				glTexCoord2d(1, 1); glVertex3f(x+partsize, y+partsize, 0);
+				glTexCoord2d(0, 1); glVertex3f(x-partsize, y+partsize, 0);
+				glTexCoord2d(1, 0); glVertex3f(x+partsize, y-partsize, 0);
+				glTexCoord2d(0, 0); glVertex3f(x-partsize, y-partsize, 0); 
 			glEnd();
 
 			if (evolve)
 			{
 				// Move particle
-				particle[i].x += particle[i].xi/(m_slowdown*1000);
-				particle[i].y += particle[i].yi/(m_slowdown*1000);
+				particle[i].x += particle[i].xi/(slowdown*1000);
+				particle[i].y += particle[i].yi/(slowdown*1000);
 
 				// Apply gravity
 				particle[i].xi+=particle[i].xg;
@@ -142,7 +142,7 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 				ProcessEffect(i);
 
 				// See if particle died
-				if (particle[i].life < 0.0f && createnew && created < MAX_PARTICLES/m_createrate)
+				if (particle[i].life < 0.0f && createnew && created < MAX_PARTICLES/createrate)
 				{
 					NewParticle(i);
 					created++;
@@ -151,7 +151,7 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 					particle[i].active = false;
 			}
 		}
-		else if (createnew && created < MAX_PARTICLES/m_createrate)
+		else if (createnew && created < MAX_PARTICLES/createrate)
 		{
 			NewParticle(i);
 			created++;
@@ -174,25 +174,25 @@ void Emitter::NewParticle(int index)
 	{
 		d[i] = (float)(rand()%100) - 50.0f;
 		d[i] /= 100.0f; 
-		d[i] *= m_deviation;
+		d[i] *= deviation;
 	}
 
 	particle[index].active = true;
-	particle[index].life = m_life;
+	particle[index].life = life;
 	particle[index].fade = (float)(rand()%100)/1000.0f+0.003f;	
-	particle[index].r = m_r + d[0] >= 1.0f ? 1.0f : m_r + d[0];
-	particle[index].g = m_g + d[1] >= 1.0f ? 1.0f : m_g + d[1];
-	particle[index].b = m_b + d[2] >= 1.0f ? 1.0f : m_b + d[2];
-	particle[index].x = m_xpos;
-	particle[index].y = m_ypos;
-	particle[index].xg = m_xg;
-	particle[index].yg = m_yg;
+	particle[index].r = r + d[0] >= 1.0f ? 1.0f : r + d[0];
+	particle[index].g = g + d[1] >= 1.0f ? 1.0f : g + d[1];
+	particle[index].b = b + d[2] >= 1.0f ? 1.0f : b + d[2];
+	particle[index].x = xpos;
+	particle[index].y = ypos;
+	particle[index].xg = xg;
+	particle[index].yg = yg;
 	
 	do
 	{
-		particle[index].xi = (float)((rand()%50)-26.0f)*m_maxspeed;
-		particle[index].yi = (float)((rand()%50)-25.0f)*m_maxspeed;
-	} while (pow(particle[index].yi, 2) + pow(particle[index].xi, 2) > pow(25.0f*m_maxspeed, 2));
+		particle[index].xi = (float)((rand()%50)-26.0f)*maxspeed;
+		particle[index].yi = (float)((rand()%50)-25.0f)*maxspeed;
+	} while (pow(particle[index].yi, 2) + pow(particle[index].xi, 2) > pow(25.0f*maxspeed, 2));
 }
 
 
@@ -232,7 +232,7 @@ Explosion::Explosion()
 : Emitter(0, 0, 0.7f, 0.7f, 0.0f, false, 0.3f, 0.0f, 0.0f, 1.0f, 120.0f, 8.5f, 2.0f) 
 {
 	// Make a BIG explosion
-	m_createrate = 20.0f;
+	createrate = 20.0f;
 }
 
 
