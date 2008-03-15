@@ -38,6 +38,7 @@
 #include "LandingPad.hpp"
 #include "Surface.hpp"
 #include "Mine.hpp"
+#include "ElectricGate.hpp"
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
@@ -85,7 +86,7 @@ private:
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture, uSpeedTexture, uBlueKey[18], uRedKey[18], uGreenKey[18], uPinkKey[18], uYellowKey[18];
    GLuint uBlueArrow, uPinkArrow, uRedArrow, uYellowArrow, uGreenArrow;
-   GLuint uGatewayTexture, uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;
+   GLuint uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;
    GLuint uGameOver, uPausedTexture;
     
     
@@ -123,13 +124,9 @@ private:
    // Electric gate things
    static const int MAX_GATEWAYS = 4;
    static const int MAX_GATEWAY_LENGTH = 10;
-   struct Gateway 
-   {
-      int xpos, ypos, length, timer;
-      bool vertical;
-      TextureQuad icon;
-   } gateways[MAX_GATEWAYS];
-   int gatewaycount;
+   typedef vector<ElectricGate> ElectricGateList;
+   typedef ElectricGateList::iterator ElectricGateListIt;
+   ElectricGateList gateways;
 
    // Space mines
    static const int MAX_MINES = 5;
