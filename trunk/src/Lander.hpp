@@ -69,9 +69,9 @@ public:
 class ActiveObject
 {
 public:
-    ActiveObject() : m_xpos(0), m_ypos(0), flSpeedX(0), flSpeedY(0), angle(0)
+    ActiveObject() : xpos(0), ypos(0), flSpeedX(0), flSpeedY(0), angle(0)
     { }
-    float m_xpos, m_ypos;
+    float xpos, ypos;
     float flSpeedX, flSpeedY, angle;
     TextureQuad tq;
 };
@@ -92,11 +92,11 @@ public:
     void UnlockSpace(int x, int y);
 	
     bool IsFilled(int x, int y) const;
-    int GetWidth() const { return m_width; }
-    int GetHeight() const { return m_height; }
+    int GetWidth() const { return width; }
+    int GetHeight() const { return height; }
 private:
-    bool *m_grid;
-    int m_width, m_height;
+    bool *grid;
+    int width, height;
 };
 
 
@@ -113,14 +113,14 @@ public:
 	
     void Reset(int index, int length); 
     void Draw(int viewadjust_x, int viewadjust_y, int levelheight, bool locked);
-    void SetYPos(int ypos) { m_ypos = ypos; }
+    void SetYPos(int ypos) { this->ypos = ypos; }
 	
-    int GetLength() const { return m_length; }
-    int GetIndex() const { return m_index; }
+    int GetLength() const { return length; }
+    int GetIndex() const { return index; }
 
 private:
-    TextureQuad m_quad;
-    int m_index, m_length, m_ypos;
+    TextureQuad quad;
+    int index, length, ypos;
     
     static Texture s_landtex, s_nolandtex;
 };
@@ -132,15 +132,15 @@ private:
 class StaticObject
 {
 public:
-    StaticObject() : m_xpos(0), m_ypos(0), m_width(0), m_height(0) {}
+    StaticObject() : xpos(0), ypos(0), width(0), height(0) {}
     
-    int GetXPos() const { return m_xpos; }
-    int GetYPos() const { return m_ypos; }
-    int GetWidth() const { return m_width; }
-    int GetHeight() const { return m_height; }
+    int GetXPos() const { return xpos; }
+    int GetYPos() const { return ypos; }
+    int GetWidth() const { return width; }
+    int GetHeight() const { return height; }
 
 protected:
-    int m_xpos, m_ypos, m_width, m_height;
+    int xpos, ypos, width, height;
 };
 
 
@@ -161,7 +161,7 @@ public:
     static const int MAX_ASTEROID_WIDTH = 15;
 	
 private:
-    Poly m_uppolys[MAX_ASTEROID_WIDTH], m_downpolys[MAX_ASTEROID_WIDTH];
+    Poly uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
 };
 
 /* Game class */
@@ -188,25 +188,25 @@ private:
     void ExplodeShip();
 
     // Private variables
-    ActiveObject m_ship;
-    int m_death_timeout, m_level, m_fuel, m_maxfuel, m_lives;
-    int nViewAdjustX, nViewAdjustY, m_levelwidth, m_levelheight;
-    bool m_hasloaded, bThrusting, bDebugMode;
-    float flGravity, m_starrotate, m_fade_alpha, m_life_alpha;
+    ActiveObject ship;
+    int death_timeout, level, fuel, maxfuel, lives;
+    int nViewAdjustX, nViewAdjustY, levelwidth, levelheight;
+    bool hasloaded, bThrusting, bDebugMode;
+    float flGravity, starrotate, fade_alpha, life_alpha;
     Explosion explosion;
     SmokeTrail exhaust;
-    Poly *m_surface;
+    Poly *surface;
     TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship, gameover, paused;
     ColourQuad speedbar;
-    int m_score, m_newscore, m_nextnewlife;
-    int m_countdown_timeout, m_leveltext_timeout, m_levelcomp_timeout;
+    int score, newscore, nextnewlife;
+    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
     // Game states
     enum GameState { gsNone, gsInGame, gsExplode, gsGameOver, gsDeathWait, 
                      gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete, gsPaused };
-    GameState m_state;
+    GameState state;
 
-    ObjectGrid m_objgrid;
+    ObjectGrid objgrid;
 	
     // Number of available _surface textures
     static const int NUM_SURF_TEX = 5;
@@ -219,8 +219,8 @@ private:
     GLuint uGameOver, uPausedTexture;
     
     static const int NUM_HOTSPOTS = 8;
-    Point m_points[NUM_HOTSPOTS];
-    static const Point m_hotspots[];
+    Point points[NUM_HOTSPOTS];
+    static const Point hotspots[];
     
     // Stars
     static const int MAX_GAME_STARS = 2048;
@@ -252,7 +252,7 @@ private:
     // Asteroids
     static const int MAX_ASTEROIDS = 50;
     Asteroid asteroids[MAX_ASTEROIDS];
-    int m_asteroidcount;
+    int asteroidcount;
 
     // Electric gate things
     static const int MAX_GATEWAYS = 4;
@@ -263,7 +263,7 @@ private:
         bool vertical;
         TextureQuad icon;
     } gateways[MAX_GATEWAYS];
-    int m_gatewaycount;
+    int gatewaycount;
 
     // Space mines
     static const int MAX_MINES = 5;
@@ -273,7 +273,7 @@ private:
         int movetimeout;
         TextureQuad frame[36];
     } mines[MAX_MINES];
-    int m_minecount;
+    int minecount;
 };
 
 #endif

@@ -33,11 +33,11 @@ public:
 	Bitmap(File *f);
 	~Bitmap();
 
-	bool HasLoaded() const { return m_loaded; }
-	int GetWidth() const { return m_width; }
-	int GetHeight() const { return m_height; }
-	int GetDepth() const { return m_depth; }
-	unsigned char *GetData() const { return m_data; }
+	bool HasLoaded() const { return loaded; }
+	int GetWidth() const { return width; }
+	int GetHeight() const { return height; }
+	int GetDepth() const { return depth; }
+	unsigned char *GetData() const { return data; }
 
 private:
 
@@ -75,13 +75,13 @@ private:
 
 #pragma pack()
 
-	BitmapFileHeader m_fileh;
-	BitmapInfoHeader m_infoh;
+	BitmapFileHeader fileh;
+	BitmapInfoHeader infoh;
 	
-	bool m_loaded;
-	int m_width, m_height, m_depth;
+	bool loaded;
+	int width, height, depth;
 
-	unsigned char *m_data;
+	unsigned char *data;
 };
 
 #endif

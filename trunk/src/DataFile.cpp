@@ -26,27 +26,27 @@
  * in the correct format.
  */
 DataFile::DataFile(const char *filename)
-    : m_file(filename), m_currindex(0)
+    : file(filename), currindex(0)
 {
     // Read the header
-    m_file.Read(&m_fileheader, sizeof(DataFileHeader));
+    file.Read(&fileheader, sizeof(DataFileHeader));
     
     // Fix the endianess
-    LittleEndian32(m_fileheader.headersz);
-    LittleEndian32(m_fileheader.filecount);
+    LittleEndian32(fileheader.headersz);
+    LittleEndian32(fileheader.filecount);
     
-    if (m_fileheader.headersz != sizeof(DataFileHeader))
+    if (fileheader.headersz != sizeof(DataFileHeader))
         throw runtime_error("Invalid data file: " + string(filename));
 
     // Read the entries
-    m_entries = new DataFileIndex[m_fileheader.filecount];
-    m_file.Read(m_entries, sizeof(DataFileIndex) * m_fileheader.filecount);
+    entries = new DataFileIndex[fileheader.filecount];
+    file.Read(entries, sizeof(DataFileIndex) * fileheader.filecount);
 	
     // Fix the endianness of the entries
-    for (int i = 0; i < m_fileheader.filecount; i++) {
-        LittleEndian32(m_entries[i].filesz);
-        LittleEndian32(m_entries[i].indexsz);
-        LittleEndian32(m_entries[i].offset);
+    for (int i = 0; i < fileheader.filecount; i++) {
+        LittleEndian32(entries[i].filesz);
+        LittleEndian32(entries[i].indexsz);
+        LittleEndian32(entries[i].offset);
     }
 }
 
@@ -56,7 +56,7 @@ DataFile::DataFile(const char *filename)
  */
 void DataFile::Rewind()
 {
-    m_file.Seek(m_entries[m_currindex].offset);
+    file.Seek(entries[currindex].offset);
 }
 
 
@@ -69,14 +69,14 @@ void DataFile::SelectFile(const char *filename)
 {
     int i = 0;
 
-    while (i < m_fileheader.filecount && strcmp(m_entries[i].name, filename))
+    while (i < fileheader.filecount && strcmp(entries[i].name, filename))
         i++;
 
-    if (i == m_fileheader.filecount) {
+    if (i == fileheader.filecount) {
         throw runtime_error("File " + string(filename) + " not present in data file");
     }
     else {
-        m_currindex = i;
+        currindex = i;
         Rewind();
     }
 }
@@ -89,7 +89,7 @@ void DataFile::SelectFile(const char *filename)
 void DataFile::ReadAll(void *buf)
 {
     Rewind();
-    m_file.Read(buf, m_entries[m_currindex].filesz);
+    file.Read(buf, entries[currindex].filesz);
     Rewind();
 }
 
@@ -101,7 +101,7 @@ void DataFile::ReadAll(void *buf)
  */
 void DataFile::Read(void *buf, int bytes)
 {
-    m_file.Read(buf, bytes);
+    file.Read(buf, bytes);
 }
 
 
@@ -112,7 +112,7 @@ void DataFile::Read(void *buf, int bytes)
 Bitmap *DataFile::LoadBitmap()
 {
     Rewind();
-    Bitmap *b = new Bitmap(&m_file);
+    Bitmap *b = new Bitmap(&file);
     Rewind();
 
     return b;
@@ -120,12 +120,12 @@ Bitmap *DataFile::LoadBitmap()
 
 
 /* 
- * Frees am_y memory used by the data file.
+ * Frees ay memory used by the data file.
  */
 DataFile::~DataFile()
 {
     // Free memory
-    delete[] m_entries;
+    delete[] entries;
 }
 
 
@@ -134,5 +134,5 @@ DataFile::~DataFile()
  */
 size_t DataFile::GetFileSize()
 {
-    return m_entries[m_currindex].filesz;
+    return entries[currindex].filesz;
 }

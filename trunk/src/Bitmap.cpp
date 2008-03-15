@@ -25,35 +25,35 @@
  * Throws std::runtime_error on failure.
  */
 Bitmap::Bitmap(File *f)
-    : m_loaded(false), m_data(NULL)
+    : loaded(false), data(NULL)
 {
     // Read file header
-    f->Read(&m_fileh, sizeof(BitmapFileHeader));
-    LittleEndian16(m_fileh.magic);
-    if (m_fileh.magic != BITMAP_MAGIC_NUMBER)
+    f->Read(&fileh, sizeof(BitmapFileHeader));
+    LittleEndian16(fileh.magic);
+    if (fileh.magic != BITMAP_MAGIC_NUMBER)
         throw std::runtime_error("Bitmap has invalid magic number");
 
     // Read info header
-    f->Read(&m_infoh, sizeof(BitmapInfoHeader));
+    f->Read(&infoh, sizeof(BitmapInfoHeader));
 	
     // Bitmaps use big endian
-    LittleEndian32(m_infoh.width);
-    LittleEndian32(m_infoh.height);
-    LittleEndian16(m_infoh.planes);
-    LittleEndian16(m_infoh.bitcount);
-    LittleEndian32(m_infoh.imagesz);
-    LittleEndian32(m_infoh.clrused);
-    LittleEndian32(m_infoh.clrimp);
+    LittleEndian32(infoh.width);
+    LittleEndian32(infoh.height);
+    LittleEndian16(infoh.planes);
+    LittleEndian16(infoh.bitcount);
+    LittleEndian32(infoh.imagesz);
+    LittleEndian32(infoh.clrused);
+    LittleEndian32(infoh.clrimp);
 	
-    m_width = m_infoh.width;
-    m_height = m_infoh.height;
-    m_depth = m_infoh.bitcount;
+    width = infoh.width;
+    height = infoh.height;
+    depth = infoh.bitcount;
 
-    if (m_depth != 24)
+    if (depth != 24)
         throw std::runtime_error("Only 24-bit bitmaps are supported");
 
     // Calculate the size of the image with padding
-    int datasize = m_width * m_height * (m_infoh.bitcount / 8);
+    int datasize = width * height * (infoh.bitcount / 8);
 
     // Allocate memory
     unsigned char *tempdata = new unsigned char[datasize];
@@ -62,14 +62,14 @@ Bitmap::Bitmap(File *f)
     f->Read(tempdata, sizeof(unsigned char) * datasize);
 
     // Calculate final width
-    int bytewidth = (m_width * m_depth) / 8;
+    int bytewidth = (width * depth) / 8;
     int padwidth = bytewidth;
     while (padwidth % 4 != 0)
         padwidth++;
 
     // Convert data to useable format
-    int diff = m_width * m_height * RGB_BYTE_SIZE;
-    m_data = new unsigned char[diff];
+    int diff = width * height * RGB_BYTE_SIZE;
+    data = new unsigned char[diff];
 
     int offset = padwidth - bytewidth;
 
@@ -77,15 +77,15 @@ Bitmap::Bitmap(File *f)
             if ((i+1) % padwidth == 0)
                 i += offset;
 
-            *(m_data+i+2) = *(tempdata+i);
-            *(m_data+i+1) = *(tempdata+i+1);
-            *(m_data+i) = *(tempdata+i+2);
+            *(data+i+2) = *(tempdata+i);
+            *(data+i+1) = *(tempdata+i+1);
+            *(data+i) = *(tempdata+i+2);
 	}
 
     // Free temporary storage
     delete[] tempdata;
 
-    m_loaded = true;
+    loaded = true;
 }
 
 /*
@@ -93,6 +93,6 @@ Bitmap::Bitmap(File *f)
  */
 Bitmap::~Bitmap()
 {
-    if (m_data)
-        delete[] m_data;
+    if (data)
+        delete[] data;
 }

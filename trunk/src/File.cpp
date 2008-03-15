@@ -13,19 +13,16 @@
  * Throw std::runtime_error if file cannot be opened.
  */
 File::File(const char *path, bool readonly)
-   : m_stream(NULL), m_path(path)
+   : stream(NULL), path(path)
 {
    const char *mode = (readonly ? "rb" : "w+b");
 
-   //m_path = DATADIR;
-   //m_path += path;
-
 #ifdef USE_FOPEN_S
-   if (fopen_s(&m_stream, m_path.c_str(), mode) != 0)
+   if (fopen_s(&stream, path, mode) != 0)
 #else
-      if ((m_stream = fopen(m_path.c_str(), mode)) == NULL)
+      if ((stream = fopen(path, mode)) == NULL)
 #endif
-         throw std::runtime_error("Failed to open " + m_path);
+         throw std::runtime_error(string("Failed to open ") + path);
 }
 
 
@@ -34,8 +31,8 @@ File::File(const char *path, bool readonly)
  */
 File::~File()
 {
-   if (m_stream != NULL)
-      fclose(m_stream);
+   if (stream != NULL)
+      fclose(stream);
 }
 
 /*
@@ -46,9 +43,9 @@ File::~File()
  */
 void File::Read(void *buf, size_t bytes)
 {
-   size_t n = fread(buf, 1, bytes, m_stream);
+   size_t n = fread(buf, 1, bytes, stream);
    if (n != bytes)
-      throw std::runtime_error("Failed to read from file: " + m_path);
+      throw std::runtime_error("Failed to read from file: " + path);
 }
  
 
@@ -60,9 +57,9 @@ void File::Read(void *buf, size_t bytes)
  */
 void File::Write(const void *buf, size_t bytes)
 {
-   size_t n = fwrite(buf, 1, bytes, m_stream);
+   size_t n = fwrite(buf, 1, bytes, stream);
    if (n != bytes)
-      throw std::runtime_error("Failed to write to file: " + m_path);
+      throw std::runtime_error("Failed to write to file: " + path);
 }
 
 
@@ -71,7 +68,7 @@ void File::Write(const void *buf, size_t bytes)
  */
 void File::Seek(size_t offset)
 {
-   fseek(m_stream, static_cast<long>(offset), SEEK_SET);
+   fseek(stream, static_cast<long>(offset), SEEK_SET);
 }
 
 

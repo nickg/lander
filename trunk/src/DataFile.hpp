@@ -49,7 +49,7 @@ private:
     struct DataFileHeader 
     {
         int headersz, filecount;
-    } m_fileheader;
+    } fileheader;
 
     // Data entry
     struct DataFileIndex
@@ -57,12 +57,12 @@ private:
         int indexsz, offset, filesz;
         static const int INDEX_NAME_SZ = 128;
         char name[INDEX_NAME_SZ];
-    } *m_entries;
+    } *entries;
 
 #pragma pack()
 
-    File m_file;
-    int m_currindex;
+    File file;
+    int currindex;
 };
 
 #endif

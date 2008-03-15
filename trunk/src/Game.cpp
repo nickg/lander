@@ -52,9 +52,9 @@ extern DataFile *g_pData;
 
 
 /*
- * Defines a simplified polygon representing the m_ship.
+ * Defines a simplified polygon representing the ship.
  */
-const Point Game::m_hotspots[] = {{1, 31}, {1, 26}, {3, 14}, {15, 0}, 
+const Point Game::hotspots[] = {{1, 31}, {1, 26}, {3, 14}, {15, 0}, 
                                   {28, 14}, {30, 26}, {30, 31}, {16, 31}};
 
 
@@ -62,7 +62,7 @@ const Point Game::m_hotspots[] = {{1, 31}, {1, 26}, {3, 14}, {15, 0},
  * Sets the inital state of the Game object.
  */
 Game::Game()
-  : m_hasloaded(false), bThrusting(false), m_surface(NULL), m_state(gsNone)
+  : hasloaded(false), bThrusting(false), surface(NULL), state(gsNone)
 {
 
 }
@@ -78,7 +78,7 @@ void Game::Load()
    OpenGL &opengl = OpenGL::GetInstance();
 
    // Load textures
-   if (!m_hasloaded) {
+   if (!hasloaded) {
       // Load textures
       uShipTexture = opengl.LoadTextureAlpha(g_pData, "Ship.bmp");
       uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
@@ -131,13 +131,13 @@ void Game::Load()
       LandingPad::Load();
       
       // Toggle loaded flag
-      m_hasloaded = true;
+      hasloaded = true;
    }
 
    // Create the ship
-   m_ship.tq.width = 32;
-   m_ship.tq.height = 32;
-   m_ship.tq.uTexture = uShipTexture;
+   ship.tq.width = 32;
+   ship.tq.height = 32;
+   ship.tq.uTexture = uShipTexture;
 
    // Create the fade
    fade.x = 0;
@@ -168,13 +168,13 @@ void Game::Load()
    fuelmeter.uTexture = uFuelMeterTexture;
 
    // Create the speed bar
-   speedbar.m_x = 12;
-   speedbar.m_y = 40;
-   speedbar.m_width = 124;
-   speedbar.m_height = 16;
-   speedbar.m_red = 1.0f;
-   speedbar.m_green = 0.0f;
-   speedbar.m_blue = 0.0f;
+   speedbar.x = 12;
+   speedbar.y = 40;
+   speedbar.width = 124;
+   speedbar.height = 16;
+   speedbar.red = 1.0f;
+   speedbar.green = 0.0f;
+   speedbar.blue = 0.0f;
 
    // Create the small ship icon
    smallship.width = 32;
@@ -198,9 +198,9 @@ void Game::Load()
    // Set default values
    nViewAdjustX = 0;
    nViewAdjustY = 0;
-   m_starrotate = 0.0f;
-   m_death_timeout = 0;
-   m_state = gsNone;
+   starrotate = 0.0f;
+   death_timeout = 0;
+   state = gsNone;
 
    bDebugMode = false;
 }
@@ -208,21 +208,21 @@ void Game::Load()
 /* Destructor */
 Game::~Game()
 {
-   if (m_surface)
-      delete[] m_surface;
+   if (surface)
+      delete[] surface;
 }
 
 /* Starts a new game */
 void Game::NewGame()
 {
    // Reset score, lives, etc.
-   m_score = 0;
-   m_lives = 3;
+   score = 0;
+   lives = 3;
 
    // Start the game
-   m_level = 1;
-   m_nextnewlife = 1000;
-   StartLevel(m_level);
+   level = 1;
+   nextnewlife = 1000;
+   StartLevel(level);
 }
 
 /* Processes events */
@@ -233,62 +233,62 @@ void Game::Process()
    int i, k, m;
 
    // Rotate ship hotspots
-   RotatePoints(m_hotspots, m_points, NUM_HOTSPOTS, m_ship.angle*PI/180, -16, 16);
+   RotatePoints(hotspots, points, NUM_HOTSPOTS, ship.angle*PI/180, -16, 16);
 
    // Check keys
    if (input.GetKeyState(SDLK_p)) {
-      if (m_state == gsPaused) {
+      if (state == gsPaused) {
          // Unpause the game
-         m_state = gsInGame;
+         state = gsInGame;
          input.ResetKey(SDLK_p);
       }
-      else if (m_state == gsInGame) {
+      else if (state == gsInGame) {
          // Pause the game
-         m_state = gsPaused;
+         state = gsPaused;
          input.ResetKey(SDLK_p);
          bThrusting = false;
       }
    }
 
    // Check for paused state
-   if (m_state == gsPaused)
+   if (state == gsPaused)
       return;
 
    if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
-       && m_fuel > 0 && m_state == gsInGame) {
+       && fuel > 0 && state == gsInGame) {
       // Thrusting
-      m_ship.flSpeedX += SHIP_SPEED * (float)sin(m_ship.angle*(PI/180));
-      m_ship.flSpeedY -= SHIP_SPEED * (float)cos(m_ship.angle*(PI/180));
+      ship.flSpeedX += SHIP_SPEED * (float)sin(ship.angle*(PI/180));
+      ship.flSpeedY -= SHIP_SPEED * (float)cos(ship.angle*(PI/180));
       bThrusting = true;
-      m_fuel--;
+      fuel--;
    }
    else
       bThrusting = false;
    
    if ((input.GetKeyState(SDLK_RIGHT) || input.QueryJoystickAxis(0) > 0)
-       && m_state == gsInGame) {
+       && state == gsInGame) {
       // Turn clockwise
-      m_ship.angle += 3.0f;
+      ship.angle += 3.0f;
    }
    else if ((input.GetKeyState(SDLK_LEFT) || input.QueryJoystickAxis(0) < 0)
-            && m_state == gsInGame) {
+            && state == gsInGame) {
       // Turn anti-clockwise
-      m_ship.angle -= 3.0f;
+      ship.angle -= 3.0f;
    }
    
-   if (input.GetKeyState(SDLK_SPACE) && m_state == gsExplode) {
+   if (input.GetKeyState(SDLK_SPACE) && state == gsExplode) {
       // Skip explosion
-      m_state = gsDeathWait; 
-      if (m_lives == 0)
-         m_death_timeout = DEATH_TIMEOUT;
+      state = gsDeathWait; 
+      if (lives == 0)
+         death_timeout = DEATH_TIMEOUT;
       else	
-         m_death_timeout = 1;
+         death_timeout = 1;
    }
 
-   if (input.GetKeyState(SDLK_ESCAPE) && m_state == gsInGame) {
+   if (input.GetKeyState(SDLK_ESCAPE) && state == gsInGame) {
       // Quit to main menu
       ExplodeShip();
-      m_lives = 0;
+      lives = 0;
    }
 
    if (input.GetKeyState(SDLK_d)) {
@@ -298,25 +298,25 @@ void Game::Process()
    }
 
    // Move only if not in game over (prevent bugs)
-   if (m_state == gsInGame || m_state == gsExplode) {
+   if (state == gsInGame || state == gsExplode) {
       // Apply gravity
-      m_ship.flSpeedY += flGravity;
+      ship.flSpeedY += flGravity;
 
       // Move the ship (and exhaust and explosion)
-      m_ship.m_xpos += m_ship.flSpeedX;
-      m_ship.m_ypos += m_ship.flSpeedY;
-      exhaust.m_xpos = m_ship.m_xpos + m_ship.tq.width/2
-         - (m_ship.tq.width/2)*(float)sin(m_ship.angle*(PI/180));
-      exhaust.m_ypos = m_ship.m_ypos + m_ship.tq.height/2
-         + (m_ship.tq.height/2)*(float)cos(m_ship.angle*(PI/180));
-      exhaust.m_yg = m_ship.flSpeedY + (flGravity * 10);
-      exhaust.m_xg = m_ship.flSpeedX;
-      explosion.m_xpos = m_ship.m_xpos + m_ship.tq.width/2;
-      explosion.m_ypos = m_ship.m_ypos + m_ship.tq.height/2;
+      ship.xpos += ship.flSpeedX;
+      ship.ypos += ship.flSpeedY;
+      exhaust.xpos = ship.xpos + ship.tq.width/2
+         - (ship.tq.width/2)*(float)sin(ship.angle*(PI/180));
+      exhaust.ypos = ship.ypos + ship.tq.height/2
+         + (ship.tq.height/2)*(float)cos(ship.angle*(PI/180));
+      exhaust.yg = ship.flSpeedY + (flGravity * 10);
+      exhaust.xg = ship.flSpeedX;
+      explosion.xpos = ship.xpos + ship.tq.width/2;
+      explosion.ypos = ship.ypos + ship.tq.height/2;
    }
 
    // Move mines
-   for (i = 0; i < m_minecount; i++) {
+   for (i = 0; i < minecount; i++) {
       if (mines[i].displace_x%OBJ_GRID_SIZE == 0
           && mines[i].displace_y%OBJ_GRID_SIZE == 0) {
          switch (mines[i].dir) {
@@ -366,12 +366,12 @@ void Game::Process()
             }
             
             // Check if this is ok
-            ok = nextx >= m_objgrid.GetWidth() || nextx < 0 
-               || nexty > m_objgrid.GetHeight() || nexty < 0 
-               || m_objgrid.IsFilled(nextx, nexty)
-               || m_objgrid.IsFilled(nextx + 1, nexty)
-               || m_objgrid.IsFilled(nextx + 1, nexty + 1)
-               || m_objgrid.IsFilled(nextx, nexty + 1);
+            ok = nextx >= objgrid.GetWidth() || nextx < 0 
+               || nexty > objgrid.GetHeight() || nexty < 0 
+               || objgrid.IsFilled(nextx, nexty)
+               || objgrid.IsFilled(nextx + 1, nexty)
+               || objgrid.IsFilled(nextx + 1, nexty + 1)
+               || objgrid.IsFilled(nextx, nexty + 1);
             ok = !ok;
             timeout--;
          } while (!ok && timeout > 0);
@@ -392,59 +392,59 @@ void Game::Process()
    }
    
    // Check bounds
-   if (m_ship.m_xpos <= 0.0f) {
-      m_ship.m_xpos = 0.0f;
-      m_ship.flSpeedX *= -0.5f;
+   if (ship.xpos <= 0.0f) {
+      ship.xpos = 0.0f;
+      ship.flSpeedX *= -0.5f;
    }
-   else if (m_ship.m_xpos + m_ship.tq.width > m_levelwidth) {
-      m_ship.m_xpos = (float)(m_levelwidth - m_ship.tq.width);
-      m_ship.flSpeedX *= -0.5f;
+   else if (ship.xpos + ship.tq.width > levelwidth) {
+      ship.xpos = (float)(levelwidth - ship.tq.width);
+      ship.flSpeedX *= -0.5f;
    }
-   if (m_ship.m_ypos <= 0.0f) {
-      m_ship.m_ypos = 0.0f;
-      m_ship.flSpeedY *= -0.5f;
+   if (ship.ypos <= 0.0f) {
+      ship.ypos = 0.0f;
+      ship.flSpeedY *= -0.5f;
    }
-   else if (m_ship.m_ypos + m_ship.tq.height > m_levelheight) {
-      m_ship.m_ypos = (float)(m_levelheight - m_ship.tq.height);
-      m_ship.flSpeedY *= -0.5f;
+   else if (ship.ypos + ship.tq.height > levelheight) {
+      ship.ypos = (float)(levelheight - ship.tq.height);
+      ship.flSpeedY *= -0.5f;
       
       // Bug fix
-      if (m_state == gsExplode) {
-         m_state = gsDeathWait; 
-         m_death_timeout = DEATH_TIMEOUT;
+      if (state == gsExplode) {
+         state = gsDeathWait; 
+         death_timeout = DEATH_TIMEOUT;
       }
    }
    
    // Calculate view adjusts
-   int centrex = (int)m_ship.m_xpos + (m_ship.tq.width/2);
-   int centrey = (int)m_ship.m_ypos + (m_ship.tq.height/2);
+   int centrex = (int)ship.xpos + (ship.tq.width/2);
+   int centrey = (int)ship.ypos + (ship.tq.height/2);
    nViewAdjustX = centrex - (opengl.GetWidth()/2);
    nViewAdjustY = centrey - (opengl.GetHeight()/2);
    if (nViewAdjustX < 0)
       nViewAdjustX = 0;
-   else if (nViewAdjustX > m_levelwidth - opengl.GetWidth())
-      nViewAdjustX = m_levelwidth - opengl.GetWidth();
+   else if (nViewAdjustX > levelwidth - opengl.GetWidth())
+      nViewAdjustX = levelwidth - opengl.GetWidth();
    if (nViewAdjustY < 0)
       nViewAdjustY = 0;
-   else if (nViewAdjustY > m_levelheight - opengl.GetHeight())
-      nViewAdjustY = m_levelheight - opengl.GetHeight();
+   else if (nViewAdjustY > levelheight - opengl.GetHeight())
+      nViewAdjustY = levelheight - opengl.GetHeight();
 
    // Check for collisions with surface
    LineSegment l;
-   int lookmin = (int)(m_ship.m_xpos/SURFACE_SIZE) - 2;
-   int lookmax = (int)(m_ship.m_xpos/SURFACE_SIZE) + 2;
+   int lookmin = (int)(ship.xpos/SURFACE_SIZE) - 2;
+   int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
-   if (lookmax >= m_levelwidth/SURFACE_SIZE) lookmax = (m_levelwidth / SURFACE_SIZE) - 1;
+   if (lookmax >= levelwidth/SURFACE_SIZE) lookmax = (levelwidth / SURFACE_SIZE) - 1;
    for (i = lookmin; i <= lookmax; i++) {
       l.p1.x = i*SURFACE_SIZE;
-      l.p1.y = m_levelheight - MAX_SURFACE_HEIGHT + m_surface[i].points[1].y;
+      l.p1.y = levelheight - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
       l.p2.x = (i+1)*SURFACE_SIZE;
-      l.p2.y = m_levelheight - MAX_SURFACE_HEIGHT + m_surface[i].points[2].y;
+      l.p2.y = levelheight - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
       
       // Look through each hot spot and check for collisions
-      if (HotSpotCollision(m_ship, l, m_points, NUM_HOTSPOTS, m_ship.m_xpos, m_ship.m_ypos)) {
+      if (HotSpotCollision(ship, l, points, NUM_HOTSPOTS, ship.xpos, ship.ypos)) {
          // Collided - see which game state we're in
-         if (m_state == gsInGame) {
+         if (state == gsInGame) {
             bool bLanded = false;
             int nPadOn = -1;
 
@@ -453,9 +453,9 @@ void Game::Process()
                for (m = 0; m < pads[k].GetLength(); m++) {
                   if (pads[k].GetIndex() + m == i) {
                      // We landed
-                     int nDAngle = ((int)m_ship.angle) % 360;
+                     int nDAngle = ((int)ship.angle) % 360;
                      if ((nDAngle >= 350 || nDAngle <= 30) 
-                         && m_ship.flSpeedY < LAND_SPEED && !nKeysRemaining) {
+                         && ship.flSpeedY < LAND_SPEED && !nKeysRemaining) {
                            // Landed safely
                         bLanded = true;
                         nPadOn = k;
@@ -473,10 +473,10 @@ void Game::Process()
             
             if (bLanded) {
                // Landed - go to next level
-               m_state = gsLevelComplete;
-               m_newscore = (m_level * 100) + 
-                  (((MAX_PAD_SIZE+2)-pads[nPadOn].GetLength())*10*m_level);
-               m_countdown_timeout = 70;
+               state = gsLevelComplete;
+               newscore = (level * 100) + 
+                  (((MAX_PAD_SIZE+2)-pads[nPadOn].GetLength())*10*level);
+               countdown_timeout = 70;
             }
             else {
                // Crashed - destroy the ship
@@ -484,13 +484,13 @@ void Game::Process()
                BounceShip();
             }
          }
-         else if (m_state == gsExplode) {
+         else if (state == gsExplode) {
             BounceShip();
             
             // See if we need to stop the madness
-            if (m_state == gsExplode && m_ship.flSpeedY*-1 < 0.05f) {
-               m_state = gsDeathWait; 
-               m_death_timeout = DEATH_TIMEOUT;
+            if (state == gsExplode && ship.flSpeedY*-1 < 0.05f) {
+               state = gsDeathWait; 
+               death_timeout = DEATH_TIMEOUT;
             }
          }
       }
@@ -498,7 +498,7 @@ void Game::Process()
    
    // Check for collisions with asteroids
    LineSegment l1, l2;
-   for (i = 0; i < m_asteroidcount; i++) {
+   for (i = 0; i < asteroidcount; i++) {
       if (ObjectInScreen(asteroids[i].GetXPos(), 
                          asteroids[i].GetYPos() + SHIP_START_Y / OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
@@ -507,22 +507,22 @@ void Game::Process()
             l1 = asteroids[i].GetUpBoundary(k);
             l2 = asteroids[i].GetDownBoundary(k);
             
-            if (HotSpotCollision(m_ship, l1, m_points, NUM_HOTSPOTS, m_ship.m_xpos, m_ship.m_ypos) 
-                || HotSpotCollision(m_ship, l2, m_points, NUM_HOTSPOTS, m_ship.m_xpos, m_ship.m_ypos)) {
+            if (HotSpotCollision(ship, l1, points, NUM_HOTSPOTS, ship.xpos, ship.ypos) 
+                || HotSpotCollision(ship, l2, points, NUM_HOTSPOTS, ship.xpos, ship.ypos)) {
                // Crashed
-               if (m_state == gsInGame) {
-                  // Destroy the m_ship
+               if (state == gsInGame) {
+                  // Destroy the ship
                   ExplodeShip();
                   BounceShip();
                }
-               else if (m_state == gsExplode) {
+               else if (state == gsExplode) {
                      BounceShip();
                      
                                  // See if we need to stop the madness
-                                 if (m_state == gsExplode && m_ship.flSpeedY*-1 < 0.05f)
+                                 if (state == gsExplode && ship.flSpeedY*-1 < 0.05f)
                                     {
-                                       m_state = gsDeathWait; 
-                                       m_death_timeout = DEATH_TIMEOUT;
+                                       state = gsDeathWait; 
+                                       death_timeout = DEATH_TIMEOUT;
                                     }
                               }
                         }
@@ -531,7 +531,7 @@ void Game::Process()
       }
 
    // Check for collision with gateways
-   for (i = 0; i < m_gatewaycount; i++)
+   for (i = 0; i < gatewaycount; i++)
       {
          int dx = gateways[i].vertical ? 0 : gateways[i].length;
          int dy = gateways[i].vertical ? gateways[i].length : 0;
@@ -539,43 +539,43 @@ void Game::Process()
             {
                bool collide1 = BoxCollision
                   (
-                   m_ship,
+                   ship,
                    gateways[i].xpos*OBJ_GRID_SIZE,
                    gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y,
                    OBJ_GRID_SIZE,
                    OBJ_GRID_SIZE,
-                   m_points,
+                   points,
                    NUM_HOTSPOTS
                    );
 			
                bool collide2 = BoxCollision
                   (
-                   m_ship,
+                   ship,
                    (gateways[i].xpos + dx)*OBJ_GRID_SIZE,
                    (gateways[i].ypos + dy)*OBJ_GRID_SIZE + SHIP_START_Y,
                    OBJ_GRID_SIZE,
                    OBJ_GRID_SIZE,
-                   m_points, 
+                   points, 
                    NUM_HOTSPOTS
                    );
 		
                if (collide1 || collide2)
                   {
-                     if (m_state == gsInGame)
+                     if (state == gsInGame)
                         {
                            // Destroy the ship
                            ExplodeShip();
                            BounceShip();
                         }
-                     else if (m_state == gsExplode)
+                     else if (state == gsExplode)
                         {
                            BounceShip();
 
                            // See if we need to stop the madness
-                           if (m_state == gsExplode && m_ship.flSpeedY*-1 < 0.05f)
+                           if (state == gsExplode && ship.flSpeedY*-1 < 0.05f)
                               {
-                                 m_state = gsDeathWait; 
-                                 m_death_timeout = DEATH_TIMEOUT;
+                                 state = gsDeathWait; 
+                                 death_timeout = DEATH_TIMEOUT;
                               }
                         }
                   }
@@ -584,64 +584,64 @@ void Game::Process()
             {
                bool collide = BoxCollision
                   (
-                   m_ship,
+                   ship,
                    gateways[i].xpos*OBJ_GRID_SIZE, 
                    gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y,
                    (dx + 1)*OBJ_GRID_SIZE,
                    (dy + 1)*OBJ_GRID_SIZE,
-                   m_points,
+                   points,
                    NUM_HOTSPOTS
                    ); 
 		
                if (collide)
                   {
-                     if (m_state == gsInGame)
+                     if (state == gsInGame)
                         {
                            // Destroy the ship
                            ExplodeShip();
                            BounceShip();
                         }
-                     else if (m_state == gsExplode)
+                     else if (state == gsExplode)
                         {
                            // Destroy the ship anyway
-                           m_state = gsDeathWait; 
-                           m_death_timeout = DEATH_TIMEOUT;
+                           state = gsDeathWait; 
+                           death_timeout = DEATH_TIMEOUT;
                         }
                   }
             }
       }
 
    // Check for collisions with mines
-   for (i = 0; i < m_minecount; i++)
+   for (i = 0; i < minecount; i++)
       {
          bool collide = BoxCollision
             (
-             m_ship,
+             ship,
              mines[i].xpos*OBJ_GRID_SIZE + 3 + mines[i].displace_x,
              mines[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
              OBJ_GRID_SIZE*2 - 6,
              OBJ_GRID_SIZE*2 - 12,
-             m_points,
+             points,
              NUM_HOTSPOTS
              ); 
 	
          if (collide)
             {
-               if (m_state == gsInGame)
+               if (state == gsInGame)
                   {
                      // Destroy the ship
                      ExplodeShip();
                      BounceShip();
                   }
-               else if (m_state == gsExplode)
+               else if (state == gsExplode)
                   {
                      BounceShip();
 
                      // See if we need to stop the madness
-                     if (m_state == gsExplode && -m_ship.flSpeedY < 0.05f)
+                     if (state == gsExplode && -ship.flSpeedY < 0.05f)
                         {
-                           m_state = gsDeathWait; 
-                           m_death_timeout = DEATH_TIMEOUT;
+                           state = gsDeathWait; 
+                           death_timeout = DEATH_TIMEOUT;
                         }
                   }
             }
@@ -652,12 +652,12 @@ void Game::Process()
       {
          bool collide = BoxCollision
             (
-             m_ship,
+             ship,
              keys[i].xpos*OBJ_GRID_SIZE + 3,
              keys[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 3,
              OBJ_GRID_SIZE - 6,
              OBJ_GRID_SIZE - 6,
-             m_points, 
+             points, 
              NUM_HOTSPOTS
              );	
 	
@@ -665,160 +665,160 @@ void Game::Process()
             {
                nKeysRemaining--;
                keys[i].active = false;
-               m_objgrid.UnlockSpace(keys[i].xpos, keys[i].ypos);
+               objgrid.UnlockSpace(keys[i].xpos, keys[i].ypos);
             }
       }
 
    // Entry / exit states
-   if (m_state == gsDeathWait)
+   if (state == gsDeathWait)
       {
-         if (--m_death_timeout == 0)
+         if (--death_timeout == 0)
             {
                // Fade out
-               if (m_lives == 0  || (m_lives == 1 && m_life_alpha < LIFE_ALPHA_BASE))
+               if (lives == 0  || (lives == 1 && life_alpha < LIFE_ALPHA_BASE))
                   {
-                     m_state = gsFadeToDeath;
-                     m_fade_alpha = LIFE_ALPHA_BASE + 1.0f;
+                     state = gsFadeToDeath;
+                     fade_alpha = LIFE_ALPHA_BASE + 1.0f;
                   }
-               else if (m_lives > 0)
+               else if (lives > 0)
                   {
-                     if (m_life_alpha < LIFE_ALPHA_BASE)
+                     if (life_alpha < LIFE_ALPHA_BASE)
                         {
-                           m_life_alpha = LIFE_ALPHA_BASE + 1.0f;
-                           m_lives--;
+                           life_alpha = LIFE_ALPHA_BASE + 1.0f;
+                           lives--;
                         }
 				
-                     m_state = gsFadeToRestart;
-                     m_fade_alpha = 0.0f;
+                     state = gsFadeToRestart;
+                     fade_alpha = 0.0f;
                   }
             }
       }
-   else if (m_state == gsGameOver)
+   else if (state == gsGameOver)
       {
-         if (--m_death_timeout == 0)
+         if (--death_timeout == 0)
             {
                // Fade out
-               m_state = gsFadeToDeath;
-               m_fade_alpha = 0.0f;
+               state = gsFadeToDeath;
+               fade_alpha = 0.0f;
             }
       }
-   else if (m_state == gsFadeIn)
+   else if (state == gsFadeIn)
       {
          // Fade in
-         m_fade_alpha -= GAME_FADE_IN_SPEED;
-         if (m_fade_alpha < 0.0f)
-            m_state = gsInGame;
+         fade_alpha -= GAME_FADE_IN_SPEED;
+         if (fade_alpha < 0.0f)
+            state = gsInGame;
       }
-   else if (m_state == gsFadeToRestart)
+   else if (state == gsFadeToRestart)
       {
          // Fade out
-         m_fade_alpha += GAME_FADE_OUT_SPEED;
-         if (m_fade_alpha > 1.0f)
+         fade_alpha += GAME_FADE_OUT_SPEED;
+         if (fade_alpha > 1.0f)
             {
                // Restart the level
-               StartLevel(m_level);
+               StartLevel(level);
                opengl.SkipDisplay();
             }
       }
-   else if (m_state == gsFadeToDeath)
+   else if (state == gsFadeToDeath)
       {
-         m_fade_alpha += GAME_FADE_OUT_SPEED;
-         if (m_fade_alpha > 1.0f)
+         fade_alpha += GAME_FADE_OUT_SPEED;
+         if (fade_alpha > 1.0f)
             {
                // Return to main menu
                ScreenManager &sm = ScreenManager::GetInstance();
                HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
-               hs->CheckScore(m_score);
+               hs->CheckScore(score);
             }
       }
-   else if (m_state == gsLevelComplete)
+   else if (state == gsLevelComplete)
       {
          // Decrease the displayed score
-         if (m_countdown_timeout > 0)
-            m_countdown_timeout--;
-         else if (m_levelcomp_timeout > 0)
+         if (countdown_timeout > 0)
+            countdown_timeout--;
+         else if (levelcomp_timeout > 0)
             {
-               if (--m_levelcomp_timeout == 0)
+               if (--levelcomp_timeout == 0)
                   {
-                     m_level++;
-                     m_state = gsFadeToRestart;
+                     level++;
+                     state = gsFadeToRestart;
                   }
             }
          else
             {
-               int dec = m_level * 2;
+               int dec = level * 2;
 
                // Decrease the score
-               m_newscore -= dec;
-               m_score += dec;
+               newscore -= dec;
+               score += dec;
 
-               if (m_score > m_nextnewlife)
+               if (score > nextnewlife)
                   {
-                     m_lives++;
-                     m_nextnewlife *= 2;
+                     lives++;
+                     nextnewlife *= 2;
                   }
 
-               if (m_newscore < 0)
+               if (newscore < 0)
                   {
                      // Move to the next level (after a 1s pause)
-                     m_score -= -m_newscore;
-                     m_levelcomp_timeout = 40;
+                     score -= -newscore;
+                     levelcomp_timeout = 40;
                   }
             }
       }
 	
    // Decrease level text timeout
-   if (m_leveltext_timeout > 0)
-      m_leveltext_timeout--;
+   if (leveltext_timeout > 0)
+      leveltext_timeout--;
 
    // Spin the ship if we're exploding
-   if (m_state == gsExplode)
-      m_ship.angle += 5.0f;
+   if (state == gsExplode)
+      ship.angle += 5.0f;
 
    // Resize the speed bar
    float flSpeed1 = 30.0f / LAND_SPEED;
-   int width = (int)((float)m_ship.flSpeedY * flSpeed1); 
+   int width = (int)((float)ship.flSpeedY * flSpeed1); 
    if (width < 0) 
       width = 0;
    if (width > 124) 
       width = 124;
-   speedbar.m_blue = 0.0f;
-   speedbar.m_red = (float)width/124.0f;
-   speedbar.m_green = 1.0f - (float)width/124.0f;
-   speedbar.m_width = width;
+   speedbar.blue = 0.0f;
+   speedbar.red = (float)width/124.0f;
+   speedbar.green = 1.0f - (float)width/124.0f;
+   speedbar.width = width;
 }
 
 /* Starts a level */
-void Game::StartLevel(int m_level)
+void Game::StartLevel(int level)
 {
    int i, change, texloop=0, j, k, nPadHere;
 
    // Set level size
-   m_levelwidth = 2000 + 2*SURFACE_SIZE*m_level;
-   m_levelheight = 1500 + 2*SURFACE_SIZE*m_level;
+   levelwidth = 2000 + 2*SURFACE_SIZE*level;
+   levelheight = 1500 + 2*SURFACE_SIZE*level;
    flGravity = GRAVITY;
 
    // Create the object grid
-   int grid_w = m_levelwidth / OBJ_GRID_SIZE;
-   int grid_h = (m_levelheight - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / OBJ_GRID_SIZE;
-   m_objgrid.Reset(grid_w, grid_h);
+   int grid_w = levelwidth / OBJ_GRID_SIZE;
+   int grid_h = (levelheight - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / OBJ_GRID_SIZE;
+   objgrid.Reset(grid_w, grid_h);
 
    // Create background stars
-   nStarCount = (m_levelwidth * m_levelheight) / 10000;
+   nStarCount = (levelwidth * levelheight) / 10000;
    if (nStarCount > MAX_GAME_STARS)
       nStarCount = MAX_GAME_STARS;
    for (i = 0; i < nStarCount; i++)
       {
-         stars[i].xpos = (int)(rand()%(m_levelwidth/20))*20;
-         stars[i].ypos = (int)(rand()%(m_levelheight/20))*20;
+         stars[i].xpos = (int)(rand()%(levelwidth/20))*20;
+         stars[i].ypos = (int)(rand()%(levelheight/20))*20;
          stars[i].quad.uTexture = uStarTexture;
          stars[i].quad.width = stars[i].quad.height = rand()%15;
       }
 
    // Create the planet surface 
-   if (m_surface)
-      delete[] m_surface;
-   m_surface = new Poly[m_levelwidth/SURFACE_SIZE];
+   if (surface)
+      delete[] surface;
+   surface = new Poly[levelwidth/SURFACE_SIZE];
 	
    // Generate landing pads
    nLandingPads = rand()%MAX_PADS + 1;
@@ -828,12 +828,12 @@ void Game::StartLevel(int m_level)
          bool overlap;
          do
             {
-               index = rand() % (m_levelwidth / SURFACE_SIZE);
+               index = rand() % (levelwidth / SURFACE_SIZE);
                length = rand() % MAX_PAD_SIZE + 3;
 
                // Check for overlap
                overlap = false;
-               if (index + length > (m_levelwidth / SURFACE_SIZE))
+               if (index + length > (levelwidth / SURFACE_SIZE))
                   overlap = true;
                for (int j = 0; j < i; j++)
                   {
@@ -851,19 +851,19 @@ void Game::StartLevel(int m_level)
 
    // Generate surface
    int surftex = rand()%NUM_SURF_TEX;
-   for (i = 0; i < m_levelwidth/SURFACE_SIZE; i++)
+   for (i = 0; i < levelwidth/SURFACE_SIZE; i++)
       {
-         m_surface[i].pointcount = 4;
-         m_surface[i].xpos = i * SURFACE_SIZE;
-         m_surface[i].ypos = m_levelheight - MAX_SURFACE_HEIGHT;
-         m_surface[i].uTexture = uSurfaceTexture[surftex];
-         m_surface[i].texX = ((float)texloop)/10;
+         surface[i].pointcount = 4;
+         surface[i].xpos = i * SURFACE_SIZE;
+         surface[i].ypos = levelheight - MAX_SURFACE_HEIGHT;
+         surface[i].uTexture = uSurfaceTexture[surftex];
+         surface[i].texX = ((float)texloop)/10;
          if (texloop++ == 10)
             texloop = 0;
-         m_surface[i].texwidth = 0.1f;
+         surface[i].texwidth = 0.1f;
 
-         m_surface[i].points[0].x = 0;
-         m_surface[i].points[0].y = MAX_SURFACE_HEIGHT;
+         surface[i].points[0].x = 0;
+         surface[i].points[0].y = MAX_SURFACE_HEIGHT;
 		
          // See if we want to place a landing pad here
          nPadHere = -1;
@@ -885,39 +885,39 @@ void Game::StartLevel(int m_level)
             {
                // Genereate height randomly
                if (i != 0)
-                  change = m_surface[i-1].points[2].y;
+                  change = surface[i-1].points[2].y;
                else
                   change = rand()%MAX_SURFACE_HEIGHT;
-               m_surface[i].points[1].x = 0;
-               m_surface[i].points[1].y = change;
+               surface[i].points[1].x = 0;
+               surface[i].points[1].y = change;
 			
                do
-                  change = m_surface[i].points[1].y + (rand()%VARIANCE-(VARIANCE/2));
+                  change = surface[i].points[1].y + (rand()%VARIANCE-(VARIANCE/2));
                while (change > MAX_SURFACE_HEIGHT || change < 0);
-               m_surface[i].points[2].x = SURFACE_SIZE;
-               m_surface[i].points[2].y = change;
+               surface[i].points[2].x = SURFACE_SIZE;
+               surface[i].points[2].y = change;
             }
          else
             {
                // Make flat terrain for landing pad
                if (i != 0)
-                  change = m_surface[i-1].points[2].y;
+                  change = surface[i-1].points[2].y;
                else
                   change = rand()%MAX_SURFACE_HEIGHT;
-               m_surface[i].points[1].x = 0;
-               m_surface[i].points[1].y = change;
-               m_surface[i].points[2].x = SURFACE_SIZE;
-               m_surface[i].points[2].y = change;
+               surface[i].points[1].x = 0;
+               surface[i].points[1].y = change;
+               surface[i].points[2].x = SURFACE_SIZE;
+               surface[i].points[2].y = change;
 
                pads[nPadHere].SetYPos(change);
             }
 
-         m_surface[i].points[3].x = SURFACE_SIZE;
-         m_surface[i].points[3].y = MAX_SURFACE_HEIGHT;
+         surface[i].points[3].x = SURFACE_SIZE;
+         surface[i].points[3].y = MAX_SURFACE_HEIGHT;
       }
 
    // Create the keys (must be created first because no success check is made on AllocFreeSpace call)
-   nKeys = (m_level / 2) + (m_level % 2);
+   nKeys = (level / 2) + (level % 2);
    if (nKeys > MAX_KEYS)
       nKeys = MAX_KEYS;
    nKeysRemaining = nKeys;
@@ -925,7 +925,7 @@ void Game::StartLevel(int m_level)
       {
          if (i < nKeys)
             {		
-               m_objgrid.AllocFreeSpace(keys[i].xpos, keys[i].ypos);
+               objgrid.AllocFreeSpace(keys[i].xpos, keys[i].ypos);
                keys[i].active = true;
                keys[i].alpha = 1.0f;
             } 
@@ -979,17 +979,17 @@ void Game::StartLevel(int m_level)
       }
 
    // Create the asteroids
-   m_asteroidcount = m_level*2 + rand()%(m_level+3);
-   if (m_asteroidcount > MAX_ASTEROIDS)
-      m_asteroidcount = MAX_ASTEROIDS;
-   for (i = 0; i < m_asteroidcount; i++)
+   asteroidcount = level*2 + rand()%(level+3);
+   if (asteroidcount > MAX_ASTEROIDS)
+      asteroidcount = MAX_ASTEROIDS;
+   for (i = 0; i < asteroidcount; i++)
       {
          // Allocate space, check for timeout
          int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
-         if (!m_objgrid.AllocFreeSpace(x, y, width, 4))
+         if (!objgrid.AllocFreeSpace(x, y, width, 4))
             {
                // Failed to allocate space so don't make any more asteroids
-               m_asteroidcount = i + 1;
+               asteroidcount = i + 1;
                break;
             }
 
@@ -998,10 +998,10 @@ void Game::StartLevel(int m_level)
       }
 
    // Create gateways
-   m_gatewaycount = m_level/2 + rand()%(m_level);
-   if (m_gatewaycount > MAX_GATEWAYS)
-      m_gatewaycount = MAX_GATEWAYS;
-   for (i = 0; i < m_gatewaycount; i++)
+   gatewaycount = level/2 + rand()%(level);
+   if (gatewaycount > MAX_GATEWAYS)
+      gatewaycount = MAX_GATEWAYS;
+   for (i = 0; i < gatewaycount; i++)
       {
          // Allocate space for gateway
          gateways[i].length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
@@ -1013,13 +1013,13 @@ void Game::StartLevel(int m_level)
 		
          bool result;
          if (gateways[i].vertical)
-            result = m_objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, 1, gateways[i].length+1);
+            result = objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, 1, gateways[i].length+1);
          else
-            result = m_objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, gateways[i].length+1, 1);
+            result = objgrid.AllocFreeSpace(gateways[i].xpos, gateways[i].ypos, gateways[i].length+1, 1);
          if (!result)
             {
                // Failed to allocate space so don't make any more gateways
-               m_gatewaycount = i + 1;
+               gatewaycount = i + 1;
                break;
             }
 
@@ -1031,16 +1031,16 @@ void Game::StartLevel(int m_level)
       }
 
    // Create mines (MUST BE CREATED LAST)
-   m_minecount = m_level/2 + rand()%m_level;
-   if (m_minecount > MAX_MINES)
-      m_minecount = MAX_MINES;
-   for (i = 0; i < m_minecount; i++)
+   minecount = level/2 + rand()%level;
+   if (minecount > MAX_MINES)
+      minecount = MAX_MINES;
+   for (i = 0; i < minecount; i++)
       {
          // Allocate space for mine
-         if (!m_objgrid.AllocFreeSpace(mines[i].xpos, mines[i].ypos, 2, 2))
+         if (!objgrid.AllocFreeSpace(mines[i].xpos, mines[i].ypos, 2, 2))
             {
                // Failed to allocate space
-               m_minecount = i + 1;
+               minecount = i + 1;
                break;
             }
 
@@ -1061,34 +1061,34 @@ void Game::StartLevel(int m_level)
             }
 
          // Free space on object grid
-         m_objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos);
-         m_objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos);
-         m_objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos + 1);
-         m_objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos + 1);
+         objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos);
+         objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos);
+         objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos + 1);
+         objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos + 1);
       }
 
    // Set ship starting position
-   m_ship.m_xpos = (float)m_levelwidth/2;
-   m_ship.m_ypos = SHIP_START_Y - 40;
+   ship.xpos = (float)levelwidth/2;
+   ship.ypos = SHIP_START_Y - 40;
 
    // Reset data
-   m_ship.angle = 0.0f;
-   m_ship.flSpeedX = 0.0f;
-   m_ship.flSpeedY = 0.0f;
-   m_leveltext_timeout = LEVEL_TEXT_TIMEOUT;
+   ship.angle = 0.0f;
+   ship.flSpeedX = 0.0f;
+   ship.flSpeedY = 0.0f;
+   leveltext_timeout = LEVEL_TEXT_TIMEOUT;
 
    // Reset emitters
    exhaust.Reset();
    explosion.Reset();
 
    // Set fuel
-   m_fuel = m_maxfuel = 750 + 50*m_level;
+   fuel = maxfuel = 750 + 50*level;
 
    // Start the game
-   m_levelcomp_timeout = 0;
-   m_state = gsFadeIn;
-   m_fade_alpha = 1.0f;
-   m_life_alpha = LIFE_ALPHA_BASE + 1.0f;
+   levelcomp_timeout = 0;
+   state = gsFadeIn;
+   fade_alpha = 1.0f;
+   life_alpha = LIFE_ALPHA_BASE + 1.0f;
 }
 
 /* 
@@ -1097,22 +1097,22 @@ void Game::StartLevel(int m_level)
 void Game::ExplodeShip()
 {
    // Set the game state
-   m_state = gsExplode;
+   state = gsExplode;
 
    // Decrement lives
-   m_life_alpha = LIFE_ALPHA_BASE - 1.0f;
+   life_alpha = LIFE_ALPHA_BASE - 1.0f;
 }
 
 
 /*
- * Bounces a ship after an impact with a m_surface.
+ * Bounces a ship after an impact with a surface.
  */
 void Game::BounceShip()
 {
-   m_ship.flSpeedY *= -1;
-   m_ship.flSpeedX *= -1;
-   m_ship.flSpeedX /= 2;
-   m_ship.flSpeedY /= 2;
+   ship.flSpeedY *= -1;
+   ship.flSpeedX *= -1;
+   ship.flSpeedX /= 2;
+   ship.flSpeedY /= 2;
 }
 
 
@@ -1186,10 +1186,10 @@ bool Game::BoxCollision(ActiveObject &a, int x, int y, int w, int h, Point *poin
    LineSegment l3(x + w, y + h, x, y + h);
    LineSegment l4(x, y + h, x, y);
 
-   return HotSpotCollision(a, l1, points, nPoints, a.m_xpos, a.m_ypos) ||
-      HotSpotCollision(a, l2, points, nPoints, a.m_xpos, a.m_ypos) ||
-      HotSpotCollision(a, l3, points, nPoints, a.m_xpos, a.m_ypos) ||
-      HotSpotCollision(a, l4, points, nPoints, a.m_xpos, a.m_ypos);
+   return HotSpotCollision(a, l1, points, nPoints, a.xpos, a.ypos) ||
+      HotSpotCollision(a, l2, points, nPoints, a.xpos, a.ypos) ||
+      HotSpotCollision(a, l3, points, nPoints, a.xpos, a.ypos) ||
+      HotSpotCollision(a, l4, points, nPoints, a.xpos, a.ypos);
 }
 
 /* Checks for collision between a vector and a line segment */
@@ -1197,8 +1197,8 @@ bool Game::CheckCollision(ActiveObject &a, LineSegment &l, float xpos, float ypo
 {
    if (xpos == -1 || ypos == -1)
       {
-         xpos = a.m_xpos;
-         ypos = a.m_ypos;
+         xpos = a.xpos;
+         ypos = a.ypos;
       }
 
    // Get position after next move
@@ -1242,20 +1242,20 @@ void Game::Display()
       {
          stars[i].quad.x = stars[i].xpos - nViewAdjustX;
          stars[i].quad.y = stars[i].ypos - nViewAdjustY;
-         opengl.DrawRotate(&stars[i].quad, m_starrotate);
-         m_starrotate += 0.005f;
+         opengl.DrawRotate(&stars[i].quad, starrotate);
+         starrotate += 0.005f;
       }
 
    // Draw the planet surface
-   for (i = 0; i < m_levelwidth/SURFACE_SIZE; i++)
+   for (i = 0; i < levelwidth/SURFACE_SIZE; i++)
       {
-         m_surface[i].xpos = i*SURFACE_SIZE - nViewAdjustX;
-         m_surface[i].ypos = m_levelheight - nViewAdjustY - MAX_SURFACE_HEIGHT;
-         opengl.Draw(&m_surface[i]);
+         surface[i].xpos = i*SURFACE_SIZE - nViewAdjustX;
+         surface[i].ypos = levelheight - nViewAdjustY - MAX_SURFACE_HEIGHT;
+         opengl.Draw(&surface[i]);
       }
 
    // Draw the asteroids
-   for (i = 0; i < m_asteroidcount; i++)
+   for (i = 0; i < asteroidcount; i++)
       {
          if (ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / OBJ_GRID_SIZE, 
                             asteroids[i].GetWidth(), asteroids[i].GetHeight()))
@@ -1298,7 +1298,7 @@ void Game::Display()
       }
 
    // Draw gateways
-   for (i = 0; i < m_gatewaycount; i++)
+   for (i = 0; i < gatewaycount; i++)
       {
          // Draw first sphere
          gateways[i].icon.x = gateways[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
@@ -1376,7 +1376,7 @@ void Game::Display()
       }
 
    // Draw mines
-   for (i = 0; i < m_minecount; i++)
+   for (i = 0; i < minecount; i++)
       {
          mines[i].frame[mines[i].current].x = mines[i].xpos*OBJ_GRID_SIZE + mines[i].displace_x - nViewAdjustX;
          mines[i].frame[mines[i].current].y = mines[i].ypos*OBJ_GRID_SIZE + mines[i].displace_y - nViewAdjustY + SHIP_START_Y;		
@@ -1397,11 +1397,11 @@ void Game::Display()
          opengl.DisableTexture();
          opengl.EnableBlending();
          opengl.Colour(1.0f, 0.0f, 0.0f, 0.4f);
-         for (x = 0; x < m_objgrid.GetWidth(); x++)
+         for (x = 0; x < objgrid.GetWidth(); x++)
             {
-               for (y = 0; y < m_objgrid.GetHeight(); y++)
+               for (y = 0; y < objgrid.GetHeight(); y++)
                   {
-                     if (m_objgrid.IsFilled(x, y))
+                     if (objgrid.IsFilled(x, y))
                         {
                            glLoadIdentity();
                            glBegin(GL_QUADS);
@@ -1418,40 +1418,40 @@ void Game::Display()
    // Draw the landing pads
    for (i = 0; i < nLandingPads; i++)
       {
-         pads[i].Draw(nViewAdjustX, nViewAdjustY, m_levelheight, nKeysRemaining > 0);
+         pads[i].Draw(nViewAdjustX, nViewAdjustY, levelheight, nKeysRemaining > 0);
       }
 
-   // Draw the m_ship
-   m_ship.tq.x = (int)m_ship.m_xpos - nViewAdjustX;
-   m_ship.tq.y = (int)m_ship.m_ypos - nViewAdjustY;
+   // Draw the ship
+   ship.tq.x = (int)ship.xpos - nViewAdjustX;
+   ship.tq.y = (int)ship.ypos - nViewAdjustY;
    if (bThrusting)
       {
-         if (sqrt(m_ship.flSpeedX*m_ship.flSpeedX + m_ship.flSpeedY*m_ship.flSpeedY) > 2.0f)
+         if (sqrt(ship.flSpeedX*ship.flSpeedX + ship.flSpeedY*ship.flSpeedY) > 2.0f)
             {
                exhaust.NewCluster
                   (
-                   (int)(exhaust.m_xpos + (exhaust.m_xpos - xlast)/2), 
-                   (int)(exhaust.m_ypos + (exhaust.m_ypos - ylast)/2)
+                   (int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
+                   (int)(exhaust.ypos + (exhaust.ypos - ylast)/2)
                    );
             }
          exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, true);
       }
-   else if (m_state == gsPaused)
+   else if (state == gsPaused)
       exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, false, false);
    else
       exhaust.Draw((float)nViewAdjustX, (float)nViewAdjustY, false);
 	
-   if (m_state != gsDeathWait && m_state != gsGameOver
-       && m_state != gsFadeToDeath && m_state != gsFadeToRestart)
+   if (state != gsDeathWait && state != gsGameOver
+       && state != gsFadeToDeath && state != gsFadeToRestart)
       {
-         opengl.DrawRotate(&m_ship.tq, m_ship.angle);
+         opengl.DrawRotate(&ship.tq, ship.angle);
       }
 	
-   xlast = exhaust.m_xpos;
-   ylast = exhaust.m_ypos;
+   xlast = exhaust.xpos;
+   ylast = exhaust.ypos;
 
    // Draw the explosion if necessary
-   if (m_state == gsExplode)
+   if (state == gsExplode)
       {
          explosion.Draw((float)nViewAdjustX, (float)nViewAdjustY, true);
          opengl.Colour(0.0f, 1.0f, 0.0f);
@@ -1463,8 +1463,8 @@ void Game::Display()
              S_DEATH
              ); 
       }
-   else if (m_state == gsDeathWait || m_state == gsGameOver 
-            || m_state == gsFadeToDeath || m_state == gsFadeToRestart)
+   else if (state == gsDeathWait || state == gsGameOver 
+            || state == gsFadeToDeath || state == gsFadeToRestart)
       {
          explosion.Draw((float)nViewAdjustX, (float)nViewAdjustY, false);
       }
@@ -1501,7 +1501,7 @@ void Game::Display()
    }
 
    // Draw fuel bar
-   int fbsize = (int)(((float)m_fuel/(float)m_maxfuel)*(256-FUELBAR_OFFSET)); 
+   int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
    float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
    opengl.EnableTexture();
    opengl.DisableBlending();
@@ -1517,7 +1517,7 @@ void Game::Display()
 
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
-   ft.Print(ftScore, 10, 10, "%.7d", m_score);
+   ft.Print(ftScore, 10, 10, "%.7d", score);
    ft.Print(ftNormal, opengl.GetWidth()-70, 10, S_FUEL);
    opengl.Draw(&speedbar);
    opengl.Draw(&speedmeter);
@@ -1525,24 +1525,24 @@ void Game::Display()
    opengl.Colour(0.0f, 1.0f, 0.0f);
 
    // Draw life icons
-   for (i = 0; i < m_lives; i++)
+   for (i = 0; i < lives; i++)
       {
          smallship.x = 5 + i*30;
          smallship.y = 60;
-         if (i == m_lives-1)
+         if (i == lives-1)
             {
-               if (m_life_alpha > LIFE_ALPHA_BASE)
+               if (life_alpha > LIFE_ALPHA_BASE)
                   opengl.Draw(&smallship);
-               else if (m_life_alpha < 0.0f)
+               else if (life_alpha < 0.0f)
                   {
                      // Decrement lives
-                     m_lives--;
-                     m_life_alpha = LIFE_ALPHA_BASE + 1.0f;
+                     lives--;
+                     life_alpha = LIFE_ALPHA_BASE + 1.0f;
                   }
                else
                   {
-                     opengl.DrawBlend(&smallship, m_life_alpha);
-                     m_life_alpha -= 0.03f;
+                     opengl.DrawBlend(&smallship, life_alpha);
+                     life_alpha -= 0.03f;
                   }
             }
          else
@@ -1586,7 +1586,7 @@ void Game::Display()
       }
 
    // Draw level complete messages
-   if (m_state == gsLevelComplete)
+   if (state == gsLevelComplete)
       {
          opengl.Draw(&levcomp);
          opengl.Colour(0.0f, 0.5f, 0.9f);
@@ -1596,12 +1596,12 @@ void Game::Display()
              (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_SCORE) - 40)/2,
              (opengl.GetHeight() - 30)/2 + 50,
              S_SCORE,
-             m_newscore > 0 ? m_newscore : 0
+             newscore > 0 ? newscore : 0
              );
       }
 
    // Draw level number text
-   if (m_leveltext_timeout)
+   if (leveltext_timeout)
       {
          opengl.Colour(0.9f, 0.9f, 0.0f);
          ft.Print
@@ -1610,20 +1610,20 @@ void Game::Display()
              (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_LEVEL) - 20)/2,
              (opengl.GetHeight() - 30)/2,
              S_LEVEL,
-             m_level
+             level
              );
       }
 
    // Draw the fade
-   if (m_state == gsFadeIn || m_state == gsFadeToDeath || m_state == gsFadeToRestart)
-      opengl.DrawBlend(&fade, m_fade_alpha);
+   if (state == gsFadeIn || state == gsFadeToDeath || state == gsFadeToRestart)
+      opengl.DrawBlend(&fade, fade_alpha);
 
    // Draw game over message
-   if (m_lives == 0 || (m_lives == 1 && m_life_alpha < LIFE_ALPHA_BASE))
+   if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE))
       opengl.Draw(&gameover);
 
    // Draw paused message
-   if (m_state == gsPaused)
+   if (state == gsPaused)
       opengl.Draw(&paused);
 }
 
@@ -1632,7 +1632,7 @@ void Game::Display()
  * Creates a new object grid.
  */
 ObjectGrid::ObjectGrid()
-  : m_grid(NULL), m_width(0), m_height(0)
+  : grid(NULL), width(0), height(0)
 {
 	
 }
@@ -1643,8 +1643,8 @@ ObjectGrid::ObjectGrid()
  */
 ObjectGrid::~ObjectGrid()
 {
-   if (m_grid)
-      delete[] m_grid;
+   if (grid)
+      delete[] grid;
 }
 
 
@@ -1663,11 +1663,11 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y)
          if (--timeout == 0)
             return false;
 		
-         x = rand() % m_width;
-         y = rand() % m_height;
-      } while (m_grid[x + (y * m_width)]);
+         x = rand() % width;
+         y = rand() % height;
+      } while (grid[x + (y * width)]);
 	
-   m_grid[x + (y * m_width)] = true;
+   grid[x + (y * width)] = true;
 	
    return true;
 }
@@ -1691,8 +1691,8 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
          if (--timeout == 0)
             return false;
 		
-         x = rand() % (m_width - width);
-         y = rand() % (m_height - height);
+         x = rand() % (this->width - width);
+         y = rand() % (this->height - height);
 		
          // Check this position
          isOk = true;
@@ -1700,7 +1700,7 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
             {
                for (counter_y = y; counter_y < y + height; counter_y++)
                   {
-                     if (m_grid[counter_x + (counter_y * m_width)])
+                     if (grid[counter_x + (counter_y * this->width)])
                         isOk = false;
                   }
             }
@@ -1709,7 +1709,7 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
    for (counter_x = x; counter_x < x + width; counter_x++)
       {
          for (counter_y = y; counter_y < y + height; counter_y++)
-            m_grid[counter_x + (counter_y * m_width)] = true;
+            grid[counter_x + (counter_y * this->width)] = true;
       }
 	
    return true;
@@ -1721,7 +1721,7 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
  */
 void ObjectGrid::UnlockSpace(int x, int y)
 {
-   m_grid[x + (y * m_width)] = false;
+   grid[x + (y * width)] = false;
 }
 
 
@@ -1733,15 +1733,15 @@ void ObjectGrid::Reset(int width, int height)
    assert(width > 0);
    assert(height > 0);
 
-   if (m_grid)
-      delete[] m_grid;
+   if (grid)
+      delete[] grid;
 		
-   m_width = width;
-   m_height = height;
+   this->width = width;
+   this->height = height;
 	
-   m_grid = new bool[m_width * m_height];
+   grid = new bool[width * height];
 	
-   memset(m_grid, 0, m_width * m_height * sizeof(bool));
+   memset(grid, 0, width * height * sizeof(bool));
 }
 
 
@@ -1750,7 +1750,7 @@ void ObjectGrid::Reset(int width, int height)
  */
 bool ObjectGrid::IsFilled(int x, int y) const
 {
-   return m_grid[x + (m_width * y)];
+   return grid[x + (width * y)];
 }
 
 
@@ -1778,10 +1778,10 @@ void LandingPad::Load()
  */
 void LandingPad::Draw(int viewadjust_x, int viewadjust_y, int levelheight, bool locked)
 {
-   m_quad.uTexture = locked ? s_nolandtex : s_landtex;
-   m_quad.x = m_index * SURFACE_SIZE - viewadjust_x;
-   m_quad.y = levelheight - viewadjust_y - MAX_SURFACE_HEIGHT + m_ypos;
-   OpenGL::GetInstance().Draw(&m_quad);
+   quad.uTexture = locked ? s_nolandtex : s_landtex;
+   quad.x = index * SURFACE_SIZE - viewadjust_x;
+   quad.y = levelheight - viewadjust_y - MAX_SURFACE_HEIGHT + ypos;
+   OpenGL::GetInstance().Draw(&quad);
 }
  
 
@@ -1790,13 +1790,13 @@ void LandingPad::Draw(int viewadjust_x, int viewadjust_y, int levelheight, bool 
  */
 void LandingPad::Reset(int index, int length)
 {
-   m_index = index;
-   m_length = length;
+   this->index = index;
+   this->length = length;
 	
-   m_quad.x = m_index * SURFACE_SIZE;
-   m_quad.width = m_length * SURFACE_SIZE;
-   m_quad.height = 16;
-   m_quad.uTexture = s_landtex;
+   quad.x = index * SURFACE_SIZE;
+   quad.width = length * SURFACE_SIZE;
+   quad.height = 16;
+   quad.uTexture = s_landtex;
 }
  
 
@@ -1805,89 +1805,89 @@ void LandingPad::Reset(int index, int length)
  */
 void Asteroid::ConstructAsteroid(int x, int y, int width, Texture texture)
 {
-   m_xpos = x;
-   m_ypos = y;
-   m_width = width;
-   m_height = 4;
+   xpos = x;
+   ypos = y;
+   this->width = width;
+   height = 4;
 
    int change, texloop=0;
 
    // Build up Polys
-   for (int i = 0; i < m_width; i++)
+   for (int i = 0; i < width; i++)
       {
          // Set Poly parameters
-         m_uppolys[i].texwidth = 0.1f;
-         m_uppolys[i].texX = ((float)texloop)/10;
+         uppolys[i].texwidth = 0.1f;
+         uppolys[i].texX = ((float)texloop)/10;
          if (texloop++ == 10)
             texloop = 0;
-         m_uppolys[i].pointcount = 4;
-         m_uppolys[i].uTexture = texture;
+         uppolys[i].pointcount = 4;
+         uppolys[i].uTexture = texture;
 
          // Lower left vertex
-         m_uppolys[i].points[0].x = i * OBJ_GRID_SIZE;
-         m_uppolys[i].points[0].y = 2 * OBJ_GRID_SIZE;
+         uppolys[i].points[0].x = i * OBJ_GRID_SIZE;
+         uppolys[i].points[0].y = 2 * OBJ_GRID_SIZE;
 
          // Upper left vertex
-         m_uppolys[i].points[1].x = i * OBJ_GRID_SIZE;
+         uppolys[i].points[1].x = i * OBJ_GRID_SIZE;
          if (i == 0)
-            m_uppolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
+            uppolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
          else
-            m_uppolys[i].points[1].y = m_uppolys[i - 1].points[2].y;
+            uppolys[i].points[1].y = uppolys[i - 1].points[2].y;
 
          // Upper right vertex
-         m_uppolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
+         uppolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
          do
-            change = m_uppolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
+            change = uppolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
          while (change < 0 || change > 2 * OBJ_GRID_SIZE);
-         m_uppolys[i].points[2].y = change;
+         uppolys[i].points[2].y = change;
 
          // Lower right vertex
-         m_uppolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
-         m_uppolys[i].points[3].y = 2 * OBJ_GRID_SIZE;
+         uppolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
+         uppolys[i].points[3].y = 2 * OBJ_GRID_SIZE;
       }
 
    // Taper last poly
-   m_uppolys[m_width - 1].points[2].y = 2 * OBJ_GRID_SIZE;
-   m_uppolys[0].points[1].y = 2 * OBJ_GRID_SIZE;
+   uppolys[width - 1].points[2].y = 2 * OBJ_GRID_SIZE;
+   uppolys[0].points[1].y = 2 * OBJ_GRID_SIZE;
 
    // Build down Polys
    texloop = 0;
-   for (int i = 0; i < m_width; i++)
+   for (int i = 0; i < width; i++)
       {
          // Set Poly parameters
-         m_downpolys[i].texwidth = 0.1f;
-         m_downpolys[i].texX = ((float)texloop) / 10;
+         downpolys[i].texwidth = 0.1f;
+         downpolys[i].texX = ((float)texloop) / 10;
          if (texloop++ == 10)
             texloop = 0;
-         m_downpolys[i].pointcount = 4;
-         m_downpolys[i].uTexture = texture;
+         downpolys[i].pointcount = 4;
+         downpolys[i].uTexture = texture;
 
          // Upper left vertex
-         m_downpolys[i].points[0].x = i * OBJ_GRID_SIZE;
-         m_downpolys[i].points[0].y = 0;
+         downpolys[i].points[0].x = i * OBJ_GRID_SIZE;
+         downpolys[i].points[0].y = 0;
 
          // Lower left vertex
-         m_downpolys[i].points[1].x = i * OBJ_GRID_SIZE;
+         downpolys[i].points[1].x = i * OBJ_GRID_SIZE;
          if (i == 0)
-            m_downpolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
+            downpolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
          else
-            m_downpolys[i].points[1].y = m_downpolys[i - 1].points[2].y;
+            downpolys[i].points[1].y = downpolys[i - 1].points[2].y;
 
          // Lower right vertex
-         m_downpolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
+         downpolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
          do
-            change = m_downpolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
+            change = downpolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
          while (change < 0 || change > 2 * OBJ_GRID_SIZE);
-         m_downpolys[i].points[2].y = change;
+         downpolys[i].points[2].y = change;
 
          // Upper right vertex
-         m_downpolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
-         m_downpolys[i].points[3].y = 0;
+         downpolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
+         downpolys[i].points[3].y = 0;
       }
 
    // Taper last poly
-   m_downpolys[m_width-1].points[2].y = 0;
-   m_downpolys[0].points[1].y = 0;
+   downpolys[width-1].points[2].y = 0;
+   downpolys[0].points[1].y = 0;
 }
 
 
@@ -1898,10 +1898,10 @@ LineSegment Asteroid::GetUpBoundary(int poly)
 {
    return LineSegment
       (
-       m_xpos*OBJ_GRID_SIZE + m_uppolys[poly].points[1].x,
-       m_ypos*OBJ_GRID_SIZE + m_uppolys[poly].points[1].y + SHIP_START_Y,
-       m_xpos*OBJ_GRID_SIZE + m_uppolys[poly].points[2].x,
-       m_ypos*OBJ_GRID_SIZE + m_uppolys[poly].points[2].y + SHIP_START_Y
+       xpos*OBJ_GRID_SIZE + uppolys[poly].points[1].x,
+       ypos*OBJ_GRID_SIZE + uppolys[poly].points[1].y + SHIP_START_Y,
+       xpos*OBJ_GRID_SIZE + uppolys[poly].points[2].x,
+       ypos*OBJ_GRID_SIZE + uppolys[poly].points[2].y + SHIP_START_Y
        );
 }
 
@@ -1913,10 +1913,10 @@ LineSegment Asteroid::GetDownBoundary(int poly)
 {
    return LineSegment
       (
-       m_xpos*OBJ_GRID_SIZE + m_downpolys[poly].points[1].x,
-       (m_ypos+2)*OBJ_GRID_SIZE + m_downpolys[poly].points[1].y + SHIP_START_Y,
-       m_xpos*OBJ_GRID_SIZE + m_downpolys[poly].points[2].x,
-       (m_ypos+2)*OBJ_GRID_SIZE + m_downpolys[poly].points[2].y + SHIP_START_Y
+       xpos*OBJ_GRID_SIZE + downpolys[poly].points[1].x,
+       (ypos+2)*OBJ_GRID_SIZE + downpolys[poly].points[1].y + SHIP_START_Y,
+       xpos*OBJ_GRID_SIZE + downpolys[poly].points[2].x,
+       (ypos+2)*OBJ_GRID_SIZE + downpolys[poly].points[2].y + SHIP_START_Y
        );
 }
 
@@ -1928,17 +1928,17 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y)
 {
    OpenGL &opengl = OpenGL::GetInstance();
 
-   for (int i = 0; i < m_width; i++)
+   for (int i = 0; i < width; i++)
       {
          // Up
-         m_uppolys[i].xpos = m_xpos*OBJ_GRID_SIZE - viewadjust_x;
-         m_uppolys[i].ypos = m_ypos*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
-         opengl.Draw(&m_uppolys[i]);
+         uppolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
+         uppolys[i].ypos = ypos*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
+         opengl.Draw(&uppolys[i]);
 
          // Down
-         m_downpolys[i].xpos = m_xpos*OBJ_GRID_SIZE - viewadjust_x;
-         m_downpolys[i].ypos = (m_ypos+2)*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
-         opengl.Draw(&m_downpolys[i]);
+         downpolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
+         downpolys[i].ypos = (ypos+2)*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
+         opengl.Draw(&downpolys[i]);
       }
 } 
 

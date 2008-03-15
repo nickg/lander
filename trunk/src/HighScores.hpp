@@ -32,7 +32,7 @@
 class HighScores : public Screen
 {
 public:
-   HighScores() : m_hasloaded(false) { }
+   HighScores() : hasloaded(false) { }
    virtual ~HighScores() { }
 	
    void Load();
@@ -49,11 +49,11 @@ private:
    enum HighScoreState { hssDisplay, hssEnterName };
 	
    // Private variables
-   bool m_hasloaded;
-   int m_newscore;
+   bool hasloaded;
+   int newscore;
    TextureQuad hscore;
-   float flAlpha, m_fade;
-   HighScoreState m_state;
+   float flAlpha, fade;
+   HighScoreState state;
 	
    // Textures
    GLuint uHighScore;
