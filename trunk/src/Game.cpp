@@ -52,13 +52,6 @@ extern DataFile *g_pData;
 
 
 /*
- * Defines a simplified polygon representing the ship.
- */
-const Point Game::hotspots[] = {{1, 31}, {1, 26}, {3, 14}, {15, 0}, 
-                                  {28, 14}, {30, 26}, {30, 31}, {16, 31}};
-
-
-/*
  * Sets the inital state of the Game object.
  */
 Game::Game()
@@ -200,14 +193,12 @@ void Game::Load()
    bDebugMode = false;
 }
 
-/* Destructor */
 Game::~Game()
 {
    if (surface)
       delete[] surface;
 }
 
-/* Starts a new game */
 void Game::NewGame()
 {
    // Reset score, lives, etc.
@@ -226,10 +217,7 @@ void Game::Process()
    Input &input = Input::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
    int i, k, m;
-
-   // Rotate ship hotspots
-   RotatePoints(hotspots, points, NUM_HOTSPOTS, ship.angle*PI/180, -16, 16);
-
+  
    // Check keys
    if (input.GetKeyState(SDLK_p)) {
       if (state == gsPaused) {
@@ -252,8 +240,7 @@ void Game::Process()
    if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
        && fuel > 0 && state == gsInGame) {
       // Thrusting
-      ship.speedX += SHIP_SPEED * (float)sin(ship.angle*(PI/180));
-      ship.speedY -= SHIP_SPEED * (float)cos(ship.angle*(PI/180));
+      ship.Thrust(SHIP_SPEED);
       bThrusting = true;
       fuel--;
    }
@@ -292,14 +279,12 @@ void Game::Process()
       input.ResetKey(SDLK_d);
    }
 
-   // Move only if not in game over (prevent bugs)
+   // Move only if not in game over
    if (state == gsInGame || state == gsExplode) {
-      // Apply gravity
-      ship.speedY += flGravity;
+      ship.ApplyGravity(flGravity);
 
       // Move the ship (and exhaust and explosion)
-      ship.xpos += ship.speedX;
-      ship.ypos += ship.speedY;
+      ship.Move();
       exhaust.xpos = ship.xpos + ship.tq.width/2
          - (ship.tq.width/2)*(float)sin(ship.angle*(PI/180));
       exhaust.ypos = ship.ypos + ship.tq.height/2
@@ -403,7 +388,6 @@ void Game::Process()
       ship.ypos = (float)(viewport.GetLevelHeight() - ship.tq.height);
       ship.speedY *= -0.5f;
       
-      // Bug fix
       if (state == gsExplode) {
          state = gsDeathWait; 
          death_timeout = DEATH_TIMEOUT;
@@ -429,7 +413,7 @@ void Game::Process()
       l.p2.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
       
       // Look through each hot spot and check for collisions
-      if (ship.HotSpotCollision(l, points, NUM_HOTSPOTS)) {
+      if (ship.HotSpotCollision(l)) {
          // Collided - see which game state we're in
          if (state == gsInGame) {
             bool bLanded = false;
@@ -494,8 +478,8 @@ void Game::Process()
             l1 = asteroids[i].GetUpBoundary(k);
             l2 = asteroids[i].GetDownBoundary(k);
             
-            if (ship.HotSpotCollision(l1, points, NUM_HOTSPOTS) 
-                || ship.HotSpotCollision(l2, points, NUM_HOTSPOTS)) {
+            if (ship.HotSpotCollision(l1) 
+                || ship.HotSpotCollision(l2)) {
                // Crashed
                if (state == gsInGame) {
                   // Destroy the ship
@@ -529,20 +513,14 @@ void Game::Process()
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE,
                    gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    ObjectGrid::OBJ_GRID_SIZE,
-                   ObjectGrid::OBJ_GRID_SIZE,
-                   points,
-                   NUM_HOTSPOTS
-                   );
+                   ObjectGrid::OBJ_GRID_SIZE);
 			
                bool collide2 = ship.BoxCollision
                   (
                    (gateways[i].xpos + dx)*ObjectGrid::OBJ_GRID_SIZE,
                    (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    ObjectGrid::OBJ_GRID_SIZE,
-                   ObjectGrid::OBJ_GRID_SIZE,
-                   points, 
-                   NUM_HOTSPOTS
-                   );
+                   ObjectGrid::OBJ_GRID_SIZE  );
 		
                if (collide1 || collide2)
                   {
@@ -572,9 +550,7 @@ void Game::Process()
                    gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE, 
                    gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
                    (dx + 1)*ObjectGrid::OBJ_GRID_SIZE,
-                   (dy + 1)*ObjectGrid::OBJ_GRID_SIZE,
-                   points,
-                   NUM_HOTSPOTS
+                   (dy + 1)*ObjectGrid::OBJ_GRID_SIZE
                    ); 
 		
                if (collide)
@@ -603,9 +579,7 @@ void Game::Process()
              mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3 + mines[i].displace_x,
              mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
              ObjectGrid::OBJ_GRID_SIZE*2 - 6,
-             ObjectGrid::OBJ_GRID_SIZE*2 - 12,
-             points,
-             NUM_HOTSPOTS
+             ObjectGrid::OBJ_GRID_SIZE*2 - 12
              ); 
 	
          if (collide)
@@ -638,9 +612,7 @@ void Game::Process()
              keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3,
              keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 3,
              ObjectGrid::OBJ_GRID_SIZE - 6,
-             ObjectGrid::OBJ_GRID_SIZE - 6,
-             points, 
-             NUM_HOTSPOTS
+             ObjectGrid::OBJ_GRID_SIZE - 6
              );	
 	
          if (keys[i].active && collide)
@@ -1095,22 +1067,6 @@ void Game::BounceShip()
    ship.speedX *= -1;
    ship.speedX /= 2;
    ship.speedY /= 2;
-}
-
-
-/* Rotates and array of Points */
-void Game::RotatePoints(const Point *pPoints, Point *pDest, int nCount, float angle, int adjustx, int adjusty)
-{
-   for (int i = 0; i < nCount; i++)
-      {
-         int x = pPoints[i].x + adjustx;
-         int y = pPoints[i].y*-1 + adjusty;
-         pDest[i].x = (int)(x*cos(angle)) + (int)(y*sin(angle));
-         pDest[i].y = (int)(y*cos(angle)) - (int)(x*sin(angle));
-         pDest[i].y -= adjusty;
-         pDest[i].x -= adjustx;
-         pDest[i].y*=-1;
-      }
 }
 
 /* Displays frame to user */

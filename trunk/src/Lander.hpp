@@ -87,7 +87,7 @@ public:
 
 private:
    
-   void RotatePoints(const Point *pPoints, Point *pDest, int nCount, float angle, int adjustx=0, int adjusty=0);
+   
    void BounceShip();
    void ExplodeShip();
 
@@ -120,9 +120,6 @@ private:
    GLuint uGatewayTexture, uFuelMeterTexture, uFuelBarTexture, uMineTexture[36], uShipSmallTexture;
    GLuint uGameOver, uPausedTexture;
     
-   static const int NUM_HOTSPOTS = 8;
-   Point points[NUM_HOTSPOTS];
-   static const Point hotspots[];
     
    // Stars
    static const int MAX_GAME_STARS = 2048;

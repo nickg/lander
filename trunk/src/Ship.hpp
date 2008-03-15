@@ -30,22 +30,32 @@ public:
    static void Load();
 
    void Display();
+   void Move();
+   void Thrust(float speed);
+   void ApplyGravity(float gravity);
    
    bool CheckCollision(LineSegment &l, float dx=0, float dy=0);
-   bool HotSpotCollision(LineSegment &l, Point *points, int nPoints, float dx=0, float dy=0);
-   bool BoxCollision(int x, int y, int w, int h, Point *points, int nPoints);
+   bool HotSpotCollision(LineSegment &l, float dx=0, float dy=0);
+   bool BoxCollision(int x, int y, int w, int h);
    
    float xpos, ypos;
    float speedX, speedY, angle;
    TextureQuad tq;
 
-private:   
+private:
+   void RotatePoints(const Point *pPoints, Point *pDest, int nCount,
+                     float angle, int adjustx=0, int adjusty=0);
+   
    static const int SHIP_TEX_WIDTH = 32;
    static const int SHIP_TEX_HEIGHT = 32;
    
    static GLuint uShipTexture;
 
    Viewport *viewport;
+   
+   static const int NUM_HOTSPOTS = 8;
+   Point points[NUM_HOTSPOTS];
+   static const Point hotspots[];
 };
 
 #endif
