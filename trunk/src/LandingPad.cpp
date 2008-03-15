@@ -17,20 +17,17 @@
 
 #include "LandingPad.hpp"
 #include "DataFile.hpp"
+#include "Surface.hpp"
 
 extern DataFile *g_pData;
 
 Texture LandingPad::s_landtex, LandingPad::s_nolandtex;
 
-// TODO: No! get this from the surface class
-#define SURFACE_SIZE 20
-#define MAX_SURFACE_HEIGHT  300
-
 LandingPad::LandingPad(Viewport *v, int index, int length)
    : viewport(v), index(index), length(length)
 {
-   quad.x = index * SURFACE_SIZE;
-   quad.width = length * SURFACE_SIZE;
+   quad.x = index * Surface::SURFACE_SIZE;
+   quad.width = length * Surface::SURFACE_SIZE;
    quad.height = 16;
    quad.uTexture = s_landtex;
 }
@@ -53,8 +50,8 @@ void LandingPad::Load()
 void LandingPad::Draw(bool locked)
 {
    quad.uTexture = locked ? s_nolandtex : s_landtex;
-   quad.x = index * SURFACE_SIZE - viewport->GetXAdjust();
+   quad.x = index * Surface::SURFACE_SIZE - viewport->GetXAdjust();
    quad.y = viewport->GetLevelHeight() - viewport->GetYAdjust()
-      - MAX_SURFACE_HEIGHT + ypos;
+      - Surface::MAX_SURFACE_HEIGHT + ypos;
    OpenGL::GetInstance().Draw(&quad);
 }

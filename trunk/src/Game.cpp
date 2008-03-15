@@ -25,7 +25,7 @@
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
 #define SURFACE_SIZE		    20
-#define VARIANCE		        50
+//#define VARIANCE		        50
 //#define AS_VARIANCE		      64
 #define MAX_PAD_SIZE		    3
 #define LAND_SPEED		      2.0f
@@ -47,24 +47,18 @@
 #define LIFE_ALPHA_BASE		  2.0f
 #define LEVEL_TEXT_TIMEOUT	75
 
-/* Globals */
 extern DataFile *g_pData;
 
 
-/*
- * Sets the inital state of the Game object.
- */
 Game::Game()
-  : hasloaded(false),
-    surface(NULL),
-    state(gsNone),
-    ship(&viewport)
+   : hasloaded(false),
+     state(gsNone),
+     ship(&viewport),
+     surface(&viewport)
 {
 
 }
 
-
-/* Loads game data */
 void Game::Load()
 {
    const int TEX_NAME_LEN = 128;
@@ -78,11 +72,6 @@ void Game::Load()
       uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
       uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
       uLevComTexture = opengl.LoadTextureAlpha(g_pData, "LevelComplete.bmp");
-      uSurfaceTexture[0] = opengl.LoadTexture(g_pData, "GrassSurface.bmp");
-      uSurfaceTexture[1] = opengl.LoadTexture(g_pData, "DirtSurface.bmp");
-      uSurfaceTexture[2] = opengl.LoadTexture(g_pData, "SnowSurface.bmp");
-      uSurfaceTexture[3] = opengl.LoadTexture(g_pData, "RedRockSurface.bmp");
-      uSurfaceTexture[4] = opengl.LoadTexture(g_pData, "RockSurface.bmp");
       uSurf2Texture[0] = opengl.LoadTexture(g_pData, "GrassSurface2.bmp");
       uSurf2Texture[1] = opengl.LoadTexture(g_pData, "DirtSurface2.bmp");
       uSurf2Texture[2] = opengl.LoadTexture(g_pData, "SnowSurface2.bmp");
@@ -124,6 +113,7 @@ void Game::Load()
 
       Ship::Load();
       LandingPad::Load();
+      Surface::Load();
       
       // Toggle loaded flag
       hasloaded = true;
@@ -194,8 +184,7 @@ void Game::Load()
 
 Game::~Game()
 {
-   if (surface)
-      delete[] surface;
+   
 }
 
 void Game::NewGame()
@@ -368,16 +357,50 @@ void Game::Process()
    viewport.SetYAdjust(centrey - (opengl.GetHeight()/2));
 
    // Check for collisions with surface
-   LineSegment l;
+   int padIndex;
+   if (surface.CheckCollisions(ship, pads, &padIndex)) {
+      bool landed = false;
+      if (state == gsInGame) {
+         if (padIndex != -1) {
+            // Hit a landing pad
+            int dAngle = ((int)ship.angle) % 360;
+            if ((dAngle >= 330 || dAngle <= 30)
+                && ship.speedY < LAND_SPEED && nKeysRemaining == 0) {
+               // Landed safely
+               state = gsLevelComplete;
+               newscore = (level * 100) + 
+                  (((MAX_PAD_SIZE+2) - pads[padIndex].GetLength())*10*level);
+               countdown_timeout = 70;
+               landed = true;
+            }
+         }
+         if (!landed) {
+            // Crash landed
+            ExplodeShip();
+            ship.Bounce();
+         }
+      }
+      else if (state == gsExplode) {
+         ship.Bounce();
+         
+         // See if we need to stop the madness
+         if (state == gsExplode && ship.speedY*-1 < 0.05f) {
+            state = gsDeathWait; 
+            death_timeout = DEATH_TIMEOUT;
+         }
+      }
+   }
+   
+   /*LineSegment l;
    int lookmin = (int)(ship.xpos/SURFACE_SIZE) - 2;
    int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
    if (lookmax >= viewport.GetLevelWidth()/SURFACE_SIZE) lookmax = (viewport.GetLevelWidth() / SURFACE_SIZE) - 1;
    for (int i = lookmin; i <= lookmax; i++) {
       l.p1.x = i*SURFACE_SIZE;
-      l.p1.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
+      l.p1.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface.surface[i].points[1].y;
       l.p2.x = (i+1)*SURFACE_SIZE;
-      l.p2.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
+      l.p2.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface.surface[i].points[2].y;
       
       // Look through each hot spot and check for collisions
       if (ship.HotSpotCollision(l)) {
@@ -432,7 +455,7 @@ void Game::Process()
             }
          }
       }
-   }
+      }*/
    
    // Check for collisions with asteroids
    LineSegment l1, l2;
@@ -712,7 +735,7 @@ void Game::Process()
 /* Starts a level */
 void Game::StartLevel(int level)
 {
-   int i, change, texloop=0, j, k, nPadHere;
+   int i, j, k;
 
    // Set level size
    viewport.SetLevelWidth(2000 + 2*SURFACE_SIZE*level);
@@ -736,11 +759,6 @@ void Game::StartLevel(int level)
          stars[i].quad.width = stars[i].quad.height = rand()%15;
       }
 
-   // Create the planet surface 
-   if (surface)
-      delete[] surface;
-   surface = new Poly[viewport.GetLevelWidth()/SURFACE_SIZE];
-	
    // Generate landing pads
    pads.clear();
    int nLandingPads = rand()%MAX_PADS + 1;
@@ -769,75 +787,11 @@ void Game::StartLevel(int level)
             } while (overlap);
 		
          pads.push_back(LandingPad(&viewport, index, length));
-      }
+      }   
 
-   // Generate surface
-   int surftex = rand()%NUM_SURF_TEX;
-   for (i = 0; i < viewport.GetLevelWidth()/SURFACE_SIZE; i++)
-      {
-         surface[i].pointcount = 4;
-         surface[i].xpos = i * SURFACE_SIZE;
-         surface[i].ypos = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT;
-         surface[i].uTexture = uSurfaceTexture[surftex];
-         surface[i].texX = ((float)texloop)/10;
-         if (texloop++ == 10)
-            texloop = 0;
-         surface[i].texwidth = 0.1f;
-
-         surface[i].points[0].x = 0;
-         surface[i].points[0].y = MAX_SURFACE_HEIGHT;
-		
-         // See if we want to place a landing pad here
-         nPadHere = -1;
-         for (j = 0; j < nLandingPads; j++)
-            {
-               for (k = 0; k < pads[j].GetLength(); k++)
-                  {
-                     if (pads[j].GetIndex() + k == i)
-                        {
-                           nPadHere = j;
-                           goto out;
-                        }
-                  }
-            }
-
-      out:
-
-         if (nPadHere == -1)
-            {
-               // Genereate height randomly
-               if (i != 0)
-                  change = surface[i-1].points[2].y;
-               else
-                  change = rand()%MAX_SURFACE_HEIGHT;
-               surface[i].points[1].x = 0;
-               surface[i].points[1].y = change;
-			
-               do
-                  change = surface[i].points[1].y + (rand()%VARIANCE-(VARIANCE/2));
-               while (change > MAX_SURFACE_HEIGHT || change < 0);
-               surface[i].points[2].x = SURFACE_SIZE;
-               surface[i].points[2].y = change;
-            }
-         else
-            {
-               // Make flat terrain for landing pad
-               if (i != 0)
-                  change = surface[i-1].points[2].y;
-               else
-                  change = rand()%MAX_SURFACE_HEIGHT;
-               surface[i].points[1].x = 0;
-               surface[i].points[1].y = change;
-               surface[i].points[2].x = SURFACE_SIZE;
-               surface[i].points[2].y = change;
-
-               pads[nPadHere].SetYPos(change);
-            }
-
-         surface[i].points[3].x = SURFACE_SIZE;
-         surface[i].points[3].y = MAX_SURFACE_HEIGHT;
-      }
-
+   int surftex = rand() % Surface::NUM_SURF_TEX;
+   surface.Generate(surftex, pads);
+    
    // Create the keys (must be created first because no success check is made on AllocFreeSpace call)
    nKeys = (level / 2) + (level % 2);
    if (nKeys > MAX_KEYS)
@@ -1037,13 +991,7 @@ void Game::Display()
          starrotate += 0.005f;
       }
 
-   // Draw the planet surface
-   for (i = 0; i < viewport.GetLevelWidth()/SURFACE_SIZE; i++)
-      {
-         surface[i].xpos = i*SURFACE_SIZE - viewport.GetXAdjust();
-         surface[i].ypos = viewport.GetLevelHeight() - viewport.GetYAdjust() - MAX_SURFACE_HEIGHT;
-         opengl.Draw(&surface[i]);
-      }
+   surface.Display();
 
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
