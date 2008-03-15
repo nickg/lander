@@ -32,9 +32,9 @@
 //#define OBJ_GRID_SIZE		    32
 //#define SHIP_START_Y		    100
 #define KEY_ROTATION_SPEED  2
-#define MINE_ROTATION_SPEED 5
+//#define MINE_ROTATION_SPEED 5
 #define GATEWAY_ACTIVE		  30
-#define MINE_MOVE_SPEED		  1
+//#define MINE_MOVE_SPEED		  1
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
 
@@ -106,16 +106,13 @@ void Game::Load()
          
          snprintf(buf, TEX_NAME_LEN, "keypink%.2d.bmp", i);
          uPinkKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-               
-         snprintf(buf, TEX_NAME_LEN, "mine%d.bmp", i*5);
-         uMineTexture[i] = opengl.LoadTextureAlpha(g_pData, buf);
       }
 
       Ship::Load();
       LandingPad::Load();
       Surface::Load();
+      Mine::Load();
       
-      // Toggle loaded flag
       hasloaded = true;
    }
 
@@ -275,80 +272,8 @@ void Game::Process()
    }
 
    // Move mines
-   for (int i = 0; i < minecount; i++) {
-      if (mines[i].displace_x%ObjectGrid::OBJ_GRID_SIZE == 0
-          && mines[i].displace_y%ObjectGrid::OBJ_GRID_SIZE == 0) {
-         switch (mines[i].dir) {
-         case UP: mines[i].ypos-=1; break;
-         case DOWN: mines[i].ypos+=1; break;
-         case LEFT: mines[i].xpos-=1; break;
-         case RIGHT: mines[i].xpos+=1; break;
-         case NODIR: 
-            break;	// Do nothing
-         }
-         mines[i].displace_x = 0;
-         mines[i].displace_y = 0;
-         mines[i].movedelay = 1;
-         
-         // Change direction
-         bool ok = false;
-         int nextx=0, nexty=0, timeout = 5;
-         do {
-            if (timeout < 5 || mines[i].movetimeout == 0) {
-               mines[i].dir = rand() % 4;
-               mines[i].movetimeout = 5;
-            }
-            else {
-               mines[i].movetimeout--;
-            }
-            
-            switch (mines[i].dir) {
-            case UP: 
-               nexty = mines[i].ypos - 1; 
-               nextx = mines[i].xpos;
-               break;
-            case DOWN: 
-               nexty = mines[i].ypos + 1;
-               nextx = mines[i].xpos;
-               break;
-            case LEFT: 
-               nexty = mines[i].ypos;
-               nextx = mines[i].xpos - 1;
-               break;
-            case RIGHT:
-               nexty = mines[i].ypos;
-               nextx = mines[i].xpos + 1; 
-               break;
-            default:
-               nextx = mines[i].xpos;
-               nexty = mines[i].ypos;
-            }
-            
-            // Check if this is ok
-            ok = nextx >= objgrid.GetWidth() || nextx < 0 
-               || nexty > objgrid.GetHeight() || nexty < 0 
-               || objgrid.IsFilled(nextx, nexty)
-               || objgrid.IsFilled(nextx + 1, nexty)
-               || objgrid.IsFilled(nextx + 1, nexty + 1)
-               || objgrid.IsFilled(nextx, nexty + 1);
-            ok = !ok;
-            timeout--;
-         } while (!ok && timeout > 0);
-         
-         if (timeout == 0)
-            mines[i].dir = NODIR;				
-      }
-      
-      if (--mines[i].movedelay == 0) {
-         switch(mines[i].dir) {
-         case UP: mines[i].displace_y--; break;
-         case DOWN: mines[i].displace_y++; break;
-         case LEFT: mines[i].displace_x--; break;
-         case RIGHT: mines[i].displace_x++; break;
-         }
-         mines[i].movedelay = MINE_MOVE_SPEED;
-      }
-   }   
+   for (MineListIt it = mines.begin(); it != mines.end(); ++it)
+      (*it).Move();
    
    // Calculate view adjusts
    ship.CentreInViewport();
@@ -388,77 +313,11 @@ void Game::Process()
       }
    }
    
-   /*LineSegment l;
-   int lookmin = (int)(ship.xpos/SURFACE_SIZE) - 2;
-   int lookmax = (int)(ship.xpos/SURFACE_SIZE) + 2;
-   if (lookmin < 0)	lookmin = 0;
-   if (lookmax >= viewport.GetLevelWidth()/SURFACE_SIZE) lookmax = (viewport.GetLevelWidth() / SURFACE_SIZE) - 1;
-   for (int i = lookmin; i <= lookmax; i++) {
-      l.p1.x = i*SURFACE_SIZE;
-      l.p1.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface.surface[i].points[1].y;
-      l.p2.x = (i+1)*SURFACE_SIZE;
-      l.p2.y = viewport.GetLevelHeight() - MAX_SURFACE_HEIGHT + surface.surface[i].points[2].y;
-      
-      // Look through each hot spot and check for collisions
-      if (ship.HotSpotCollision(l)) {
-         // Collided - see which game state we're in
-         if (state == gsInGame) {
-            bool bLanded = false;
-            LandingPad *padOn = NULL;
-
-            // See if this is a landing pad
-            for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
-               LandingPad &pad = *it;
-               for (int m = 0; m < pad.GetLength(); m++) {
-                  if (pad.GetIndex() + m == i) {
-                     // We landed
-                     int nDAngle = ((int)ship.angle) % 360;
-                     if ((nDAngle >= 350 || nDAngle <= 30) 
-                         && ship.speedY < LAND_SPEED && !nKeysRemaining) {
-                           // Landed safely
-                        bLanded = true;
-                        padOn = &pad;
-                        break;
-                     }
-                     else {
-                        // Crash landed
-                        bLanded = false;
-                        break;
-                     }
-                  }
-               }
-            }
-            
-            if (bLanded) {
-               // Landed - go to next level
-               state = gsLevelComplete;
-               newscore = (level * 100) + 
-                  (((MAX_PAD_SIZE+2)-padOn->GetLength())*10*level);
-               countdown_timeout = 70;
-            }
-            else {
-               // Crashed - destroy the ship
-               ExplodeShip();
-               ship.Bounce();
-            }
-         }
-         else if (state == gsExplode) {
-            ship.Bounce();
-            
-            // See if we need to stop the madness
-            if (state == gsExplode && ship.speedY*-1 < 0.05f) {
-               state = gsDeathWait; 
-               death_timeout = DEATH_TIMEOUT;
-            }
-         }
-      }
-      }*/
-   
    // Check for collisions with asteroids
    LineSegment l1, l2;
    for (int i = 0; i < asteroidcount; i++) {
-      if (viewport.ObjectInScreen(asteroids[i].GetXPos(), 
-                                  asteroids[i].GetYPos() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE,
+      if (viewport.ObjectInScreen(asteroids[i].GetX(), 
+                                  asteroids[i].GetY() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
          // Look at polys
          for (int k = 0; k < asteroids[i].GetWidth(); k++) {
@@ -559,17 +418,11 @@ void Game::Process()
       }
 
    // Check for collisions with mines
-   for (int i = 0; i < minecount; i++)
+   for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       {
-         bool collide = ship.BoxCollision
-            (
-             mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3 + mines[i].displace_x,
-             mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 6 + mines[i].displace_y,
-             ObjectGrid::OBJ_GRID_SIZE*2 - 6,
-             ObjectGrid::OBJ_GRID_SIZE*2 - 12
-             ); 
+         
 	
-         if (collide)
+         if ((*it).CheckCollision(ship))
             {
                if (state == gsInGame)
                   {
@@ -904,40 +757,20 @@ void Game::StartLevel(int level)
       }
 
    // Create mines (MUST BE CREATED LAST)
-   minecount = level/2 + rand()%level;
+   int minecount = level/2 + rand()%level;
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
    for (i = 0; i < minecount; i++)
       {
          // Allocate space for mine
-         if (!objgrid.AllocFreeSpace(mines[i].xpos, mines[i].ypos, 2, 2))
+         int xpos, ypos;
+         if (!objgrid.AllocFreeSpace(xpos, ypos, 2, 2))
             {
                // Failed to allocate space
                minecount = i + 1;
                break;
             }
-
-         mines[i].current = 0;
-         mines[i].rotcount = MINE_ROTATION_SPEED;
-         mines[i].displace_x = 0;
-         mines[i].displace_y = 0;
-         mines[i].movedelay = MINE_MOVE_SPEED;
-         mines[i].dir = NODIR;
-         mines[i].movetimeout = 1;
-
-         // Allocate frame images
-         for (j = 0; j < 36; j++)
-            {
-               mines[i].frame[j].width = ObjectGrid::OBJ_GRID_SIZE*2;
-               mines[i].frame[j].height = ObjectGrid::OBJ_GRID_SIZE*2;
-               mines[i].frame[j].uTexture = uMineTexture[j];
-            }
-
-         // Free space on object grid
-         objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos);
-         objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos);
-         objgrid.UnlockSpace(mines[i].xpos + 1, mines[i].ypos + 1);
-         objgrid.UnlockSpace(mines[i].xpos, mines[i].ypos + 1);
+         mines.push_back(Mine(&objgrid, &viewport, xpos, ypos));
       }
 
    // Set ship starting position
@@ -989,7 +822,7 @@ void Game::Display()
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
       {
-         if (viewport.ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 
+         if (viewport.ObjectInScreen(asteroids[i].GetX(), asteroids[i].GetY() + ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE, 
                             asteroids[i].GetWidth(), asteroids[i].GetHeight()))
             {
                asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
@@ -1108,18 +941,8 @@ void Game::Display()
       }
 
    // Draw mines
-   for (i = 0; i < minecount; i++)
-      {
-         mines[i].frame[mines[i].current].x = mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_x - viewport.GetXAdjust();
-         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;		
-         opengl.Draw(&mines[i].frame[mines[i].current]);
-         if (--mines[i].rotcount == 0)
-            {
-               if (++mines[i].current == 18)
-                  mines[i].current = 0;
-               mines[i].rotcount = MINE_ROTATION_SPEED;
-            }
-      }
+   for (MineListIt it = mines.begin(); it != mines.end(); ++it)
+      (*it).Draw();
 
    // ***DEBUG***
    if (bDebugMode)
