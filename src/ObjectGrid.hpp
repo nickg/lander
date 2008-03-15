@@ -37,6 +37,7 @@ public:
 
    static const int OBJ_GRID_SIZE = 32;
    static const int OBJ_GRID_TOP = 100;
+   
 private:   
    bool *grid;
    int width, height;
@@ -47,8 +48,8 @@ class StaticObject {
 public:
    StaticObject() : xpos(0), ypos(0), width(0), height(0) {}
     
-   int GetXPos() const { return xpos; }
-   int GetYPos() const { return ypos; }
+   int GetX() const { return xpos; }
+   int GetY() const { return ypos; }
    int GetWidth() const { return width; }
    int GetHeight() const { return height; }
 

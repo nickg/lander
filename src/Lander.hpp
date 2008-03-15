@@ -37,14 +37,11 @@
 #include "Ship.hpp"
 #include "LandingPad.hpp"
 #include "Surface.hpp"
+#include "Mine.hpp"
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
 
-/* Constants */
-enum DIRECTIONS { UP, RIGHT, DOWN, LEFT, NODIR };
-
-/* Macros */
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
 
@@ -88,7 +85,7 @@ private:
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture, uSpeedTexture, uBlueKey[18], uRedKey[18], uGreenKey[18], uPinkKey[18], uYellowKey[18];
    GLuint uBlueArrow, uPinkArrow, uRedArrow, uYellowArrow, uGreenArrow;
-   GLuint uGatewayTexture, uFuelMeterTexture, uFuelBarTexture, uMineTexture[36], uShipSmallTexture;
+   GLuint uGatewayTexture, uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;
    GLuint uGameOver, uPausedTexture;
     
     
@@ -136,13 +133,9 @@ private:
 
    // Space mines
    static const int MAX_MINES = 5;
-   struct Mine 
-   {
-      int xpos, ypos, current, rotcount, dir, displace_x, displace_y, movedelay;
-      int movetimeout;
-      TextureQuad frame[36];
-   } mines[MAX_MINES];
-   int minecount;
+   typedef vector<Mine> MineList;
+   typedef MineList::iterator MineListIt;
+   MineList mines;
 };
 
 #endif

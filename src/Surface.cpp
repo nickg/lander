@@ -1,4 +1,4 @@
-/*  Surface.hpp -- Randomly generated planet surface.
+/*  Surface.cpp -- Randomly generated planet surface.
  *  Copyright (C) 2008  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -133,7 +133,7 @@ bool Surface::CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex)
 {
    LineSegment l;
    int lookmin = (int)(ship.GetX()/SURFACE_SIZE) - 2;
-   int lookmax = (int)(ship.GetY()/SURFACE_SIZE) + 2;
+   int lookmax = (int)(ship.GetX()/SURFACE_SIZE) + 2;
    if (lookmin < 0)	lookmin = 0;
    if (lookmax >= viewport->GetLevelWidth()/SURFACE_SIZE)
       lookmax = viewport->GetLevelWidth()/SURFACE_SIZE - 1;
