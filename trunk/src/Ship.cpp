@@ -53,12 +53,69 @@ void Ship::Display()
    OpenGL::GetInstance().DrawRotate(&tq, angle);
 }
 
+void Ship::DrawExhaust(bool thrusting, bool paused)
+{
+   static float xlast, ylast;
+   
+   if (thrusting) {
+      if (sqrt(speedX*speedX + speedY*speedY) > 2.0f) {
+         exhaust.NewCluster
+            ((int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
+             (int)(exhaust.ypos + (exhaust.ypos - ylast)/2));
+      }
+      exhaust.Draw((float)viewport->GetXAdjust(),
+                   (float)viewport->GetYAdjust(), true);
+   }
+   else if (paused)
+      exhaust.Draw((float)viewport->GetXAdjust(),
+                   (float)viewport->GetYAdjust(), false, false);
+   else
+      exhaust.Draw((float)viewport->GetXAdjust(),
+                   (float)viewport->GetYAdjust(), false);
+
+   xlast = exhaust.xpos;
+   ylast = exhaust.ypos;
+}
+
+void Ship::DrawExplosion(bool createNew)
+{
+   explosion.Draw((float)viewport->GetXAdjust(),
+                  (float)viewport->GetYAdjust(), createNew);
+}
+
 void Ship::Move()
 {
     RotatePoints(hotspots, points, NUM_HOTSPOTS, angle*PI/180, -16, 16);
 
     xpos += speedX;
     ypos += speedY;
+
+    // Check bounds
+    if (xpos <= 0.0f) {
+       xpos = 0.0f;
+       speedX *= -0.5f;
+    }
+    else if (xpos + tq.width > viewport->GetLevelWidth()) {
+      xpos = (float)(viewport->GetLevelWidth() - tq.width);
+      speedX *= -0.5f;
+    }
+    if (ypos <= 0.0f) {
+       ypos = 0.0f;
+       speedY *= -0.5f;
+    }
+    else if (ypos + tq.height > viewport->GetLevelHeight()) {
+       ypos = (float)(viewport->GetLevelHeight() - tq.height);
+       speedY *= -0.5f;
+    }
+    
+    exhaust.xpos = xpos + tq.width/2
+       - (tq.width/2)*(float)sin(angle*(PI/180));
+    exhaust.ypos = ypos + tq.height/2
+       + (tq.height/2)*(float)cos(angle*(PI/180));
+    exhaust.yg = speedY; //+ (flGravity * 10);
+    exhaust.xg = speedX;
+    explosion.xpos = xpos + tq.width/2;
+    explosion.ypos = ypos + tq.height/2;
 }
 
 void Ship::Thrust(float speed)
@@ -72,6 +129,25 @@ void Ship::ApplyGravity(float gravity)
    speedY += gravity;
 }
 
+void Ship::Bounce()
+{
+   speedX *= -1;
+   speedY *= -1;
+   speedX /= 2;
+   speedY /= 2;
+}
+
+/*
+ * Reset at the start of a new level.
+ */
+void Ship::Reset()
+{
+   exhaust.Reset();
+   explosion.Reset();
+
+   xpos = (float)viewport->GetLevelWidth()/2;
+   ypos = SHIP_START_Y - 40;
+}
 
 void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
                         float angle, int adjustx, int adjusty)

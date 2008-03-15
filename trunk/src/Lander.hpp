@@ -87,8 +87,6 @@ public:
 
 private:
    
-   
-   void BounceShip();
    void ExplodeShip();
 
    Viewport viewport;
@@ -96,8 +94,6 @@ private:
    int death_timeout, level, fuel, maxfuel, lives;
    bool hasloaded, bThrusting, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   Explosion explosion;
-   SmokeTrail exhaust;
    Poly *surface;
    TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship, gameover, paused;
    ColourQuad speedbar;
