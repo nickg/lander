@@ -237,12 +237,12 @@ void Game::Process()
    if ((input.GetKeyState(SDLK_RIGHT) || input.QueryJoystickAxis(0) > 0)
        && state == gsInGame) {
       // Turn clockwise
-      ship.angle += 3.0f;
+      ship.Turn(TURN_ANGLE);
    }
    else if ((input.GetKeyState(SDLK_LEFT) || input.QueryJoystickAxis(0) < 0)
             && state == gsInGame) {
       // Turn anti-clockwise
-      ship.angle -= 3.0f;
+      ship.Turn(-TURN_ANGLE);
    }
    
    if (input.GetKeyState(SDLK_SPACE) && state == gsExplode) {
@@ -351,10 +351,7 @@ void Game::Process()
    }   
    
    // Calculate view adjusts
-   int centrex = (int)ship.xpos + (ship.tq.width/2);
-   int centrey = (int)ship.ypos + (ship.tq.height/2);
-   viewport.SetXAdjust(centrex - (opengl.GetWidth()/2));
-   viewport.SetYAdjust(centrey - (opengl.GetHeight()/2));
+   ship.CentreInViewport();
 
    // Check for collisions with surface
    int padIndex;
@@ -363,9 +360,9 @@ void Game::Process()
       if (state == gsInGame) {
          if (padIndex != -1) {
             // Hit a landing pad
-            int dAngle = ((int)ship.angle) % 360;
+            int dAngle = ((int)ship.GetAngle()) % 360;
             if ((dAngle >= 330 || dAngle <= 30)
-                && ship.speedY < LAND_SPEED && nKeysRemaining == 0) {
+                && ship.GetYSpeed() < LAND_SPEED && nKeysRemaining == 0) {
                // Landed safely
                state = gsLevelComplete;
                newscore = (level * 100) + 
@@ -384,7 +381,7 @@ void Game::Process()
          ship.Bounce();
          
          // See if we need to stop the madness
-         if (state == gsExplode && ship.speedY*-1 < 0.05f) {
+         if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
             state = gsDeathWait; 
             death_timeout = DEATH_TIMEOUT;
          }
@@ -480,7 +477,7 @@ void Game::Process()
                      ship.Bounce();
                      
                                  // See if we need to stop the madness
-                                 if (state == gsExplode && ship.speedY*-1 < 0.05f)
+                     if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
                                     {
                                        state = gsDeathWait; 
                                        death_timeout = DEATH_TIMEOUT;
@@ -525,7 +522,7 @@ void Game::Process()
                            ship.Bounce();
 
                            // See if we need to stop the madness
-                           if (state == gsExplode && ship.speedY*-1 < 0.05f)
+                           if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
                               {
                                  state = gsDeathWait; 
                                  death_timeout = DEATH_TIMEOUT;
@@ -585,7 +582,7 @@ void Game::Process()
                      ship.Bounce();
 
                      // See if we need to stop the madness
-                     if (state == gsExplode && -ship.speedY < 0.05f)
+                     if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
                         {
                            state = gsDeathWait; 
                            death_timeout = DEATH_TIMEOUT;
@@ -717,11 +714,11 @@ void Game::Process()
 
    // Spin the ship if we're exploding
    if (state == gsExplode)
-      ship.angle += 5.0f;
+      ship.Turn(5.0f);
 
    // Resize the speed bar
    float flSpeed1 = 30.0f / LAND_SPEED;
-   int width = (int)((float)ship.speedY * flSpeed1); 
+   int width = (int)((float)ship.GetYSpeed() * flSpeed1); 
    if (width < 0) 
       width = 0;
    if (width > 124) 
@@ -946,10 +943,6 @@ void Game::StartLevel(int level)
    // Set ship starting position
    ship.Reset();
 
-   // Reset data
-   ship.angle = 0.0f;
-   ship.speedX = 0.0f;
-   ship.speedY = 0.0f;
    leveltext_timeout = LEVEL_TEXT_TIMEOUT;
 
    // Set fuel
