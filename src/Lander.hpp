@@ -31,6 +31,9 @@
 #include "Menu.hpp"
 #include "HighScores.hpp"
 
+#include "ObjectGrid.hpp"
+#include "Asteroid.hpp"
+
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
 
@@ -41,28 +44,6 @@ enum DIRECTIONS { UP, RIGHT, DOWN, LEFT, NODIR };
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
 
-/*
- * A single point in space.
- */
-struct Point 
-{
-    int x, y;	
-};
-
-
-/* 
- * A line segment. Used for collision detection.
- */
-class LineSegment
-{
-public:
-    LineSegment(int x1, int y1, int x2, int y2)
-    { p1.x=x1; p1.y=y1; p2.x=x2; p2.y=y2; }
-    LineSegment()
-    { p1.x = 0; p1.y = 0; p2.x = 0; p2.y = 0; }
-
-    Point p1, p2;
-};
 
 
 /* An object that can move about the screen */
@@ -74,29 +55,6 @@ public:
     float xpos, ypos;
     float flSpeedX, flSpeedY, angle;
     TextureQuad tq;
-};
-
-
-/*
- * Grid where objects may be placed.
- */
-class ObjectGrid
-{
-public:
-    ObjectGrid();
-    ~ObjectGrid();
-    
-    void Reset(int width, int height);
-    bool AllocFreeSpace(int &x, int &y);
-    bool AllocFreeSpace(int &x, int &y, int width, int height);
-    void UnlockSpace(int x, int y);
-	
-    bool IsFilled(int x, int y) const;
-    int GetWidth() const { return width; }
-    int GetHeight() const { return height; }
-private:
-    bool *grid;
-    int width, height;
 };
 
 
@@ -126,45 +84,6 @@ private:
 };
 
 
-/*
- * An object on the object grid.
- */
-class StaticObject
-{
-public:
-    StaticObject() : xpos(0), ypos(0), width(0), height(0) {}
-    
-    int GetXPos() const { return xpos; }
-    int GetYPos() const { return ypos; }
-    int GetWidth() const { return width; }
-    int GetHeight() const { return height; }
-
-protected:
-    int xpos, ypos, width, height;
-};
-
-
-/*
- * An asteroid floating in space.
- */
-class Asteroid : public StaticObject
-{
-public:
-    Asteroid() {}
-    ~Asteroid() {}
-	
-    void ConstructAsteroid(int x, int y, int width, Texture texture);
-    void Draw(int viewadjust_x, int viewadjust_y);
-    LineSegment GetUpBoundary(int poly);
-    LineSegment GetDownBoundary(int poly);
-
-    static const int MAX_ASTEROID_WIDTH = 15;
-	
-private:
-    Poly uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
-};
-
-/* Game class */
 class Game : public Screen
 {
 public:

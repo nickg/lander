@@ -26,10 +26,10 @@
 #define SHIP_SPEED		      0.15f
 #define SURFACE_SIZE		    20
 #define VARIANCE		        50
-#define AS_VARIANCE		      64
+//#define AS_VARIANCE		      64
 #define MAX_PAD_SIZE		    3
 #define LAND_SPEED		      2.0f
-#define OBJ_GRID_SIZE		    32
+//#define OBJ_GRID_SIZE		    32
 #define SHIP_START_Y		    100
 #define KEY_ROTATION_SPEED  2
 #define MINE_ROTATION_SPEED 5
@@ -317,8 +317,8 @@ void Game::Process()
 
    // Move mines
    for (i = 0; i < minecount; i++) {
-      if (mines[i].displace_x%OBJ_GRID_SIZE == 0
-          && mines[i].displace_y%OBJ_GRID_SIZE == 0) {
+      if (mines[i].displace_x%ObjectGrid::OBJ_GRID_SIZE == 0
+          && mines[i].displace_y%ObjectGrid::OBJ_GRID_SIZE == 0) {
          switch (mines[i].dir) {
          case UP: mines[i].ypos-=1; break;
          case DOWN: mines[i].ypos+=1; break;
@@ -500,7 +500,7 @@ void Game::Process()
    LineSegment l1, l2;
    for (i = 0; i < asteroidcount; i++) {
       if (ObjectInScreen(asteroids[i].GetXPos(), 
-                         asteroids[i].GetYPos() + SHIP_START_Y / OBJ_GRID_SIZE,
+                         asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE,
                          asteroids[i].GetWidth(), 4)) {
          // Look at polys
          for (k = 0; k < asteroids[i].GetWidth(); k++) {
@@ -540,10 +540,10 @@ void Game::Process()
                bool collide1 = BoxCollision
                   (
                    ship,
-                   gateways[i].xpos*OBJ_GRID_SIZE,
-                   gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y,
-                   OBJ_GRID_SIZE,
-                   OBJ_GRID_SIZE,
+                   gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE,
+                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   ObjectGrid::OBJ_GRID_SIZE,
+                   ObjectGrid::OBJ_GRID_SIZE,
                    points,
                    NUM_HOTSPOTS
                    );
@@ -551,10 +551,10 @@ void Game::Process()
                bool collide2 = BoxCollision
                   (
                    ship,
-                   (gateways[i].xpos + dx)*OBJ_GRID_SIZE,
-                   (gateways[i].ypos + dy)*OBJ_GRID_SIZE + SHIP_START_Y,
-                   OBJ_GRID_SIZE,
-                   OBJ_GRID_SIZE,
+                   (gateways[i].xpos + dx)*ObjectGrid::OBJ_GRID_SIZE,
+                   (gateways[i].ypos + dy)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   ObjectGrid::OBJ_GRID_SIZE,
+                   ObjectGrid::OBJ_GRID_SIZE,
                    points, 
                    NUM_HOTSPOTS
                    );
@@ -585,10 +585,10 @@ void Game::Process()
                bool collide = BoxCollision
                   (
                    ship,
-                   gateways[i].xpos*OBJ_GRID_SIZE, 
-                   gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y,
-                   (dx + 1)*OBJ_GRID_SIZE,
-                   (dy + 1)*OBJ_GRID_SIZE,
+                   gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE, 
+                   gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y,
+                   (dx + 1)*ObjectGrid::OBJ_GRID_SIZE,
+                   (dy + 1)*ObjectGrid::OBJ_GRID_SIZE,
                    points,
                    NUM_HOTSPOTS
                    ); 
@@ -617,10 +617,10 @@ void Game::Process()
          bool collide = BoxCollision
             (
              ship,
-             mines[i].xpos*OBJ_GRID_SIZE + 3 + mines[i].displace_x,
-             mines[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
-             OBJ_GRID_SIZE*2 - 6,
-             OBJ_GRID_SIZE*2 - 12,
+             mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3 + mines[i].displace_x,
+             mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 6 + mines[i].displace_y,
+             ObjectGrid::OBJ_GRID_SIZE*2 - 6,
+             ObjectGrid::OBJ_GRID_SIZE*2 - 12,
              points,
              NUM_HOTSPOTS
              ); 
@@ -653,10 +653,10 @@ void Game::Process()
          bool collide = BoxCollision
             (
              ship,
-             keys[i].xpos*OBJ_GRID_SIZE + 3,
-             keys[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 3,
-             OBJ_GRID_SIZE - 6,
-             OBJ_GRID_SIZE - 6,
+             keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3,
+             keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 3,
+             ObjectGrid::OBJ_GRID_SIZE - 6,
+             ObjectGrid::OBJ_GRID_SIZE - 6,
              points, 
              NUM_HOTSPOTS
              );	
@@ -799,8 +799,8 @@ void Game::StartLevel(int level)
    flGravity = GRAVITY;
 
    // Create the object grid
-   int grid_w = levelwidth / OBJ_GRID_SIZE;
-   int grid_h = (levelheight - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / OBJ_GRID_SIZE;
+   int grid_w = levelwidth / ObjectGrid::OBJ_GRID_SIZE;
+   int grid_h = (levelheight - SHIP_START_Y - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
    objgrid.Reset(grid_w, grid_h);
 
    // Create background stars
@@ -953,8 +953,8 @@ void Game::StartLevel(int level)
          // Allocate frame images
          for (j = 0; j < 18; j++)
             {
-               keys[i].frame[j].width = OBJ_GRID_SIZE;
-               keys[i].frame[j].height = OBJ_GRID_SIZE;
+               keys[i].frame[j].width = ObjectGrid::OBJ_GRID_SIZE;
+               keys[i].frame[j].height = ObjectGrid::OBJ_GRID_SIZE;
 
                // Allocate key color
                switch(i)
@@ -1024,8 +1024,8 @@ void Game::StartLevel(int level)
             }
 
          // Set texture, etc.
-         gateways[i].icon.width = OBJ_GRID_SIZE;
-         gateways[i].icon.height = OBJ_GRID_SIZE;
+         gateways[i].icon.width = ObjectGrid::OBJ_GRID_SIZE;
+         gateways[i].icon.height = ObjectGrid::OBJ_GRID_SIZE;
          gateways[i].icon.uTexture = uGatewayTexture;
          gateways[i].timer = rand() % 70 + 10;
       }
@@ -1055,8 +1055,8 @@ void Game::StartLevel(int level)
          // Allocate frame images
          for (j = 0; j < 36; j++)
             {
-               mines[i].frame[j].width = OBJ_GRID_SIZE*2;
-               mines[i].frame[j].height = OBJ_GRID_SIZE*2;
+               mines[i].frame[j].width = ObjectGrid::OBJ_GRID_SIZE*2;
+               mines[i].frame[j].height = ObjectGrid::OBJ_GRID_SIZE*2;
                mines[i].frame[j].uTexture = uMineTexture[j];
             }
 
@@ -1150,8 +1150,8 @@ bool Game::HotSpotCollision(ActiveObject &a, LineSegment &l, Point *points, int 
  */
 bool Game::ObjectInScreen(int xpos, int ypos, int width, int height)
 {
-   return PointInScreen(xpos * OBJ_GRID_SIZE, ypos * OBJ_GRID_SIZE,
-                        width * OBJ_GRID_SIZE, height * OBJ_GRID_SIZE);
+   return PointInScreen(xpos * ObjectGrid::OBJ_GRID_SIZE, ypos * ObjectGrid::OBJ_GRID_SIZE,
+                        width * ObjectGrid::OBJ_GRID_SIZE, height * ObjectGrid::OBJ_GRID_SIZE);
 }
 
 
@@ -1257,7 +1257,7 @@ void Game::Display()
    // Draw the asteroids
    for (i = 0; i < asteroidcount; i++)
       {
-         if (ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / OBJ_GRID_SIZE, 
+         if (ObjectInScreen(asteroids[i].GetXPos(), asteroids[i].GetYPos() + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 
                             asteroids[i].GetWidth(), asteroids[i].GetHeight()))
             {
                asteroids[i].Draw(nViewAdjustX, nViewAdjustY);			
@@ -1269,8 +1269,8 @@ void Game::Display()
       {
          if (keys[i].active)
             {
-               keys[i].frame[keys[i].current].x = keys[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
-               keys[i].frame[keys[i].current].y = keys[i].ypos*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;		
+               keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;		
                opengl.Draw(&keys[i].frame[keys[i].current]);
                if (--keys[i].rotcount == 0)
                   {
@@ -1283,8 +1283,8 @@ void Game::Display()
             {
                if (keys[i].alpha > 0.0f)
                   {
-                     keys[i].frame[keys[i].current].x = keys[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
-                     keys[i].frame[keys[i].current].y = keys[i].ypos*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;	
+                     keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y;	
                      opengl.DrawBlend(&keys[i].frame[keys[i].current], keys[i].alpha);
                      keys[i].alpha -= 0.02f;
                      if (--keys[i].rotcount == 0)
@@ -1301,20 +1301,20 @@ void Game::Display()
    for (i = 0; i < gatewaycount; i++)
       {
          // Draw first sphere
-         gateways[i].icon.x = gateways[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
-         gateways[i].icon.y = gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+         gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+         gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
          opengl.Draw(&gateways[i].icon);
 
          // Draw second sphere
          if (gateways[i].vertical)
             {
-               gateways[i].icon.x = gateways[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
-               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+               gateways[i].icon.x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+               gateways[i].icon.y = (gateways[i].ypos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
             }
          else
             {
-               gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*OBJ_GRID_SIZE - nViewAdjustX;
-               gateways[i].icon.y = gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+               gateways[i].icon.x = (gateways[i].xpos+gateways[i].length)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+               gateways[i].icon.y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
             }
          opengl.Draw(&gateways[i].icon);
 
@@ -1341,28 +1341,28 @@ void Game::Display()
                            glColor3f(r, g, b);
                            if (gateways[i].vertical)
                               {
-                                 x = gateways[i].xpos*OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
-                                 y = (gateways[i].ypos+k)*OBJ_GRID_SIZE + SHIP_START_Y + 16 - nViewAdjustY;
+                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
+                                 y = (gateways[i].ypos+k)*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 - nViewAdjustY;
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
                                  else
                                     deviation += rand()%20 - 10;
-                                 x = gateways[i].xpos*OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
-                                 y += OBJ_GRID_SIZE;
+                                 x = gateways[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 16 + deviation - nViewAdjustX;
+                                 y += ObjectGrid::OBJ_GRID_SIZE;
                                  glVertex2i(x, y);
                               }
                            else
                               {
-                                 x = (gateways[i].xpos+k)*OBJ_GRID_SIZE + 16 - nViewAdjustX;
-                                 y = gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
+                                 x = (gateways[i].xpos+k)*ObjectGrid::OBJ_GRID_SIZE + 16 - nViewAdjustX;
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
                                  glVertex2i(x, y);
                                  if (k == gateways[i].length-1)
                                     deviation = 0;
                                  else
                                     deviation += rand()%20 - 10;
-                                 y = gateways[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
-                                 x += OBJ_GRID_SIZE;
+                                 y = gateways[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y + 16 + deviation - nViewAdjustY;
+                                 x += ObjectGrid::OBJ_GRID_SIZE;
                                  glVertex2i(x, y);
                               }
                            glEnd();
@@ -1378,8 +1378,8 @@ void Game::Display()
    // Draw mines
    for (i = 0; i < minecount; i++)
       {
-         mines[i].frame[mines[i].current].x = mines[i].xpos*OBJ_GRID_SIZE + mines[i].displace_x - nViewAdjustX;
-         mines[i].frame[mines[i].current].y = mines[i].ypos*OBJ_GRID_SIZE + mines[i].displace_y - nViewAdjustY + SHIP_START_Y;		
+         mines[i].frame[mines[i].current].x = mines[i].xpos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_x - nViewAdjustX;
+         mines[i].frame[mines[i].current].y = mines[i].ypos*ObjectGrid::OBJ_GRID_SIZE + mines[i].displace_y - nViewAdjustY + SHIP_START_Y;		
          opengl.Draw(&mines[i].frame[mines[i].current]);
          if (--mines[i].rotcount == 0)
             {
@@ -1405,10 +1405,10 @@ void Game::Display()
                         {
                            glLoadIdentity();
                            glBegin(GL_QUADS);
-                           glVertex2i(x*OBJ_GRID_SIZE - nViewAdjustX, y*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i((x+1)*OBJ_GRID_SIZE - nViewAdjustX, y*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i((x+1)*OBJ_GRID_SIZE - nViewAdjustX, (y+1)*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
-                           glVertex2i(x*OBJ_GRID_SIZE - nViewAdjustX, (y+1)*OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, y*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, y*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
+                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, (y+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
+                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX, (y+1)*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustY + SHIP_START_Y);
                            glEnd();
                         }
                   }
@@ -1471,9 +1471,9 @@ void Game::Display()
 	
    // Draw the arrows
    for (i = 0; i < nKeys; i++)	{
-      if (keys[i].active && !ObjectInScreen(keys[i].xpos, keys[i].ypos + SHIP_START_Y / OBJ_GRID_SIZE, 1, 1))	{
-         int ax = keys[i].xpos*OBJ_GRID_SIZE - nViewAdjustX;
-         int ay = keys[i].ypos*OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
+      if (keys[i].active && !ObjectInScreen(keys[i].xpos, keys[i].ypos + SHIP_START_Y / ObjectGrid::OBJ_GRID_SIZE, 1, 1))	{
+         int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - nViewAdjustX;
+         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + SHIP_START_Y - nViewAdjustY;
          double angle = 0.0;
 
          if (ax < 0) { 
@@ -1629,132 +1629,6 @@ void Game::Display()
 
 
 /*
- * Creates a new object grid.
- */
-ObjectGrid::ObjectGrid()
-  : grid(NULL), width(0), height(0)
-{
-	
-}
-
-
-/*
- * Frees memory used by the object grid.
- */
-ObjectGrid::~ObjectGrid()
-{
-   if (grid)
-      delete[] grid;
-}
-
-
-/* 
- * Allocates a free space in the object grid.
- *	x, y -> Output x, y, co-ordinates.
- * Returns falce if area could not be allocated.
- */
-bool ObjectGrid::AllocFreeSpace(int &x, int &y)
-{
-   int timeout = 10000;
-	
-   // Keep generating points until we find a free space
-   do
-      {
-         if (--timeout == 0)
-            return false;
-		
-         x = rand() % width;
-         y = rand() % height;
-      } while (grid[x + (y * width)]);
-	
-   grid[x + (y * width)] = true;
-	
-   return true;
-}
-
-
-/* 
- * Allocates a free space in the object grid.
- *	x, y -> Output x, y co-ordinates.
- *	width, height -> Size of desired space.
- * Returns false if area could not be allocated.
- */
-bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
-{
-   bool isOk;
-   int counter_x, counter_y;
-   int timeout = 10000;
-	
-   // Keep generating points until we find a free space
-   do
-      {
-         if (--timeout == 0)
-            return false;
-		
-         x = rand() % (this->width - width);
-         y = rand() % (this->height - height);
-		
-         // Check this position
-         isOk = true;
-         for (counter_x = x; counter_x < x + width; counter_x++)
-            {
-               for (counter_y = y; counter_y < y + height; counter_y++)
-                  {
-                     if (grid[counter_x + (counter_y * this->width)])
-                        isOk = false;
-                  }
-            }
-      } while (!isOk);
-	
-   for (counter_x = x; counter_x < x + width; counter_x++)
-      {
-         for (counter_y = y; counter_y < y + height; counter_y++)
-            grid[counter_x + (counter_y * this->width)] = true;
-      }
-	
-   return true;
-}
-
-
-/*
- * Marks the square at (x, y) as no longer in use.
- */
-void ObjectGrid::UnlockSpace(int x, int y)
-{
-   grid[x + (y * width)] = false;
-}
-
-
-/*
- * Creates a new blank object grid.
- */
-void ObjectGrid::Reset(int width, int height)
-{
-   assert(width > 0);
-   assert(height > 0);
-
-   if (grid)
-      delete[] grid;
-		
-   this->width = width;
-   this->height = height;
-	
-   grid = new bool[width * height];
-	
-   memset(grid, 0, width * height * sizeof(bool));
-}
-
-
-/*
- * Returns true if there is an object at the specified co-ordinates.
- */
-bool ObjectGrid::IsFilled(int x, int y) const
-{
-   return grid[x + (width * y)];
-}
-
-
-/*
  * Static members of LandingPad.
  */
 Texture LandingPad::s_landtex, LandingPad::s_nolandtex;
@@ -1798,148 +1672,3 @@ void LandingPad::Reset(int index, int length)
    quad.height = 16;
    quad.uTexture = s_landtex;
 }
- 
-
-/*
- * Generates a random asteroid.
- */
-void Asteroid::ConstructAsteroid(int x, int y, int width, Texture texture)
-{
-   xpos = x;
-   ypos = y;
-   this->width = width;
-   height = 4;
-
-   int change, texloop=0;
-
-   // Build up Polys
-   for (int i = 0; i < width; i++)
-      {
-         // Set Poly parameters
-         uppolys[i].texwidth = 0.1f;
-         uppolys[i].texX = ((float)texloop)/10;
-         if (texloop++ == 10)
-            texloop = 0;
-         uppolys[i].pointcount = 4;
-         uppolys[i].uTexture = texture;
-
-         // Lower left vertex
-         uppolys[i].points[0].x = i * OBJ_GRID_SIZE;
-         uppolys[i].points[0].y = 2 * OBJ_GRID_SIZE;
-
-         // Upper left vertex
-         uppolys[i].points[1].x = i * OBJ_GRID_SIZE;
-         if (i == 0)
-            uppolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
-         else
-            uppolys[i].points[1].y = uppolys[i - 1].points[2].y;
-
-         // Upper right vertex
-         uppolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
-         do
-            change = uppolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
-         while (change < 0 || change > 2 * OBJ_GRID_SIZE);
-         uppolys[i].points[2].y = change;
-
-         // Lower right vertex
-         uppolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
-         uppolys[i].points[3].y = 2 * OBJ_GRID_SIZE;
-      }
-
-   // Taper last poly
-   uppolys[width - 1].points[2].y = 2 * OBJ_GRID_SIZE;
-   uppolys[0].points[1].y = 2 * OBJ_GRID_SIZE;
-
-   // Build down Polys
-   texloop = 0;
-   for (int i = 0; i < width; i++)
-      {
-         // Set Poly parameters
-         downpolys[i].texwidth = 0.1f;
-         downpolys[i].texX = ((float)texloop) / 10;
-         if (texloop++ == 10)
-            texloop = 0;
-         downpolys[i].pointcount = 4;
-         downpolys[i].uTexture = texture;
-
-         // Upper left vertex
-         downpolys[i].points[0].x = i * OBJ_GRID_SIZE;
-         downpolys[i].points[0].y = 0;
-
-         // Lower left vertex
-         downpolys[i].points[1].x = i * OBJ_GRID_SIZE;
-         if (i == 0)
-            downpolys[i].points[1].y = rand() % (2 * OBJ_GRID_SIZE);
-         else
-            downpolys[i].points[1].y = downpolys[i - 1].points[2].y;
-
-         // Lower right vertex
-         downpolys[i].points[2].x = (i + 1) * OBJ_GRID_SIZE;
-         do
-            change = downpolys[i].points[1].y + (rand() % AS_VARIANCE) - (AS_VARIANCE / 2);
-         while (change < 0 || change > 2 * OBJ_GRID_SIZE);
-         downpolys[i].points[2].y = change;
-
-         // Upper right vertex
-         downpolys[i].points[3].x = (i + 1) * OBJ_GRID_SIZE;
-         downpolys[i].points[3].y = 0;
-      }
-
-   // Taper last poly
-   downpolys[width-1].points[2].y = 0;
-   downpolys[0].points[1].y = 0;
-}
-
-
-/*
- * Returns the line segment which defines the top of the given Poly.
- */
-LineSegment Asteroid::GetUpBoundary(int poly)
-{
-   return LineSegment
-      (
-       xpos*OBJ_GRID_SIZE + uppolys[poly].points[1].x,
-       ypos*OBJ_GRID_SIZE + uppolys[poly].points[1].y + SHIP_START_Y,
-       xpos*OBJ_GRID_SIZE + uppolys[poly].points[2].x,
-       ypos*OBJ_GRID_SIZE + uppolys[poly].points[2].y + SHIP_START_Y
-       );
-}
-
-
-/*
- * Returns the line segment which defines the bottom of the given Poly.
- */
-LineSegment Asteroid::GetDownBoundary(int poly)
-{
-   return LineSegment
-      (
-       xpos*OBJ_GRID_SIZE + downpolys[poly].points[1].x,
-       (ypos+2)*OBJ_GRID_SIZE + downpolys[poly].points[1].y + SHIP_START_Y,
-       xpos*OBJ_GRID_SIZE + downpolys[poly].points[2].x,
-       (ypos+2)*OBJ_GRID_SIZE + downpolys[poly].points[2].y + SHIP_START_Y
-       );
-}
-
-
-/*
- * Draws an asteroid on the display.
- */
-void Asteroid::Draw(int viewadjust_x, int viewadjust_y)
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   for (int i = 0; i < width; i++)
-      {
-         // Up
-         uppolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
-         uppolys[i].ypos = ypos*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
-         opengl.Draw(&uppolys[i]);
-
-         // Down
-         downpolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
-         downpolys[i].ypos = (ypos+2)*OBJ_GRID_SIZE - viewadjust_y + SHIP_START_Y;
-         opengl.Draw(&downpolys[i]);
-      }
-} 
-
- 
