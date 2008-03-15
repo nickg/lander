@@ -23,45 +23,58 @@
 #include "Screens.hpp"
 
 #define MENU_FADE_SPEED		0.1f
-#define NUM_STARS			512
 #define HINT_DISPLAY_TIME	140
 
 
-/* 
- * The menu screen.
- */
-class MainMenu : public Screen
-{
+class MenuStar {
 public:
-	MainMenu() : m_hasloaded(false) { }
-	virtual ~MainMenu() { }
+   MenuStar();
+   
+   bool Move();
+   void Display(float fade=1.0f);
 
-	void Load();
-	void Process();
-	void Display();
 private:
-	enum MenuState { msFadeIn, msInMenu, msFadeToStart,
-		msFadeToHigh, msFadeToOpt, msFadeToExit };
-		
-	TextureQuad logo, start, highscore, options, exit;
-	float m_fade, m_starsel, m_highsel, m_optsel, m_exitsel;
-	bool m_hasloaded;
-	GLuint uStartTexture, uHighTexture, uOptionsTexture, uExitTexture;
-	GLuint uStarTexture;
-	MenuState m_state;
-	
-	int m_hint_timeout, m_hintidx;
+   static const float ROTATE_SPEED = 0.005f;
+   static const float ENLARGE_RATE = 0.003f;
+   static const float INIT_SCALE = 0.1f;
+   static const int SPEED = 4;
+   static const int TEXTURE_SIZE = 20;
+   
+   TextureQuad quad;
+   float scale;
+   bool active;
+   float angle, xpos, ypos;
 
-	// Stars
-	struct Star 
-	{
-		TextureQuad quad;
-		float scale;
-		bool active;
-		float angle, xpos, ypos;
-	} stars[NUM_STARS];
-	int m_stardelay;
-	float m_starrotate;
+   static float starRotate;
+   static bool hasLoaded;
+   static GLuint uStarTexture;
 };
+
+class MainMenu : public Screen {
+public:
+   MainMenu() : hasloaded(false) { }
+   virtual ~MainMenu() { }
+
+   void Load();
+   void Process();
+   void Display();
+private:
+   enum MenuState { msFadeIn, msInMenu, msFadeToStart,
+                    msFadeToHigh, msFadeToOpt, msFadeToExit };
+		
+   TextureQuad logo, start, highscore, options, exit;
+   float fade, starsel, highsel, optsel, exitsel;
+   bool hasloaded;
+   GLuint uStartTexture, uHighTexture, uOptionsTexture, uExitTexture;
+   MenuState state;
+	
+   int hint_timeout, hintidx;
+
+   static const int MAX_STARS = 80;
+   typedef vector<MenuStar> StarList;
+   typedef StarList::iterator StarListIt;
+   vector<MenuStar> stars;
+};
+
 
 #endif

@@ -25,45 +25,43 @@
 /* 
  * A screen within the game that can be displayed.
  */
-class Screen
-{
+class Screen {
 public:
-	virtual ~Screen() { }
-	virtual void Load() { }
-	virtual void Unload() { }
-	virtual void Display() { }
-	virtual void Process() { }
+   virtual ~Screen() { }
+   virtual void Load() { }
+   virtual void Unload() { }
+   virtual void Display() { }
+   virtual void Process() { }
 };
 
 
 /*
- * Manages the transition between the various m_screens in the game.
+ * Manages the transition between the various screens in the game.
  */
-class ScreenManager
-{
+class ScreenManager {
 public:
-	ScreenManager();
-	~ScreenManager();
+   ScreenManager();
+   ~ScreenManager();
 
-	static ScreenManager &GetInstance();
+   static ScreenManager &GetInstance();
 
-	void AddScreen(const char *id, Screen *ptr);
-	void SelectScreen(const char *id);
-	void Process();
-	void Display();
-	Screen *GetScreenById(const char *id) const;
+   void AddScreen(const char *id, Screen *ptr);
+   void SelectScreen(const char *id);
+   void Process();
+   void Display();
+   Screen *GetScreenById(const char *id) const;
 	
 private:
-	// Holds data about the state of an individual screen
-	struct ScreenData
-	{
-		bool loaded;
-		Screen *ptr;
-	};
+   // Holds data about the state of an individual screen
+   struct ScreenData
+   {
+      bool loaded;
+      Screen *ptr;
+   };
 
-	typedef map<string, ScreenData> ScreenMap;
-	ScreenMap m_screens;
-	ScreenData m_active;
+   typedef map<string, ScreenData> ScreenMap;
+   ScreenMap m_screens;
+   ScreenData m_active;
 };
 
 #endif

@@ -1,7 +1,7 @@
 AC_INIT([Lunar Lander], [0.9],
-        [Nick Gasson <nick.gasson@yahoo.co.uk>],
+        [Nick Gasson <nick@cakesniffer.co.uk>],
         [lander])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_PROG_CC
 AC_PROG_CXX
 
