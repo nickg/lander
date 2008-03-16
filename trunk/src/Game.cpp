@@ -24,17 +24,8 @@
  */
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
-#define SURFACE_SIZE		    20
-//#define VARIANCE		        50
-//#define AS_VARIANCE		      64
 #define MAX_PAD_SIZE		    3
 #define LAND_SPEED		      2.0f
-//#define OBJ_GRID_SIZE		    32
-//#define SHIP_START_Y		    100
-//#define KEY_ROTATION_SPEED  2
-//#define MINE_ROTATION_SPEED 5
-//#define GATEWAY_ACTIVE		  30
-//#define MINE_MOVE_SPEED		  1
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
 
@@ -67,7 +58,6 @@ void Game::Load()
 
    OpenGL &opengl = OpenGL::GetInstance();
 
-   // Load textures
    if (!hasloaded) {
       uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
       uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
@@ -331,31 +321,24 @@ void Game::Process()
    }
 
    // Check for collisions with mines
-   for (MineListIt it = mines.begin(); it != mines.end(); ++it)
-      {
-         
-	
-         if ((*it).CheckCollision(ship))
-            {
-               if (state == gsInGame)
-                  {
-                     // Destroy the ship
-                     ExplodeShip();
-                     ship.Bounce();
-                  }
-               else if (state == gsExplode)
-                  {
-                     ship.Bounce();
-
-                     // See if we need to stop the madness
-                     if (state == gsExplode && -ship.GetYSpeed() < 0.05f)
-                        {
-                           state = gsDeathWait; 
-                           death_timeout = DEATH_TIMEOUT;
-                        }
-                  }
+   for (MineListIt it = mines.begin(); it != mines.end(); ++it) {
+      if ((*it).CheckCollision(ship)) {
+         if (state == gsInGame) {
+            // Destroy the ship
+            ExplodeShip();
+            ship.Bounce();
+         }
+         else if (state == gsExplode) {
+            ship.Bounce();
+            
+            // See if we need to stop the madness
+            if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
+               state = gsDeathWait; 
+               death_timeout = DEATH_TIMEOUT;
             }
+         }
       }
+   }
 
    // See if the player collected a key
    for (int i = 0; i < nKeys; i++) {
@@ -367,103 +350,85 @@ void Game::Process()
    }
 
    // Entry / exit states
-   if (state == gsDeathWait)
-      {
-         if (--death_timeout == 0)
-            {
-               // Fade out
-               if (lives == 0  || (lives == 1 && life_alpha < LIFE_ALPHA_BASE))
-                  {
-                     state = gsFadeToDeath;
-                     fade_alpha = LIFE_ALPHA_BASE + 1.0f;
-                  }
-               else if (lives > 0)
-                  {
-                     if (life_alpha < LIFE_ALPHA_BASE)
-                        {
-                           life_alpha = LIFE_ALPHA_BASE + 1.0f;
-                           lives--;
-                        }
-				
-                     state = gsFadeToRestart;
-                     fade_alpha = 0.0f;
-                  }
-            }
-      }
-   else if (state == gsGameOver)
-      {
-         if (--death_timeout == 0)
-            {
-               // Fade out
-               state = gsFadeToDeath;
-               fade_alpha = 0.0f;
-            }
-      }
-   else if (state == gsFadeIn)
-      {
-         // Fade in
-         fade_alpha -= GAME_FADE_IN_SPEED;
-         if (fade_alpha < 0.0f)
-            state = gsInGame;
-      }
-   else if (state == gsFadeToRestart)
-      {
+   if (state == gsDeathWait) {
+      if (--death_timeout == 0) {
          // Fade out
-         fade_alpha += GAME_FADE_OUT_SPEED;
-         if (fade_alpha > 1.0f)
-            {
-               // Restart the level
-               StartLevel(level);
-               opengl.SkipDisplay();
+         if (lives == 0  || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
+            state = gsFadeToDeath;
+            fade_alpha = LIFE_ALPHA_BASE + 1.0f;
+         }
+         else if (lives > 0) {
+            if (life_alpha < LIFE_ALPHA_BASE) {
+               life_alpha = LIFE_ALPHA_BASE + 1.0f;
+               lives--;
             }
-      }
-   else if (state == gsFadeToDeath)
-      {
-         fade_alpha += GAME_FADE_OUT_SPEED;
-         if (fade_alpha > 1.0f)
-            {
-               // Return to main menu
-               ScreenManager &sm = ScreenManager::GetInstance();
-               HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
-               hs->CheckScore(score);
-            }
-      }
-   else if (state == gsLevelComplete)
-      {
-         // Decrease the displayed score
-         if (countdown_timeout > 0)
-            countdown_timeout--;
-         else if (levelcomp_timeout > 0)
-            {
-               if (--levelcomp_timeout == 0)
-                  {
-                     level++;
-                     state = gsFadeToRestart;
-                  }
-            }
-         else
-            {
-               int dec = level * 2;
 
-               // Decrease the score
-               newscore -= dec;
-               score += dec;
-
-               if (score > nextnewlife)
-                  {
-                     lives++;
-                     nextnewlife *= 2;
-                  }
-
-               if (newscore < 0)
-                  {
-                     // Move to the next level (after a 1s pause)
-                     score -= -newscore;
-                     levelcomp_timeout = 40;
-                  }
-            }
+            state = gsFadeToRestart;
+            fade_alpha = 0.0f;
+         }
       }
-	
+   }
+   else if (state == gsGameOver) {
+      if (--death_timeout == 0) {
+         // Fade out
+         state = gsFadeToDeath;
+         fade_alpha = 0.0f;
+      }
+   }
+   else if (state == gsFadeIn) {
+      // Fade in
+      fade_alpha -= GAME_FADE_IN_SPEED;
+      if (fade_alpha < 0.0f)
+         state = gsInGame;
+   }
+   else if (state == gsFadeToRestart) {
+      // Fade out
+      fade_alpha += GAME_FADE_OUT_SPEED;
+      if (fade_alpha > 1.0f) {
+         // Restart the level
+         StartLevel(level);
+         opengl.SkipDisplay();
+      }
+   }
+   else if (state == gsFadeToDeath) {
+      fade_alpha += GAME_FADE_OUT_SPEED;
+      if (fade_alpha > 1.0f) {
+         // Return to main menu
+         ScreenManager &sm = ScreenManager::GetInstance();
+         HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
+         hs->CheckScore(score);
+      }
+   }
+   else if (state == gsLevelComplete) {
+      // Decrease the displayed score
+      if (countdown_timeout > 0)
+         countdown_timeout--;
+      else if (levelcomp_timeout > 0) {
+         if (--levelcomp_timeout == 0) {
+            level++;
+            state = gsFadeToRestart;
+         }
+      }
+      else {
+         int dec = level * 2;
+         
+         // Decrease the score
+         newscore -= dec;
+         score += dec;
+         
+         if (score > nextnewlife) {
+            lives++;
+            nextnewlife *= 2;
+         }
+         
+         if (newscore < 0) {
+            // Move to the next level (after a 1s pause)
+            score -= -newscore;
+            levelcomp_timeout = 40;
+         }
+      }
+   }
+   
    // Decrease level text timeout
    if (leveltext_timeout > 0)
       leveltext_timeout--;
@@ -488,60 +453,59 @@ void Game::Process()
 void Game::StartLevel(int level)
 {
    // Set level size
-   viewport.SetLevelWidth(2000 + 2*SURFACE_SIZE*level);
-   viewport.SetLevelHeight(1500 + 2*SURFACE_SIZE*level);
+   viewport.SetLevelWidth(2000 + 2*Surface::SURFACE_SIZE*level);
+   viewport.SetLevelHeight(1500 + 2*Surface::SURFACE_SIZE*level);
    flGravity = GRAVITY;
 
    // Create the object grid
    int grid_w = viewport.GetLevelWidth() / ObjectGrid::OBJ_GRID_SIZE;
-   int grid_h = (viewport.GetLevelHeight() - ObjectGrid::OBJ_GRID_TOP - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
+   int grid_h = (viewport.GetLevelHeight() - ObjectGrid::OBJ_GRID_TOP
+                 - MAX_SURFACE_HEIGHT - 100) / ObjectGrid::OBJ_GRID_SIZE;
    objgrid.Reset(grid_w, grid_h);
 
    // Create background stars
    nStarCount = (viewport.GetLevelWidth() * viewport.GetLevelHeight()) / 10000;
    if (nStarCount > MAX_GAME_STARS)
       nStarCount = MAX_GAME_STARS;
-   for (int i = 0; i < nStarCount; i++)
-      {
-         stars[i].xpos = (int)(rand()%(viewport.GetLevelWidth()/20))*20;
-         stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
-         stars[i].quad.uTexture = uStarTexture;
-         stars[i].quad.width = stars[i].quad.height = rand()%15;
-      }
-
+   for (int i = 0; i < nStarCount; i++) {
+      stars[i].xpos = (int)(rand()%(viewport.GetLevelWidth()/20))*20;
+      stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
+      stars[i].quad.uTexture = uStarTexture;
+      stars[i].quad.width = stars[i].quad.height = rand()%15;
+   }
+   
    // Generate landing pads
    pads.clear();
    int nLandingPads = rand()%MAX_PADS + 1;
-   for (int i = 0; i < nLandingPads; i++)
-      {
-         int index, length;
-         bool overlap;
-         do
-            {
-               index = rand() % (viewport.GetLevelWidth() / SURFACE_SIZE);
-               length = rand() % MAX_PAD_SIZE + 3;
-
-               // Check for overlap
-               overlap = false;
-               if (index + length > (viewport.GetLevelWidth() / SURFACE_SIZE))
-                  overlap = true;
-               for (int j = 0; j < i; j++)
-                  {
-                     if (pads[j].GetIndex() == index) 
-                        overlap = true;
-                     else if (pads[j].GetIndex() < index && pads[j].GetIndex() + pads[j].GetLength() >= index)
-                        overlap = true;
-                     else if (index < pads[j].GetIndex() && index + length >= pads[j].GetIndex())
-                        overlap = true;
-                  }
-            } while (overlap);
-		
-         pads.push_back(LandingPad(&viewport, index, length));
-      }   
+   for (int i = 0; i < nLandingPads; i++) {
+      int index, length;
+      bool overlap;
+      do {
+         index = rand() % (viewport.GetLevelWidth() / Surface::SURFACE_SIZE);
+         length = rand() % MAX_PAD_SIZE + 3;
+         
+         // Check for overlap
+         overlap = false;
+         if (index + length > (viewport.GetLevelWidth() / Surface::SURFACE_SIZE))
+            overlap = true;
+         for (int j = 0; j < i; j++) {
+            if (pads[j].GetIndex() == index) 
+               overlap = true;
+            else if (pads[j].GetIndex() < index
+                     && pads[j].GetIndex() + pads[j].GetLength() >= index)
+               overlap = true;
+            else if (index < pads[j].GetIndex()
+                     && index + length >= pads[j].GetIndex())
+               overlap = true;
+         }
+      } while (overlap);
+      
+      pads.push_back(LandingPad(&viewport, index, length));
+   }   
 
    int surftex = rand() % Surface::NUM_SURF_TEX;
    surface.Generate(surftex, pads);
-    
+   
    // Create the keys
    nKeys = (level / 2) + (level % 2);
    if (nKeys > MAX_KEYS)
@@ -559,66 +523,59 @@ void Game::StartLevel(int level)
    asteroidcount = level*2 + rand()%(level+3);
    if (asteroidcount > MAX_ASTEROIDS)
       asteroidcount = MAX_ASTEROIDS;
-   for (int i = 0; i < asteroidcount; i++)
-      {
-         // Allocate space, check for timeout
-         int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
-         if (!objgrid.AllocFreeSpace(x, y, width, 4))
-            {
-               // Failed to allocate space so don't make any more asteroids
-               break;
-            }
-
-         // Generate the asteroid
-         asteroids[i].ConstructAsteroid(x, y, width, uSurf2Texture[surftex]);			
+   for (int i = 0; i < asteroidcount; i++) {
+      // Allocate space, check for timeout
+      int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
+      if (!objgrid.AllocFreeSpace(x, y, width, 4)) {
+         // Failed to allocate space so don't make any more asteroids
+         break;
       }
-
+      
+      // Generate the asteroid
+      asteroids[i].ConstructAsteroid(x, y, width, uSurf2Texture[surftex]);			
+   }
+   
    // Create gateways
    int gatewaycount = level/2 + rand()%(level);
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
-   for (int i = 0; i < gatewaycount; i++)
-      {
-         // Allocate space for gateway
-         int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
-         bool vertical;
-         switch(rand() % 2)
-            {
-            case 0: vertical = true; break;
-            case 1: vertical = false; break;
-            }
-		
-         bool result;
-         int xpos, ypos;
-         if (vertical)
-            result = objgrid.AllocFreeSpace(xpos, ypos, 1, length+1);
-         else
-            result = objgrid.AllocFreeSpace(xpos, ypos, length+1, 1);
-         if (!result)
-            {
-               // Failed to allocate space so don't make any more gateways
-               break;
-            }
-
-         gateways.push_back(ElectricGate(&viewport, length, vertical, xpos, ypos));
+   for (int i = 0; i < gatewaycount; i++) {
+      // Allocate space for gateway
+      int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
+      bool vertical;
+      switch(rand() % 2) {
+      case 0: vertical = true; break;
+      case 1: vertical = false; break;
       }
+		
+      bool result;
+      int xpos, ypos;
+      if (vertical)
+         result = objgrid.AllocFreeSpace(xpos, ypos, 1, length+1);
+      else
+         result = objgrid.AllocFreeSpace(xpos, ypos, length+1, 1);
+      if (!result) {
+         // Failed to allocate space so don't make any more gateways
+         break;
+      }
+
+      gateways.push_back(ElectricGate(&viewport, length, vertical, xpos, ypos));
+   }
 
    // Create mines (MUST BE CREATED LAST)
    int minecount = level/2 + rand()%level;
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
-   for (int i = 0; i < minecount; i++)
-      {
-         // Allocate space for mine
-         int xpos, ypos;
-         if (!objgrid.AllocFreeSpace(xpos, ypos, 2, 2))
-            {
-               // Failed to allocate space
-               minecount = i + 1;
-               break;
-            }
-         mines.push_back(Mine(&objgrid, &viewport, xpos, ypos));
+   for (int i = 0; i < minecount; i++) {
+      // Allocate space for mine
+      int xpos, ypos;
+      if (!objgrid.AllocFreeSpace(xpos, ypos, 2, 2)) {
+         // Failed to allocate space
+         minecount = i + 1;
+         break;
       }
+      mines.push_back(Mine(&objgrid, &viewport, xpos, ypos));
+   }
 
    // Set ship starting position
    ship.Reset();
@@ -647,31 +604,26 @@ void Game::ExplodeShip()
    life_alpha = LIFE_ALPHA_BASE - 1.0f;
 }
 
-/* Displays frame to user */
 void Game::Display()
 {
    FreeType &ft = FreeType::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
-
+   
    // Draw the stars
-   for (int i = 0; i < nStarCount; i++)
-      {
-         stars[i].quad.x = stars[i].xpos - viewport.GetXAdjust();
-         stars[i].quad.y = stars[i].ypos - viewport.GetYAdjust();
-         opengl.DrawRotate(&stars[i].quad, starrotate);
-         starrotate += 0.005f;
-      }
+   for (int i = 0; i < nStarCount; i++) {
+      stars[i].quad.x = stars[i].xpos - viewport.GetXAdjust();
+      stars[i].quad.y = stars[i].ypos - viewport.GetYAdjust();
+      opengl.DrawRotate(&stars[i].quad, starrotate);
+      starrotate += 0.005f;
+   }
 
    surface.Display();
 
    // Draw the asteroids
-   for (int i = 0; i < asteroidcount; i++)
-      {
-         if (asteroids[i].ObjectInScreen(&viewport))
-            {
-               asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
-            }
-      }
+   for (int i = 0; i < asteroidcount; i++) {
+      if (asteroids[i].ObjectInScreen(&viewport))
+         asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
+   }
 
    // Draw the keys
    for (int i = 0; i < nKeys; i++)
@@ -685,65 +637,62 @@ void Game::Display()
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       (*it).Draw();
 
-   // ***DEBUG***
-   if (bDebugMode)
-      {
-         // Draw red squares around no-go areas
-         int x, y;
-         opengl.DisableTexture();
-         opengl.EnableBlending();
-         opengl.Colour(1.0f, 0.0f, 0.0f, 0.4f);
-         for (x = 0; x < objgrid.GetWidth(); x++)
-            {
-               for (y = 0; y < objgrid.GetHeight(); y++)
-                  {
-                     if (objgrid.IsFilled(x, y))
-                        {
-                           glLoadIdentity();
-                           glBegin(GL_QUADS);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
-                           glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
-                           glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(), (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP);
-                           glEnd();
-                        }
-                  }
+   if (bDebugMode) {
+      // Draw red squares around no-go areas
+      int x, y;
+      opengl.DisableTexture();
+      opengl.EnableBlending();
+      opengl.Colour(1.0f, 0.0f, 0.0f, 0.4f);
+      for (x = 0; x < objgrid.GetWidth(); x++) {
+         for (y = 0; y < objgrid.GetHeight(); y++) {
+            if (objgrid.IsFilled(x, y)) {
+               glLoadIdentity();
+               glBegin(GL_QUADS);
+               glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(),
+                          y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust()
+                          + ObjectGrid::OBJ_GRID_TOP);
+               glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(),
+                          y*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust()
+                          + ObjectGrid::OBJ_GRID_TOP);
+               glVertex2i((x+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(),
+                          (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust()
+                          + ObjectGrid::OBJ_GRID_TOP);
+               glVertex2i(x*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust(),
+                          (y+1)*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust()
+                          + ObjectGrid::OBJ_GRID_TOP);
+               glEnd();
             }
+         }
       }
+   }
 
    // Draw the landing pads
-   for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
+   for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it)
       (*it).Draw(nKeysRemaining > 0);
-   }
 
    // Draw the exhaust
    ship.DrawExhaust(state == gsPaused);
    
    if (state != gsDeathWait && state != gsGameOver
-       && state != gsFadeToDeath && state != gsFadeToRestart)
-      {
-         ship.Display();
-      }
-
+       && state != gsFadeToDeath && state != gsFadeToRestart) {
+      ship.Display();
+   }
+   
    // Draw the explosion if necessary
-   if (state == gsExplode)
-      {
-         ship.DrawExplosion(true);
-         opengl.Colour(0.0f, 1.0f, 0.0f);
-         ft.Print
-            (
-             ftNormal,
-             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_DEATH)) / 2,
-             opengl.GetHeight() - 40,
-             S_DEATH
-             ); 
-      }
+   if (state == gsExplode) {
+      ship.DrawExplosion(true);
+      opengl.Colour(0.0f, 1.0f, 0.0f);
+      ft.Print
+         (ftNormal,
+          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_DEATH)) / 2,
+          opengl.GetHeight() - 40,
+          S_DEATH); 
+   }
    else if (state == gsDeathWait || state == gsGameOver 
-            || state == gsFadeToDeath || state == gsFadeToRestart)
-      {
-         ship.DrawExplosion(false);
-      }
-	
+            || state == gsFadeToDeath || state == gsFadeToRestart) {
+      ship.DrawExplosion(false);
+   }
+   
    // Draw the arrows
    for (int i = 0; i < nKeys; i++)
       keys[i].DrawArrow(&viewport);
@@ -773,84 +722,65 @@ void Game::Display()
    opengl.Colour(0.0f, 1.0f, 0.0f);
 
    // Draw life icons
-   for (int i = 0; i < lives; i++)
-      {
-         smallship.x = 5 + i*30;
-         smallship.y = 60;
-         if (i == lives-1)
-            {
-               if (life_alpha > LIFE_ALPHA_BASE)
-                  opengl.Draw(&smallship);
-               else if (life_alpha < 0.0f)
-                  {
-                     // Decrement lives
-                     lives--;
-                     life_alpha = LIFE_ALPHA_BASE + 1.0f;
-                  }
-               else
-                  {
-                     opengl.DrawBlend(&smallship, life_alpha);
-                     life_alpha -= 0.03f;
-                  }
-            }
-         else
+   for (int i = 0; i < lives; i++) {
+      smallship.x = 5 + i*30;
+      smallship.y = 60;
+      if (i == lives-1) {
+         if (life_alpha > LIFE_ALPHA_BASE)
             opengl.Draw(&smallship);
+         else if (life_alpha < 0.0f) {
+            // Decrement lives
+            lives--;
+            life_alpha = LIFE_ALPHA_BASE + 1.0f;
+         }
+         else {
+            opengl.DrawBlend(&smallship, life_alpha);
+            life_alpha -= 0.03f;
+         }
       }
-
+      else
+         opengl.Draw(&smallship);
+   }
+   
    // Draw key icons
    int offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
-   if (nKeysRemaining > 0)
-      {
-         for (int i = 0; i < MAX_KEYS; i++)
-            {
-               keys[i].DrawIcon(offset + i*32, 0.3f);
-            }
+   if (nKeysRemaining > 0) {
+      for (int i = 0; i < MAX_KEYS; i++) {
+         keys[i].DrawIcon(offset + i*32, 0.3f);
       }
-   else
-      {
-         
-         for (int i = 0; i < MAX_KEYS; i++)
-            {
-               keys[i].DrawIcon(offset + i*32, 0.0f);
-            }
-         opengl.Colour(0.0f, 1.0f, 0.0f);
-         ft.Print
-            (
-             ftNormal,
-             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_LAND))/2,
-             30,
-             S_LAND
-             );
-      }
+   }
+   else {
+      
+      for (int i = 0; i < MAX_KEYS; i++)
+         keys[i].DrawIcon(offset + i*32, 0.0f);
+      opengl.Colour(0.0f, 1.0f, 0.0f);
+      ft.Print
+         (ftNormal,
+          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_LAND))/2,
+          30, S_LAND);
+   }
 
    // Draw level complete messages
-   if (state == gsLevelComplete)
-      {
-         opengl.Draw(&levcomp);
-         opengl.Colour(0.0f, 0.5f, 0.9f);
-         ft.Print
-            (
-             ftBig,
-             (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_SCORE) - 40)/2,
-             (opengl.GetHeight() - 30)/2 + 50,
-             S_SCORE,
-             newscore > 0 ? newscore : 0
-             );
-      }
-
+   if (state == gsLevelComplete) {
+      opengl.Draw(&levcomp);
+      opengl.Colour(0.0f, 0.5f, 0.9f);
+      ft.Print
+         (ftBig,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_SCORE) - 40)/2,
+          (opengl.GetHeight() - 30)/2 + 50,
+          S_SCORE,
+          newscore > 0 ? newscore : 0);
+   }
+   
    // Draw level number text
-   if (leveltext_timeout)
-      {
-         opengl.Colour(0.9f, 0.9f, 0.0f);
-         ft.Print
-            (
-             ftBig,
-             (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_LEVEL) - 20)/2,
-             (opengl.GetHeight() - 30)/2,
-             S_LEVEL,
-             level
-             );
-      }
+   if (leveltext_timeout) {
+      opengl.Colour(0.9f, 0.9f, 0.0f);
+      ft.Print
+         (ftBig,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_LEVEL) - 20)/2,
+          (opengl.GetHeight() - 30)/2,
+          S_LEVEL, level);
+   }
 
    // Draw the fade
    if (state == gsFadeIn || state == gsFadeToDeath || state == gsFadeToRestart)
