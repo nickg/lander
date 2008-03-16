@@ -71,8 +71,6 @@ void Game::Load()
       uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
       uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
-      uGameOver = opengl.LoadTextureAlpha(g_pData, "GameOver.bmp");
-      uPausedTexture = opengl.LoadTextureAlpha(g_pData, "Paused.bmp");
       
       Ship::Load();
       LandingPad::Load();
@@ -125,20 +123,6 @@ void Game::Load()
    smallship.width = 32;
    smallship.height = 32;
    smallship.uTexture = uShipSmallTexture;
-
-   // Create the game over thing
-   gameover.x = (opengl.GetWidth()-512)/2;
-   gameover.y = (opengl.GetHeight()-64)/2;
-   gameover.width = 512;
-   gameover.height = 64;
-   gameover.uTexture = uGameOver;
-
-   // Create the paused text
-   paused.x = (opengl.GetWidth()-512)/2;
-   paused.y = (opengl.GetHeight()-64)/2;
-   paused.width = 512;
-   paused.height = 64;
-   paused.uTexture = uPausedTexture;
 
    starrotate = 0.0f;
    death_timeout = 0;
@@ -787,10 +771,22 @@ void Game::Display()
       opengl.DrawBlend(&fade, fade_alpha);
 
    // Draw game over message
-   if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE))
-      opengl.Draw(&gameover);
+   if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
+      opengl.Colour(0.9f, 0.0f, 0.0f);
+      ft.Print
+         (ftHollow,
+          (opengl.GetWidth() - ft.GetStringWidth(ftHollow, S_GAME_OVER) - 20)/2,
+          (opengl.GetHeight() - 150)/2,
+          S_GAME_OVER);
+   }
 
    // Draw paused message
-   if (state == gsPaused)
-      opengl.Draw(&paused);
+   if (state == gsPaused) {
+      opengl.Colour(0.0f, 0.5f, 1.0f);
+      ft.Print
+         (ftBig,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_PAUSED) - 20)/2,
+          (opengl.GetHeight() - 150)/2,
+          S_PAUSED);
+   }
 }
