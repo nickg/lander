@@ -73,7 +73,7 @@ private:
    int death_timeout, level, fuel, maxfuel, lives;
    bool hasloaded, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship, gameover, paused;
+   TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship;
    ColourQuad speedbar;
    int score, newscore, nextnewlife;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
@@ -86,9 +86,7 @@ private:
    // Textures
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture, uSpeedTexture;
-   GLuint uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;
-   GLuint uGameOver, uPausedTexture;
-    
+   GLuint uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;    
     
    // Stars
    static const int MAX_GAME_STARS = 2048;
