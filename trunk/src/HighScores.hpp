@@ -1,5 +1,5 @@
 /*
- * HighScores.hpp - Definition of high score screen.
+ * HighScores.hpp -- Definition of high score screen.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,12 +25,7 @@
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.015f
 
-
-/* 
- * High scores screen.
- */
-class HighScores : public Screen
-{
+class HighScores : public Screen {
 public:
    HighScores() : hasloaded(false) { }
    virtual ~HighScores() { }
@@ -42,20 +37,19 @@ public:
    void WriteHighScores();
    void DisplayScores();
    void CheckScore(int score);
+   
 private:
    void SortScores();
    void SwapScores(int a, int b);
 	
    enum HighScoreState { hssDisplay, hssEnterName };
 	
-   // Private variables
    bool hasloaded;
    int newscore;
    TextureQuad hscore;
    float flAlpha, fade;
    HighScoreState state;
 	
-   // Textures
    GLuint uHighScore;
 	
    // An entry in the highscores chart
@@ -69,8 +63,7 @@ private:
 	
    // Fireworks
    static const int MAX_FIREWORKS = 10;
-   class Firework
-   {
+   class Firework {
    public:
       Firework() : active(false)
       { 

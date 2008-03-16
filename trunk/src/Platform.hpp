@@ -88,6 +88,12 @@ using namespace std;
 
 #endif /* #if (_MSC_VER >= 1400) */
 
+#else /* #ifdef WIN32 */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #endif /* #ifdef WIN32 */
 
 /* Mac OS X specifics */
@@ -95,8 +101,6 @@ using namespace std;
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-#include <unistd.h>
 
 #define msleep(n) usleep((n)*1000)
 
@@ -109,8 +113,6 @@ using namespace std;
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-#include <unistd.h>
 
 #define msleep(n) usleep((n)*1000)
 

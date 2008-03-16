@@ -85,7 +85,8 @@ bool File::Exists(const char *path)
    hFile = OpenFile(path, &of, OF_EXIST);
    return hFile != HFILE_ERROR;
 #else
-   return true;
+   struct stat dummy;
+   return stat(path, &dummy) == 0;
 #endif
 }
 
