@@ -39,6 +39,7 @@
 #include "Surface.hpp"
 #include "Mine.hpp"
 #include "ElectricGate.hpp"
+#include "Key.hpp"
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
@@ -84,8 +85,7 @@ private:
 
    // Textures
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
-   GLuint uLevComTexture, uSpeedTexture, uBlueKey[18], uRedKey[18], uGreenKey[18], uPinkKey[18], uYellowKey[18];
-   GLuint uBlueArrow, uPinkArrow, uRedArrow, uYellowArrow, uGreenArrow;
+   GLuint uLevComTexture, uSpeedTexture;
    GLuint uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;
    GLuint uGameOver, uPausedTexture;
     
@@ -106,14 +106,7 @@ private:
     
    // Keys
    static const int MAX_KEYS = 5;
-   struct Key 
-   {
-      int xpos, ypos;
-      TextureQuad frame[18], arrow;
-      int current, rotcount;
-      float alpha;
-      bool active;
-   } keys[MAX_KEYS];
+   Key keys[MAX_KEYS];
    int nKeysRemaining, nKeys;
 
    // Asteroids

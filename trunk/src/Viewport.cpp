@@ -68,4 +68,3 @@ bool Viewport::ObjectInScreen(int xpos, int ypos, int width, int height)
                         width * ObjectGrid::OBJ_GRID_SIZE,
                         height * ObjectGrid::OBJ_GRID_SIZE);
 }
-

@@ -31,7 +31,7 @@
 #define LAND_SPEED		      2.0f
 //#define OBJ_GRID_SIZE		    32
 //#define SHIP_START_Y		    100
-#define KEY_ROTATION_SPEED  2
+//#define KEY_ROTATION_SPEED  2
 //#define MINE_ROTATION_SPEED 5
 //#define GATEWAY_ACTIVE		  30
 //#define MINE_MOVE_SPEED		  1
@@ -78,40 +78,18 @@ void Game::Load()
       uSurf2Texture[3] = opengl.LoadTexture(g_pData, "RedRockSurface2.bmp");
       uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
       uSpeedTexture = opengl.LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
-      uBlueArrow = opengl.LoadTextureAlpha(g_pData, "BlueArrow.bmp");
-      uRedArrow = opengl.LoadTextureAlpha(g_pData, "RedArrow.bmp");
-      uGreenArrow = opengl.LoadTextureAlpha(g_pData, "GreenArrow.bmp");
-      uYellowArrow = opengl.LoadTextureAlpha(g_pData, "YellowArrow.bmp");
-      uPinkArrow = opengl.LoadTextureAlpha(g_pData, "PinkArrow.bmp");
       uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
       uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
       uGameOver = opengl.LoadTextureAlpha(g_pData, "GameOver.bmp");
       uPausedTexture = opengl.LoadTextureAlpha(g_pData, "Paused.bmp");
       
-      // Load key and mine textures
-      for (i = 0; i < 18; i++) {
-         snprintf(buf, TEX_NAME_LEN, "keyblue%.2d.bmp", i);
-         uBlueKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-         
-         snprintf(buf, TEX_NAME_LEN, "keygreen%.2d.bmp", i);
-         uGreenKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-         
-         snprintf(buf, TEX_NAME_LEN, "keyred%.2d.bmp", i);
-         uRedKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-         
-         snprintf(buf, TEX_NAME_LEN, "keyyellow%.2d.bmp", i);
-         uYellowKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-         
-         snprintf(buf, TEX_NAME_LEN, "keypink%.2d.bmp", i);
-         uPinkKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-      }
-
       Ship::Load();
       LandingPad::Load();
       Surface::Load();
       Mine::Load();
       ElectricGate::Load();
+      Key::Load();
       
       hasloaded = true;
    }
@@ -380,23 +358,13 @@ void Game::Process()
       }
 
    // See if the player collected a key
-   for (int i = 0; i < nKeys; i++)
-      {
-         bool collide = ship.BoxCollision
-            (
-             keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE + 3,
-             keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP + 3,
-             ObjectGrid::OBJ_GRID_SIZE - 6,
-             ObjectGrid::OBJ_GRID_SIZE - 6
-             );	
-	
-         if (keys[i].active && collide)
-            {
-               nKeysRemaining--;
-               keys[i].active = false;
-               objgrid.UnlockSpace(keys[i].xpos, keys[i].ypos);
-            }
+   for (int i = 0; i < nKeys; i++) {
+      if(keys[i].CheckCollision(ship)) {
+         nKeysRemaining--;
+         keys[i].Collected();
+         objgrid.UnlockSpace(keys[i].GetX(), keys[i].GetY());
       }
+   }
 
    // Entry / exit states
    if (state == gsDeathWait)
@@ -517,11 +485,8 @@ void Game::Process()
    speedbar.width = width;
 }
 
-/* Starts a level */
 void Game::StartLevel(int level)
 {
-   int i, j, k;
-
    // Set level size
    viewport.SetLevelWidth(2000 + 2*SURFACE_SIZE*level);
    viewport.SetLevelHeight(1500 + 2*SURFACE_SIZE*level);
@@ -536,7 +501,7 @@ void Game::StartLevel(int level)
    nStarCount = (viewport.GetLevelWidth() * viewport.GetLevelHeight()) / 10000;
    if (nStarCount > MAX_GAME_STARS)
       nStarCount = MAX_GAME_STARS;
-   for (i = 0; i < nStarCount; i++)
+   for (int i = 0; i < nStarCount; i++)
       {
          stars[i].xpos = (int)(rand()%(viewport.GetLevelWidth()/20))*20;
          stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
@@ -577,74 +542,24 @@ void Game::StartLevel(int level)
    int surftex = rand() % Surface::NUM_SURF_TEX;
    surface.Generate(surftex, pads);
     
-   // Create the keys (must be created first because no success check
-   // is made on AllocFreeSpace call)
+   // Create the keys
    nKeys = (level / 2) + (level % 2);
    if (nKeys > MAX_KEYS)
       nKeys = MAX_KEYS;
    nKeysRemaining = nKeys;
-   for (i = 0; i < MAX_KEYS; i++)
-      {
-         if (i < nKeys)
-            {		
-               objgrid.AllocFreeSpace(keys[i].xpos, keys[i].ypos);
-               keys[i].active = true;
-               keys[i].alpha = 1.0f;
-            } 
-         else
-            {
-               keys[i].active = false;	
-               keys[i].alpha = -1.0f;
-            }
-		
-         keys[i].current = 0;
-         keys[i].rotcount = KEY_ROTATION_SPEED;
-
-         // Allocate arrow image
-         keys[i].arrow.width = 32;
-         keys[i].arrow.height = 32;
-         switch(i)
-            {
-            case 0: keys[i].arrow.uTexture = uBlueArrow; break;
-            case 1: keys[i].arrow.uTexture = uRedArrow; break;
-            case 2: keys[i].arrow.uTexture = uYellowArrow; break;
-            case 3: keys[i].arrow.uTexture = uPinkArrow; break;
-            case 4: keys[i].arrow.uTexture = uGreenArrow; break;
-            }
-		
-         // Allocate frame images
-         for (j = 0; j < 18; j++)
-            {
-               keys[i].frame[j].width = ObjectGrid::OBJ_GRID_SIZE;
-               keys[i].frame[j].height = ObjectGrid::OBJ_GRID_SIZE;
-
-               // Allocate key color
-               switch(i)
-                  {
-                  case 0:
-                     keys[i].frame[j].uTexture = uBlueKey[j];
-                     break;
-                  case 1:
-                     keys[i].frame[j].uTexture = uRedKey[j];
-                     break;
-                  case 2:
-                     keys[i].frame[j].uTexture = uYellowKey[j];
-                     break;
-                  case 3:
-                     keys[i].frame[j].uTexture = uPinkKey[j];
-                     break;
-                  case 4:
-                     keys[i].frame[j].uTexture = uGreenKey[j];
-                     break;
-                  }
-            }
-      }
+   const ArrowColour acols[MAX_KEYS] =
+      { acBlue, acRed, acYellow, acPink, acGreen };
+   for (int i = 0; i < MAX_KEYS; i++) {
+      int xpos, ypos;
+      objgrid.AllocFreeSpace(xpos, ypos, 1, 1);
+      keys[i].Reset(i < nKeysRemaining, xpos, ypos, acols[i]);
+   }
 
    // Create the asteroids
    asteroidcount = level*2 + rand()%(level+3);
    if (asteroidcount > MAX_ASTEROIDS)
       asteroidcount = MAX_ASTEROIDS;
-   for (i = 0; i < asteroidcount; i++)
+   for (int i = 0; i < asteroidcount; i++)
       {
          // Allocate space, check for timeout
          int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
@@ -662,7 +577,7 @@ void Game::StartLevel(int level)
    int gatewaycount = level/2 + rand()%(level);
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
-   for (i = 0; i < gatewaycount; i++)
+   for (int i = 0; i < gatewaycount; i++)
       {
          // Allocate space for gateway
          int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
@@ -692,7 +607,7 @@ void Game::StartLevel(int level)
    int minecount = level/2 + rand()%level;
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
-   for (i = 0; i < minecount; i++)
+   for (int i = 0; i < minecount; i++)
       {
          // Allocate space for mine
          int xpos, ypos;
@@ -735,13 +650,11 @@ void Game::ExplodeShip()
 /* Displays frame to user */
 void Game::Display()
 {
-   int i, j, k, offset;
-
    FreeType &ft = FreeType::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
 
    // Draw the stars
-   for (i = 0; i < nStarCount; i++)
+   for (int i = 0; i < nStarCount; i++)
       {
          stars[i].quad.x = stars[i].xpos - viewport.GetXAdjust();
          stars[i].quad.y = stars[i].ypos - viewport.GetYAdjust();
@@ -752,7 +665,7 @@ void Game::Display()
    surface.Display();
 
    // Draw the asteroids
-   for (i = 0; i < asteroidcount; i++)
+   for (int i = 0; i < asteroidcount; i++)
       {
          if (asteroids[i].ObjectInScreen(&viewport))
             {
@@ -761,38 +674,9 @@ void Game::Display()
       }
 
    // Draw the keys
-   for (i = 0; i < nKeys; i++)
-      {
-         if (keys[i].active)
-            {
-               keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-               keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;		
-               opengl.Draw(&keys[i].frame[keys[i].current]);
-               if (--keys[i].rotcount == 0)
-                  {
-                     if (++keys[i].current == 18)
-                        keys[i].current = 0;
-                     keys[i].rotcount = KEY_ROTATION_SPEED;
-                  }
-            }
-         else
-            {
-               if (keys[i].alpha > 0.0f)
-                  {
-                     keys[i].frame[keys[i].current].x = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-                     keys[i].frame[keys[i].current].y = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetYAdjust() + ObjectGrid::OBJ_GRID_TOP;	
-                     opengl.DrawBlend(&keys[i].frame[keys[i].current], keys[i].alpha);
-                     keys[i].alpha -= 0.02f;
-                     if (--keys[i].rotcount == 0)
-                        {
-                           if (++keys[i].current == 18)
-                              keys[i].current = 0;
-                           keys[i].rotcount = KEY_ROTATION_SPEED;
-                        }
-                  }
-            }
-      }
-
+   for (int i = 0; i < nKeys; i++)
+      keys[i].DrawKey(&viewport);
+      
    // Draw gateways
    for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it)
       (*it).Draw();
@@ -861,35 +745,8 @@ void Game::Display()
       }
 	
    // Draw the arrows
-   for (i = 0; i < nKeys; i++)	{
-      if (keys[i].active && !viewport.ObjectInScreen(keys[i].xpos, keys[i].ypos, 1, 1))	{
-         int ax = keys[i].xpos*ObjectGrid::OBJ_GRID_SIZE - viewport.GetXAdjust();
-         int ay = keys[i].ypos*ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP - viewport.GetYAdjust();
-         double angle = 0.0;
-
-         if (ax < 0) { 
-            ax = 0; 
-            angle = 90;
-         }
-         else if (ax + 32 > opengl.GetWidth()) { 
-            ax = opengl.GetWidth() - 32;
-            angle = 270;
-         }
-         if (ay < 0) { 
-            ay = 0;
-            angle = 180;
-         }
-         else if (ay + 32 > opengl.GetHeight()) { 
-            ay = opengl.GetHeight() - 32;
-            angle = 0;
-         }
-
-         keys[i].arrow.x = ax;
-         keys[i].arrow.y = ay;
-			
-         opengl.DrawRotate(&keys[i].arrow, (float)angle);
-      }
-   }
+   for (int i = 0; i < nKeys; i++)
+      keys[i].DrawArrow(&viewport);
 
    // Draw fuel bar
    int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
@@ -916,7 +773,7 @@ void Game::Display()
    opengl.Colour(0.0f, 1.0f, 0.0f);
 
    // Draw life icons
-   for (i = 0; i < lives; i++)
+   for (int i = 0; i < lives; i++)
       {
          smallship.x = 5 + i*30;
          smallship.y = 60;
@@ -941,30 +798,20 @@ void Game::Display()
       }
 
    // Draw key icons
-   if (nKeysRemaining)
+   int offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
+   if (nKeysRemaining > 0)
       {
-         offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
-         for (i = 0; i < MAX_KEYS; i++)
+         for (int i = 0; i < MAX_KEYS; i++)
             {
-               keys[i].frame[5].x = offset + i*32;
-               keys[i].frame[5].y = 10;
-               if (keys[i].active)
-                  opengl.Draw(&keys[i].frame[5]);
-               else
-                  opengl.DrawBlend(&keys[i].frame[5], keys[i].alpha > 0.3f ? keys[i].alpha : 0.3f);
+               keys[i].DrawIcon(offset + i*32, 0.3f);
             }
       }
    else
       {
-         offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
-         for (i = 0; i < MAX_KEYS; i++)
+         
+         for (int i = 0; i < MAX_KEYS; i++)
             {
-               keys[i].frame[5].x = offset + i*32;
-               keys[i].frame[5].y = 10;
-               if (keys[i].active)
-                  opengl.Draw(&keys[i].frame[5]);
-               else
-                  opengl.DrawBlend(&keys[i].frame[5], keys[i].alpha > 0.0f ? keys[i].alpha : 0.0f);
+               keys[i].DrawIcon(offset + i*32, 0.0f);
             }
          opengl.Colour(0.0f, 1.0f, 0.0f);
          ft.Print
