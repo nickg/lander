@@ -23,7 +23,7 @@
 #include "Screens.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
-#define HS_FADE_OUT_SPEED	-0.015f
+#define HS_FADE_OUT_SPEED	-0.02f
 
 class HighScores : public Screen {
 public:
@@ -62,7 +62,7 @@ private:
    } scores[NUM_SCORES];
 	
    // Fireworks
-   static const int MAX_FIREWORKS = 10;
+   static const int MAX_FIREWORKS = 7;
    class Firework {
    public:
       Firework() : active(false)
