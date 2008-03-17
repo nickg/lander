@@ -520,7 +520,8 @@ void Game::StartLevel(int level)
    }
    
    // Create gateways
-   int gatewaycount = level/2 + rand()%(level);
+   int gatewaycount = level/2 + rand()%level;
+   gateways.clear();
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
    for (int i = 0; i < gatewaycount; i++) {
@@ -548,6 +549,7 @@ void Game::StartLevel(int level)
 
    // Create mines (MUST BE CREATED LAST)
    int minecount = level/2 + rand()%level;
+   mines.clear();
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
    for (int i = 0; i < minecount; i++) {

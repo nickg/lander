@@ -31,7 +31,7 @@
 #define S_HSCORE	"Well  done  -  You  got  a  high  score"
 #define S_HCONT		"Press  ENTER  or  FIRE  to  continue"
 #define S_HNAME		"Name?  %s"
-#define S_TITLE		"Lunar  Lander"
+#define S_TITLE		"LUNAR  LANDER"
 #define S_GAME_OVER "Game Over"
 #define S_PAUSED  "Paused"
 

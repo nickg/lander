@@ -51,8 +51,8 @@ void Viewport::SetYAdjust(int y)
  */
 bool Viewport::PointInScreen(int xpos, int ypos, int width, int height)
 {
-   return (xpos + width > adjustX && xpos - adjustX < screenWidth
-           && ypos + height > adjustY && ypos - adjustY < screenHeight);
+   return ((xpos + width > adjustX && xpos - adjustX < screenWidth)
+           && (ypos + height > adjustY && ypos - adjustY < screenHeight));
 }
 
 /* 
@@ -62,9 +62,8 @@ bool Viewport::PointInScreen(int xpos, int ypos, int width, int height)
  */
 bool Viewport::ObjectInScreen(int xpos, int ypos, int width, int height)
 {
-   int yoff = ObjectGrid::OBJ_GRID_TOP / ObjectGrid::OBJ_GRID_SIZE;
    return PointInScreen(xpos * ObjectGrid::OBJ_GRID_SIZE,
-                        ypos * ObjectGrid::OBJ_GRID_SIZE + yoff,
+                        ypos * ObjectGrid::OBJ_GRID_SIZE + ObjectGrid::OBJ_GRID_TOP,
                         width * ObjectGrid::OBJ_GRID_SIZE,
                         height * ObjectGrid::OBJ_GRID_SIZE);
 }

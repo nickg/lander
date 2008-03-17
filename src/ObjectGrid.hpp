@@ -47,7 +47,7 @@ private:
 
 class StaticObject {
 public:
-   StaticObject() : xpos(0), ypos(0), width(0), height(0) {}
+   StaticObject() : xpos(0), ypos(0), width(1), height(1) {}
 
    bool ObjectInScreen(Viewport *viewport);
    
