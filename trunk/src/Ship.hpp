@@ -48,8 +48,8 @@ public:
    bool HotSpotCollision(LineSegment &l, float dx=0, float dy=0);
    bool BoxCollision(int x, int y, int w, int h);
 
-   int GetX() const { return xpos; }
-   int GetY() const { return ypos; }
+   float GetX() const { return xpos; }
+   float GetY() const { return ypos; }
    float GetXSpeed() const { return speedX; }
    float GetYSpeed() const { return speedY; }
    float GetAngle() const { return angle; }
