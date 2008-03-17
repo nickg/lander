@@ -230,7 +230,7 @@ bool Ship::CheckCollision(LineSegment &l, float dx, float dy)
    float xpos = this->xpos + dx;
    float ypos = this->ypos + dy;
 
-   if (!viewport->PointInScreen(xpos, ypos, SHIP_TEX_WIDTH, SHIP_TEX_HEIGHT))
+   if (!viewport->PointInScreen((int)xpos, (int)ypos, SHIP_TEX_WIDTH, SHIP_TEX_HEIGHT))
       return false;
 
    // Get position after next move
