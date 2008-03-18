@@ -31,29 +31,37 @@
 
 typedef GLuint Texture;
 
-
-class ColourQuad {
+class Renderable {
 public:
-   ColourQuad(int x=0, int y=0, int width=0, int height=0, float r=1, float g=1, float b=1)
-      : x(x), y(y), width(width), height(height), red(r), 
-        green(g), blue(b)
-   { }
+   Renderable(int x, int y, int width, int height,
+              float r, float g, float b);
+   
+   virtual void Render() = 0;
+
+   void TranslateTo();
+   void ApplyColour(float alpha=1.0f);
+
    int x, y, width, height;
    float red, green, blue;
 };
 
+class ColourQuad : public Renderable {
+public:
+   ColourQuad(int x=0, int y=0, int width=0, int height=0,
+              float r=1, float g=1, float b=1);
+   void Render();
+   
+};
 
 /* 
  * A polygon with four points and a texture.
  */
-struct TextureQuad {
+class TextureQuad : public Renderable {
+public:
    TextureQuad(int qx=0, int qy=0, int width=0, int height=0, GLuint tex=0,
-               float r=1, float g=1, float b=1)
-      : x(qx), y(qy), width(width), height(height), red(r), 
-        green(g), blue(b), uTexture(tex)
-   { }
-   int x, y, width, height;
-   float red, green, blue;
+               float r=1, float g=1, float b=1);
+   void Render();
+   
    Texture uTexture;
 };
 
@@ -96,108 +104,30 @@ public:
    void Viewport(int x, int y, int width, int height);
 
    // Renderer functions
-   void Draw(ColourQuad *cq);
-   void Draw(TextureQuad *tq);
+   void Draw(Renderable *r);
    void Draw(Poly *cp);
-   void DrawRotate(ColourQuad *cq, float angle);
-   void DrawRotate(TextureQuad *tq, float angle);
-   void DrawBlend(ColourQuad *cq, float alpha);
-   void DrawBlend(TextureQuad *tq, float alpha);
-   void DrawRotateBlend(ColourQuad *cq, float angle, float alpha);
-   void DrawRotateBlend(TextureQuad *tq, float angle, float alpha);
-   void DrawScale(ColourQuad *cq, float factor);
-   void DrawScale(TextureQuad *tq, float factor);
-   void DrawRotateScale(ColourQuad *cq, float angle, float factor);
-   void DrawRotateScale(TextureQuad *tq, float angle, float factor);
-   void DrawBlendScale(ColourQuad *cq, float alpha, float factor);
-   void DrawBlendScale(TextureQuad *tq, float alpha, float factor);
-   void DrawRotateBlendScale(ColourQuad *cq, float angle, float alpha, float factor);
-   void DrawRotateBlendScale(TextureQuad *tq, float angle, float alpha, float factor);
+   void DrawRotate(Renderable *r, float angle);
+   void DrawBlend(Renderable *r, float alpha);
+   void DrawRotateBlend(Renderable *r, float angle, float alpha);
+   void DrawScale(Renderable *r, float factor);
+   void DrawRotateScale(Renderable *r, float angle, float factor);
+   void DrawBlendScale(Renderable *r, float alpha, float factor);
+   void DrawRotateBlendScale(Renderable *r, float angle, float alpha, float factor);
 
-   inline int GetWidth()
-   { 
-      return screen_width;
-   }
+   int GetWidth() const { return screen_width; }
+   int GetHeight() const { return screen_height; }
 
-   inline int GetHeight()
-   { 
-      return screen_height;
-   }
-
-   inline void SelectTexture(GLuint uTexture)
-   {
-      glBindTexture(GL_TEXTURE_2D, uTexture);
-   }
-
-   inline void ClearColour(float r, float g, float b)
-   { 
-      glClearColor(r, g, b, 0.0f); 
-   }
-
-   inline void Colour(float r, float g, float b)
-   { 
-      glColor3f(r, g, b); 
-   }
-
-   inline void Colour(float r, float g, float b, float a)
-   { 
-      glColor4f(r, g, b, a); 
-   }
-
-   inline void EnableTexture() 
-   { 
-      if (!textureon)
-         { 
-            glEnable(GL_TEXTURE_2D); 
-            textureon = true; 
-         } 
-   }
-
-   inline void DisableTexture() 
-   { 
-      if (textureon)
-         { 
-            glDisable(GL_TEXTURE_2D); 
-            textureon = false; 
-         } 
-   }
-
-   inline void EnableBlending() 
-   { 
-      if (!blendon)
-         { 
-            glEnable(GL_BLEND); 
-            blendon = true; 
-         } 
-   }
-
-   inline void DisableBlending() 
-   { 
-      if (blendon)
-         { 
-            glDisable(GL_BLEND);
-            blendon = false;
-         }
-   } 
-	
-   inline void EnableDepthBuffer() 
-   { 
-      if (!depthon)
-         {
-            glEnable(GL_DEPTH_TEST); 
-            depthon = true; 
-         } 
-   }
-	
-   inline void DisableDepthBuffer() 
-   { 
-      if (depthon)
-         { 
-            glDisable(GL_DEPTH_TEST); 
-            depthon = false; 
-         } 
-   } 
-	
+   void SelectTexture(Texture uTexture);
+   void ClearColour(float r, float g, float b);
+   void Colour(float r, float g, float b, float a=1.0f);
+   
+   void EnableTexture();
+   void DisableTexture();
+   void EnableBlending();
+   void DisableBlending();
+   void EnableDepthBuffer();
+   void DisableDepthBuffer();
+     	
    static const Texture INVALID_TEXTURE = 0xFFFFFFFF;
 
 private:

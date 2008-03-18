@@ -158,35 +158,13 @@ void OpenGL::Viewport(int x, int y, int width, int height)
    glViewport(x, y, width, height);
 }
 
-void OpenGL::Draw(ColourQuad *cq)
+void OpenGL::Draw(Renderable *r)
 {
    DisableBlending();
-   DisableTexture();
    glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
-   glColor3f(cq->red, cq->green, cq->blue);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(cq->width/2), -(cq->height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(cq->width/2), cq->height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(cq->width/2, cq->height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
-}
-
-void OpenGL::Draw(TextureQuad *tq)
-{
-   DisableBlending();
-   EnableTexture();
-   glLoadIdentity();
-   glTranslatef((float)(tq->x + (tq->width/2)), (float)(tq->y + (tq->height/2)), 0.0f);
-   glColor3f(tq->red, tq->green, tq->blue);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
+   r->TranslateTo();
+   r->ApplyColour();
+   r->Render();
 }
 
 void OpenGL::Draw(Poly *cp)
@@ -209,261 +187,80 @@ void OpenGL::Draw(Poly *cp)
    glEnd();
 }
 
-void OpenGL::DrawRotate(ColourQuad *cq, float angle)
+void OpenGL::DrawRotate(Renderable *r, float angle)
 {
    DisableBlending();
    DisableTexture();
    glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
+   r->TranslateTo();
    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor3f(cq->red, cq->green, cq->blue);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
+   r->ApplyColour();
+   r->Render();
 }
 
-void OpenGL::DrawRotate(TextureQuad *tq, float angle)
+void OpenGL::DrawBlend(Renderable *r, float alpha)
+{
+   DisableDepthBuffer();
+   EnableBlending();
+   glLoadIdentity();
+   r->TranslateTo();
+   r->ApplyColour(alpha);
+   r->Render();
+}
+
+void OpenGL::DrawRotateBlend(Renderable *r, float angle, float alpha)
+{
+   DisableDepthBuffer();
+   EnableBlending();
+   glLoadIdentity();
+   r->TranslateTo();
+   glRotatef(angle, 0.0f, 0.0f, 1.0f);
+   r->ApplyColour(alpha);
+   r->Render();
+}
+
+void OpenGL::DrawScale(Renderable *r, float factor)
 {
    DisableBlending();
-   EnableTexture();
    glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor3f(tq->red, tq->green, tq->blue);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); 
-   glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f);
-   glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f);
-   glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f);
-   glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
+   r->TranslateTo();
+   glScalef(factor, factor, 0);
+   r->ApplyColour();
+   r->Render();
 }
 
-void OpenGL::DrawBlend(ColourQuad *cq, float alpha)
-{
-   DisableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
-   glColor4f(cq->red, cq->green, cq->blue, alpha);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawBlend(TextureQuad *tq, float alpha)
-{
-   EnableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glColor4f(tq->red, tq->green, tq->blue, alpha);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f);
-   glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f);
-   glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f);
-   glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f);
-   glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawRotateBlend(ColourQuad *cq, float angle, float alpha)
-{
-   DisableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor4f(cq->red, cq->green, cq->blue, alpha);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawRotateBlend(TextureQuad *tq, float angle, float alpha)
-{
-   EnableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor4f(tq->red, tq->green, tq->blue, alpha);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f);
-   glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f);
-   glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f);
-   glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f);
-   glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawScale(ColourQuad *cq, float factor)
+void OpenGL::DrawRotateScale(Renderable *r, float angle, float factor)
 {
    DisableBlending();
-   DisableTexture();
    glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
-   glScalef(factor, factor, 0);
-   glColor3f(cq->red, cq->green, cq->blue);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawScale(TextureQuad *tq, float factor)
-{
-   DisableBlending();
-   EnableTexture();
-   glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glScalef(factor, factor, 0);
-   glColor3f(tq->red, tq->green, tq->blue);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f);
-   glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f);
-   glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f);
-   glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f);
-   glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawRotateScale(ColourQuad *cq, float angle, float factor)
-{
-   DisableBlending();
-   DisableTexture();
-   glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
+   r->TranslateTo();
    glScalef(factor, factor, 0);
    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor3f(cq->red, cq->green, cq->blue);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
+   r->ApplyColour();
+   r->Render();
 }
 
-void OpenGL::DrawRotateScale(TextureQuad *tq, float angle, float factor)
+void OpenGL::DrawBlendScale(Renderable *r, float alpha, float factor)
 {
-   DisableBlending();
-   EnableTexture();
-   glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glScalef(factor, factor, 0);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor3f(tq->red, tq->green, tq->blue);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawBlendScale(ColourQuad *cq, float alpha, float factor)
-{
-   DisableTexture();
    DisableDepthBuffer();
    EnableBlending();
    glLoadIdentity();
-   glTranslatef(cq->x, cq->y, 0.0f);
+   r->TranslateTo();
    glScalef(factor, factor, 0);
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
+   r->ApplyColour();
+   r->Render();
 }
 
-void OpenGL::DrawBlendScale(TextureQuad *tq, float alpha, float factor)
+void OpenGL::DrawRotateBlendScale(Renderable *r, float angle, float alpha, float factor)
 {
-   EnableTexture();
    DisableDepthBuffer();
    EnableBlending();
    glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glScalef(factor, factor, 0);
-   glColor4f(tq->red, tq->green, tq->blue, alpha);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawRotateBlendScale(ColourQuad *cq, float angle, float alpha, float factor)
-{
-   DisableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(cq->x + (cq->width/2), cq->y + (cq->height/2), 0.0f);
+   r->TranslateTo();
    glScalef(factor, factor, 0);
    glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor4f(cq->red, cq->green, cq->blue, alpha);
-   glBegin(GL_QUADS);
-   glVertex2i(-(cq->width/2), -(cq->height/2));
-   glVertex2i(-(cq->width/2), cq->height/2);
-   glVertex2i(cq->width/2, cq->height/2);
-   glVertex2i(cq->width/2, -(cq->height/2));
-   glEnd();
-}
-
-void OpenGL::DrawRotateBlendScale(TextureQuad *tq, float angle, float alpha, float factor)
-{
-   EnableTexture();
-   DisableDepthBuffer();
-   EnableBlending();
-   glLoadIdentity();
-   glTranslatef(tq->x + (tq->width/2), tq->y + (tq->height/2), 0.0f);
-   glScalef(factor, factor, 0);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   glColor4f(tq->red, tq->green, tq->blue, alpha);
-   glBindTexture(GL_TEXTURE_2D, tq->uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(tq->width/2), -(tq->height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(tq->width/2), tq->height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(tq->width/2, tq->height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(tq->width/2, -(tq->height/2));
-   glEnd();
+   r->ApplyColour(alpha);
+   r->Render();
 }
 
 OpenGL::~OpenGL()
@@ -686,4 +483,122 @@ void OpenGL::Stop()
 void OpenGL::SkipDisplay()
 {
    dodisplay = false;
+}
+
+void OpenGL::SelectTexture(Texture uTexture)
+{
+   glBindTexture(GL_TEXTURE_2D, uTexture);
+}
+
+void OpenGL::ClearColour(float r, float g, float b)
+{
+   glClearColor(r, g, b, 0.0f); 
+}
+
+void OpenGL::Colour(float r, float g, float b, float a)
+{
+   glColor4f(r, g, b, a); 
+}
+
+void OpenGL::EnableTexture() 
+{ 
+   if (!textureon) { 
+      glEnable(GL_TEXTURE_2D); 
+      textureon = true; 
+   } 
+}
+
+void OpenGL::DisableTexture() 
+{ 
+   if (textureon) { 
+      glDisable(GL_TEXTURE_2D); 
+      textureon = false; 
+   } 
+}
+
+void OpenGL::EnableBlending() 
+{ 
+   if (!blendon) { 
+      glEnable(GL_BLEND); 
+      blendon = true; 
+   } 
+}
+
+void OpenGL::DisableBlending() 
+{ 
+   if (blendon) { 
+      glDisable(GL_BLEND);
+      blendon = false;
+   }
+} 
+	
+void OpenGL::EnableDepthBuffer() 
+{ 
+   if (!depthon) {
+      glEnable(GL_DEPTH_TEST); 
+      depthon = true; 
+   } 
+}
+
+void OpenGL::DisableDepthBuffer() 
+{ 
+   if (depthon) { 
+      glDisable(GL_DEPTH_TEST); 
+      depthon = false; 
+   } 
+} 
+
+Renderable::Renderable(int x, int y, int width, int height,
+                       float r, float g, float b)
+   : x(x), y(y), width(width), height(height), red(r), 
+     green(g), blue(b)
+{
+
+}
+
+void Renderable::TranslateTo()
+{
+   glTranslatef((float)(x + width/2), (float)(y + height/2), 0.0f);
+}
+
+void Renderable::ApplyColour(float alpha)
+{
+   glColor4f(red, green, blue, alpha);
+}
+
+TextureQuad::TextureQuad(int qx, int qy, int width, int height, Texture tex,
+                         float r, float g, float b)
+   : Renderable(qx, qy, width, height, r, g, b), uTexture(tex)
+{
+
+}
+
+void TextureQuad::Render()
+{
+   glEnable(GL_TEXTURE_2D); 
+   glBindTexture(GL_TEXTURE_2D, uTexture);
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
+   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(width/2), height/2);
+   glTexCoord2f(1.0f, 0.0f); glVertex2i(width/2, height/2);
+   glTexCoord2f(1.0f, 1.0f); glVertex2i(width/2, -(height/2));
+   glEnd();
+}
+
+ColourQuad::ColourQuad(int x, int y, int width, int height,
+                       float r, float g, float b)
+   : Renderable(x, y, width, height, r, g, b)
+{
+
+}
+
+void ColourQuad::Render()
+{
+   glDisable(GL_TEXTURE_2D); 
+   glBegin(GL_QUADS);
+   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
+   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(width/2), height/2);
+   glTexCoord2f(1.0f, 0.0f); glVertex2i(width/2, height/2);
+   glTexCoord2f(1.0f, 1.0f); glVertex2i(width/2, -(height/2));
+   glEnd();
 }
