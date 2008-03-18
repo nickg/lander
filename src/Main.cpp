@@ -85,7 +85,7 @@ int main(int argc, char **argv)
       ft.LoadFont(ftHollow, File::LocateResource("Hollow_Font", "ttf"), 40);
       ft.LoadFont(ftScoreName, File::LocateResource("Default_Font", "ttf"), 14);
       ft.LoadFont(ftLarge, File::LocateResource("Default_Font", "ttf"), 15);
-		
+      
       // Run the game
       sm.SelectScreen("MAIN MENU");
       opengl.Run();
@@ -101,6 +101,5 @@ int main(int argc, char **argv)
 #endif /* #ifdef WIN32 */
    }
 
-   // Exit
    return 0;
 }

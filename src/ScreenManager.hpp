@@ -29,7 +29,6 @@ class Screen {
 public:
    virtual ~Screen() { }
    virtual void Load() { }
-   virtual void Unload() { }
    virtual void Display() { }
    virtual void Process() { }
 };
@@ -43,7 +42,7 @@ public:
    static ScreenManager &GetInstance();
 
    void AddScreen(const char *id, Screen *ptr);
-   void SelectScreen(const char *id);
+   void SelectScreen(const string id);
    void Process();
    void Display();
    Screen *GetScreenById(const char *id) const;

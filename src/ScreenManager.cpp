@@ -29,12 +29,7 @@ ScreenManager::ScreenManager()
 
 ScreenManager::~ScreenManager()
 {
-   ScreenMap::iterator it;
-
-   for (it = screens.begin(); it != screens.end(); ++it)	{
-      if ((*it).second.ptr != NULL && (*it).second.loaded)
-         (*it).second.ptr->Unload();
-   }
+   
 }
 
 ScreenManager &ScreenManager::GetInstance()
@@ -56,26 +51,19 @@ void ScreenManager::AddScreen(const char *id, Screen *ptr)
    screens[string(id)] = sd;
 }
 
-void ScreenManager::SelectScreen(const char *id)
+void ScreenManager::SelectScreen(const string id)
 {
-   ScreenMap::iterator it;
-
-   it = screens.find(string(id));
+   ScreenMapIt it = screens.find(id);
 
    if (it == screens.end())
-      throw runtime_error("Screen does not exist: " + string(id));
+      throw runtime_error("Screen does not exist: " + id);
 	
-   if (active.ptr != NULL) {
-      active.ptr->Unload();
-      active.loaded = false;
-   }
-
    active = (*it).second;
 	
    active.ptr->Load();
    active.loaded = true;
    screens[id] = active;
-
+   
    // Allow the new screen to generate a frame
    OpenGL::GetInstance().SkipDisplay();
 }
