@@ -24,26 +24,24 @@
  * Create a new input manager. Never call this directly: use GetInstance.
  */
 Input::Input()
-: joystick(NULL), m_textinput(false)
+  : joystick(NULL), textinput(false)
 {
-	// Start SDL joystick handling subsystem
-	if (SDL_Init(SDL_INIT_JOYSTICK) < 0) 
-	{
-		throw runtime_error("Unable to initialise SDL: " + string(SDL_GetError()));
-	}
+   // Start SDL joystick handling subsystem
+   if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
+      throw runtime_error("Unable to initialise SDL: " + string(SDL_GetError()));
+   }
 
-	// Only use the first joystick
-	if (SDL_NumJoysticks() > 0)
-	{
-		SDL_JoystickEventState(SDL_DISABLE);	// TODO: enable when I have a joystick to test!
-		//joystick = SDL_JoystickOpen(0);
-	}
+   // Only use the first joystick
+   if (SDL_NumJoysticks() > 0)	{
+      SDL_JoystickEventState(SDL_DISABLE);	// TODO: enable when I have a joystick to test!
+      //joystick = SDL_JoystickOpen(0);
+   }
 
-	for (int i = 0; i < NUM_KEYS; i++)
-		m_ignore[i] = 0;
+   for (int i = 0; i < NUM_KEYS; i++)
+      ignore[i] = 0;
 	
-	for (int i = 0; i < NUM_BUTTONS; i++)
-		m_jignore[i] = 0;
+   for (int i = 0; i < NUM_BUTTONS; i++)
+      jignore[i] = 0;
 }
 
 
@@ -52,8 +50,8 @@ Input::Input()
  */
 Input::~Input()
 {
-	if (joystick != NULL)
-		SDL_JoystickClose(joystick);
+   if (joystick != NULL)
+      SDL_JoystickClose(joystick);
 }
 
 
@@ -62,9 +60,9 @@ Input::~Input()
  */
 Input &Input::GetInstance()
 {
-	static Input g_input;
+   static Input g_input;
 
-	return g_input;	
+   return g_input;	
 }
 
 
@@ -73,66 +71,57 @@ Input &Input::GetInstance()
  */
 void Input::Update()
 {
-	SDL_Event e;
-	int i;
+   SDL_Event e;
+   int i;
 
-	while (SDL_PollEvent(&e))
-	{
-		switch (e.type)
-		{
+   while (SDL_PollEvent(&e))	{
+      switch (e.type)	{
 			case SDL_QUIT:
-				// End the game
-				OpenGL::GetInstance().Stop();
-				break;
+         // End the game
+         OpenGL::GetInstance().Stop();
+         break;
 
 			case SDL_KEYDOWN:
-				// Type a character in text input mode
-				if (m_textinput)
-				{
-					if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
-						|| (e.key.keysym.sym == SDLK_SPACE))
-					{
-						m_text += (char)e.key.keysym.sym;
-					}
-					else if (e.key.keysym.sym == SDLK_BACKSPACE && m_text.length() > 0)
-					{
-						m_text.erase(m_text.length() - 1, 1);
-					}
-				}
-				break;
+         // Type a character in text input mode
+         if (textinput) {
+            if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
+                || (e.key.keysym.sym == SDLK_SPACE)) {
+               text += (char)e.key.keysym.sym;
+            }
+            else if (e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 0)	{
+               text.erase(text.length() - 1, 1);
+            }
+         }
+         break;
 
 			case SDL_JOYAXISMOTION:
-				// Joystick was moved
-				if ((e.jaxis.value < -3200) || (e.jaxis.value > 3200)) 
-				{
-					if (e.jaxis.axis == 0) 
-					{
-						// Left-right movement code goes here
-					}
+         // Joystick was moved
+         if ((e.jaxis.value < -3200) || (e.jaxis.value > 3200)) {
+            if (e.jaxis.axis == 0) {
+               // Left-right movement code goes here
+            }
 				
-					if (e.jaxis.axis == 1) 
-					{
-						// Up-Down movement code goes here
-					}
-				}
-				break;
+            if (e.jaxis.axis == 1) {
+               // Up-Down movement code goes here
+            }
+         }
+         break;
 
 			case SDL_JOYBUTTONDOWN:
-				// Joystick button was pressed
-				// Button is e.jbutton.button
-				break;
+         // Joystick button was pressed
+         // Button is e.jbutton.button
+         break;
 
 			case SDL_JOYBUTTONUP:
-				// Joystick button was released
-				break;
-		}
-	}
+         // Joystick button was released
+         break;
+      }
+   }
 
-	for (i = 0; i < NUM_KEYS; i++)
-	{
-		if (m_ignore[i] > 0)
-			m_ignore[i]--;
-	}
+   for (i = 0; i < NUM_KEYS; i++) {
+      if (ignore[i] > 0)
+         ignore[i]--;
+   }
 }
 
 
@@ -141,16 +130,16 @@ void Input::Update()
  */
 bool Input::GetKeyState(int key)
 {
-	int numkeys;
-	Uint8 *keystate;
+   int numkeys;
+   Uint8 *keystate;
 
-	if (m_ignore[key])
-		return false;
+   if (ignore[key])
+      return false;
 
-	keystate = SDL_GetKeyState(&numkeys);
-	assert(key < numkeys);
+   keystate = SDL_GetKeyState(&numkeys);
+   assert(key < numkeys);
 
-	return keystate[key] != 0;
+   return keystate[key] != 0;
 }
 
 
@@ -159,9 +148,9 @@ bool Input::GetKeyState(int key)
  */
 void Input::ResetKey(int key)
 {
-	assert(key < NUM_KEYS);
+   assert(key < NUM_KEYS);
 
-	m_ignore[key] = RESET_TIMEOUT;
+   ignore[key] = RESET_TIMEOUT;
 }
 
 
@@ -170,9 +159,9 @@ void Input::ResetKey(int key)
  */
 void Input::ResetJoystickButton(int button)
 {
-	assert(button < NUM_BUTTONS);
+   assert(button < NUM_BUTTONS);
 	
-	m_jignore[button] = RESET_TIMEOUT;
+   jignore[button] = RESET_TIMEOUT;
 }
 
 
@@ -182,11 +171,11 @@ void Input::ResetJoystickButton(int button)
  */
 void Input::OpenCharBuffer(int max)
 {
-	assert(!m_textinput);
+   assert(!textinput);
 
-	m_maxchar = max;
-	m_text = "";
-	m_textinput = true;
+   maxchar = max;
+   text = "";
+   textinput = true;
 }
 
 /*
@@ -194,9 +183,9 @@ void Input::OpenCharBuffer(int max)
  */
 void Input::CloseCharBuffer()
 {
-	assert(m_textinput);
+   assert(textinput);
 
-	m_textinput = false;
+   textinput = false;
 }
 
 
@@ -205,7 +194,7 @@ void Input::CloseCharBuffer()
  */
 const char *Input::GetInput() const
 {
-	return m_text.c_str();
+   return text.c_str();
 }
 
 
@@ -215,7 +204,7 @@ const char *Input::GetInput() const
  */
 int Input::QueryJoystickAxis(int axis)
 {
-	return 0;
+   return 0;
 }
 
 
@@ -225,6 +214,6 @@ int Input::QueryJoystickAxis(int axis)
  */
 bool Input::QueryJoystickButton(int button)
 {
-	return false;
+   return false;
 }
 

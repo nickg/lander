@@ -24,7 +24,7 @@
  */
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
-#define MAX_PAD_SIZE		   2 
+#define MAX_PAD_SIZE		    2 
 #define LAND_SPEED		      2.0f
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
@@ -68,8 +68,6 @@ void Game::Load()
       uSurf2Texture[3] = opengl.LoadTexture(g_pData, "RedRockSurface2.bmp");
       uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
       uSpeedTexture = opengl.LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
-      uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
-      uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
       
       Ship::Load();
@@ -78,6 +76,7 @@ void Game::Load()
       Mine::Load();
       ElectricGate::Load();
       Key::Load();
+      FuelMeter::Load();
       
       hasloaded = true;
    }
@@ -102,13 +101,6 @@ void Game::Load()
    speedmeter.width = 128;
    speedmeter.height = 16;
    speedmeter.uTexture = uSpeedTexture;
-
-   // Create the fuel meter
-   fuelmeter.x = opengl.GetWidth() - 266;
-   fuelmeter.y = 30;
-   fuelmeter.width = 256;
-   fuelmeter.height = 32;
-   fuelmeter.uTexture = uFuelMeterTexture;
 
    // Create the speed bar
    speedbar.x = 12;
@@ -148,6 +140,14 @@ void Game::NewGame()
    StartLevel(level);
 }
 
+void Game::CalculateScore(int padIndex)
+{
+   newscore =
+      (level * SCORE_LEVEL)
+      + ((MAX_PAD_SIZE + 2 - pads[padIndex].GetLength()) * SCORE_PAD_SIZE)
+      + (fuelmeter.GetFuel() / SCORE_FUEL_DIV);
+}
+
 void Game::Process()
 {
    Input &input = Input::GetInstance();
@@ -173,11 +173,11 @@ void Game::Process()
       return;
 
    if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
-       && fuel > 0 && state == gsInGame) {
+       && !fuelmeter.OutOfFuel() && state == gsInGame) {
       // Thrusting
       ship.ThrustOn();
       ship.Thrust(SHIP_SPEED);
-      fuel--;
+      fuelmeter.BurnFuel();
    }
    else
       ship.ThrustOff();
@@ -241,8 +241,7 @@ void Game::Process()
                 && ship.GetYSpeed() < LAND_SPEED && nKeysRemaining == 0) {
                // Landed safely
                state = gsLevelComplete;
-               newscore = (level * 100) + 
-                  (((MAX_PAD_SIZE+2) - pads[padIndex].GetLength())*10*level);
+               CalculateScore(padIndex);
                countdown_timeout = 70;
                landed = true;
             }
@@ -568,8 +567,7 @@ void Game::StartLevel(int level)
 
    leveltext_timeout = LEVEL_TEXT_TIMEOUT;
 
-   // Set fuel
-   fuel = maxfuel = 750 + 50*level;
+   fuelmeter.Refuel(FUEL_BASE + FUEL_PER_LEVEL*level);
 
    // Start the game
    levelcomp_timeout = 0;
@@ -683,29 +681,14 @@ void Game::Display()
    for (int i = 0; i < nKeys; i++)
       keys[i].DrawArrow(&viewport);
 
-   // Draw fuel bar
-   int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
-   float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
-   opengl.EnableTexture();
-   opengl.DisableBlending();
-   opengl.Colour(1.0f, 1.0f, 1.0f);
-   opengl.SelectTexture(uFuelBarTexture);
-   glLoadIdentity();
-   glBegin(GL_QUADS);
-   glTexCoord2f(1.0f-texsize, 1.0f); glVertex2i(opengl.GetWidth()-fbsize-10, 30);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(opengl.GetWidth()-10, 30);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(opengl.GetWidth()-10, 62);
-   glTexCoord2f(1.0f-texsize, 0.0f); glVertex2i(opengl.GetWidth()-fbsize-10, 62);
-   glEnd();
-
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
    ft.Print(ftScore, 10, 25, "%.7d", score);
-   ft.Print(ftNormal, opengl.GetWidth()-70, 20, S_FUEL);
    opengl.Draw(&speedbar);
    opengl.Draw(&speedmeter);
-   opengl.Draw(&fuelmeter);
    opengl.Colour(0.0f, 1.0f, 0.0f);
+
+   fuelmeter.Display();
 
    // Draw life icons
    for (int i = 0; i < lives; i++) {
@@ -792,3 +775,67 @@ void Game::Display()
           S_PAUSED);
    }
 }
+
+Texture FuelMeter::uFuelMeterTexture, FuelMeter::uFuelBarTexture;
+
+FuelMeter::FuelMeter()
+   : fuel(0), maxfuel(1)
+{
+   
+}
+
+void FuelMeter::Load()
+{
+   OpenGL &opengl = OpenGL::GetInstance();
+   
+   uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
+   uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
+}
+
+void FuelMeter::Display()
+{
+   OpenGL &opengl = OpenGL::GetInstance();
+   
+   int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
+   float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
+   opengl.EnableTexture();
+   opengl.DisableBlending();
+   opengl.Colour(1.0f, 1.0f, 1.0f);
+   opengl.SelectTexture(uFuelBarTexture);
+   glLoadIdentity();
+   glBegin(GL_QUADS);
+     glTexCoord2f(1.0f-texsize, 1.0f);
+     glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y);
+     glTexCoord2f(1.0f, 1.0f);
+     glVertex2i(opengl.GetWidth()-10, FUELBAR_Y);
+     glTexCoord2f(1.0f, 0.0f);
+     glVertex2i(opengl.GetWidth()-10, FUELBAR_Y + 32);
+     glTexCoord2f(1.0f-texsize, 0.0f);
+     glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y + 32);
+   glEnd();
+
+   border.x = opengl.GetWidth() - 266;
+   border.y = FUELBAR_Y;
+   border.width = 256;
+   border.height = 32;
+   border.uTexture = uFuelMeterTexture;
+   opengl.Draw(&border);
+}
+
+void FuelMeter::Refuel(int howmuch)
+{
+   maxfuel = howmuch;
+   fuel = maxfuel;
+}
+
+void FuelMeter::BurnFuel()
+{
+   assert(fuel > 0);
+   fuel--;
+}
+
+bool FuelMeter::OutOfFuel() const
+{
+   return fuel <= 0;
+}
+
