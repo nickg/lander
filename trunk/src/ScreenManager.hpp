@@ -40,9 +40,6 @@ public:
  */
 class ScreenManager {
 public:
-   ScreenManager();
-   ~ScreenManager();
-
    static ScreenManager &GetInstance();
 
    void AddScreen(const char *id, Screen *ptr);
@@ -52,16 +49,19 @@ public:
    Screen *GetScreenById(const char *id) const;
 	
 private:
+   ScreenManager();
+   ~ScreenManager();
+   
    // Holds data about the state of an individual screen
-   struct ScreenData
-   {
+   struct ScreenData {
       bool loaded;
       Screen *ptr;
    };
 
    typedef map<string, ScreenData> ScreenMap;
-   ScreenMap m_screens;
-   ScreenData m_active;
+   typedef ScreenMap::iterator ScreenMapIt;
+   ScreenMap screens;
+   ScreenData active;
 };
 
 #endif

@@ -79,7 +79,6 @@ void MainMenu::Load()
    hintidx = 0;
 }
 
-/* Processes user input */
 void MainMenu::Process()
 {
    Input &input = Input::GetInstance();
@@ -234,7 +233,7 @@ void MainMenu::Display()
    FreeType &ft = FreeType::GetInstance();
 
    opengl.Colour(0.0f, 1.0f, 0.0f, fade);
-   ft.Print(ftHollow, (opengl.GetWidth() - ft.GetStringWidth(ftHollow, S_TITLE))/2, 60, S_TITLE);
+   ft.Print(ftHollow, (opengl.GetWidth() - ft.GetStringWidth(ftHollow, S_TITLE))/2, 100, S_TITLE);
 	
    // Draw some hint texts
    const int numhints = 7;
