@@ -20,7 +20,7 @@
 #ifndef INC_MENU_HPP
 #define INC_MENU_HPP
 
-#include "Screens.hpp"
+#include "ScreenManager.hpp"
 
 #define MENU_FADE_SPEED		0.1f
 #define HINT_DISPLAY_TIME	140

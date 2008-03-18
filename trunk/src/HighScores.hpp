@@ -20,7 +20,7 @@
 #ifndef INC_HIGHSCORES_HPP
 #define INC_HIGHSCORES_HPP
 
-#include "Screens.hpp"
+#include "ScreenManager.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f

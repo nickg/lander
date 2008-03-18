@@ -23,7 +23,7 @@
 #include "Platform.hpp"
 #include "OpenGL.hpp" 
 #include "Emitter.hpp"
-#include "Screens.hpp"
+#include "ScreenManager.hpp"
 #include "DataFile.hpp"
 #include "Input.hpp"
 #include "Strings.hpp"
