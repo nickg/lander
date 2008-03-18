@@ -25,7 +25,6 @@
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
 #define MAX_PAD_SIZE		    2 
-#define LAND_SPEED		      2.0f
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
 
@@ -45,7 +44,8 @@ Game::Game()
    : hasloaded(false),
      state(gsNone),
      ship(&viewport),
-     surface(&viewport)
+     surface(&viewport),
+     speedmeter(&ship)
 {
 
 }
@@ -67,7 +67,6 @@ void Game::Load()
       uSurf2Texture[2] = opengl.LoadTexture(g_pData, "SnowSurface2.bmp");
       uSurf2Texture[3] = opengl.LoadTexture(g_pData, "RedRockSurface2.bmp");
       uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
-      uSpeedTexture = opengl.LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
       
       Ship::Load();
@@ -77,6 +76,7 @@ void Game::Load()
       ElectricGate::Load();
       Key::Load();
       FuelMeter::Load();
+      SpeedMeter::Load();
       
       hasloaded = true;
    }
@@ -94,22 +94,6 @@ void Game::Load()
    levcomp.width = 512;
    levcomp.height = 32;
    levcomp.uTexture = uLevComTexture;
-
-   // Create the speed meter
-   speedmeter.x = 10;
-   speedmeter.y = 40;
-   speedmeter.width = 128;
-   speedmeter.height = 16;
-   speedmeter.uTexture = uSpeedTexture;
-
-   // Create the speed bar
-   speedbar.x = 12;
-   speedbar.y = 40;
-   speedbar.width = 124;
-   speedbar.height = 16;
-   speedbar.red = 1.0f;
-   speedbar.green = 0.0f;
-   speedbar.blue = 0.0f;
 
    // Create the small ship icon
    smallship.width = 32;
@@ -238,7 +222,7 @@ void Game::Process()
             // Hit a landing pad
             int dAngle = ((int)ship.GetAngle()) % 360;
             if ((dAngle >= 330 || dAngle <= 30)
-                && ship.GetYSpeed() < LAND_SPEED && nKeysRemaining == 0) {
+                && speedmeter.SafeLandingSpeed() && nKeysRemaining == 0) {
                // Landed safely
                state = gsLevelComplete;
                CalculateScore(padIndex);
@@ -418,19 +402,7 @@ void Game::Process()
 
    // Spin the ship if we're exploding
    if (state == gsExplode)
-      ship.Turn(5.0f);
-
-   // Resize the speed bar
-   float flSpeed1 = 30.0f / LAND_SPEED;
-   int width = (int)((float)ship.GetYSpeed() * flSpeed1); 
-   if (width < 0) 
-      width = 0;
-   if (width > 124) 
-      width = 124;
-   speedbar.blue = 0.0f;
-   speedbar.red = (float)width/124.0f;
-   speedbar.green = 1.0f - (float)width/124.0f;
-   speedbar.width = width;
+      ship.Turn(DEATH_SPIN_RATE);
 }
 
 void Game::StartLevel(int level)
@@ -684,11 +656,9 @@ void Game::Display()
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
    ft.Print(ftScore, 10, 25, "%.7d", score);
-   opengl.Draw(&speedbar);
-   opengl.Draw(&speedmeter);
-   opengl.Colour(0.0f, 1.0f, 0.0f);
 
    fuelmeter.Display();
+   speedmeter.Display();
 
    // Draw life icons
    for (int i = 0; i < lives; i++) {
@@ -837,5 +807,54 @@ void FuelMeter::BurnFuel()
 bool FuelMeter::OutOfFuel() const
 {
    return fuel <= 0;
+}
+
+Texture SpeedMeter::uSpeedTexture;
+
+SpeedMeter::SpeedMeter(Ship *ship)
+   : ship(ship)
+{
+   border.x = 10;
+   border.y = 40;
+   border.width = 128;
+   border.height = 16;
+
+   speedbar.x = 12;
+   speedbar.y = 40;
+   speedbar.width = 124;
+   speedbar.height = 16;
+   speedbar.red = 1.0f;
+   speedbar.green = 0.0f;
+   speedbar.blue = 0.0f;
+}
+
+void SpeedMeter::Load()
+{
+   uSpeedTexture = OpenGL::GetInstance().LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
+}
+
+void SpeedMeter::Display()
+{
+   // Resize the speed bar
+   float flSpeed1 = 30.0f / LAND_SPEED;
+   int width = (int)((float)ship->GetYSpeed() * flSpeed1); 
+   if (width < 0) 
+      width = 0;
+   if (width > 124) 
+      width = 124;
+   speedbar.blue = 0.0f;
+   speedbar.red = (float)width/124.0f;
+   speedbar.green = 1.0f - (float)width/124.0f;
+   speedbar.width = width;
+
+   OpenGL &opengl = OpenGL::GetInstance();
+   opengl.Draw(&speedbar);
+   border.uTexture = uSpeedTexture;
+   opengl.Draw(&border);
+}
+
+bool SpeedMeter::SafeLandingSpeed()
+{
+   return ship->GetYSpeed() < LAND_SPEED;
 }
 
