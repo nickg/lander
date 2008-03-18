@@ -20,126 +20,89 @@
 #include "ScreenManager.hpp"
 #include "OpenGL.hpp"
 
-/*
- * Instantiates the ScreenManager class. Never calls this directly. 
- */
+
 ScreenManager::ScreenManager()
 {
-	m_active.loaded = false;
-	m_active.ptr = NULL;
+   active.loaded = false;
+   active.ptr = NULL;
 }
 
-
-/*
- * Unloads all loaded m_screens.
- */
 ScreenManager::~ScreenManager()
 {
-	ScreenMap::iterator it;
+   ScreenMap::iterator it;
 
-	for (it = m_screens.begin(); it != m_screens.end(); ++it)
-	{
-		if ((*it).second.ptr != NULL && (*it).second.loaded)
-			(*it).second.ptr->Unload();
-	}
+   for (it = screens.begin(); it != screens.end(); ++it)	{
+      if ((*it).second.ptr != NULL && (*it).second.loaded)
+         (*it).second.ptr->Unload();
+   }
 }
 
-
-/*
- * Returns the single instance of ScreenManager.
- */
 ScreenManager &ScreenManager::GetInstance()
 {
-	static ScreenManager sm;
+   static ScreenManager sm;
 
-	return sm;
+   return sm;
 }
 
-
-/*
- * Registers a new screen with the screen manager.
- *	id -> String identifier to reference the screen.
- *	ptr -> Pointer to instance of Screen class.
- */
 void ScreenManager::AddScreen(const char *id, Screen *ptr)
 {
-	if (m_screens.find(string(id)) != m_screens.end())
-		throw runtime_error("Screen already registered: " + string(id));
+   if (screens.find(string(id)) != screens.end())
+      throw runtime_error("Screen already registered: " + string(id));
 
-	ScreenData sd;
-	sd.loaded = false;
-	sd.ptr = ptr;
+   ScreenData sd;
+   sd.loaded = false;
+   sd.ptr = ptr;
 
-	m_screens[string(id)] = sd;
+   screens[string(id)] = sd;
 }
 
-
-/* 
- * Changes the currently active screen.
- *	id -> Screen identifier to switch to.
- */
 void ScreenManager::SelectScreen(const char *id)
 {
-	ScreenMap::iterator it;
+   ScreenMap::iterator it;
 
-	it = m_screens.find(string(id));
+   it = screens.find(string(id));
 
-	if (it == m_screens.end())
-		throw runtime_error("Screen does not exist: " + string(id));
+   if (it == screens.end())
+      throw runtime_error("Screen does not exist: " + string(id));
 	
-	if (m_active.ptr != NULL)
-	{
-		m_active.ptr->Unload();
-		m_active.loaded = false;
-	}
+   if (active.ptr != NULL) {
+      active.ptr->Unload();
+      active.loaded = false;
+   }
 
-	m_active = (*it).second;
+   active = (*it).second;
 	
-	m_active.ptr->Load();
-	m_active.loaded = true;
-	m_screens[id] = m_active;
+   active.ptr->Load();
+   active.loaded = true;
+   screens[id] = active;
 
-	// Allow the new screen to generate a frame
-	OpenGL::GetInstance().SkipDisplay();
+   // Allow the new screen to generate a frame
+   OpenGL::GetInstance().SkipDisplay();
 }
 
-
-/*
- * Finds a screen given an identifier.
- */
 Screen *ScreenManager::GetScreenById(const char *id) const
 {
-	ScreenMap::const_iterator it;
+   ScreenMap::const_iterator it;
 
-	it = m_screens.find(string(id));
-	if (it == m_screens.end())
-		throw runtime_error("Screen " + string(id) + " does not exist");
-	else
-		return (*it).second.ptr;
+   it = screens.find(string(id));
+   if (it == screens.end())
+      throw runtime_error("Screen " + string(id) + " does not exist");
+   else
+      return (*it).second.ptr;
 }
 
-
-/*
- * Calls the Process method of the active screen.
- */
 void ScreenManager::Process()
 {
-	if (m_active.ptr != NULL)
-	{
-		assert(m_active.loaded);
-		m_active.ptr->Process();
-	}
+   if (active.ptr != NULL)	{
+      assert(active.loaded);
+      active.ptr->Process();
+   }
 }
 
-
-/*
- * Calls the Display method of the active screen.
- */
 void ScreenManager::Display()
 {
-	if (m_active.ptr != NULL)
-	{
-		assert(m_active.loaded);
-		m_active.ptr->Display();
-	}
+   if (active.ptr != NULL)	{
+      assert(active.loaded);
+      active.ptr->Display();
+   }
 }
