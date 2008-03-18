@@ -54,8 +54,7 @@ private:
 	
    // An entry in the highscores chart
    static const int NUM_SCORES = 10;
-   struct ScoreEntry
-   {
+   struct ScoreEntry {
       static const int MAX_NAME_LEN = 32;
       char name[MAX_NAME_LEN];
       int score;

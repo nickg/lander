@@ -70,6 +70,24 @@ private:
    TextureQuad border;
 };
 
+class SpeedMeter {
+public:
+   SpeedMeter(Ship *ship);
+
+   static void Load();
+
+   bool SafeLandingSpeed();
+   void Display();
+
+private:
+   static Texture uSpeedTexture;
+
+   static const float LAND_SPEED = 2.0f;
+   
+   TextureQuad border;
+   ColourQuad speedbar;
+   Ship *ship;
+};
 
 class Game : public Screen {
 public:
@@ -85,6 +103,7 @@ public:
 private:
 
    static const float TURN_ANGLE = 3.0f;
+   static const float DEATH_SPIN_RATE = 5.0f;
    static const int FUEL_BASE = 600;
    static const int FUEL_PER_LEVEL = 50;
 
@@ -100,11 +119,11 @@ private:
    Surface surface;
    ObjectGrid objgrid;
    FuelMeter fuelmeter;
+   SpeedMeter speedmeter;
    int death_timeout, level, lives;
    bool hasloaded, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   TextureQuad fade, levcomp, speedmeter, smallship;
-   ColourQuad speedbar;
+   TextureQuad fade, levcomp, smallship;
    int score, newscore, nextnewlife;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
@@ -114,7 +133,7 @@ private:
 
    // Textures
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
-   GLuint uLevComTexture, uSpeedTexture;
+   GLuint uLevComTexture;
    GLuint uShipSmallTexture;    
     
    // Stars
