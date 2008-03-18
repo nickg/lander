@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Screens.hpp"
+#include "ScreenManager.hpp"
 #include "OpenGL.hpp"
 
 /*

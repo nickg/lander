@@ -19,7 +19,7 @@
 
 #include "OpenGL.hpp"
 #include "Input.hpp"
-#include "Screens.hpp"
+#include "ScreenManager.hpp"
 
 /* OpenGL constructor */
 OpenGL::OpenGL()
