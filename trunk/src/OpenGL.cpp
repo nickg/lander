@@ -101,8 +101,6 @@ string OpenGL::SDLErrorString()
     return string(SDL_GetError());
 }
 
-
-/* Main game loop */
 void OpenGL::Run()
 {
     unsigned int tick_start, tick_now;

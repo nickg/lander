@@ -36,7 +36,6 @@ class FreeType
     static FreeType &GetInstance();
     void LoadFont(int index, string face, unsigned int h);
     void Print(int index, int x, int y, const char *fmt, ...);
-    void PrintRotate(int index, int width, float x, float y, float xrot, float yrot, float zrot, const char *fmt, ...);
     int GetStringWidth(int index, const char *s);
     private:
     // Holds data about a single font

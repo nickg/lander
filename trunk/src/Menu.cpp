@@ -257,11 +257,11 @@ void MainMenu::Display()
    
    ft.Print(ftNormal,
             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][0])) / 2,
-            opengl.GetHeight() - 140,
+            opengl.GetHeight() - 120,
             hints[hintidx][0]);
    ft.Print(ftNormal,
             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][1])) / 2,
-            opengl.GetHeight() - 120,
+            opengl.GetHeight() - 100,
             hints[hintidx][1]);
 }
 
