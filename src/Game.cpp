@@ -24,7 +24,7 @@
  */
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
-#define MAX_PAD_SIZE		    3
+#define MAX_PAD_SIZE		   2 
 #define LAND_SPEED		      2.0f
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
@@ -700,8 +700,8 @@ void Game::Display()
 
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
-   ft.Print(ftScore, 10, 10, "%.7d", score);
-   ft.Print(ftNormal, opengl.GetWidth()-70, 10, S_FUEL);
+   ft.Print(ftScore, 10, 25, "%.7d", score);
+   ft.Print(ftNormal, opengl.GetWidth()-70, 20, S_FUEL);
    opengl.Draw(&speedbar);
    opengl.Draw(&speedmeter);
    opengl.Draw(&fuelmeter);

@@ -33,74 +33,74 @@ DataFile *g_pData;
  */
 int main(int argc, char **argv)
 {
-    int width, height, depth;
-    bool fullscreen;
+   int width, height, depth;
+   bool fullscreen;
 
-    // Get current resolution from windows
+   // Get current resolution from windows
 #ifdef DEBUG_WINDOW 
-    width = DEBUG_WIN_X;
-    height = DEBUG_WIN_Y;
-    fullscreen = false;
+   width = DEBUG_WIN_X;
+   height = DEBUG_WIN_Y;
+   fullscreen = false;
 #else
-    // width = GetSystemMetrics(SM_CXSCREEN);
-    // height = GetSystemMetrics(SM_CYSCREEN);
-    width = 800;
-    height = 600;
-    fullscreen = true;
+   // width = GetSystemMetrics(SM_CXSCREEN);
+   // height = GetSystemMetrics(SM_CYSCREEN);
+   width = 800;
+   height = 600;
+   fullscreen = true;
 #endif
 
 #ifdef WIN32
-    // Work out colour depth
-    HDC hDesktopDC = GetDC(GetDesktopWindow());
-    depth = GetDeviceCaps(hDesktopDC, BITSPIXEL);
-    ReleaseDC(GetDesktopWindow(), hDesktopDC);
+   // Work out colour depth
+   HDC hDesktopDC = GetDC(GetDesktopWindow());
+   depth = GetDeviceCaps(hDesktopDC, BITSPIXEL);
+   ReleaseDC(GetDesktopWindow(), hDesktopDC);
 #else
-    // Use default colour depth
-    depth = 0;
+   // Use default colour depth
+   depth = 0;
 #endif
 
-    try {
-        // Open data file
-        g_pData = new DataFile(File::LocateResource("lander", "dat"));
+   try {
+      // Open data file
+      g_pData = new DataFile(File::LocateResource("lander", "dat"));
 
-        // Create the game window
-        OpenGL &opengl = OpenGL::GetInstance();
-        opengl.Init(width, height, depth, fullscreen);
+      // Create the game window
+      OpenGL &opengl = OpenGL::GetInstance();
+      opengl.Init(width, height, depth, fullscreen);
 
-        // Create screens
-        MainMenu mm;
-        Game g;
-        HighScores hs;
+      // Create screens
+      MainMenu mm;
+      Game g;
+      HighScores hs;
 
-        ScreenManager &sm = ScreenManager::GetInstance();
-        sm.AddScreen("MAIN MENU", &mm);
-        sm.AddScreen("GAME", &g);
-        sm.AddScreen("HIGH SCORES", &hs);
+      ScreenManager &sm = ScreenManager::GetInstance();
+      sm.AddScreen("MAIN MENU", &mm);
+      sm.AddScreen("GAME", &g);
+      sm.AddScreen("HIGH SCORES", &hs);
 
-        // Load fonts
-        FreeType &ft = FreeType::GetInstance();
-        ft.LoadFont(ftNormal, File::LocateResource("Default_Font", "ttf"), 10);
-        ft.LoadFont(ftBig, File::LocateResource("Default_Font", "ttf"), 20);
-        ft.LoadFont(ftScore, File::LocateResource("Default_Font", "ttf"), 16);
-        ft.LoadFont(ftHollow, File::LocateResource("Hollow_Font", "ttf"), 40);
-        ft.LoadFont(ftScoreName, File::LocateResource("Default_Font", "ttf"), 14);
-        ft.LoadFont(ftLarge, File::LocateResource("Default_Font", "ttf"), 15);
+      // Load fonts
+      FreeType &ft = FreeType::GetInstance();
+      ft.LoadFont(ftNormal, File::LocateResource("Default_Font", "ttf"), 11);
+      ft.LoadFont(ftBig, File::LocateResource("Default_Font", "ttf"), 20);
+      ft.LoadFont(ftScore, File::LocateResource("Default_Font", "ttf"), 16);
+      ft.LoadFont(ftHollow, File::LocateResource("Hollow_Font", "ttf"), 40);
+      ft.LoadFont(ftScoreName, File::LocateResource("Default_Font", "ttf"), 14);
+      ft.LoadFont(ftLarge, File::LocateResource("Default_Font", "ttf"), 15);
 		
-        // Run the game
-        sm.SelectScreen("MAIN MENU");
-        opengl.Run();
+      // Run the game
+      sm.SelectScreen("MAIN MENU");
+      opengl.Run();
 
-        // Close data file
-        delete g_pData;
-    }
-    catch (std::runtime_error e) {
+      // Close data file
+      delete g_pData;
+   }
+   catch (std::runtime_error e) {
 #ifdef WIN32
-            MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
+      MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
 #else /* #ifdef WIN32 */
-            fprintf(stderr, "Runtime Error: %s\n", e.what());
+      fprintf(stderr, "Runtime Error: %s\n", e.what());
 #endif /* #ifdef WIN32 */
-    }
+   }
 
-    // Exit
-    return 0;
+   // Exit
+   return 0;
 }
