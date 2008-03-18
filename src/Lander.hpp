@@ -101,7 +101,6 @@ public:
    void StartLevel(int nLevel);
 
 private:
-
    static const float TURN_ANGLE = 3.0f;
    static const float DEATH_SPIN_RATE = 5.0f;
    static const int FUEL_BASE = 600;
@@ -110,6 +109,8 @@ private:
    static const int SCORE_PAD_SIZE = 10;
    static const int SCORE_LEVEL = 100;
    static const int SCORE_FUEL_DIV = 10;
+
+   static const int SCORE_Y = 30;
    
    void ExplodeShip();
    void CalculateScore(int padIndex);
