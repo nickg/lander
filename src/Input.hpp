@@ -1,5 +1,5 @@
 /*
- * Input.hpp - Definition of input manager class.
+ * Input.hpp -- Definition of input manager class.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,38 +25,37 @@
 /* 
  * A singleton class to manage SDL input.
  */
-class Input
-{
+class Input {
 public:
-	Input();
-	~Input();
+   static Input &GetInstance();
 
-	static Input &GetInstance();
+   void Update();
+   bool GetKeyState(int key);
+   void ResetKey(int key);
+   int QueryJoystickAxis(int axis);
+   bool QueryJoystickButton(int button);
+   void ResetJoystickButton(int button);
 
-	void Update();
-	bool GetKeyState(int key);
-	void ResetKey(int key);
-	int QueryJoystickAxis(int axis);
-	bool QueryJoystickButton(int button);
-	void ResetJoystickButton(int button);
-
-	void OpenCharBuffer(int max=256);
-	void CloseCharBuffer();
-	const char *GetInput() const;
+   void OpenCharBuffer(int max=256);
+   void CloseCharBuffer();
+   const char *GetInput() const;
 
 private:
-	static const int NUM_KEYS = 512;		// Maximum number of input keys
-	static const int RESET_TIMEOUT = 5;		// Frames between key presses
-	static const int NUM_BUTTONS = 16;		// Maximum number of joystick buttons
+   Input();
+   ~Input();
+   
+   static const int NUM_KEYS = 512;		// Maximum number of input keys
+   static const int RESET_TIMEOUT = 5;		// Frames between key presses
+   static const int NUM_BUTTONS = 16;		// Maximum number of joystick buttons
 
-	SDL_Joystick *joystick;
+   SDL_Joystick *joystick;
 
-	int m_ignore[NUM_KEYS];		// Timeout for keys being ignored
-	int m_jignore[NUM_BUTTONS];	// Timeout for buttons being ignored
+   int ignore[NUM_KEYS];		// Timeout for keys being ignored
+   int jignore[NUM_BUTTONS];	// Timeout for buttons being ignored
 
-	bool m_textinput;			// Is a character buffer open?
-	string m_text;				// Text read so far
-	int m_maxchar;				// Maximum number of characters to read
+   bool textinput;			// Is a character buffer open?
+   string text;				// Text read so far
+   int maxchar;				// Maximum number of characters to read
 
 };
 

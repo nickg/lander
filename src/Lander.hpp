@@ -1,5 +1,5 @@
 /*
- * Lander.hpp - Definition of core game classes.
+ * Lander.hpp -- Definition of core game classes.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,9 +47,31 @@ enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
 
+class FuelMeter {
+public:
+   FuelMeter();
+   
+   static void Load();
 
-class Game : public Screen
-{
+   void Display();
+
+   void Refuel(int howmuch);
+   bool OutOfFuel() const;
+   void BurnFuel();
+
+   int GetFuel() const { return fuel; }
+   
+private:
+   static Texture uFuelMeterTexture, uFuelBarTexture;
+
+   static const int FUELBAR_Y = 15;
+   
+   int fuel, maxfuel;
+   TextureQuad border;
+};
+
+
+class Game : public Screen {
 public:
    Game();
    virtual ~Game();
@@ -63,17 +85,25 @@ public:
 private:
 
    static const float TURN_ANGLE = 3.0f;
+   static const int FUEL_BASE = 600;
+   static const int FUEL_PER_LEVEL = 50;
+
+   static const int SCORE_PAD_SIZE = 10;
+   static const int SCORE_LEVEL = 100;
+   static const int SCORE_FUEL_DIV = 10;
    
    void ExplodeShip();
+   void CalculateScore(int padIndex);
 
    Viewport viewport;
    Ship ship;
    Surface surface;
    ObjectGrid objgrid;
-   int death_timeout, level, fuel, maxfuel, lives;
+   FuelMeter fuelmeter;
+   int death_timeout, level, lives;
    bool hasloaded, bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   TextureQuad fade, levcomp, speedmeter, fuelmeter, smallship;
+   TextureQuad fade, levcomp, speedmeter, smallship;
    ColourQuad speedbar;
    int score, newscore, nextnewlife;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
@@ -82,16 +112,14 @@ private:
                     gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete, gsPaused };
    GameState state;
 
-
    // Textures
    GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture, uSpeedTexture;
-   GLuint uFuelMeterTexture, uFuelBarTexture,  uShipSmallTexture;    
+   GLuint uShipSmallTexture;    
     
    // Stars
    static const int MAX_GAME_STARS = 2048;
-   struct Star 
-   {
+   struct Star {
       TextureQuad quad;
       float scale;
       int xpos, ypos;
