@@ -655,7 +655,7 @@ void Game::Display()
 
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
-   ft.Print(ftScore, 10, 25, "%.7d", score);
+   ft.Print(ftScore, 10, SCORE_Y, "%.7d", score);
 
    fuelmeter.Display();
    speedmeter.Display();

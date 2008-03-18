@@ -164,16 +164,16 @@ void Key::DrawArrow(Viewport *viewport)
          ax = 0; 
          angle = 90;
       }
-      else if (ax + 32 > screenWidth) { 
-         ax = screenWidth - 32;
+      else if (ax + ARROW_SIZE > screenWidth) { 
+         ax = screenWidth - ARROW_SIZE;
          angle = 270;
       }
       if (ay < 0) { 
          ay = 0;
          angle = 180;
       }
-      else if (ay + 32 > screenHeight) { 
-         ay = screenHeight - 32;
+      else if (ay + ARROW_SIZE > screenHeight) { 
+         ay = screenHeight - ARROW_SIZE;
          angle = 0;
       }
       

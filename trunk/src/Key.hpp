@@ -41,6 +41,7 @@ public:
 private:
    static const int KEY_FRAMES = 18;
    static const int KEY_ROTATION_SPEED = 2;
+   static const int ARROW_SIZE = 32;
    
    static GLuint uBlueKey[KEY_FRAMES], uRedKey[KEY_FRAMES];
    static GLuint uGreenKey[KEY_FRAMES], uPinkKey[KEY_FRAMES];
