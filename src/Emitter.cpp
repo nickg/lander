@@ -108,7 +108,9 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 	opengl.EnableBlending();
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	glLoadIdentity();
-
+  
+  glBindTexture(GL_TEXTURE_2D, uTexture);
+			
 	for (i = 0; i < MAX_PARTICLES; i++)
 	{
 		if (particle[i].active)
@@ -117,7 +119,6 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 			float y = particle[i].y - adjust_y;
 
 			glColor4f(particle[i].r, particle[i].g, particle[i].b, particle[i].life);
-			glBindTexture(GL_TEXTURE_2D, uTexture);
 			glBegin(GL_TRIANGLE_STRIP);	
 				glTexCoord2d(1, 1); glVertex3f(x+partsize, y+partsize, 0);
 				glTexCoord2d(0, 1); glVertex3f(x-partsize, y+partsize, 0);
