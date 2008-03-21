@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="Lander"
-	ProjectGUID="{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}"
+	ProjectGUID="{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -31,12 +31,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib SDLmain.lib SDL.lib libfreetype.dll.a"
+				AdditionalDependencies="SDL.lib SDLmain.lib opengl32.lib glu32.lib libfreetype.lib"
 				OutputFile="$(OutDir)/Lander.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\SDL-1.2.11\lib&quot;;&quot;C:\Program Files\GnuWin32\lib\pkgconfig&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/Lander.pdb"
 				SubSystem="2"
@@ -117,40 +114,67 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\Bitmap.cpp">
+				RelativePath="..\..\src\Asteroid.cpp">
 			</File>
 			<File
-				RelativePath=".\DataFile.cpp">
+				RelativePath="..\..\src\Bitmap.cpp">
 			</File>
 			<File
-				RelativePath=".\Emitter.cpp">
+				RelativePath="..\..\src\DataFile.cpp">
 			</File>
 			<File
-				RelativePath=".\File.cpp">
+				RelativePath="..\..\src\ElectricGate.cpp">
 			</File>
 			<File
-				RelativePath=".\FreeType.cpp">
+				RelativePath="..\..\src\Emitter.cpp">
 			</File>
 			<File
-				RelativePath=".\Game.cpp">
+				RelativePath="..\..\src\File.cpp">
 			</File>
 			<File
-				RelativePath=".\HighScores.cpp">
+				RelativePath="..\..\src\FreeType.cpp">
 			</File>
 			<File
-				RelativePath=".\Input.cpp">
+				RelativePath="..\..\src\Game.cpp">
 			</File>
 			<File
-				RelativePath=".\Main.cpp">
+				RelativePath="..\..\src\HighScores.cpp">
 			</File>
 			<File
-				RelativePath=".\Menu.cpp">
+				RelativePath="..\..\src\Input.cpp">
 			</File>
 			<File
-				RelativePath=".\OpenGL.cpp">
+				RelativePath="..\..\src\Key.cpp">
 			</File>
 			<File
-				RelativePath=".\Screens.cpp">
+				RelativePath="..\..\src\LandingPad.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Main.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Menu.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Mine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\ObjectGrid.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\OpenGL.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\ScreenManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Ship.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Surface.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Viewport.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -158,46 +182,73 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\Bitmap.hpp">
+				RelativePath="..\..\src\Asteroid.hpp">
 			</File>
 			<File
-				RelativePath=".\DataFile.hpp">
+				RelativePath="..\..\src\Bitmap.hpp">
 			</File>
 			<File
-				RelativePath=".\Emitter.hpp">
+				RelativePath="..\..\src\DataFile.hpp">
 			</File>
 			<File
-				RelativePath=".\File.hpp">
+				RelativePath="..\..\src\ElectricGate.hpp">
 			</File>
 			<File
-				RelativePath=".\FreeType.hpp">
+				RelativePath="..\..\src\Emitter.hpp">
 			</File>
 			<File
-				RelativePath=".\HighScores.hpp">
+				RelativePath="..\..\src\File.hpp">
 			</File>
 			<File
-				RelativePath=".\Input.hpp">
+				RelativePath="..\..\src\FreeType.hpp">
 			</File>
 			<File
-				RelativePath=".\Lander.hpp">
+				RelativePath="..\..\src\Geometry.hpp">
 			</File>
 			<File
-				RelativePath=".\Menu.hpp">
+				RelativePath="..\..\src\HighScores.hpp">
 			</File>
 			<File
-				RelativePath=".\OpenGL.hpp">
+				RelativePath="..\..\src\Input.hpp">
 			</File>
 			<File
-				RelativePath=".\Platform.hpp">
+				RelativePath="..\..\src\Key.hpp">
 			</File>
 			<File
-				RelativePath=".\Screens.hpp">
+				RelativePath="..\..\src\Lander.hpp">
 			</File>
 			<File
-				RelativePath=".\SDLMain.h">
+				RelativePath="..\..\src\LandingPad.hpp">
 			</File>
 			<File
-				RelativePath=".\Strings.hpp">
+				RelativePath="..\..\src\Menu.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Mine.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\ObjectGrid.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\OpenGL.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Platform.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\ScreenManager.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Ship.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Strings.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Surface.hpp">
+			</File>
+			<File
+				RelativePath="..\..\src\Viewport.hpp">
 			</File>
 		</Filter>
 		<Filter

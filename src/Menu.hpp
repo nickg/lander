@@ -1,5 +1,5 @@
 /*
- * Menu.hpp - Defintition of main menu screen.
+ * Menu.hpp -- Defintition of main menu screen.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,11 +34,8 @@ public:
    void Display(float fade=1.0f);
 
 private:
-   static const float ROTATE_SPEED = 0.005f;
-   static const float ENLARGE_RATE = 0.003f;
-   static const float INIT_SCALE = 0.1f;
-   static const int SPEED = 4;
-   static const int TEXTURE_SIZE = 20;
+   static const float ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE;
+   static const int SPEED, TEXTURE_SIZE;
    
    TextureQuad quad;
    float scale;

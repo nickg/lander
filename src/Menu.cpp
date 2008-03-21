@@ -1,5 +1,5 @@
 /*
- * Bitmap.cpp - Implementation of main menu screen.
+ * Menu.cpp -- Implementation of main menu screen.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,12 @@
 
 #include "Lander.hpp"
 
-/* Globals */
+const float MenuStar::ROTATE_SPEED(0.005f);
+const float MenuStar::ENLARGE_RATE(0.003f);
+const float MenuStar::INIT_SCALE(0.1f);
+const int MenuStar::SPEED(4);
+const int MenuStar::TEXTURE_SIZE(20);
+
 extern DataFile *g_pData;
 
 /* Loads menu data */
@@ -84,7 +89,6 @@ void MainMenu::Process()
    Input &input = Input::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
    ScreenManager &sm = ScreenManager::GetInstance();
-   int i;
 
    // Stop user doing something when they're not supposed to
    if (state == msInMenu) {

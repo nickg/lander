@@ -146,7 +146,7 @@ void OpenGL::DrawGLScene()
 
       if (!fullscreen) {
          snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, fps_rate);
-         SDL_WSetCaption(buf, NULL);
+         SDL_WM_SetCaption(buf, NULL);
       }
 #endif /* #ifdef _DEBUG */
    }
@@ -173,7 +173,7 @@ void OpenGL::Draw(Poly *cp)
    EnableTexture();
    glBindTexture(GL_TEXTURE_2D, cp->uTexture);
    glLoadIdentity();
-   glTranslatef(cp->xpos, cp->ypos, 0.0f);
+   glTranslatef((float)cp->xpos, (float)cp->ypos, 0.0f);
    glColor3f(1.0f, 1.0f, 1.0f);
    glBegin(GL_QUADS);
    glTexCoord2f(cp->texX, 0.0f);

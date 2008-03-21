@@ -64,7 +64,7 @@ public:
 private:
    static Texture uFuelMeterTexture, uFuelBarTexture;
 
-   static const int FUELBAR_Y = 15;
+   static const int FUELBAR_Y;
    
    int fuel, maxfuel;
    TextureQuad border;
@@ -82,7 +82,7 @@ public:
 private:
    static Texture uSpeedTexture;
 
-   static const float LAND_SPEED = 2.0f;
+   static const float LAND_SPEED;
    
    TextureQuad border;
    ColourQuad speedbar;
@@ -101,16 +101,10 @@ public:
    void StartLevel(int nLevel);
 
 private:
-   static const float TURN_ANGLE = 3.0f;
-   static const float DEATH_SPIN_RATE = 5.0f;
-   static const int FUEL_BASE = 600;
-   static const int FUEL_PER_LEVEL = 50;
-
-   static const int SCORE_PAD_SIZE = 10;
-   static const int SCORE_LEVEL = 100;
-   static const int SCORE_FUEL_DIV = 10;
-
-   static const int SCORE_Y = 30;
+   static const float TURN_ANGLE, DEATH_SPIN_RATE;
+   static const int FUEL_BASE, FUEL_PER_LEVEL;
+   static const int SCORE_PAD_SIZE, SCORE_LEVEL, SCORE_FUEL_DIV;
+   static const int SCORE_Y;
    
    void ExplodeShip();
    void CalculateScore(int padIndex);
