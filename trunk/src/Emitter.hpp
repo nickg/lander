@@ -23,7 +23,7 @@
 #include "Platform.hpp"
 #include "OpenGL.hpp"
 
-#define MAX_PARTICLES 768 // 1024
+#define MAX_PARTICLES 1024
 
 
 /*

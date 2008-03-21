@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lander", "Lander.vcproj", "{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lander", "Lander.vcproj", "{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -8,11 +8,13 @@ Global
 		Debug = Debug
 		Release = Release
 	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}.Debug.ActiveCfg = Debug|Win32
-		{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}.Debug.Build.0 = Debug|Win32
-		{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}.Release.ActiveCfg = Release|Win32
-		{A5F33FDC-CAFD-4667-BCAA-3F86AD6C89D7}.Release.Build.0 = Release|Win32
+		{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}.Debug.ActiveCfg = Debug|Win32
+		{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}.Debug.Build.0 = Debug|Win32
+		{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}.Release.ActiveCfg = Release|Win32
+		{2EC35BD5-D3F5-468B-8AA3-E3AAA2A847C6}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

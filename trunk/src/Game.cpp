@@ -37,6 +37,21 @@
 #define LIFE_ALPHA_BASE		  2.0f
 #define LEVEL_TEXT_TIMEOUT	75
 
+const float Game::TURN_ANGLE(3.0f);
+const float Game::DEATH_SPIN_RATE(5.0f);
+const int Game::FUEL_BASE(600);
+const int Game::FUEL_PER_LEVEL(50);
+
+const int Game::SCORE_PAD_SIZE(10);
+const int Game::SCORE_LEVEL(100);
+const int Game::SCORE_FUEL_DIV(10);
+
+const int Game::SCORE_Y(30);
+
+const float SpeedMeter::LAND_SPEED(2.0f);
+
+const int FuelMeter::FUELBAR_Y(15);
+
 extern DataFile *g_pData;
 
 
@@ -52,10 +67,6 @@ Game::Game()
 
 void Game::Load()
 {
-   const int TEX_NAME_LEN = 128;
-   char buf[TEX_NAME_LEN];
-   int i;
-
    OpenGL &opengl = OpenGL::GetInstance();
 
    if (!hasloaded) {

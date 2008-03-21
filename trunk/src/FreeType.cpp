@@ -1,5 +1,5 @@
 /*
- * FreeType.cpp - Implementation of FreeType wrapper class.
+ * FreeType.cpp -- Implementation of FreeType wrapper class.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
