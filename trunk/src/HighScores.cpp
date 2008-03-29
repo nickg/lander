@@ -88,11 +88,9 @@ void HighScores::Process()
           && strlen(input.GetInput()) > 0) {
        
          // Enter name into high score chart
-         scores[9].score = newscore;
-         strncpy(scores[9].name, input.GetInput(), ScoreEntry::MAX_NAME_LEN);
+         scoreFile.Insert(input.GetInput(), newscore);
          input.CloseCharBuffer();
-         WriteHighScores();
-         SortScores();
+         scoreFile.Save();
          state = hssDisplay;
          flAlpha = 0.0f;
          fade = HS_FADE_IN_SPEED;
@@ -183,8 +181,8 @@ void HighScores::Display()
 
       opengl.Colour(0.0f, 1.0f, 0.0f, flAlpha);
       for (int i = 0; i < 10; i++) {
-         ft.Print(ftScoreName, x, y + 22*i, "%s", scores[i].name);
-         ft.Print(ftScoreName, x + 230, y + 22*i, "%d", scores[i].score);
+         ft.Print(ftScoreName, x, y + 22*i, "%s", scoreFile[i].GetName());
+         ft.Print(ftScoreName, x + 230, y + 22*i, "%d", scoreFile[i].GetScore());
       }	
    }
 
@@ -239,64 +237,15 @@ void HighScores::Display()
  */
 void HighScores::LoadHighScores()
 {
-   int i;
-
-   // Check for file's existence
-   if (!File::Exists(File::LocateResource("Highscores", "dat")))	{
-      // Create dummy highscores file 
-      for (i = 0; i < 10; i++) {
-         strncpy(scores[i].name, "Nobody", ScoreEntry::MAX_NAME_LEN);
-         scores[i].score = 0;
-      }
-      File f(File::LocateResource("Highscores", "dat"), false);
-      f.Write(&scores, sizeof(ScoreEntry) * 10);
-   }
-
-   // Open highscores file
-   File f(File::LocateResource("Highscores", "dat"));
-   f.Read(&scores, sizeof(ScoreEntry) * 10);
-
-   // Sort the scores
-   SortScores();
+   scoreFile.Load();
 }
-
-
-/* 
- * Sorts the scores into ascending order.
- */
-void HighScores::SortScores()
-{
-   int i, j;
-
-   for (i = 0; i < 9; i++)	{
-      for (j = 0; j < 9 - i; j++)	{
-         if (scores[j+1].score > scores[j].score)
-            SwapScores(j+1, j);
-      }
-   }
-}
-
-
-/* 
- * Swaps two entries in the score array.
- */
-void HighScores::SwapScores(int a, int b)
-{
-   ScoreEntry temp;
-
-   temp = scores[a];
-   scores[a] = scores[b];
-   scores[b] = temp;
-}
-
 
 /*
  * Writes high scores to disk.
  */
 void HighScores::WriteHighScores()
 {
-   File f(File::LocateResource("Highscores", "dat"), false);
-   f.Write(&scores, sizeof(ScoreEntry) * 10);
+   scoreFile.Save();
 }
 
 
@@ -328,10 +277,10 @@ void HighScores::CheckScore(int score)
    LoadHighScores();
    ScreenManager::GetInstance().SelectScreen("HIGH SCORES");
 	
-   if (score > scores[9].score) {
+   if (score > scoreFile[9].GetScore()) {
       // New high score
       state = hssEnterName;
-      Input::GetInstance().OpenCharBuffer(ScoreEntry::MAX_NAME_LEN - 1);
+      Input::GetInstance().OpenCharBuffer(ScoreFile::ScoreEntry::MAX_NAME);
       newscore = score;
    }
    else 
@@ -345,4 +294,80 @@ void HighScores::CheckScore(int score)
    // Fade in
    flAlpha = 0.0f;
    fade = HS_FADE_IN_SPEED;
+}
+
+ScoreFile::ScoreFile()
+   : needsWrite(false), scores(NUM_SCORES, ScoreEntry("Nobody", 0))
+{
+
+}
+
+ScoreFile::~ScoreFile()
+{
+   if (needsWrite)
+      Save();
+}
+
+bool operator<(const ScoreFile::ScoreEntry &a, const ScoreFile::ScoreEntry &b)
+{
+   return a.GetScore() > b.GetScore();
+}
+
+void ScoreFile::Sort()
+{
+   sort(scores.begin(), scores.end());
+}
+
+void ScoreFile::Load()
+{
+   // Check for file's existence
+   if (!File::Exists(File::LocateResource("Highscores", "dat"))) {
+      // Write a dummy score file
+      Save();
+   }
+   else {
+      // Open highscores file
+      const char *fname = File::LocateResource("Highscores", "dat");
+      ifstream fin(fname);
+      for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
+         (*it).ReadFromStream(fin);
+      
+      Sort();
+   }
+}
+
+void ScoreFile::Save()
+{
+   if (!needsWrite)
+      return;
+
+   const char *fname = File::LocateResource("Highscores", "dat");
+   ofstream fout(fname);
+   for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
+      (*it).WriteOnStream(fout);
+}
+
+void ScoreFile::Insert(const char *name, int score)
+{
+   scores[9] = ScoreEntry(name, score);
+   Sort();
+   needsWrite = true;
+}
+
+ScoreFile::ScoreEntry::ScoreEntry(const char *name, int score)
+   : score(score)
+{
+   strncpy(this->name, name, MAX_NAME);
+}
+
+void ScoreFile::ScoreEntry::WriteOnStream(ostream &os)
+{
+   os.write((const char*)&score, sizeof(int));
+   os.write(name, MAX_NAME);
+}
+
+void ScoreFile::ScoreEntry::ReadFromStream(istream &is)
+{
+   is.read((char*)&score, sizeof(int));
+   is.read(name, MAX_NAME);
 }

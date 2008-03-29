@@ -23,7 +23,6 @@
 #define DEBUG_WIN_X 800
 #define DEBUG_WIN_Y 600
 
-/* Globals */
 DataFile *g_pData;
 
 #include <SDL_main.h>

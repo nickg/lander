@@ -25,6 +25,47 @@
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f
 
+class ScoreFile {
+public:
+   ScoreFile();
+   ~ScoreFile();
+
+   void Load();
+   void Save();
+   void Insert(const char *name, int score);
+
+   // An entry in the highscores chart
+   class ScoreEntry {
+   public:
+      ScoreEntry(const char *name, int score);
+
+      static const int MAX_NAME = 16;
+
+      const char *GetName() const { return name; }
+      int GetScore() const { return score; }
+      
+      void WriteOnStream(ostream &os);
+      void ReadFromStream(istream &is);
+
+   private:
+      char name[MAX_NAME];
+      int score;    
+   };
+   
+   static const int NUM_SCORES = 10;
+   
+   const ScoreEntry &operator[](int n) const { return scores[n]; }
+      
+private:
+   void Sort();
+   void SwapScores(int a, int b);
+   
+   bool needsWrite;
+   typedef vector<ScoreEntry> ScoreEntryVec;
+   typedef ScoreEntryVec::iterator ScoreEntryVecIt; 
+   ScoreEntryVec scores; 
+};
+
 class HighScores : public Screen {
 public:
    HighScores() : hasloaded(false) { }
@@ -39,8 +80,6 @@ public:
    void CheckScore(int score);
    
 private:
-   void SortScores();
-   void SwapScores(int a, int b);
 	
    enum HighScoreState { hssDisplay, hssEnterName };
 	
@@ -49,16 +88,11 @@ private:
    TextureQuad hscore;
    float flAlpha, fade;
    HighScoreState state;
-	
+   ScoreFile scoreFile;
+   
    GLuint uHighScore;
 	
-   // An entry in the highscores chart
-   static const int NUM_SCORES = 10;
-   struct ScoreEntry {
-      static const int MAX_NAME_LEN = 32;
-      char name[MAX_NAME_LEN];
-      int score;
-   } scores[NUM_SCORES];
+   
 	
    // Fireworks
    static const int MAX_FIREWORKS = 7;
