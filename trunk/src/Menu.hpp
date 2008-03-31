@@ -21,6 +21,7 @@
 #define INC_MENU_HPP
 
 #include "ScreenManager.hpp"
+#include "Mechanics.hpp"
 
 #define MENU_FADE_SPEED		0.1f
 #define HINT_DISPLAY_TIME	140
@@ -34,13 +35,14 @@ public:
    void Display(float fade=1.0f);
 
 private:
-   static const float ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE;
-   static const int SPEED, TEXTURE_SIZE;
+   static const float ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
+   static const int TEXTURE_SIZE;
    
    TextureQuad quad;
    float scale;
    bool active;
-   float angle, xpos, ypos;
+   Position pos;
+   Velocity vel;
 
    static float starRotate;
    static bool hasLoaded;

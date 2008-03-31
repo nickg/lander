@@ -140,7 +140,7 @@ void OpenGL::DrawGLScene()
       fps_rate = fps_framesdrawn;
       fps_framesdrawn = 0;
 
-#ifdef _DEBUG
+#ifdef SHOW_FPS
       const int TITLE_BUF_LEN = 256;
       char buf[TITLE_BUF_LEN];
 
@@ -148,7 +148,7 @@ void OpenGL::DrawGLScene()
          snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, fps_rate);
          SDL_WM_SetCaption(buf, NULL);
       }
-#endif /* #ifdef _DEBUG */
+#endif /* #ifdef SHOW_FPS */
    }
    fps_framesdrawn++;
 }

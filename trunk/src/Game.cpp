@@ -502,7 +502,7 @@ void Game::StartLevel(int level)
    }
    
    // Create gateways
-   int gatewaycount = level/2 + rand()%level;
+   int gatewaycount = level/2 + rand()%level - 1;
    gateways.clear();
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
