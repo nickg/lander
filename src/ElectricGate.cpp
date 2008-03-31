@@ -89,11 +89,9 @@ void ElectricGate::Draw()
    opengl.Draw(&icon);
 
    // Draw the electricity stuff
-   if (--timer < GATEWAY_ACTIVE) {
-      float r, g, b; 
+   if (--timer < GATEWAY_ACTIVE) { 
       int x, y, deviation;
       
-      opengl.DisableBlending();
       opengl.DisableTexture();
       
       for (int j = 0; j < 10; j++) {
@@ -101,11 +99,12 @@ void ElectricGate::Draw()
          for (int k = 0; k < length; k++) {
             glLoadIdentity();
             glBegin(GL_LINE_STRIP);
-            r = 0.0f + (float)(rand()%5)/10.0f;
-            g = 0.0f + (float)(rand()%5)/10.0f;
-            b = 1.0f - (float)(rand()%5)/10.0f;
+            float r = 0.0f + (float)(rand()%5)/10.0f;
+            float g = 0.0f + (float)(rand()%5)/10.0f;
+            float b = 1.0f - (float)(rand()%5)/10.0f;
+            float a = 1.0f - (float)(rand()%5)/10.0f;
             
-            glColor3f(r, g, b);
+            glColor4f(r, g, b, a);
             if (vertical) {
                x = xpos*OBJ_GRID_SIZE + 16 + deviation - viewport->GetXAdjust();
                y = (ypos+k)*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();

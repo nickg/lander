@@ -22,7 +22,7 @@
 const float MenuStar::ROTATE_SPEED(0.005f);
 const float MenuStar::ENLARGE_RATE(0.003f);
 const float MenuStar::INIT_SCALE(0.1f);
-const int MenuStar::SPEED(4);
+const float MenuStar::SPEED(4.0f);
 const int MenuStar::TEXTURE_SIZE(20);
 
 extern DataFile *g_pData;
@@ -224,6 +224,7 @@ void MainMenu::Display()
 {
    OpenGL &opengl = OpenGL::GetInstance();
 
+
    for (StarListIt it = stars.begin(); it != stars.end(); ++it) {
       (*it).Display();
    }
@@ -286,17 +287,18 @@ MenuStar::MenuStar()
    const int screenWidth = opengl.GetWidth();
    const int screenHeight = opengl.GetHeight();
 
-   xpos = (float)(rand()%(screenWidth/2) + screenWidth/4);
-   ypos = (float)(rand()%(screenHeight/2) + screenHeight/4);
+   pos = Position((float)(rand()%(screenWidth/2) + screenWidth/4),
+                  (float)(rand()%(screenHeight/2) + screenHeight/4));
 
-   float ratio = (ypos - screenHeight/2) / (xpos - screenWidth/2);
-   angle = atanf(ratio);
+   float ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
+   float angle = atanf(ratio);
+   vel = Velocity::Project(SPEED, angle);
    
    quad.uTexture = uStarTexture;
    quad.height = TEXTURE_SIZE;
    quad.width = TEXTURE_SIZE;
-   quad.x = (int)xpos;
-   quad.y = (int)ypos;
+   quad.x = (int)pos.GetX();
+   quad.y = (int)pos.GetY();
 }
 
 void MenuStar::Display(float fade)
@@ -307,24 +309,18 @@ void MenuStar::Display(float fade)
 
 bool MenuStar::Move()
 {
-   const int screenWidth = OpenGL::GetInstance().GetWidth();
-   const int screenHeight = OpenGL::GetInstance().GetHeight();
-
-   if (xpos > screenWidth / 2) {
-      xpos += SPEED * cosf(angle);
-      ypos += SPEED * sinf(angle);
-   }
-   else {
-      xpos -= SPEED * cosf(angle);
-      ypos -= SPEED * sinf(angle);
-   }
-   quad.x = (int)xpos;
-   quad.y = (int)ypos;
+   if (pos.GetX() > OpenGL::GetInstance().GetWidth() / 2)
+      pos += vel;
+   else
+      pos -= vel;
+   
+   quad.x = (int)pos.GetX();
+   quad.y = (int)pos.GetY();
    scale += ENLARGE_RATE;
 
    // Has it left the screen?
-   return (quad.x > screenWidth
-           || quad.y > screenHeight
+   return (quad.x > OpenGL::GetInstance().GetWidth()
+           || quad.y > OpenGL::GetInstance().GetHeight()
            || quad.x + quad.width < 0
            || quad.y + quad.height < 0);
 }
