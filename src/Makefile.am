@@ -2,7 +2,7 @@ bin_PROGRAMS = lander
 
 AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -DLINUX -DUNIX -DSHOW_FPS \
 	-DDATADIR=\"$(pkgdatadir)\"
-AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU
+AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Bitmap.cpp Bitmap.hpp FreeType.cpp FreeType.hpp \
 	HighScores.cpp HighScores.hpp Input.cpp Input.hpp \
@@ -16,3 +16,6 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Mechanics.hpp Mechanics.cpp
 
 dist_pkgdata_DATA = ../lander.dat ../Default_Font.ttf ../Hollow_Font.ttf
+
+localedir = $(datadir)/locale
+DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@

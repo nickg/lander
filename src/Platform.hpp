@@ -116,6 +116,9 @@ using namespace std;
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <libintl.h>
+#define i18n(x) gettext(x)
+
 #define msleep(n) usleep((n)*1000)
 
 #include "SDL.h"

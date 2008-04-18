@@ -26,7 +26,6 @@
 #include "ScreenManager.hpp"
 #include "DataFile.hpp"
 #include "Input.hpp"
-#include "Strings.hpp"
 
 #include "Menu.hpp"
 #include "HighScores.hpp"

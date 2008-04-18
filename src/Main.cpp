@@ -35,6 +35,10 @@ int main(int argc, char **argv)
    int width, height, depth;
    bool fullscreen;
 
+   setlocale(LC_ALL, "");
+   bindtextdomain(PACKAGE, LOCALEDIR);
+   textdomain(PACKAGE);
+   
    // Get current resolution from windows
 #ifdef DEBUG_WINDOW 
    width = DEBUG_WIN_X;
@@ -96,7 +100,7 @@ int main(int argc, char **argv)
 #ifdef WIN32
       MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
 #else /* #ifdef WIN32 */
-      fprintf(stderr, "Runtime Error: %s\n", e.what());
+      fprintf(stderr, i18n("Runtime Error: %s\n"), e.what());
 #endif /* #ifdef WIN32 */
    }
 

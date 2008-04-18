@@ -21,6 +21,8 @@
 #define INC_HIGHSCORES_HPP
 
 #include "ScreenManager.hpp"
+#include "OpenGL.hpp"
+#include "Emitter.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f

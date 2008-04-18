@@ -17,9 +17,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Lander.hpp"
+#include "HighScores.hpp"
+#include "Input.hpp"
+#include "FreeType.hpp"
 
-/* Globals */
+#include "Lander.hpp" // TODO: Remove
+
+
 extern DataFile *g_pData;
 
 
@@ -187,46 +191,51 @@ void HighScores::Display()
    }
 
    // Draw other stuff
+   const char *hsnext = i18n("Press  SPACE  or  FIRE  to  return");
    if (state == hssDisplay) {
       opengl.DrawBlend(&hscore, flAlpha);
       opengl.Colour(0.0f, 0.5f, 1.0f, flAlpha);
       ft.Print
          (
           ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, S_HSNEXT)) / 2, 
+          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hsnext)) / 2, 
           opengl.GetHeight() - 50, 
-          S_HSNEXT
+          hsnext
           );
    }
    else if (state == hssEnterName)	{
       Input &input = Input::GetInstance();
 
+      const char *hsscore = i18n("Well  done  -  You  got  a  high  score");
       opengl.Colour(0.0f, 1.0f, 0.0f, flAlpha);
       ft.Print
          (
           ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, S_HSCORE)) / 2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hsscore)) / 2,
           100, 
-          S_HSCORE
+          hsscore
           );
+
+      const char *hscont = i18n("Press  ENTER  or  FIRE  to  continue");
       ft.Print
          (
           ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, S_HCONT)) / 2, 
+          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hscont)) / 2, 
           opengl.GetHeight() - 60, 
-          S_HCONT
+          hscont
           );
-		
+
+      const char *hsname = i18n("Name?  %s");
       opengl.Colour(0.8f, 0.0f, 1.0f, flAlpha);
       ft.Print
          (
           ftLarge, 
           (opengl.GetWidth() 
            - ft.GetStringWidth(ftLarge, input.GetInput()) 
-           - ft.GetStringWidth(ftLarge, S_HNAME)
+           - ft.GetStringWidth(ftLarge, hsname)
            ) / 2, 
           (opengl.GetHeight() - 50) / 2, 
-          S_HNAME, 
+          hsname, 
           input.GetInput()
           );
    }
