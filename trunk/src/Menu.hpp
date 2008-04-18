@@ -38,7 +38,6 @@ private:
    static const float ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
    static const int TEXTURE_SIZE;
    
-   TextureQuad quad;
    float scale;
    bool active;
    Position pos;

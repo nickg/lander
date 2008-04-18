@@ -649,11 +649,12 @@ void Game::Display()
    if (state == gsExplode) {
       ship.DrawExplosion(true);
       opengl.Colour(0.0f, 1.0f, 0.0f);
+      const char *sdeath = i18n("Press  SPACE  to  continue");
       ft.Print
          (ftNormal,
-          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_DEATH)) / 2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, sdeath)) / 2,
           opengl.GetHeight() - 40,
-          S_DEATH); 
+          sdeath); 
    }
    else if (state == gsDeathWait || state == gsGameOver 
             || state == gsFadeToDeath || state == gsFadeToRestart) {
@@ -704,32 +705,35 @@ void Game::Display()
       for (int i = 0; i < MAX_KEYS; i++)
          keys[i].DrawIcon(offset + i*32, 0.0f);
       opengl.Colour(0.0f, 1.0f, 0.0f);
+      const char *sland = i18n("Land  now");
       ft.Print
          (ftNormal,
-          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, S_LAND))/2,
-          30, S_LAND);
+          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, sland))/2,
+          30, sland);
    }
 
    // Draw level complete messages
+   const char *scoretxt = i18n("Score:  %d");
    if (state == gsLevelComplete) {
       opengl.Draw(&levcomp);
       opengl.Colour(0.0f, 0.5f, 0.9f);
       ft.Print
          (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_SCORE) - 40)/2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, scoretxt) - 40)/2,
           (opengl.GetHeight() - 30)/2 + 50,
-          S_SCORE,
+          scoretxt,
           newscore > 0 ? newscore : 0);
    }
    
    // Draw level number text
    if (leveltext_timeout) {
       opengl.Colour(0.9f, 0.9f, 0.0f);
+      const char *lvltxt = i18n("Level  %d");
       ft.Print
          (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_LEVEL) - 20)/2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, lvltxt) - 20)/2,
           (opengl.GetHeight() - 30)/2,
-          S_LEVEL, level);
+          lvltxt, level);
    }
 
    // Draw the fade
@@ -739,21 +743,23 @@ void Game::Display()
    // Draw game over message
    if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
       opengl.Colour(0.9f, 0.0f, 0.0f);
+      const char *sgo = i18n("Game Over");
       ft.Print
          (ftHollow,
-          (opengl.GetWidth() - ft.GetStringWidth(ftHollow, S_GAME_OVER) - 20)/2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftHollow, sgo) - 20)/2,
           (opengl.GetHeight() - 150)/2,
-          S_GAME_OVER);
+          sgo);
    }
 
    // Draw paused message
    if (state == gsPaused) {
+      const char *txtpaused = i18n("Paused");
       opengl.Colour(0.0f, 0.5f, 1.0f);
       ft.Print
          (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, S_PAUSED) - 20)/2,
+          (opengl.GetWidth() - ft.GetStringWidth(ftBig, txtpaused) - 20)/2,
           (opengl.GetHeight() - 150)/2,
-          S_PAUSED);
+          txtpaused);
    }
 }
 

@@ -238,8 +238,8 @@ void MainMenu::Display()
    FreeType &ft = FreeType::GetInstance();
 
    opengl.Colour(0.0f, 1.0f, 0.0f, fade);
-   ft.Print(ftHollow, (opengl.GetWidth() - ft.GetStringWidth(ftHollow, S_TITLE))/2, 100, S_TITLE);
-	
+   const char *stitle = i18n("LUNAR  LANDER");
+   ft.Print(ftHollow, (opengl.GetWidth() - ft.GetStringWidth(ftHollow, stitle))/2, 100, stitle);	
    // Draw some hint texts
    const int numhints = 7;
    const char *hints[][2] = {
@@ -293,16 +293,12 @@ MenuStar::MenuStar()
    float ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
    float angle = atanf(ratio);
    vel = Velocity::Project(SPEED, angle);
-   
-   quad.uTexture = uStarTexture;
-   quad.height = TEXTURE_SIZE;
-   quad.width = TEXTURE_SIZE;
-   quad.x = (int)pos.GetX();
-   quad.y = (int)pos.GetY();
 }
 
 void MenuStar::Display(float fade)
 {
+   TextureQuad quad(pos.GetX(), pos.GetY(), TEXTURE_SIZE, TEXTURE_SIZE,
+                    uStarTexture);
    OpenGL::GetInstance().DrawRotateBlendScale(&quad, starRotate, fade, scale);
    starRotate += ROTATE_SPEED;
 }
@@ -314,13 +310,11 @@ bool MenuStar::Move()
    else
       pos -= vel;
    
-   quad.x = (int)pos.GetX();
-   quad.y = (int)pos.GetY();
    scale += ENLARGE_RATE;
 
    // Has it left the screen?
-   return (quad.x > OpenGL::GetInstance().GetWidth()
-           || quad.y > OpenGL::GetInstance().GetHeight()
-           || quad.x + quad.width < 0
-           || quad.y + quad.height < 0);
+   return (pos.GetX() > OpenGL::GetInstance().GetWidth()
+           || pos.GetY() > OpenGL::GetInstance().GetHeight()
+           || pos.GetX() + TEXTURE_SIZE < 0
+           || pos.GetY() + TEXTURE_SIZE < 0);
 }
