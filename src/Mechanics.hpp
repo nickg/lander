@@ -25,8 +25,8 @@ public:
 
    static Velocity Project(float speed, float angle);
 
-   int GetXSpeed() const { return xspeed; }
-   int GetYSpeed() const { return yspeed; }
+   float GetXSpeed() const { return xspeed; }
+   float GetYSpeed() const { return yspeed; }
    
 private:
    float xspeed, yspeed;
