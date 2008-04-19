@@ -26,7 +26,7 @@ public:
    ~Image();
 
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
-             double alpha=1.0) const;
+             double alpha=1.0, double white=1.0) const;
 
    int GetWidth() const { return width; }
    int GetHeight() const { return height; }

@@ -17,71 +17,48 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "Menu.hpp"
+#include "Input.hpp"
+#include "OpenGL.hpp"
 #include "Lander.hpp"
+#include "HighScores.hpp"
 
 const double MenuStar::ROTATE_SPEED(0.005);
 const double MenuStar::ENLARGE_RATE(0.001);
 const double MenuStar::INIT_SCALE(0.01);
 const double MenuStar::SPEED(4.0);
 
-extern DataFile *g_pData;
+const int MainMenu::OPTIONS_OFFSET(128);
+const int MainMenu::HINT_DISPLAY_TIME(140);
+const double MainMenu::MENU_FADE_SPEED(0.1);
+const unsigned MainMenu::MAX_STARS(80);
+
+const double MenuOption::SEL_ENLARGE(1.2);
+const double MenuOption::UNSEL_DIM(0.5);
 
 Image *MenuStar::starImage = NULL;
 
+MainMenu::MainMenu()
+   : startOpt("images/start_option.png", OPTIONS_OFFSET, 0),
+     scoreOpt("images/score_option.png", OPTIONS_OFFSET, 1),
+     optionsOpt("images/options_option.png", OPTIONS_OFFSET, 2),
+     exitOpt("images/exit_option.png", OPTIONS_OFFSET, 3)
+{
+   
+}
+
 void MainMenu::Load()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   // Load textures
-   if (!hasloaded) {
-      uStartTexture = opengl.LoadTextureAlpha(g_pData, "StartOption.bmp");
-      uHighTexture = opengl.LoadTextureAlpha(g_pData, "HighScoreOption.bmp");
-      uOptionsTexture = opengl.LoadTextureAlpha(g_pData, "Options.bmp");
-      uExitTexture = opengl.LoadTextureAlpha(g_pData, "ExitOption.bmp");
-      hasloaded = true;
-   }
-
-   // Create start button
-   start.x = (opengl.GetWidth() - 256) / 2;
-   start.y = (opengl.GetHeight() - 128) / 2;
-   start.height = 32;
-   start.width = 256;
-   start.uTexture = uStartTexture;
-
-   // Create high score button
-   highscore.x = (opengl.GetWidth() - 512) / 2;
-   highscore.y = start.y + 32;
-   highscore.height = 32;
-   highscore.width = 512;
-   highscore.uTexture = uHighTexture;
-
-   // Create options button
-   options.x = (opengl.GetWidth() - 256) / 2;
-   options.y = start.y + 64;
-   options.height = 32;
-   options.width = 256;
-   options.uTexture = uOptionsTexture;
-
-   // Create exit button
-   exit.x = (opengl.GetWidth() - 128) / 2;
-   exit.y = start.y + 96;
-   exit.height = 32;
-   exit.width = 128;
-   exit.uTexture = uExitTexture;
-
    // Set fade in state
    state = msFadeIn;
-   fade = 0.0f;
+   fade = 0.0;
+   bigness = 1.0;
 
-   // Set default selections
-   starsel = 1.5f;
-   optsel = 1.0f;
-   highsel = 1.0f;
-   exitsel = 1.0f;
-	
    // Show a new hint
    hint_timeout = 0;
    hintidx = 0;
+
+   selOption = optStart;
 }
 
 void MainMenu::Process()
@@ -95,49 +72,60 @@ void MainMenu::Process()
       // Look at keys
       if (input.GetKeyState(SDLK_DOWN) || input.QueryJoystickAxis(1) > 0) {
          // Move the selection down
-         if (starsel > 1.4f) {
-            starsel = 1.0f;
-            highsel = 1.5f;
+         switch (selOption) {
+         case optStart:
+            selOption = optScore;
+            break;
+         case optScore:
+            selOption = optOptions;
+            break;
+         case optOptions:
+            selOption = optExit;
+            break;
+         default:
+            break;
          }
-         else if (highsel > 1.4f) {
-            highsel = 1.0f;
-            optsel = 1.5f;
-         }
-         else if (optsel > 1.4f) {
-            optsel = 1.0f;
-            exitsel = 1.5f;
-         }
+         
          input.ResetKey(SDLK_DOWN);
          //opengl.di.ResetProp(DIJ_YAXIS);
       }
       else if (input.GetKeyState(SDLK_UP) /*|| opengl.di.QueryJoystick(DIJ_YAXIS) < 0*/) {
          // Move the selection up
-         if (highsel > 1.4f) {
-            highsel = 1.0f;
-            starsel = 1.5f;
+         switch (selOption) {
+         case optScore:
+            selOption = optStart;
+            break;
+         case optOptions:
+            selOption = optScore;
+            break;
+         case optExit:
+            selOption = optOptions;
+            break;
+         default:
+            break;
          }
-         else if (optsel > 1.4f) {
-            optsel = 1.0f;
-            highsel = 1.5f;
-         }
-         else if (exitsel > 1.4f) {
-            exitsel = 1.0f;
-            optsel = 1.5f;
-         }
+         
          input.ResetKey(SDLK_UP);
          //opengl.di.ResetProp(DIJ_YAXIS);
       }
       else if (input.GetKeyState(SDLK_RETURN)
                /*|| opengl.di.QueryJoystick(DIJ_BUTTON0) || opengl.di.QueryJoystick(DIJ_BUTTON1)*/ ) {
          // Select this option
-         if (starsel > 1.4f)
+         switch (selOption) {
+         case optStart:
             state = msFadeToStart;
-         else if (highsel > 1.4f)
+            break;
+         case optScore:
             state = msFadeToHigh;
-         else if (optsel > 1.4f)
+            break;
+         case optOptions:
             state = msFadeToOpt;
-         else if (exitsel > 1.4f)
+            break;
+         case optExit:
             state = msFadeToExit;
+            break;
+         }
+         
          input.ResetKey(SDLK_RETURN);
          /*opengl.di.ResetProp(DIJ_BUTTON0);
            opengl.di.ResetProp(DIJ_BUTTON1);*/
@@ -147,17 +135,17 @@ void MainMenu::Process()
    // See what menu state we're in
    if (state == msFadeIn) {
       // Apply the fade to the menu items
-      if (fade >= 1.0f) {
+      if (fade >= 1.0) {
          // Switch to the next state
          state = msInMenu;
-         fade = 1.0f;
+         fade = 1.0;
       }
       else
          fade += MENU_FADE_SPEED;
    }	
    else if (state == msFadeToStart) {
       // Apply fade
-      if (fade <= 0.0f) {
+      if (fade <= 0.0) {
          // Move to the game screen
          sm.SelectScreen("GAME");
          Game *g = static_cast<Game*>(sm.GetScreenById("GAME"));
@@ -165,7 +153,7 @@ void MainMenu::Process()
       }
       else {
          fade -= MENU_FADE_SPEED;
-         starsel += 0.5f;
+         bigness += 0.5f;
       }
    }
    else if (state == msFadeToHigh) {
@@ -177,7 +165,7 @@ void MainMenu::Process()
       }
       else {
          fade -= MENU_FADE_SPEED;
-         highsel += 0.5f;
+         bigness += 0.5f;
       }
    }
    else if (state == msFadeToOpt) {
@@ -189,7 +177,7 @@ void MainMenu::Process()
       }
       else {
          fade -= MENU_FADE_SPEED;
-         optsel += 0.5f;
+         bigness += 0.5f;
       }
    }
    else if (state == msFadeToExit) {
@@ -200,7 +188,7 @@ void MainMenu::Process()
       }
       else {
          fade -= MENU_FADE_SPEED;
-         exitsel += 0.5f;
+         bigness += 0.5f;
       }
    }
 
@@ -230,10 +218,10 @@ void MainMenu::Display()
    }
    
    // Draw logo and menu items
-   opengl.DrawBlendScale(&start, fade, starsel);
-   opengl.DrawBlendScale(&highscore, fade, highsel);
-   opengl.DrawBlendScale(&options, fade, optsel);
-   opengl.DrawBlendScale(&exit, fade, exitsel);
+   startOpt.Display(selOption == optStart, bigness, fade);
+   scoreOpt.Display(selOption == optScore, bigness, fade);
+   optionsOpt.Display(selOption == optOptions, bigness, fade);
+   exitOpt.Display(selOption == optExit, bigness, fade);
 
    FreeType &ft = FreeType::GetInstance();
 
@@ -243,13 +231,13 @@ void MainMenu::Display()
    // Draw some hint texts
    const int numhints = 7;
    const char *hints[][2] = {
-      { "Use  the  arrow  keys  to  rotate  the  ship", "" },
-      { "Press  the  up  arrow  to  fire  the  thruster", "" },
-      { "Smaller  landing  pads  give  you  more  points", "" },
-      { "Press  P  to  pause  the  game", "" },
-      { "Press  escape  to  self  destruct", "" },
-      { "You  can  only  land  safely  when  the", "speed  bar  is  green" },
-      { "Collect  the  spinning  rings  to", "unlock  the  landing  pads" }
+      { "Use the arrow keys to rotate the ship", "" },
+      { "Press the up arrow to fire the thruster", "" },
+      { "Smaller landing pads give you more points", "" },
+      { "Press P to pause the game", "" },
+      { "Press escape to self destruct", "" },
+      { "You can only land safely when the", "speed bar is green" },
+      { "Collect the spinning rings to", "unlock the landing pads" }
    };
 
    if (hint_timeout == 0) {
@@ -288,7 +276,7 @@ MenuStar::MenuStar()
    vel = Velocity::Project(SPEED, angle);
 }
 
-void MenuStar::Display(float fade)
+void MenuStar::Display(double fade)
 {
    starImage->Draw(pos.GetX(), pos.GetY(), starRotate, scale);
    starRotate += ROTATE_SPEED;
@@ -308,4 +296,18 @@ bool MenuStar::Move()
            || pos.GetY() > OpenGL::GetInstance().GetHeight()
            || pos.GetX() + starImage->GetWidth() < 0
            || pos.GetY() + starImage->GetWidth() < 0);
+}
+
+MenuOption::MenuOption(const char *imgFile, int off, int order)
+   : image(imgFile)
+{
+   y = (OpenGL::GetInstance().GetHeight() - off) / 2 + (order*image.GetHeight());
+}
+
+void MenuOption::Display(bool selected, double bigness, double fade) const
+{
+   int x = (OpenGL::GetInstance().GetWidth() - image.GetWidth()) / 2;
+   double scale = selected ? (bigness > SEL_ENLARGE ? bigness : SEL_ENLARGE) : 1.0;
+   double white = selected ? 1.0 : UNSEL_DIM;
+   image.Draw(x, y, 0.0, scale, fade, white);
 }

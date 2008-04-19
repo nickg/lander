@@ -45,6 +45,7 @@ public:
    void SelectScreen(const string id);
    void Process();
    void Display();
+   void RemoveAllScreens();
    Screen *GetScreenById(const char *id) const;
 	
 private:
