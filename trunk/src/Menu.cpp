@@ -19,13 +19,14 @@
 
 #include "Lander.hpp"
 
-const float MenuStar::ROTATE_SPEED(0.005f);
-const float MenuStar::ENLARGE_RATE(0.003f);
-const float MenuStar::INIT_SCALE(0.1f);
-const float MenuStar::SPEED(4.0f);
-const int MenuStar::TEXTURE_SIZE(20);
+const double MenuStar::ROTATE_SPEED(0.005);
+const double MenuStar::ENLARGE_RATE(0.001);
+const double MenuStar::INIT_SCALE(0.01);
+const double MenuStar::SPEED(4.0);
 
 extern DataFile *g_pData;
+
+Image *MenuStar::starImage = NULL;
 
 void MainMenu::Load()
 {
@@ -268,23 +269,16 @@ void MainMenu::Display()
             hints[hintidx][1]);
 }
 
-bool MenuStar::hasLoaded = false;
-float MenuStar::starRotate = 0.0f;
-GLuint MenuStar::uStarTexture = 0;
+double MenuStar::starRotate = 0.0;
 
 MenuStar::MenuStar()
-   : active(false),
-     scale(INIT_SCALE)
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-   
-   if (!hasLoaded) {
-      uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
-      hasLoaded = true;
-   }
+   : scale(INIT_SCALE), active(false)
+{   
+   if (NULL == starImage)
+      starImage = new Image("images/star.png");
 
-   const int screenWidth = opengl.GetWidth();
-   const int screenHeight = opengl.GetHeight();
+   const int screenWidth = OpenGL::GetInstance().GetWidth();
+   const int screenHeight = OpenGL::GetInstance().GetHeight();
 
    pos = Position((float)(rand()%(screenWidth/2) + screenWidth/4),
                   (float)(rand()%(screenHeight/2) + screenHeight/4));
@@ -296,9 +290,7 @@ MenuStar::MenuStar()
 
 void MenuStar::Display(float fade)
 {
-   TextureQuad quad(pos.GetX(), pos.GetY(), TEXTURE_SIZE, TEXTURE_SIZE,
-                    uStarTexture);
-   OpenGL::GetInstance().DrawRotateBlendScale(&quad, starRotate, fade, scale);
+   starImage->Draw(pos.GetX(), pos.GetY(), starRotate, scale);
    starRotate += ROTATE_SPEED;
 }
 
@@ -314,6 +306,6 @@ bool MenuStar::Move()
    // Has it left the screen?
    return (pos.GetX() > OpenGL::GetInstance().GetWidth()
            || pos.GetY() > OpenGL::GetInstance().GetHeight()
-           || pos.GetX() + TEXTURE_SIZE < 0
-           || pos.GetY() + TEXTURE_SIZE < 0);
+           || pos.GetX() + starImage->GetWidth() < 0
+           || pos.GetY() + starImage->GetWidth() < 0);
 }

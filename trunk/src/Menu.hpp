@@ -36,17 +36,15 @@ public:
    void Display(float fade=1.0f);
 
 private:
-   static const float ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
-   static const int TEXTURE_SIZE;
+   static const double ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
    
-   float scale;
+   double scale;
    bool active;
    Position pos;
    Velocity vel;
 
-   static float starRotate;
-   static bool hasLoaded;
-   static GLuint uStarTexture;
+   static double starRotate;
+   static Image *starImage;
 };
 
 class MainMenu : public Screen {
@@ -69,7 +67,7 @@ private:
 	
    int hint_timeout, hintidx;
 
-   static const int MAX_STARS = 80;
+   static const unsigned MAX_STARS = 80;
    typedef vector<MenuStar> StarList;
    typedef StarList::iterator StarListIt;
    vector<MenuStar> stars;
