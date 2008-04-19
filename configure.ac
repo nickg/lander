@@ -29,12 +29,17 @@ SDL_VERSION=1.2.5
 AM_PATH_SDL($SDL_VERSION,
         :,
         AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
-)       
+)
 
-dnl Check for Freetype
-PKG_CHECK_MODULES(LANDER, freetype2)
+dnl Check for SDL_Image
+AC_CHECK_LIB(SDL_image, IMG_Load, [],
+             AC_MSG_ERROR([*** SDL_image not found!]))
+                                                               
+
+dnl Check for Freetype and libpng
+PKG_CHECK_MODULES(LANDER, freetype2 libpng)
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile po/Makefile.in])
+AC_CONFIG_FILES([Makefile data/Makefile src/Makefile po/Makefile.in])
 AC_OUTPUT
 
