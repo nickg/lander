@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "You had better be running this in the source tree..."
+basedir=`pwd | sed 's/\(lander\/trunk\).*/\1/'`
+echo "I think the source root is $basedir"
+
+potfiles="$basedir/po/POTFILES.in"
+find $basedir | grep -v .svn | grep '\.[hc]pp' | \
+    sed "s|$basedir\/||g" > $potfiles
+
+files=`wc -l $potfiles | awk '{ print \$1 }'`
+
+echo "Found $files files"
