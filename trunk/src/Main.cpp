@@ -71,14 +71,14 @@ int main(int argc, char **argv)
       opengl.Init(width, height, depth, fullscreen);
 
       // Create screens
-      MainMenu mm;
-      Game g;
-      HighScores hs;
+      MainMenu *mm = new MainMenu();
+      Game *g = new Game();
+      HighScores *hs = new HighScores();
 
       ScreenManager &sm = ScreenManager::GetInstance();
-      sm.AddScreen("MAIN MENU", &mm);
-      sm.AddScreen("GAME", &g);
-      sm.AddScreen("HIGH SCORES", &hs);
+      sm.AddScreen("MAIN MENU", mm);
+      sm.AddScreen("GAME", g);
+      sm.AddScreen("HIGH SCORES", hs);
 
       // Load fonts
       FreeType &ft = FreeType::GetInstance();
@@ -92,6 +92,11 @@ int main(int argc, char **argv)
       // Run the game
       sm.SelectScreen("MAIN MENU");
       opengl.Run();
+      
+      sm.RemoveAllScreens();
+      delete mm;
+      delete g;
+      delete hs;
 
       // Close data file
       delete g_pData;

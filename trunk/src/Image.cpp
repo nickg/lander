@@ -76,7 +76,8 @@ Image::~Image()
    glDeleteTextures(1, &texture);
 }
 
-void Image::Draw(int x, int y, double rotate, double scale, double alpha) const
+void Image::Draw(int x, int y, double rotate, double scale,
+                 double alpha, double white) const
 {
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
@@ -85,7 +86,7 @@ void Image::Draw(int x, int y, double rotate, double scale, double alpha) const
    glTranslated((double)(x + width/2), (double)(y + height/2), 0.0);
    glScaled(scale, scale, 0);
    glRotated(rotate, 0.0, 0.0, 1.0);
-   glColor4d(1.0, 1.0, 1.0, alpha);
+   glColor4d(white, white, white, alpha);
    glBegin(GL_QUADS);
    glTexCoord2d(0.0, 0.0); glVertex2i(-(width/2), -(height/2));
    glTexCoord2d(0.0, 1.0); glVertex2i(-(width/2), height/2);

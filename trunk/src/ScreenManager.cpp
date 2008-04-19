@@ -94,3 +94,8 @@ void ScreenManager::Display()
       active.ptr->Display();
    }
 }
+
+void ScreenManager::RemoveAllScreens()
+{
+   screens.clear();
+}

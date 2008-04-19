@@ -24,16 +24,13 @@
 #include "Mechanics.hpp"
 #include "Image.hpp"
 
-#define MENU_FADE_SPEED		0.1f
-#define HINT_DISPLAY_TIME	140
-
 
 class MenuStar {
 public:
    MenuStar();
    
    bool Move();
-   void Display(float fade=1.0f);
+   void Display(double fade=1.0);
 
 private:
    static const double ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
@@ -47,27 +44,44 @@ private:
    static Image *starImage;
 };
 
+class MenuOption {
+public:
+   MenuOption(const char *imgFile, int off, int order);
+
+   void Display(bool selected, double bigness, double fade) const;
+   
+private:
+   Image image;
+   int y;
+
+   static const double SEL_ENLARGE, UNSEL_DIM;
+};
+
 class MainMenu : public Screen {
 public:
-   MainMenu() : hasloaded(false) { }
+   MainMenu();
    virtual ~MainMenu() { }
 
    void Load();
    void Process();
    void Display();
+   
 private:
    enum MenuState { msFadeIn, msInMenu, msFadeToStart,
                     msFadeToHigh, msFadeToOpt, msFadeToExit };
-		
-   TextureQuad logo, start, highscore, options, exit;
-   float fade, starsel, highsel, optsel, exitsel;
-   bool hasloaded;
-   GLuint uStartTexture, uHighTexture, uOptionsTexture, uExitTexture;
+   enum SelOption { optStart, optScore, optOptions, optExit };
+   
+   MenuOption startOpt, scoreOpt, optionsOpt, exitOpt;
+   SelOption selOption;
+   double fade, bigness;
    MenuState state;
 	
    int hint_timeout, hintidx;
 
-   static const unsigned MAX_STARS = 80;
+   static const int OPTIONS_OFFSET, HINT_DISPLAY_TIME;
+   static const double MENU_FADE_SPEED;
+   
+   static const unsigned MAX_STARS;
    typedef vector<MenuStar> StarList;
    typedef StarList::iterator StarListIt;
    vector<MenuStar> stars;
