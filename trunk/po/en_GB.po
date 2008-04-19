@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-04-19 14:59+0100\n"
+"POT-Creation-Date: 2008-04-19 17:46+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -16,10 +16,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Main.cpp:103
+#: src/HighScores.cpp:194
+msgid "Press  SPACE  or  FIRE  to  return"
+msgstr "Press  SPACE  or  FIRE  to  return"
+
+#: src/HighScores.cpp:209
+msgid "Well  done  -  You  got  a  high  score"
+msgstr "Well  done  -  You  got  a  high  score"
+
+#: src/HighScores.cpp:219
+msgid "Press  ENTER  or  FIRE  to  continue"
+msgstr "Press  ENTER  or  FIRE  to  continue"
+
+#: src/HighScores.cpp:228
 #, c-format
-msgid "Runtime Error: %s\n"
-msgstr "Runtime Error: %s\n"
+msgid "Name?  %s"
+msgstr "Name?  %s"
+
+#: src/Menu.cpp:241
+msgid "LUNAR  LANDER"
+msgstr "LUNAR  LANDER"
 
 #: src/Game.cpp:652
 msgid "Press  SPACE  to  continue"
@@ -47,23 +63,7 @@ msgstr "Game Over"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/HighScores.cpp:194
-msgid "Press  SPACE  or  FIRE  to  return"
-msgstr "Press  SPACE  or  FIRE  to  return"
-
-#: src/HighScores.cpp:209
-msgid "Well  done  -  You  got  a  high  score"
-msgstr "Well  done  -  You  got  a  high  score"
-
-#: src/HighScores.cpp:219
-msgid "Press  ENTER  or  FIRE  to  continue"
-msgstr "Press  ENTER  or  FIRE  to  continue"
-
-#: src/HighScores.cpp:228
+#: src/Main.cpp:103
 #, c-format
-msgid "Name?  %s"
-msgstr "Name?  %s"
-
-#: src/Menu.cpp:241
-msgid "LUNAR  LANDER"
-msgstr "LUNAR  LANDER"
+msgid "Runtime Error: %s\n"
+msgstr "Runtime Error: %s\n"

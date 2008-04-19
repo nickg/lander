@@ -27,7 +27,6 @@ const int MenuStar::TEXTURE_SIZE(20);
 
 extern DataFile *g_pData;
 
-/* Loads menu data */
 void MainMenu::Load()
 {
    OpenGL &opengl = OpenGL::GetInstance();

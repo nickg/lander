@@ -106,3 +106,17 @@ int main(int argc, char **argv)
 
    return 0;
 }
+
+/*
+ * Find a filename in the installation tree.
+ */
+const char *LocateResource(const char *file)
+{
+#ifdef DATADIR
+   static char path[PATH_MAX];
+   snprintf(path, PATH_MAX, "%s/%s", DATADIR, file);
+   return path;   
+#endif
+
+   return file;
+}

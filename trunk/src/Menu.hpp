@@ -22,6 +22,7 @@
 
 #include "ScreenManager.hpp"
 #include "Mechanics.hpp"
+#include "Image.hpp"
 
 #define MENU_FADE_SPEED		0.1f
 #define HINT_DISPLAY_TIME	140

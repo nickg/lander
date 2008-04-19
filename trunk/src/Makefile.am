@@ -1,7 +1,6 @@
 bin_PROGRAMS = lander
 
-AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -DLINUX -DUNIX -DSHOW_FPS \
-	-DDATADIR=\"$(pkgdatadir)\"
+AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) 
 AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Bitmap.cpp Bitmap.hpp FreeType.cpp FreeType.hpp \
@@ -13,9 +12,13 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Ship.hpp Ship.cpp Viewport.hpp Viewport.cpp LandingPad.hpp \
 	LandingPad.cpp Surface.hpp Surface.cpp Mine.hpp Mine.cpp \
 	ElectricGate.hpp ElectricGate.cpp Key.hpp Key.cpp \
-	Mechanics.hpp Mechanics.cpp Geometry.hpp
+	Mechanics.hpp Mechanics.cpp Geometry.hpp Image.hpp \
+	Image.cpp
 
 dist_pkgdata_DATA = ../lander.dat ../Default_Font.ttf ../Hollow_Font.ttf
 
 localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+
+# Add -DSHOW_FPS here to show FPS in title bar
+DEFS = -DLOCALEDIR=\"$(localedir)\" -DLINUX -DUNIX \
+	-DDATADIR=\"$(pkgdatadir)\" @DEFS@
