@@ -16,11 +16,6 @@
  */
 
 #include "Ship.hpp"
-#include "DataFile.hpp"
-
-extern DataFile *g_pData;
-
-GLuint Ship::uShipTexture = 0;
 
 /*
  * Defines a simplified polygon representing the ship.
@@ -31,32 +26,24 @@ const Point Ship::hotspots[] = {
 
 
 Ship::Ship(Viewport *v)
-   : xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
+   : shipImage("images/ship.png"),
+     xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
      thrusting(false)
 {
-   tq.width = SHIP_TEX_WIDTH;
-   tq.height = SHIP_TEX_HEIGHT;
-}
-
-void Ship::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
    
-   uShipTexture = opengl.LoadTextureAlpha(g_pData, "Ship.bmp");
 }
 
 void Ship::Display()
 {
-   tq.x = (int)xpos - viewport->GetXAdjust();
-   tq.y = (int)ypos - viewport->GetYAdjust();
-   tq.uTexture = uShipTexture;
-   
-   OpenGL::GetInstance().DrawRotate(&tq, angle);
+   int dx = (int)xpos - viewport->GetXAdjust();
+   int dy = (int)ypos - viewport->GetYAdjust();
+
+   shipImage.Draw(dx, dy, angle);
 }
 
 void Ship::DrawExhaust(bool paused)
 {
-   static float xlast, ylast;
+   static double xlast, ylast;
    
    if (thrusting) {
       if (sqrt(speedX*speedX + speedY*speedY) > 2.0f) {
@@ -64,15 +51,15 @@ void Ship::DrawExhaust(bool paused)
             ((int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
              (int)(exhaust.ypos + (exhaust.ypos - ylast)/2));
       }
-      exhaust.Draw((float)viewport->GetXAdjust(),
-                   (float)viewport->GetYAdjust(), true);
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), true);
    }
    else if (paused)
-      exhaust.Draw((float)viewport->GetXAdjust(),
-                   (float)viewport->GetYAdjust(), false, false);
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), false, false);
    else
-      exhaust.Draw((float)viewport->GetXAdjust(),
-                   (float)viewport->GetYAdjust(), false);
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), false);
 
    xlast = exhaust.xpos;
    ylast = exhaust.ypos;
@@ -80,8 +67,8 @@ void Ship::DrawExhaust(bool paused)
 
 void Ship::DrawExplosion(bool createNew)
 {
-   explosion.Draw((float)viewport->GetXAdjust(),
-                  (float)viewport->GetYAdjust(), createNew);
+   explosion.Draw((double)viewport->GetXAdjust(),
+                  (double)viewport->GetYAdjust(), createNew);
 }
 
 void Ship::Move()
@@ -92,31 +79,31 @@ void Ship::Move()
     ypos += speedY;
 
     // Check bounds
-    if (xpos <= 0.0f) {
-       xpos = 0.0f;
-       speedX *= -0.5f;
+    if (xpos <= 0.0) {
+       xpos = 0.0;
+       speedX *= -0.5;
     }
-    else if (xpos + tq.width > viewport->GetLevelWidth()) {
-      xpos = (float)(viewport->GetLevelWidth() - tq.width);
-      speedX *= -0.5f;
+    else if (xpos + shipImage.GetWidth() > viewport->GetLevelWidth()) {
+       xpos = (double)(viewport->GetLevelWidth() - shipImage.GetWidth());
+       speedX *= -0.5;
     }
-    if (ypos <= 0.0f) {
-       ypos = 0.0f;
-       speedY *= -0.5f;
+    if (ypos <= 0.0) {
+       ypos = 0.0;
+       speedY *= -0.5;
     }
-    else if (ypos + tq.height > viewport->GetLevelHeight()) {
-       ypos = (float)(viewport->GetLevelHeight() - tq.height);
-       speedY *= -0.5f;
+    else if (ypos + shipImage.GetHeight() > viewport->GetLevelHeight()) {
+       ypos = (double)(viewport->GetLevelHeight() - shipImage.GetHeight());
+       speedY *= -0.5;
     }
     
-    exhaust.xpos = xpos + tq.width/2
-       - (tq.width/2)*(float)sin(angle*(PI/180));
-    exhaust.ypos = ypos + tq.height/2
-       + (tq.height/2)*(float)cos(angle*(PI/180));
+    exhaust.xpos = xpos + shipImage.GetWidth()/2
+       - (shipImage.GetWidth()/2)*(double)sin(angle*(PI/180));
+    exhaust.ypos = ypos + shipImage.GetHeight()/2
+       + (shipImage.GetHeight()/2)*(double)cos(angle*(PI/180));
     exhaust.yg = speedY; //+ (flGravity * 10);
     exhaust.xg = speedX;
-    explosion.xpos = xpos + tq.width/2;
-    explosion.ypos = ypos + tq.height/2;
+    explosion.xpos = xpos + shipImage.GetWidth()/2;
+    explosion.ypos = ypos + shipImage.GetHeight()/2;
 }
 
 void Ship::ThrustOn()
@@ -129,18 +116,18 @@ void Ship::ThrustOff()
    thrusting = false;
 }
 
-void Ship::Thrust(float speed)
+void Ship::Thrust(double speed)
 {
    speedX += speed * sinf(angle*(PI/180));
    speedY -= speed * cosf(angle*(PI/180));
 }
 
-void Ship::Turn(float delta)
+void Ship::Turn(double delta)
 {
    angle += delta;
 }
 
-void Ship::ApplyGravity(float gravity)
+void Ship::ApplyGravity(double gravity)
 {
    speedY += gravity;
 }
@@ -155,8 +142,8 @@ void Ship::Bounce()
 
 void Ship::CentreInViewport()
 {
-   int centrex = (int)xpos + (tq.width/2);
-   int centrey = (int)ypos + (tq.height/2);
+   int centrex = (int)xpos + (shipImage.GetWidth()/2);
+   int centrey = (int)ypos + (shipImage.GetHeight()/2);
    OpenGL &opengl = OpenGL::GetInstance();
    viewport->SetXAdjust(centrex - (opengl.GetWidth()/2));
    viewport->SetYAdjust(centrey - (opengl.GetHeight()/2));
@@ -170,7 +157,7 @@ void Ship::Reset()
    exhaust.Reset();
    explosion.Reset();
 
-   xpos = (float)viewport->GetLevelWidth()/2;
+   xpos = (double)viewport->GetLevelWidth()/2;
    ypos = SHIP_START_Y - 40;
 
    angle = 0.0f;
@@ -179,7 +166,7 @@ void Ship::Reset()
 }
 
 void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
-                        float angle, int adjustx, int adjusty)
+                        double angle, int adjustx, int adjusty)
 {
    for (int i = 0; i < nCount; i++) {
       int x = pPoints[i].x + adjustx;
@@ -195,7 +182,7 @@ void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
 /*
  * Check for collision between the ship and a polygon.
  */
-bool Ship::HotSpotCollision(LineSegment &l, float dx, float dy)
+bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy)
 {
    for (int i = 0; i < NUM_HOTSPOTS; i++) {
       if (CheckCollision(l, dx + points[i].x, dy + points[i].y))
@@ -225,36 +212,37 @@ bool Ship::BoxCollision(int x, int y, int w, int h)
 /*
  * Checks for collision between the ship and a line segment.
  */
-bool Ship::CheckCollision(LineSegment &l, float dx, float dy)
+bool Ship::CheckCollision(LineSegment &l, double dx, double dy)
 {
-   float xpos = this->xpos + dx;
-   float ypos = this->ypos + dy;
+   double xpos = this->xpos + dx;
+   double ypos = this->ypos + dy;
 
-   if (!viewport->PointInScreen((int)xpos, (int)ypos, SHIP_TEX_WIDTH, SHIP_TEX_HEIGHT))
+   if (!viewport->PointInScreen
+       ((int)xpos, (int)ypos, shipImage.GetWidth(), shipImage.GetHeight()))
       return false;
 
    // Get position after next move
-   float cX = xpos + speedX;
-   float cY = ypos + speedY;
+   double cX = xpos + speedX;
+   double cY = ypos + speedY;
 
    // Get displacement
-   float vecX = cX - xpos;
-   float vecY = cY - ypos;
+   double vecX = cX - xpos;
+   double vecY = cY - ypos;
 
    // Get line position
-   float wallX = (float)(l.p2.x - l.p1.x);
-   float wallY = (float)(l.p2.y - l.p1.y);
+   double wallX = (double)(l.p2.x - l.p1.x);
+   double wallY = (double)(l.p2.y - l.p1.y);
 
    // Work out numerator and denominator (used parametric equations)
-   float numT = wallX * (ypos - l.p1.y) - wallY * (xpos - l.p1.x);
-   float numU = vecX * (ypos - l.p1.y) - vecY * (xpos - l.p1.x);
+   double numT = wallX * (ypos - l.p1.y) - wallY * (xpos - l.p1.x);
+   double numU = vecX * (ypos - l.p1.y) - vecY * (xpos - l.p1.x);
 
    // Work out denominator
-   float denom = wallY * (cX - xpos) - wallX * (cY - ypos);
+   double denom = wallY * (cX - xpos) - wallX * (cY - ypos);
 
    // Work out u and t
-   float u = numU / denom;
-   float t = numT / denom;
+   double u = numU / denom;
+   double t = numT / denom;
 
    // Collision occured if (0 < t < 1) and (0 < u < 1)
    return (t > 0.0f) && (t < 1.0f) && (u > 0.0f) && (u < 1.0f);

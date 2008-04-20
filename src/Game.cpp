@@ -1,5 +1,5 @@
 /*
- * Game.cpp - Implementation of core game logic.
+ * Game.cpp -- Implementation of core game logic.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,11 +56,12 @@ extern DataFile *g_pData;
 
 
 Game::Game()
-   : hasloaded(false),
-     state(gsNone),
-     ship(&viewport),
+   : ship(&viewport),
      surface(&viewport),
-     speedmeter(&ship)
+     speedmeter(&ship),
+     hasloaded(false),
+     state(gsNone),
+     starImage("images/star.png")
 {
 
 }
@@ -70,7 +71,6 @@ void Game::Load()
    OpenGL &opengl = OpenGL::GetInstance();
 
    if (!hasloaded) {
-      uStarTexture = opengl.LoadTextureAlpha(g_pData, "Star.bmp");
       uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
       uLevComTexture = opengl.LoadTextureAlpha(g_pData, "LevelComplete.bmp");
       uSurf2Texture[0] = opengl.LoadTexture(g_pData, "GrassSurface2.bmp");
@@ -80,7 +80,6 @@ void Game::Load()
       uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
       
-      Ship::Load();
       LandingPad::Load();
       Surface::Load();
       Mine::Load();
@@ -436,8 +435,7 @@ void Game::StartLevel(int level)
    for (int i = 0; i < nStarCount; i++) {
       stars[i].xpos = (int)(rand()%(viewport.GetLevelWidth()/20))*20;
       stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
-      stars[i].quad.uTexture = uStarTexture;
-      stars[i].quad.width = stars[i].quad.height = rand()%15;
+      stars[i].scale = (double)rand()/(double)RAND_MAX/8.0;
    }
    
    // Generate landing pads
@@ -502,18 +500,14 @@ void Game::StartLevel(int level)
    }
    
    // Create gateways
-   int gatewaycount = level/2 + rand()%level - 1;
+   int gatewaycount = level/2 + rand()%level - 2;
    gateways.clear();
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
    for (int i = 0; i < gatewaycount; i++) {
       // Allocate space for gateway
       int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
-      bool vertical;
-      switch(rand() % 2) {
-      case 0: vertical = true; break;
-      case 1: vertical = false; break;
-      }
+      bool vertical = rand() % 2 == 0;
 		
       bool result;
       int xpos, ypos;
@@ -578,9 +572,9 @@ void Game::Display()
    
    // Draw the stars
    for (int i = 0; i < nStarCount; i++) {
-      stars[i].quad.x = stars[i].xpos - viewport.GetXAdjust();
-      stars[i].quad.y = stars[i].ypos - viewport.GetYAdjust();
-      opengl.DrawRotate(&stars[i].quad, starrotate);
+      int x = stars[i].xpos - viewport.GetXAdjust();
+      int y = stars[i].ypos - viewport.GetYAdjust();
+      starImage.Draw(x, y, starrotate, stars[i].scale);
       starrotate += 0.005f;
    }
 
