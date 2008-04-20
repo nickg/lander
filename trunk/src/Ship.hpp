@@ -19,16 +19,14 @@
 #define INC_SHIP_HPP
 
 #include "Platform.hpp"
-#include "OpenGL.hpp"
 #include "Geometry.hpp"
 #include "Viewport.hpp"
 #include "Emitter.hpp"
+#include "Image.hpp"
 
 class Ship {
 public:
    Ship(Viewport *v);
-
-   static void Load();
 
    void Reset();
 
@@ -38,36 +36,32 @@ public:
    void Move();
    void ThrustOn();
    void ThrustOff();
-   void Thrust(float speed);
-   void Turn(float delta);
+   void Thrust(double speed);
+   void Turn(double delta);
    void Bounce();
-   void ApplyGravity(float gravity);
+   void ApplyGravity(double gravity);
    void CentreInViewport();
    
-   bool CheckCollision(LineSegment &l, float dx=0, float dy=0);
-   bool HotSpotCollision(LineSegment &l, float dx=0, float dy=0);
+   bool CheckCollision(LineSegment &l, double dx=0, double dy=0);
+   bool HotSpotCollision(LineSegment &l, double dx=0, double dy=0);
    bool BoxCollision(int x, int y, int w, int h);
 
-   float GetX() const { return xpos; }
-   float GetY() const { return ypos; }
-   float GetXSpeed() const { return speedX; }
-   float GetYSpeed() const { return speedY; }
-   float GetAngle() const { return angle; }
+   double GetX() const { return xpos; }
+   double GetY() const { return ypos; }
+   double GetXSpeed() const { return speedX; }
+   double GetYSpeed() const { return speedY; }
+   double GetAngle() const { return angle; }
    
    static const int SHIP_START_Y = 100;
 
 private:
    void RotatePoints(const Point *pPoints, Point *pDest, int nCount,
-                     float angle, int adjustx=0, int adjusty=0);
+                     double angle, int adjustx=0, int adjusty=0);
+
+   Image shipImage;
    
-   static const int SHIP_TEX_WIDTH = 32;
-   static const int SHIP_TEX_HEIGHT = 32;
-   
-   static GLuint uShipTexture;
-   
-   float xpos, ypos;
-   float speedX, speedY, angle;
-   TextureQuad tq;
+   double xpos, ypos;
+   double speedX, speedY, angle;
 
    Viewport *viewport;
    Explosion explosion;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-04-19 17:46+0100\n"
+"POT-Creation-Date: 2008-04-20 00:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Name?  %s"
 msgstr ""
 
-#: src/Menu.cpp:241
+#: src/Menu.cpp:229
 msgid "LUNAR  LANDER"
 msgstr ""
 
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Paused"
 msgstr ""
 
-#: src/Main.cpp:103
+#: src/Main.cpp:108
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr ""

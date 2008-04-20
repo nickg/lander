@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-04-19 17:46+0100\n"
+"POT-Creation-Date: 2008-04-20 00:45+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -33,7 +33,7 @@ msgstr "Press  ENTER  or  FIRE  to  continue"
 msgid "Name?  %s"
 msgstr "Name?  %s"
 
-#: src/Menu.cpp:241
+#: src/Menu.cpp:229
 msgid "LUNAR  LANDER"
 msgstr "LUNAR  LANDER"
 
@@ -63,7 +63,7 @@ msgstr "Game Over"
 msgid "Paused"
 msgstr "Paused"
 
-#: src/Main.cpp:103
+#: src/Main.cpp:108
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr "Runtime Error: %s\n"

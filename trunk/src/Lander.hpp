@@ -122,19 +122,21 @@ private:
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
    enum GameState { gsNone, gsInGame, gsExplode, gsGameOver, gsDeathWait, 
-                    gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete, gsPaused };
+                    gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete,
+                    gsPaused };
    GameState state;
 
    // Textures
-   GLuint uStarTexture, uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
+   GLuint uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
    GLuint uLevComTexture;
-   GLuint uShipSmallTexture;    
+   GLuint uShipSmallTexture;
+
+   Image starImage;
     
    // Stars
    static const int MAX_GAME_STARS = 2048;
    struct Star {
-      TextureQuad quad;
-      float scale;
+      double scale;
       int xpos, ypos;
    } stars[MAX_GAME_STARS];
    int nStarCount;
