@@ -318,11 +318,11 @@ void Game::Process()
    }
 
    // See if the player collected a key
-   for (int i = 0; i < nKeys; i++) {
-      if(keys[i].CheckCollision(ship)) {
+   for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
+      if((*it).CheckCollision(ship)) {
          nKeysRemaining--;
-         keys[i].Collected();
-         objgrid.UnlockSpace(keys[i].GetX(), keys[i].GetY());
+         (*it).Collected();
+         objgrid.UnlockSpace((*it).GetX(), (*it).GetY());
       }
    }
 
@@ -477,10 +477,11 @@ void Game::StartLevel(int level)
    nKeysRemaining = nKeys;
    const ArrowColour acols[MAX_KEYS] =
       { acBlue, acRed, acYellow, acPink, acGreen };
+   keys.clear();
    for (int i = 0; i < MAX_KEYS; i++) {
       int xpos, ypos;
       objgrid.AllocFreeSpace(xpos, ypos, 1, 1);
-      keys[i].Reset(i < nKeysRemaining, xpos, ypos, acols[i]);
+      keys.push_back(Key(i < nKeysRemaining, xpos, ypos, acols[i]));
    }
 
    // Create the asteroids
@@ -587,8 +588,8 @@ void Game::Display()
    }
 
    // Draw the keys
-   for (int i = 0; i < nKeys; i++)
-      keys[i].DrawKey(&viewport);
+   for (KeyListIt it = keys.begin(); it != keys.end(); ++it)
+      (*it).DrawKey(&viewport);   
       
    // Draw gateways
    for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it)
@@ -656,8 +657,8 @@ void Game::Display()
    }
    
    // Draw the arrows
-   for (int i = 0; i < nKeys; i++)
-      keys[i].DrawArrow(&viewport);
+   for (KeyListIt it = keys.begin(); it != keys.end(); ++it)
+      (*it).DrawArrow(&viewport);
 
    // Draw HUD
    opengl.Colour(0.0f, 0.9f, 0.0f);
@@ -690,14 +691,18 @@ void Game::Display()
    // Draw key icons
    int offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
    if (nKeysRemaining > 0) {
-      for (int i = 0; i < MAX_KEYS; i++) {
-         keys[i].DrawIcon(offset + i*32, 0.3f);
+      int i = 0;
+      for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
+         (*it).DrawIcon(offset + i, 0.3f);
+         i += 32;
       }
    }
    else {
-      
-      for (int i = 0; i < MAX_KEYS; i++)
-         keys[i].DrawIcon(offset + i*32, 0.0f);
+      int i = 0;
+      for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
+         (*it).DrawIcon(offset + i*32, 0.0f);
+         i += 32;
+      }
       opengl.Colour(0.0f, 1.0f, 0.0f);
       const char *sland = i18n("Land  now");
       ft.Print

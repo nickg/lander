@@ -21,16 +21,16 @@
 #include "ObjectGrid.hpp"
 #include "Viewport.hpp"
 #include "Ship.hpp"
+#include "AnimatedImage.hpp"
 
 enum ArrowColour { acBlue, acRed, acYellow, acPink, acGreen };
 
 class Key : public StaticObject {
 public:
-   Key();
+   Key(bool active, int xpos, int ypos, ArrowColour acol);
 
    static void Load();
    
-   void Reset(bool active, int xpos, int ypos, ArrowColour acol);
    void DrawKey(Viewport *viewport);
    void DrawArrow(Viewport *viewport);
    void DrawIcon(int offset, float minAlpha);
@@ -43,15 +43,16 @@ private:
    static const int KEY_ROTATION_SPEED = 2;
    static const int ARROW_SIZE = 32;
    
-   static GLuint uBlueKey[KEY_FRAMES], uRedKey[KEY_FRAMES];
-   static GLuint uGreenKey[KEY_FRAMES], uPinkKey[KEY_FRAMES];
-   static GLuint uYellowKey[KEY_FRAMES];
    static GLuint uBlueArrow, uPinkArrow, uRedArrow, uYellowArrow, uGreenArrow;
 
    TextureQuad frame[KEY_FRAMES], arrow;
    int current, rotcount;
    float alpha;
    bool active;
+   AnimatedImage *image;
+
+   static AnimatedImage *blueImage, *redImage, *yellowImage,
+      *pinkImage, *greenImage;
 };
 
 #endif

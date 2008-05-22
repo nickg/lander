@@ -1,4 +1,4 @@
-/*  Image.hpp -- Wrapper for loading and displaying images
+/*  AnimatedImage.hpp -- Images with multiple frames.
  *  Copyright (C) 2008  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,28 +15,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INC_IMAGE_HPP
-#define INC_IMAGE_HPP
+#ifndef INC_ANIMATED_IMAGE_HPP
+#define INC_ANIMATED_IMAGE_HPP
 
-#include "Platform.hpp"
+#include "Image.hpp"
 
-class Image {
+class AnimatedImage : public Image {
 public:
-   Image(const char *file);
-   virtual ~Image();
+   AnimatedImage(const char *file, int frameWidth, int frameCount=0);
+   
+   void Draw(int x, int y, double rotate=0.0, double scale=1.0,
+             double alpha=1.0, double white=1.0) const;
+   void NextFrame();
 
-   virtual void Draw(int x, int y, double rotate=0.0, double scale=1.0,
-                     double alpha=1.0, double white=1.0) const;
-
-   virtual int GetWidth() const { return width; }
-   virtual int GetHeight() const { return height; }
-  
-protected:
-   GLuint texture;
-   int width, height;
-
+   int GetWidth() const { return frameWidth; }
 private:
-   static bool IsPowerOfTwo(int n);
+   int frameWidth, frameCount;
+   int currFrame;
 };
 
 #endif

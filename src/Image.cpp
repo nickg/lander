@@ -24,14 +24,13 @@ Image::Image(const char *file)
    SDL_Surface *surface = IMG_Load(LocateResource(file));
    if (NULL == surface) {
       ostringstream os;
-      os << "Failed to load image " << IMG_GetError();
+      os << "Failed to load image: " << IMG_GetError();
       throw runtime_error(os.str());
    }
 
-   // Load the image into an OpenGL texture
-   if (surface->w & (surface->w - 1) != 0)
+   if (!IsPowerOfTwo(surface->w))
       cerr << "Warning: " << file << " width not a power of 2" << endl;
-   if (surface->h & (surface->h - 1) != 0)
+   if (!IsPowerOfTwo(surface->h))
       cerr << "Warning: " << file << " height not a power of 2" << endl;
 
    int ncols = surface->format->BytesPerPixel;
@@ -57,7 +56,7 @@ Image::Image(const char *file)
 
    width = surface->w;
    height = surface->h;
-   
+
    glGenTextures(1, &texture);
    glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -93,4 +92,16 @@ void Image::Draw(int x, int y, double rotate, double scale,
    glTexCoord2d(1.0, 1.0); glVertex2i(width/2, height/2);
    glTexCoord2d(1.0, 0.0); glVertex2i(width/2, -(height/2));
    glEnd();
+}
+
+bool Image::IsPowerOfTwo(int n)
+{
+   int pop = 0;
+   for (unsigned i = 0, bit = 1;
+        i < sizeof(int)*8;
+        i++, bit <<= 1) {
+      if (n & bit)
+         pop++;
+   }
+   return pop == 1;
 }

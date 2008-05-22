@@ -21,58 +21,20 @@
 
 extern DataFile *g_pData;
 
-GLuint Key::uBlueKey[KEY_FRAMES], Key::uRedKey[KEY_FRAMES];
-GLuint Key::uGreenKey[KEY_FRAMES], Key::uPinkKey[KEY_FRAMES];
-GLuint Key::uYellowKey[KEY_FRAMES];
 GLuint Key::uBlueArrow, Key::uPinkArrow, Key::uRedArrow;
 GLuint Key::uYellowArrow, Key::uGreenArrow;
 
-Key::Key()
+AnimatedImage *Key::blueImage = NULL;
+AnimatedImage *Key::redImage = NULL;
+AnimatedImage *Key::greenImage = NULL;
+AnimatedImage *Key::yellowImage = NULL;
+AnimatedImage *Key::pinkImage = NULL;
+
+Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
+   : StaticObject(xpos, ypos, 1, 1),
+     active(active)
 {
-   Reset(false, 0, 0, acBlue);
-}
-
-void Key::Load()
-{
-   const int TEX_NAME_LEN = 128;
-   char buf[TEX_NAME_LEN];
-
-   OpenGL &opengl = OpenGL::GetInstance();
-   
-   uBlueArrow = opengl.LoadTextureAlpha(g_pData, "BlueArrow.bmp");
-   uRedArrow = opengl.LoadTextureAlpha(g_pData, "RedArrow.bmp");
-   uGreenArrow = opengl.LoadTextureAlpha(g_pData, "GreenArrow.bmp");
-   uYellowArrow = opengl.LoadTextureAlpha(g_pData, "YellowArrow.bmp");
-   uPinkArrow = opengl.LoadTextureAlpha(g_pData, "PinkArrow.bmp");
-      
-   for (int i = 0; i < KEY_FRAMES; i++) {
-      snprintf(buf, TEX_NAME_LEN, "keyblue%.2d.bmp", i);
-      uBlueKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-      
-      snprintf(buf, TEX_NAME_LEN, "keygreen%.2d.bmp", i);
-      uGreenKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-         
-      snprintf(buf, TEX_NAME_LEN, "keyred%.2d.bmp", i);
-      uRedKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-      
-      snprintf(buf, TEX_NAME_LEN, "keyyellow%.2d.bmp", i);
-      uYellowKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-      
-      snprintf(buf, TEX_NAME_LEN, "keypink%.2d.bmp", i);
-      uPinkKey[i] = opengl.LoadTextureAlpha(g_pData, buf);
-   }
-}
-
-void Key::Reset(bool active, int xpos, int ypos, ArrowColour acol)
-{
-   this->active = active;
-   this->xpos = xpos;
-   this->ypos = ypos;
-
-   if (active)
-      alpha = 1.0f;
-   else
-      alpha = 0.0f;
+   alpha = active ? 1.0 : 0.0;
 
    current = 0;
    rotcount = KEY_ROTATION_SPEED;
@@ -83,71 +45,56 @@ void Key::Reset(bool active, int xpos, int ypos, ArrowColour acol)
    switch (acol) {
    case acBlue:
       arrow.uTexture = uBlueArrow;
+      image = blueImage;
       break;
    case acRed:
       arrow.uTexture = uRedArrow;
+      image = redImage;
       break;
    case acYellow:
       arrow.uTexture = uYellowArrow;
+      image = yellowImage;
       break;
    case acPink:
       arrow.uTexture = uPinkArrow;
+      image = pinkImage;
       break;
    case acGreen:
       arrow.uTexture = uGreenArrow;
+      image = greenImage;
       break;
    }
+}
 
-   // Allocate frame images
-   for (int j = 0; j < KEY_FRAMES; j++) {
-      frame[j].width = OBJ_GRID_SIZE;
-      frame[j].height = OBJ_GRID_SIZE;
+void Key::Load()
+{
+   OpenGL &opengl = OpenGL::GetInstance();
 
-      switch (acol) {
-      case acBlue:
-         frame[j].uTexture = uBlueKey[j];
-         break;
-      case acRed:
-         frame[j].uTexture = uRedKey[j];
-         break;
-      case acYellow:
-         frame[j].uTexture = uYellowKey[j];
-         break;
-      case acPink:
-         frame[j].uTexture = uPinkKey[j];
-         break;
-      case acGreen:
-         frame[j].uTexture = uGreenKey[j];
-         break;
-      }
-   }
+   blueImage = new AnimatedImage("images/keyblue.png", 32, KEY_FRAMES);
+   redImage = new AnimatedImage("images/keyred.png", 32, KEY_FRAMES);
+   greenImage = new AnimatedImage("images/keygreen.png", 32, KEY_FRAMES);
+   yellowImage = new AnimatedImage("images/keyyellow.png", 32, KEY_FRAMES);
+   pinkImage = new AnimatedImage("images/keypink.png", 32, KEY_FRAMES);
+   
+   uBlueArrow = opengl.LoadTextureAlpha(g_pData, "BlueArrow.bmp");
+   uRedArrow = opengl.LoadTextureAlpha(g_pData, "RedArrow.bmp");
+   uGreenArrow = opengl.LoadTextureAlpha(g_pData, "GreenArrow.bmp");
+   uYellowArrow = opengl.LoadTextureAlpha(g_pData, "YellowArrow.bmp");
+   uPinkArrow = opengl.LoadTextureAlpha(g_pData, "PinkArrow.bmp");
 }
 
 void Key::DrawKey(Viewport *viewport)
 {
-   if (active) {
-      frame[current].x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
-      frame[current].y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;		
-      OpenGL::GetInstance().Draw(&frame[current]);
-      if (--rotcount == 0) {
-         if (++current == 18)
-            current = 0;
-         rotcount = KEY_ROTATION_SPEED;
-      }
+   int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
+   int draw_y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;
+   image->Draw(draw_x, draw_y, 0.0, 1.0, alpha);
+   if (--rotcount == 0) {
+      image->NextFrame();
+      rotcount = KEY_ROTATION_SPEED;
    }
-   else {
-      if (alpha > 0.0f) {
-         frame[current].x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
-         frame[current].y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;	
-         OpenGL::GetInstance().DrawBlend(&frame[current], alpha);
-         alpha -= 0.02f;
-         if (--rotcount == 0) {
-            if (++current == 18)
-               current = 0;
-            rotcount = KEY_ROTATION_SPEED;
-         }
-      }
-   }
+
+   if (!active && alpha > 0.0f)
+      alpha -= 0.02f;
 }
 
 void Key::DrawArrow(Viewport *viewport)

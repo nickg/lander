@@ -147,7 +147,9 @@ private:
     
    // Keys
    static const int MAX_KEYS = 5;
-   Key keys[MAX_KEYS];
+   typedef vector<Key> KeyList;
+   typedef KeyList::iterator KeyListIt;
+   KeyList keys;
    int nKeysRemaining, nKeys;
 
    // Asteroids

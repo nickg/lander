@@ -21,8 +21,8 @@
  * Defines a simplified polygon representing the ship.
  */
 const Point Ship::hotspots[] = {
-   {1, 31}, {1, 26}, {3, 14}, {15, 0}, 
-   {28, 14}, {30, 26}, {30, 31}, {16, 31} };
+   {2, 31}, {2, 26}, {4, 14}, {16, 0}, 
+   {29, 14}, {31, 26}, {31, 31}, {17, 31} };
 
 
 Ship::Ship(Viewport *v)

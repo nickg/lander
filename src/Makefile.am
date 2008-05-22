@@ -13,7 +13,7 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	LandingPad.cpp Surface.hpp Surface.cpp Mine.hpp Mine.cpp \
 	ElectricGate.hpp ElectricGate.cpp Key.hpp Key.cpp \
 	Mechanics.hpp Mechanics.cpp Geometry.hpp Image.hpp \
-	Image.cpp
+	Image.cpp AnimatedImage.hpp AnimatedImage.cpp
 
 dist_pkgdata_DATA = ../lander.dat ../Default_Font.ttf ../Hollow_Font.ttf
 
