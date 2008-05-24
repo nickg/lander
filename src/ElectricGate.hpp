@@ -27,8 +27,6 @@ class ElectricGate : public StaticObject {
 public:
    ElectricGate(Viewport *v, int length, bool vertical, int x, int y);
 
-   static void Load();
-
    bool CheckCollision(Ship &ship);
    void Draw();
    

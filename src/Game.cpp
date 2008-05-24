@@ -18,6 +18,7 @@
  */
 
 #include "Lander.hpp"
+#include "LoadOnce.hpp"
 
 /*
  * Constants affecting level generation.
@@ -59,7 +60,6 @@ Game::Game()
    : ship(&viewport),
      surface(&viewport),
      speedmeter(&ship),
-     hasloaded(false),
      state(gsNone),
      starImage("images/star.png")
 {
@@ -70,7 +70,7 @@ void Game::Load()
 {
    OpenGL &opengl = OpenGL::GetInstance();
 
-   if (!hasloaded) {
+   LOAD_ONCE {
       uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
       uLevComTexture = opengl.LoadTextureAlpha(g_pData, "LevelComplete.bmp");
       uSurf2Texture[0] = opengl.LoadTexture(g_pData, "GrassSurface2.bmp");
@@ -79,16 +79,6 @@ void Game::Load()
       uSurf2Texture[3] = opengl.LoadTexture(g_pData, "RedRockSurface2.bmp");
       uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
       uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
-      
-      LandingPad::Load();
-      Surface::Load();
-      Mine::Load();
-      ElectricGate::Load();
-      Key::Load();
-      FuelMeter::Load();
-      SpeedMeter::Load();
-      
-      hasloaded = true;
    }
 
    // Create the fade
@@ -767,15 +757,12 @@ Texture FuelMeter::uFuelMeterTexture, FuelMeter::uFuelBarTexture;
 FuelMeter::FuelMeter()
    : fuel(0), maxfuel(1)
 {
+   LOAD_ONCE {
+      OpenGL &opengl = OpenGL::GetInstance();
    
-}
-
-void FuelMeter::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-   
-   uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
-   uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
+      uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
+      uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
+   }
 }
 
 void FuelMeter::Display()
@@ -830,6 +817,10 @@ Texture SpeedMeter::uSpeedTexture;
 SpeedMeter::SpeedMeter(Ship *ship)
    : ship(ship)
 {
+   LOAD_ONCE {
+      uSpeedTexture = OpenGL::GetInstance().LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
+   }
+   
    border.x = 10;
    border.y = 40;
    border.width = 128;
@@ -842,11 +833,6 @@ SpeedMeter::SpeedMeter(Ship *ship)
    speedbar.red = 1.0f;
    speedbar.green = 0.0f;
    speedbar.blue = 0.0f;
-}
-
-void SpeedMeter::Load()
-{
-   uSpeedTexture = OpenGL::GetInstance().LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
 }
 
 void SpeedMeter::Display()

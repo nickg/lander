@@ -57,3 +57,11 @@ void AnimatedImage::NextFrame()
 {
    currFrame = (currFrame + 1) % frameCount;
 }
+
+void AnimatedImage::SetFrame(int f)
+{
+   if (f >= frameCount)
+      throw new runtime_error("SetFrame frame out of range");
+   else
+      currFrame = f;
+}

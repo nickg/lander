@@ -27,7 +27,9 @@ public:
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;
    void NextFrame();
+   void SetFrame(int f);
 
+   int GetFrame() const { return currFrame; }
    int GetWidth() const { return frameWidth; }
 private:
    int frameWidth, frameCount;

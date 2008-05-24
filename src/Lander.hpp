@@ -50,8 +50,6 @@ class FuelMeter {
 public:
    FuelMeter();
    
-   static void Load();
-
    void Display();
 
    void Refuel(int howmuch);
@@ -72,8 +70,6 @@ private:
 class SpeedMeter {
 public:
    SpeedMeter(Ship *ship);
-
-   static void Load();
 
    bool SafeLandingSpeed();
    void Display();
@@ -115,7 +111,7 @@ private:
    FuelMeter fuelmeter;
    SpeedMeter speedmeter;
    int death_timeout, level, lives;
-   bool hasloaded, bDebugMode;
+   bool bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
    TextureQuad fade, levcomp, smallship;
    int score, newscore, nextnewlife;

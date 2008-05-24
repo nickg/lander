@@ -28,8 +28,6 @@ public:
    Surface(Viewport *v);
    ~Surface();
 
-   static void Load();
-
    void Generate(int surftex, LandingPadList &pads);
    bool CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex);
    void Display();

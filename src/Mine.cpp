@@ -18,6 +18,7 @@
 #include "Mine.hpp"
 #include "OpenGL.hpp"
 #include "DataFile.hpp"
+#include "LoadOnce.hpp"
 
 extern DataFile *g_pData;
 
@@ -26,6 +27,17 @@ GLuint Mine::uMineTexture[Mine::MINE_FRAME_COUNT];
 Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
    : objgrid(o), viewport(v)
 {
+   LOAD_ONCE {
+      OpenGL &opengl = OpenGL::GetInstance();
+      const int TEX_NAME_LEN = 128;
+      char buf[TEX_NAME_LEN];
+      
+      for (int i = 0; i < MINE_FRAME_COUNT; i++) {
+         snprintf(buf, TEX_NAME_LEN, "mine%d.bmp", i*5);
+         uMineTexture[i] = opengl.LoadTextureAlpha(g_pData, buf);
+      }
+   }
+   
    current = 0;
    rotcount = MINE_ROTATION_SPEED;
    displace_x = 0;
@@ -49,18 +61,6 @@ Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
    objgrid->UnlockSpace(xpos + 1, ypos);
    objgrid->UnlockSpace(xpos + 1, ypos + 1);
    objgrid->UnlockSpace(xpos, ypos + 1);
-}
-
-void Mine::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-   const int TEX_NAME_LEN = 128;
-   char buf[TEX_NAME_LEN];
-   
-   for (int i = 0; i < MINE_FRAME_COUNT; i++) {
-      snprintf(buf, TEX_NAME_LEN, "mine%d.bmp", i*5);
-      uMineTexture[i] = opengl.LoadTextureAlpha(g_pData, buf);
-   }
 }
 
 void Mine::Move()

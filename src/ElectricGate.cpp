@@ -17,6 +17,7 @@
 
 #include "ElectricGate.hpp"
 #include "DataFile.hpp"
+#include "LoadOnce.hpp"
 
 extern DataFile *g_pData;
 
@@ -25,6 +26,11 @@ GLuint ElectricGate::uGatewayTexture = 0;
 ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
    : length(length), vertical(vertical), viewport(v)
 {
+   LOAD_ONCE {
+      OpenGL &opengl = OpenGL::GetInstance();
+      uGatewayTexture = opengl.LoadTextureAlpha(g_pData, "Gateway.bmp");
+   }
+   
    xpos = x;
    ypos = y;
    
@@ -32,12 +38,6 @@ ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
    icon.height = OBJ_GRID_SIZE;
    icon.uTexture = uGatewayTexture;
    timer = rand() % 70 + 10;
-}
-
-void ElectricGate::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-   uGatewayTexture = opengl.LoadTextureAlpha(g_pData, "Gateway.bmp");
 }
 
 bool ElectricGate::CheckCollision(Ship &ship)

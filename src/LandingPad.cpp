@@ -18,6 +18,7 @@
 #include "LandingPad.hpp"
 #include "DataFile.hpp"
 #include "Surface.hpp"
+#include "LoadOnce.hpp"
 
 extern DataFile *g_pData;
 
@@ -26,22 +27,18 @@ Texture LandingPad::s_landtex, LandingPad::s_nolandtex;
 LandingPad::LandingPad(Viewport *v, int index, int length)
    : viewport(v), index(index), length(length)
 {
+   LOAD_ONCE {
+      OpenGL &opengl = OpenGL::GetInstance();
+
+      s_landtex = opengl.LoadTextureAlpha(g_pData, "LandingPad.bmp");
+      s_nolandtex = opengl.LoadTextureAlpha(g_pData, "LandingPadRed.bmp");
+   }
+   
    quad.x = index * Surface::SURFACE_SIZE;
    quad.width = length * Surface::SURFACE_SIZE;
    quad.height = 16;
    quad.uTexture = s_landtex;
 }
-
-/*
- * Loads landing pad graphics.
- */
-void LandingPad::Load()
-{
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   s_landtex = opengl.LoadTextureAlpha(g_pData, "LandingPad.bmp");
-   s_nolandtex = opengl.LoadTextureAlpha(g_pData, "LandingPadRed.bmp");
-} 
 
 /*
  * Draws the landing pad in the current frame.

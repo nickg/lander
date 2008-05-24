@@ -26,8 +26,6 @@ class Mine : public StaticObject {
 public:
    Mine(ObjectGrid *o, Viewport *v, int x, int y);
 
-   static void Load();
-
    void Move();
    void Draw();
    bool CheckCollision(Ship &ship);

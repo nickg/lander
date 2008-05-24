@@ -25,9 +25,7 @@ class LandingPad
 {
 public:
    LandingPad(Viewport *v, int index, int length);
-	
-   static void Load();
-	
+
    void Draw(bool locked);
    void SetYPos(int ypos) { this->ypos = ypos; }
 	
