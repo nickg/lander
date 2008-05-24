@@ -21,6 +21,7 @@
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
 #include "Viewport.hpp"
+#include "AnimatedImage.hpp"
 
 class Mine : public StaticObject {
 public:
@@ -30,14 +31,12 @@ public:
    void Draw();
    bool CheckCollision(Ship &ship);
 
-   static const int MINE_FRAME_COUNT = 36;
+   static const int MINE_FRAME_COUNT = 18;
  
 private:
    static const int MINE_ROTATION_SPEED = 5;
    static const int MINE_MOVE_SPEED = 1;
    
-   static GLuint uMineTexture[MINE_FRAME_COUNT];
-
    enum Direction { dirUp, dirRight, dirDown, dirLeft, dirNone };
 
    ObjectGrid *objgrid;
@@ -45,7 +44,8 @@ private:
    Direction dir;
    int current, rotcount, movetimeout;
    int displace_x, displace_y, movedelay;
-   TextureQuad frame[MINE_FRAME_COUNT];
+
+   static AnimatedImage *image;
 };
 
 #endif

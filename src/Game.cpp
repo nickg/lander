@@ -515,7 +515,8 @@ void Game::StartLevel(int level)
    }
 
    // Create mines (MUST BE CREATED LAST)
-   int minecount = level/2 + rand()%level;
+   //int minecount = level/2 + rand()%level;
+   int minecount = 6;
    mines.clear();
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;

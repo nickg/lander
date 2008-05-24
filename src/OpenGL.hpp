@@ -127,6 +127,9 @@ public:
    void DisableBlending();
    void EnableDepthBuffer();
    void DisableDepthBuffer();
+
+   bool IsTextureSizeSupported(int width, int height, int ncols=4,
+                               GLenum format=GL_RGBA);
      	
    static const Texture INVALID_TEXTURE = 0xFFFFFFFF;
 

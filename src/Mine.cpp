@@ -17,25 +17,15 @@
 
 #include "Mine.hpp"
 #include "OpenGL.hpp"
-#include "DataFile.hpp"
 #include "LoadOnce.hpp"
 
-extern DataFile *g_pData;
-
-GLuint Mine::uMineTexture[Mine::MINE_FRAME_COUNT];
+AnimatedImage *Mine::image = NULL;
 
 Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
    : objgrid(o), viewport(v)
 {
    LOAD_ONCE {
-      OpenGL &opengl = OpenGL::GetInstance();
-      const int TEX_NAME_LEN = 128;
-      char buf[TEX_NAME_LEN];
-      
-      for (int i = 0; i < MINE_FRAME_COUNT; i++) {
-         snprintf(buf, TEX_NAME_LEN, "mine%d.bmp", i*5);
-         uMineTexture[i] = opengl.LoadTextureAlpha(g_pData, buf);
-      }
+      image = new AnimatedImage("images/mine.png", 64, MINE_FRAME_COUNT);
    }
    
    current = 0;
@@ -48,13 +38,6 @@ Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
 
    xpos = x;
    ypos = y;
-
-   // Allocate frame images
-   for (int j = 0; j < 36; j++) {
-      frame[j].width = OBJ_GRID_SIZE*2;
-      frame[j].height = OBJ_GRID_SIZE*2;
-      frame[j].uTexture = uMineTexture[j];
-   }
 
    // Free space on object grid
    objgrid->UnlockSpace(xpos, ypos);
@@ -159,14 +142,15 @@ bool Mine::CheckCollision(Ship &ship)
 
 void Mine::Draw()
 {
-   frame[current].x = xpos*OBJ_GRID_SIZE + displace_x
+   int draw_x = xpos*OBJ_GRID_SIZE + displace_x
       - viewport->GetXAdjust();
-   frame[current].y = ypos*OBJ_GRID_SIZE + displace_y
-      - viewport->GetYAdjust() + OBJ_GRID_TOP;		
-   OpenGL::GetInstance().Draw(&frame[current]);
+   int draw_y = ypos*OBJ_GRID_SIZE + displace_y
+      - viewport->GetYAdjust() + OBJ_GRID_TOP;
+   image->SetFrame(current);
+   image->Draw(draw_x, draw_y);
+   
    if (--rotcount == 0) {
-      if (++current == 18)
-         current = 0;
+      current = (current + 1) % MINE_FRAME_COUNT;
       rotcount = MINE_ROTATION_SPEED;
    }
 }

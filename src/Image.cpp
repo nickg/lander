@@ -16,6 +16,7 @@
  */
 
 #include "Image.hpp"
+#include "OpenGL.hpp"
 
 #include <SDL_image.h>
 
@@ -32,6 +33,9 @@ Image::Image(const char *file)
       cerr << "Warning: " << file << " width not a power of 2" << endl;
    if (!IsPowerOfTwo(surface->h))
       cerr << "Warning: " << file << " height not a power of 2" << endl;
+
+   if (!OpenGL::GetInstance().IsTextureSizeSupported(surface->w, surface->h))
+      cerr << "Warning: " << file << " bigger than max OpenGL texture" << endl;
 
    int ncols = surface->format->BytesPerPixel;
    GLenum texture_format;

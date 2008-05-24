@@ -404,6 +404,16 @@ GLuint OpenGL::LoadTexture(DataFile *p_data, const char *filename)
    return result;
 }
 
+bool OpenGL::IsTextureSizeSupported(int width, int height, int ncols, GLenum format)
+{
+   glTexImage2D(GL_PROXY_TEXTURE_2D, 0, ncols, width, height, 0, format,
+                GL_UNSIGNED_BYTE, NULL);
+   glGetTexLevelParameteriv(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+   glGetTexLevelParameteriv(GL_PROXY_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+
+   return height != 0 && width != 0;
+}
+
 bool OpenGL::InitGL()
 {
    // Set options
