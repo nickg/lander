@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-04-20 00:45+0100\n"
+"POT-Creation-Date: 2008-05-23 18:03+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -37,29 +37,29 @@ msgstr "Name?  %s"
 msgid "LUNAR  LANDER"
 msgstr "LUNAR  LANDER"
 
-#: src/Game.cpp:652
+#: src/Game.cpp:647
 msgid "Press  SPACE  to  continue"
 msgstr "Press  SPACE  to  continue"
 
-#: src/Game.cpp:708
+#: src/Game.cpp:707
 msgid "Land  now"
 msgstr "Land  now"
 
-#: src/Game.cpp:716
+#: src/Game.cpp:715
 #, c-format
 msgid "Score:  %d"
 msgstr "Score:  %d"
 
-#: src/Game.cpp:731
+#: src/Game.cpp:730
 #, c-format
 msgid "Level  %d"
 msgstr "Level  %d"
 
-#: src/Game.cpp:746
+#: src/Game.cpp:745
 msgid "Game Over"
 msgstr "Game Over"
 
-#: src/Game.cpp:756
+#: src/Game.cpp:755
 msgid "Paused"
 msgstr "Paused"
 
