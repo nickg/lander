@@ -41,10 +41,11 @@ private:
    static const int KEY_ROTATION_SPEED = 2;
    static const int ARROW_SIZE = 32;
    
-   int current, rotcount;
+   int rotcount;
    float alpha;
    bool active;
-   AnimatedImage *image, *arrow;
+   AnimatedImage *image;
+   Image *arrow;
 
    static AnimatedImage *blueImage, *redImage, *yellowImage,
       *pinkImage, *greenImage;

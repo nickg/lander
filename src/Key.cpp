@@ -17,13 +17,7 @@
 
 #include "Key.hpp"
 #include "OpenGL.hpp"
-#include "DataFile.hpp"
 #include "LoadOnce.hpp"
-
-extern DataFile *g_pData;
-
-GLuint Key::uBlueArrow, Key::uPinkArrow, Key::uRedArrow;
-GLuint Key::uYellowArrow, Key::uGreenArrow;
 
 AnimatedImage *Key::blueImage = NULL;
 AnimatedImage *Key::redImage = NULL;
@@ -42,8 +36,6 @@ Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
 {
    // Static initialisation
    LOAD_ONCE {
-      OpenGL &opengl = OpenGL::GetInstance();
-
       blueImage = new AnimatedImage("images/keyblue.png", 32, KEY_FRAMES);
       redImage = new AnimatedImage("images/keyred.png", 32, KEY_FRAMES);
       greenImage = new AnimatedImage("images/keygreen.png", 32, KEY_FRAMES);
@@ -55,41 +47,32 @@ Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
       greenArrow = new Image("images/arrowgreen.png");
       yellowArrow = new Image("images/arrowyellow.png");
       pinkArrow = new Image("images/arrowpink.png");
-      
-      uBlueArrow = opengl.LoadTextureAlpha(g_pData, "BlueArrow.bmp");
-      uRedArrow = opengl.LoadTextureAlpha(g_pData, "RedArrow.bmp");
-      uGreenArrow = opengl.LoadTextureAlpha(g_pData, "GreenArrow.bmp");
-      uYellowArrow = opengl.LoadTextureAlpha(g_pData, "YellowArrow.bmp");
-      uPinkArrow = opengl.LoadTextureAlpha(g_pData, "PinkArrow.bmp");
    }
    
    alpha = active ? 1.0 : 0.0;
 
-   current = 0;
    rotcount = KEY_ROTATION_SPEED;
 
    // Allocate arrow images
-   arrow.width = OBJ_GRID_SIZE;
-   arrow.height = OBJ_GRID_SIZE;
    switch (acol) {
    case acBlue:
-      arrow.uTexture = uBlueArrow;
+      arrow = blueArrow;
       image = blueImage;
       break;
    case acRed:
-      arrow.uTexture = uRedArrow;
+      arrow = redArrow;
       image = redImage;
       break;
    case acYellow:
-      arrow.uTexture = uYellowArrow;
+      arrow = yellowArrow;
       image = yellowImage;
       break;
    case acPink:
-      arrow.uTexture = uPinkArrow;
+      arrow = pinkArrow;
       image = pinkImage;
       break;
    case acGreen:
-      arrow.uTexture = uGreenArrow;
+      arrow = greenArrow;
       image = greenImage;
       break;
    }
@@ -135,11 +118,8 @@ void Key::DrawArrow(Viewport *viewport)
          ay = screenHeight - ARROW_SIZE;
          angle = 0;
       }
-      
-      arrow.x = ax;
-      arrow.y = ay;
-			
-      OpenGL::GetInstance().DrawRotate(&arrow, angle);
+
+      arrow->Draw(ax, ay, angle);
    }
 }
 
