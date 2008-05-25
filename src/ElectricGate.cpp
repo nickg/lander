@@ -22,14 +22,12 @@
 Image *ElectricGate::gateImage = NULL;
 
 ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
-   : length(length), vertical(vertical), viewport(v)
+   : length(length), vertical(vertical), viewport(v),
+     StaticObject(x, y)
 {
    LOAD_ONCE {
       gateImage = new Image("images/gateway.png");
    }
-   
-   xpos = x;
-   ypos = y;
    
    timer = rand() % 70 + 10;
 }

@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 #ifdef DEBUG_WINDOW 
    width = DEBUG_WIN_X;
    height = DEBUG_WIN_Y;
-   fullscreen = false;
+   fullscreen = true;
 #else
    // width = GetSystemMetrics(SM_CXSCREEN);
    // height = GetSystemMetrics(SM_CYSCREEN);
