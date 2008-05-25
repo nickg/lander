@@ -71,15 +71,14 @@ class SpeedMeter {
 public:
    SpeedMeter(Ship *ship);
 
-   bool SafeLandingSpeed();
+   bool SafeLandingSpeed() const;
    void Display();
 
 private:
-   static GLuint uSpeedTexture;
+   static Image *speedMeterImage;
 
    static const float LAND_SPEED;
    
-   TextureQuad border;
    ColourQuad speedbar;
    Ship *ship;
 };

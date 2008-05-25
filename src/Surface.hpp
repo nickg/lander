@@ -21,6 +21,7 @@
 #include "Texture.hpp"
 #include "Viewport.hpp"
 #include "LandingPad.hpp"
+#include "OpenGL.hpp"
 #include "Ship.hpp"
 
 class Surface {

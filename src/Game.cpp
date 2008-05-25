@@ -53,8 +53,6 @@ const float SpeedMeter::LAND_SPEED(2.0f);
 
 const int FuelMeter::FUELBAR_Y(15);
 
-extern DataFile *g_pData;
-
 
 Game::Game()
    : ship(&viewport),
@@ -789,19 +787,14 @@ bool FuelMeter::OutOfFuel() const
    return fuel <= 0;
 }
 
-GLuint SpeedMeter::uSpeedTexture;
+Image *SpeedMeter::speedMeterImage = NULL;
 
 SpeedMeter::SpeedMeter(Ship *ship)
    : ship(ship)
 {
    LOAD_ONCE {
-      uSpeedTexture = OpenGL::GetInstance().LoadTextureAlpha(g_pData, "SpeedMeter.bmp");
+      speedMeterImage = new Image("images/speedmeter.png");
    }
-   
-   border.x = 10;
-   border.y = 40;
-   border.width = 128;
-   border.height = 16;
 
    speedbar.x = 12;
    speedbar.y = 40;
@@ -826,13 +819,12 @@ void SpeedMeter::Display()
    speedbar.green = 1.0f - (float)width/124.0f;
    speedbar.width = width;
 
-   OpenGL &opengl = OpenGL::GetInstance();
-   opengl.Draw(&speedbar);
-   border.uTexture = uSpeedTexture;
-   opengl.Draw(&border);
+   OpenGL::GetInstance().Draw(&speedbar);
+
+   speedMeterImage->Draw(10, 40);
 }
 
-bool SpeedMeter::SafeLandingSpeed()
+bool SpeedMeter::SafeLandingSpeed() const
 {
    return ship->GetYSpeed() < LAND_SPEED;
 }

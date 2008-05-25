@@ -5,7 +5,7 @@ AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Bitmap.cpp Bitmap.hpp FreeType.cpp FreeType.hpp \
 	HighScores.cpp HighScores.hpp Input.cpp Input.hpp \
-	DataFile.cpp DataFile.hpp File.cpp File.hpp Platform.hpp \
+	File.cpp File.hpp Platform.hpp \
 	OpenGL.cpp OpenGL.hpp Menu.cpp Menu.hpp Emitter.cpp \
 	Emitter.hpp ScreenManager.cpp ScreenManager.hpp \
 	ObjectGrid.hpp ObjectGrid.cpp Asteroid.hpp Asteroid.cpp \
@@ -16,7 +16,7 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Image.cpp AnimatedImage.hpp AnimatedImage.cpp \
 	Texture.hpp Texture.cpp
 
-dist_pkgdata_DATA = ../lander.dat ../Default_Font.ttf ../Hollow_Font.ttf
+dist_pkgdata_DATA = ../Default_Font.ttf ../Hollow_Font.ttf
 
 localedir = $(datadir)/locale
 

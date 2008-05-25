@@ -19,6 +19,7 @@
 #define INC_LANDINGPAD_HPP
 
 #include "Viewport.hpp"
+#include "Texture.hpp"
 #include "OpenGL.hpp"
 
 class LandingPad
@@ -37,7 +38,7 @@ private:
    int index, length, ypos;
    Viewport *viewport;
    
-   static GLuint s_landtex, s_nolandtex;
+   static Texture *landTexture, *noLandTexture;
 };
 
 typedef vector<LandingPad> LandingPadList;

@@ -16,7 +16,6 @@
  */
 
 #include "ElectricGate.hpp"
-#include "DataFile.hpp"
 #include "LoadOnce.hpp"
 #include "OpenGL.hpp"
 

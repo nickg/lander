@@ -20,6 +20,7 @@
 #include "HighScores.hpp"
 #include "Input.hpp"
 #include "FreeType.hpp"
+#include "File.hpp"
 
 #include "Lander.hpp" // TODO: Remove
 

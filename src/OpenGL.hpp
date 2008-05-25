@@ -21,7 +21,6 @@
 #define INC_OPENGL_HPP
 
 #include "Platform.hpp"
-#include "DataFile.hpp"
 #include "FreeType.hpp"
 #include "Geometry.hpp"
 
@@ -93,11 +92,6 @@ public:
    void Run();
    void SkipDisplay();
    int GetFPS();
-
-   GLuint LoadTexture(const char *filename);
-   GLuint LoadTexture(DataFile *p_data, const char *filename);
-   GLuint LoadTextureAlpha(const char *filename);
-   GLuint LoadTextureAlpha(DataFile *p_data, const char *filename);
 
    void Viewport(int x, int y, int width, int height);
 

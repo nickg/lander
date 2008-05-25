@@ -21,7 +21,7 @@
 #define INC_EMITTER_HPP
 
 #include "Platform.hpp"
-#include "OpenGL.hpp"
+#include "Texture.hpp"
 
 #define MAX_PARTICLES 1024
 
@@ -29,48 +29,46 @@
 /*
  * A generic particle emitter.
  */
-class Emitter
-{
+class Emitter {
 public:
-	Emitter(int x, int y, float r, float g, float b, bool createnew=true, float deviation=0.0f, float xg=0.0f, float yg=0.0f,
-		float life=1.0f, float max_speed=10.0f, float size=2.0f, float slowdown=2.0f);
-	virtual ~Emitter() { }
+   Emitter(int x, int y, float r, float g, float b, bool createnew=true, float deviation=0.0f, float xg=0.0f, float yg=0.0f,
+           float life=1.0f, float max_speed=10.0f, float size=2.0f, float slowdown=2.0f);
+   virtual ~Emitter() { }
 
-	void Draw(float adjust_x=0.0f, float adjust_y=0.0f, bool bCreateNew=true, bool evolve=true);
-	void NewCluster(int x, int y);
-	void Reset();
-
-	virtual void ProcessEffect(int particle) { }
-
-	float partsize, r, g, b, deviation, xg, yg, life, maxspeed, flSize;
-	float xpos, ypos, slowdown, createrate;
-
+   void Draw(float adjust_x=0.0f, float adjust_y=0.0f, bool bCreateNew=true, bool evolve=true);
+   void NewCluster(int x, int y);
+   void Reset();
+   
+   virtual void ProcessEffect(int particle) { }
+   
+   float partsize, r, g, b, deviation, xg, yg, life, maxspeed, flSize;
+   float xpos, ypos, slowdown, createrate;
+   
 protected:
-	void NewParticle(int index);
+   void NewParticle(int index);
 
-	struct Particle 
-	{
-		bool active;
-		float life, fade;
-		float r, g, b;
-		float x, y;
-		float xi, yi;
-		float xg, yg;
-	} particle[MAX_PARTICLES];
-	GLuint uTexture;
+   struct Particle {
+      bool active;
+      float life, fade;
+      float r, g, b;
+      float x, y;
+      float xi, yi;
+      float xg, yg;
+   } particle[MAX_PARTICLES];
+
+   static Texture *texture;
 };
 
 
 /* 
  * A smoke trail.
  */
-class SmokeTrail : public Emitter
-{
+class SmokeTrail : public Emitter {
 public:
-	SmokeTrail();
-	virtual ~SmokeTrail() { }
-	
-	void ProcessEffect(int particle);
+   SmokeTrail();
+   virtual ~SmokeTrail() { }
+   
+   void ProcessEffect(int particle);
 private:
 };
 
@@ -78,13 +76,12 @@ private:
 /* 
  * An explosion.
  */
-class Explosion : public Emitter
-{
+class Explosion : public Emitter {
 public:
-	Explosion();
-	virtual ~Explosion() { }
-	
-	void ProcessEffect(int particle);
+   Explosion();
+   virtual ~Explosion() { }
+   
+   void ProcessEffect(int particle);
 private:
 };
 

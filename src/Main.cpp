@@ -18,12 +18,11 @@
  */
 
 #include "Lander.hpp"
+#include "File.hpp"
 
 #define DEBUG_WINDOW
 #define DEBUG_WIN_X 800
 #define DEBUG_WIN_Y 600
-
-DataFile *g_pData;
 
 #include <SDL_main.h>
 
@@ -39,7 +38,7 @@ int main(int argc, char **argv)
    bindtextdomain(PACKAGE, LOCALEDIR);
    textdomain(PACKAGE);
    
-   // Get current resolution from windows
+   // Get current resolution from Windows
 #ifdef DEBUG_WINDOW 
    width = DEBUG_WIN_X;
    height = DEBUG_WIN_Y;
@@ -63,9 +62,6 @@ int main(int argc, char **argv)
 #endif
 
    try {
-      // Open data file
-      g_pData = new DataFile(File::LocateResource("lander", "dat"));
-
       // Create the game window
       OpenGL &opengl = OpenGL::GetInstance();
       opengl.Init(width, height, depth, fullscreen);
@@ -97,9 +93,6 @@ int main(int argc, char **argv)
       delete mm;
       delete g;
       delete hs;
-
-      // Close data file
-      delete g_pData;
    }
    catch (std::runtime_error e) {
 #ifdef WIN32
