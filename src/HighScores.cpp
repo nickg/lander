@@ -23,9 +23,11 @@
 
 #include "Lander.hpp" // TODO: Remove
 
+HighScores::HighScores()
+   : hscoreImage("images/hscore.png")
+{
 
-extern DataFile *g_pData;
-
+}
 
 /*
  * Called just before the screen is to be displayed. Resets variables
@@ -33,22 +35,6 @@ extern DataFile *g_pData;
  */
 void HighScores::Load()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   // Load graphics
-   if (!hasloaded) {
-      uHighScore = opengl.LoadTextureAlpha(g_pData, "HighScore.bmp");
-
-      hasloaded = true;
-   }
-
-   // High score label
-   hscore.x = (opengl.GetWidth() - 512) / 2;
-   hscore.y = 50;
-   hscore.width = 512;
-   hscore.height = 64;
-   hscore.uTexture = uHighScore;
-
    // Set state
    state = hssDisplay;
 }
@@ -73,16 +59,15 @@ void HighScores::Process()
        
          // Go back to main menu
          fade = HS_FADE_OUT_SPEED;
-         for (i = 0; i < MAX_FIREWORKS; i++)
-            {
-               fw[i].em->maxspeed = 200;
-               fw[i].speed = 0;
-               fw[i].em->createrate = 2.0f;
-               fw[i].timeout = 5;
-               fw[i].em->life = 1.0f;
-               input.ResetKey(SDLK_RETURN);
-               input.ResetKey(SDLK_SPACE);
-            }
+         for (i = 0; i < MAX_FIREWORKS; i++) {
+            fw[i].em->maxspeed = 200;
+            fw[i].speed = 0;
+            fw[i].em->createrate = 2.0f;
+            fw[i].timeout = 5;
+            fw[i].em->life = 1.0f;
+            input.ResetKey(SDLK_RETURN);
+            input.ResetKey(SDLK_SPACE);
+         }
       }
    }
    else if (state == hssEnterName)	{
@@ -193,7 +178,10 @@ void HighScores::Display()
    // Draw other stuff
    const char *hsnext = i18n("Press  SPACE  or  FIRE  to  return");
    if (state == hssDisplay) {
-      opengl.DrawBlend(&hscore, flAlpha);
+      int title_x = (opengl.GetWidth() - hscoreImage.GetWidth()) / 2;
+      int title_y = 50;
+      hscoreImage.Draw(title_x, title_y, 0.0, 1.0, flAlpha);
+      
       opengl.Colour(0.0f, 0.5f, 1.0f, flAlpha);
       ft.Print
          (

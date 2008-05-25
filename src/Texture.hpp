@@ -1,4 +1,4 @@
-/*  LandingPad.hpp -- Where the player can land.
+/*  Texture.hpp -- Wrapper for OpenGL textures.
  *  Copyright (C) 2008  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,32 +15,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INC_LANDINGPAD_HPP
-#define INC_LANDINGPAD_HPP
+#ifndef INC_TEXTURE_HPP
+#define INC_TEXTURE_HPP
 
-#include "Viewport.hpp"
-#include "OpenGL.hpp"
+#include "Platform.hpp"
 
-class LandingPad
-{
+class Texture {
 public:
-   LandingPad(Viewport *v, int index, int length);
+   Texture(const char *file);
+   virtual ~Texture();
 
-   void Draw(bool locked);
-   void SetYPos(int ypos) { this->ypos = ypos; }
-	
-   int GetLength() const { return length; }
-   int GetIndex() const { return index; }
-
-private:
-   TextureQuad quad;
-   int index, length, ypos;
-   Viewport *viewport;
+   GLuint GetGLTexture() const { return texture; }
    
-   static GLuint s_landtex, s_nolandtex;
+   virtual int GetWidth() const { return width; }
+   virtual int GetHeight() const { return height; }
+   
+private:
+   GLuint texture;
+   int width, height;
+   
+   static bool IsPowerOfTwo(int n);
 };
-
-typedef vector<LandingPad> LandingPadList;
-typedef LandingPadList::iterator LandingPadListIt;
 
 #endif

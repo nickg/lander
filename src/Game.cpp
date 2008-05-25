@@ -61,44 +61,22 @@ Game::Game()
      surface(&viewport),
      speedmeter(&ship),
      state(gsNone),
-     starImage("images/star.png")
+     fadeTexture("images/fade.png"),
+     starImage("images/star.png"),
+     levelComp("images/levelcomp.png"),
+     smallShip("images/shipsmall.png")
 {
 
 }
 
 void Game::Load()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
-
-   LOAD_ONCE {
-      uFadeTexture = opengl.LoadTexture(g_pData, "Fade.bmp");
-      uLevComTexture = opengl.LoadTextureAlpha(g_pData, "LevelComplete.bmp");
-      uSurf2Texture[0] = opengl.LoadTexture(g_pData, "GrassSurface2.bmp");
-      uSurf2Texture[1] = opengl.LoadTexture(g_pData, "DirtSurface2.bmp");
-      uSurf2Texture[2] = opengl.LoadTexture(g_pData, "SnowSurface2.bmp");
-      uSurf2Texture[3] = opengl.LoadTexture(g_pData, "RedRockSurface2.bmp");
-      uSurf2Texture[4] = opengl.LoadTexture(g_pData, "RockSurface2.bmp");
-      uShipSmallTexture = opengl.LoadTextureAlpha(g_pData, "ShipSmall.bmp");
-   }
-
    // Create the fade
    fade.x = 0;
    fade.y = 0;
-   fade.width = opengl.GetWidth();
-   fade.height = opengl.GetHeight();
-   fade.uTexture = uFadeTexture;
-
-   // Create the level complete sign
-   levcomp.x = (opengl.GetWidth() - 512) / 2;
-   levcomp.y = (opengl.GetHeight() - 32) / 2 - 50;
-   levcomp.width = 512;
-   levcomp.height = 32;
-   levcomp.uTexture = uLevComTexture;
-
-   // Create the small ship icon
-   smallship.width = 32;
-   smallship.height = 32;
-   smallship.uTexture = uShipSmallTexture;
+   fade.width = OpenGL::GetInstance().GetWidth();
+   fade.height = OpenGL::GetInstance().GetHeight();
+   fade.uTexture = fadeTexture.GetGLTexture();
 
    starrotate = 0.0f;
    death_timeout = 0;
@@ -487,11 +465,11 @@ void Game::StartLevel(int level)
       }
       
       // Generate the asteroid
-      asteroids[i].ConstructAsteroid(x, y, width, uSurf2Texture[surftex]);			
+      asteroids[i].ConstructAsteroid(x, y, width, surftex);			
    }
    
    // Create gateways
-   int gatewaycount = level/2 + rand()%level - 2;
+   int gatewaycount = level/3 + rand()%level - 2;
    gateways.clear();
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
@@ -515,8 +493,7 @@ void Game::StartLevel(int level)
    }
 
    // Create mines (MUST BE CREATED LAST)
-   //int minecount = level/2 + rand()%level;
-   int minecount = 6;
+   int minecount = level/2 + rand()%level - 2;
    mines.clear();
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
@@ -660,23 +637,23 @@ void Game::Display()
 
    // Draw life icons
    for (int i = 0; i < lives; i++) {
-      smallship.x = 5 + i*30;
-      smallship.y = 60;
+      int draw_x = 5 + i*30;
+      int draw_y = 60;
       if (i == lives-1) {
          if (life_alpha > LIFE_ALPHA_BASE)
-            opengl.Draw(&smallship);
+            smallShip.Draw(draw_x, draw_y);
          else if (life_alpha < 0.0f) {
             // Decrement lives
             lives--;
             life_alpha = LIFE_ALPHA_BASE + 1.0f;
          }
          else {
-            opengl.DrawBlend(&smallship, life_alpha);
+            smallShip.Draw(draw_x, draw_y, 0.0, 1.0, life_alpha);
             life_alpha -= 0.03f;
          }
       }
       else
-         opengl.Draw(&smallship);
+         smallShip.Draw(draw_x, draw_y);
    }
    
    // Draw key icons
@@ -705,7 +682,10 @@ void Game::Display()
    // Draw level complete messages
    const char *scoretxt = i18n("Score:  %d");
    if (state == gsLevelComplete) {
-      opengl.Draw(&levcomp);
+      int lc_x = (opengl.GetWidth() - levelComp.GetWidth()) / 2;
+      int lc_y = (opengl.GetHeight() - levelComp.GetHeight()) / 2 - 50;
+      levelComp.Draw(lc_x, lc_y);
+         
       opengl.Colour(0.0f, 0.5f, 0.9f);
       ft.Print
          (ftBig,
@@ -753,16 +733,15 @@ void Game::Display()
    }
 }
 
-Texture FuelMeter::uFuelMeterTexture, FuelMeter::uFuelBarTexture;
+Image *FuelMeter::fuelMeterImage = NULL;
+Texture *FuelMeter::fuelBarTexture = NULL;
 
 FuelMeter::FuelMeter()
    : fuel(0), maxfuel(1)
 {
    LOAD_ONCE {
-      OpenGL &opengl = OpenGL::GetInstance();
-   
-      uFuelMeterTexture = opengl.LoadTextureAlpha(g_pData, "FuelMeter.bmp");
-      uFuelBarTexture = opengl.LoadTextureAlpha(g_pData, "FuelBar.bmp");
+      fuelMeterImage = new Image("images/fuelmeter.png");
+      fuelBarTexture = new Texture("images/fuelbar.png");
    }
 }
 
@@ -775,7 +754,7 @@ void FuelMeter::Display()
    opengl.EnableTexture();
    opengl.DisableBlending();
    opengl.Colour(1.0f, 1.0f, 1.0f);
-   opengl.SelectTexture(uFuelBarTexture);
+   opengl.SelectTexture(fuelBarTexture->GetGLTexture());
    glLoadIdentity();
    glBegin(GL_QUADS);
      glTexCoord2f(1.0f-texsize, 1.0f);
@@ -788,12 +767,9 @@ void FuelMeter::Display()
      glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y + 32);
    glEnd();
 
-   border.x = opengl.GetWidth() - 266;
-   border.y = FUELBAR_Y;
-   border.width = 256;
-   border.height = 32;
-   border.uTexture = uFuelMeterTexture;
-   opengl.Draw(&border);
+   int draw_x = opengl.GetWidth() - fuelMeterImage->GetWidth() - 10;
+   int draw_y = FUELBAR_Y;
+   fuelMeterImage->Draw(draw_x, draw_y);
 }
 
 void FuelMeter::Refuel(int howmuch)
@@ -813,7 +789,7 @@ bool FuelMeter::OutOfFuel() const
    return fuel <= 0;
 }
 
-Texture SpeedMeter::uSpeedTexture;
+GLuint SpeedMeter::uSpeedTexture;
 
 SpeedMeter::SpeedMeter(Ship *ship)
    : ship(ship)

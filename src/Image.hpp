@@ -19,24 +19,15 @@
 #define INC_IMAGE_HPP
 
 #include "Platform.hpp"
+#include "Texture.hpp"
 
-class Image {
+class Image : public Texture {
 public:
    Image(const char *file);
    virtual ~Image();
 
    virtual void Draw(int x, int y, double rotate=0.0, double scale=1.0,
                      double alpha=1.0, double white=1.0) const;
-
-   virtual int GetWidth() const { return width; }
-   virtual int GetHeight() const { return height; }
-  
-protected:
-   GLuint texture;
-   int width, height;
-
-private:
-   static bool IsPowerOfTwo(int n);
 };
 
 #endif

@@ -29,8 +29,6 @@
 #define FRAME_RATE 35
 #define PI 3.1415926535f
 
-typedef GLuint Texture;
-
 class Renderable {
 public:
    Renderable(int x, int y, int width, int height,
@@ -62,7 +60,7 @@ public:
                float r=1, float g=1, float b=1);
    void Render();
    
-   Texture uTexture;
+   GLuint uTexture;
 };
 
 
@@ -117,7 +115,7 @@ public:
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
 
-   void SelectTexture(Texture uTexture);
+   void SelectTexture(GLuint uTexture);
    void ClearColour(float r, float g, float b);
    void Colour(float r, float g, float b, float a=1.0f);
    
@@ -131,7 +129,7 @@ public:
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);
      	
-   static const Texture INVALID_TEXTURE = 0xFFFFFFFF;
+   static const GLuint INVALID_TEXTURE = 0xFFFFFFFF;
 
 private:
    OpenGL();

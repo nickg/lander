@@ -24,7 +24,6 @@
 #include "OpenGL.hpp" 
 #include "Emitter.hpp"
 #include "ScreenManager.hpp"
-#include "DataFile.hpp"
 #include "Input.hpp"
 
 #include "Menu.hpp"
@@ -59,7 +58,8 @@ public:
    int GetFuel() const { return fuel; }
    
 private:
-   static Texture uFuelMeterTexture, uFuelBarTexture;
+   static Image *fuelMeterImage;
+   static Texture *fuelBarTexture;
 
    static const int FUELBAR_Y;
    
@@ -75,7 +75,7 @@ public:
    void Display();
 
 private:
-   static Texture uSpeedTexture;
+   static GLuint uSpeedTexture;
 
    static const float LAND_SPEED;
    
@@ -113,7 +113,7 @@ private:
    int death_timeout, level, lives;
    bool bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
-   TextureQuad fade, levcomp, smallship;
+   TextureQuad fade;
    int score, newscore, nextnewlife;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
@@ -122,11 +122,9 @@ private:
                     gsPaused };
    GameState state;
 
-   // Textures
-   GLuint uSurf2Texture[Surface::NUM_SURF_TEX], uFadeTexture;
-   GLuint uLevComTexture;
-   GLuint uShipSmallTexture;
+   Texture fadeTexture;
 
+   Image levelComp, smallShip;
    Image starImage;
     
    // Stars

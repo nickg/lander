@@ -17,8 +17,22 @@
 
 #include "Asteroid.hpp"
 #include "OpenGL.hpp"
+#include "LoadOnce.hpp"
 
-void Asteroid::ConstructAsteroid(int x, int y, int width, Texture texture)
+Texture *Asteroid::surfTexture[Surface::NUM_SURF_TEX];
+
+Asteroid::Asteroid()
+{
+   LOAD_ONCE {
+      surfTexture[0] = new Texture("images/grass_surface2.png");
+      surfTexture[1] = new Texture("images/dirt_surface2.png");
+      surfTexture[2] = new Texture("images/snow_surface2.png");
+      surfTexture[3] = new Texture("images/red_rock_surface2.png");
+      surfTexture[4] = new Texture("images/rock_surface2.png");
+   }
+}
+
+void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
 {
    xpos = x;
    ypos = y;
@@ -35,7 +49,7 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, Texture texture)
       if (texloop++ == 10)
          texloop = 0;
       uppolys[i].pointcount = 4;
-      uppolys[i].uTexture = texture;
+      uppolys[i].uTexture = surfTexture[surftex]->GetGLTexture();
 
       // Lower left vertex
       uppolys[i].points[0].x = i * OBJ_GRID_SIZE;
@@ -73,7 +87,7 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, Texture texture)
       if (texloop++ == 10)
          texloop = 0;
       downpolys[i].pointcount = 4;
-      downpolys[i].uTexture = texture;
+      downpolys[i].uTexture = surfTexture[surftex]->GetGLTexture();
 
       // Upper left vertex
       downpolys[i].points[0].x = i * OBJ_GRID_SIZE;

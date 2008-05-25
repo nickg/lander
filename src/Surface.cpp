@@ -16,24 +16,19 @@
  */
 
 #include "Surface.hpp"
-#include "DataFile.hpp"
 #include "LoadOnce.hpp"
 
-extern DataFile *g_pData;
-
-GLuint Surface::uSurfaceTexture[Surface::NUM_SURF_TEX];
+Texture *Surface::surfTexture[Surface::NUM_SURF_TEX];
 
 Surface::Surface(Viewport *v)
    : surface(NULL), viewport(v)
 {
    LOAD_ONCE {
-      OpenGL &opengl = OpenGL::GetInstance();
-   
-      uSurfaceTexture[0] = opengl.LoadTexture(g_pData, "GrassSurface.bmp");
-      uSurfaceTexture[1] = opengl.LoadTexture(g_pData, "DirtSurface.bmp");
-      uSurfaceTexture[2] = opengl.LoadTexture(g_pData, "SnowSurface.bmp");
-      uSurfaceTexture[3] = opengl.LoadTexture(g_pData, "RedRockSurface.bmp");
-      uSurfaceTexture[4] = opengl.LoadTexture(g_pData, "RockSurface.bmp");   
+      surfTexture[0] = new Texture("images/grass_surface.png");
+      surfTexture[1] = new Texture("images/dirt_surface.png");
+      surfTexture[2] = new Texture("images/snow_surface.png");
+      surfTexture[3] = new Texture("images/red_rock_surface.png");
+      surfTexture[4] = new Texture("images/rock_surface.png");
    }
 }
 
@@ -56,7 +51,7 @@ void Surface::Generate(int surftex, LandingPadList &pads)
       surface[i].pointcount = 4;
       surface[i].xpos = i * SURFACE_SIZE;
       surface[i].ypos = viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT;
-      surface[i].uTexture = uSurfaceTexture[surftex];
+      surface[i].uTexture = surfTexture[surftex]->GetGLTexture();
       surface[i].texX = ((float)texloop)/10;
       if (texloop++ == 10)
          texloop = 0;

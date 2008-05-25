@@ -495,7 +495,7 @@ void OpenGL::SkipDisplay()
    dodisplay = false;
 }
 
-void OpenGL::SelectTexture(Texture uTexture)
+void OpenGL::SelectTexture(GLuint uTexture)
 {
    glBindTexture(GL_TEXTURE_2D, uTexture);
 }
@@ -576,7 +576,7 @@ void Renderable::ApplyColour(float alpha)
    glColor4f(red, green, blue, alpha);
 }
 
-TextureQuad::TextureQuad(int qx, int qy, int width, int height, Texture tex,
+TextureQuad::TextureQuad(int qx, int qy, int width, int height, GLuint tex,
                          float r, float g, float b)
    : Renderable(qx, qy, width, height, r, g, b), uTexture(tex)
 {

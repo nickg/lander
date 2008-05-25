@@ -19,9 +19,9 @@
 #define INC_ELECTRICGATE_HPP
 
 #include "ObjectGrid.hpp"
-#include "OpenGL.hpp"
 #include "Ship.hpp"
 #include "Viewport.hpp"
+#include "Image.hpp"
 
 class ElectricGate : public StaticObject {
 public:
@@ -35,10 +35,9 @@ private:
    
    int length, timer;
    bool vertical;
-   TextureQuad icon;
    Viewport *viewport;
 
-   static GLuint uGatewayTexture;
+   static Image *gateImage;
 };
 
 #endif

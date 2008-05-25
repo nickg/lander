@@ -22,7 +22,7 @@
 
 extern DataFile *g_pData;
 
-Texture LandingPad::s_landtex, LandingPad::s_nolandtex;
+GLuint LandingPad::s_landtex, LandingPad::s_nolandtex;
 
 LandingPad::LandingPad(Viewport *v, int index, int length)
    : viewport(v), index(index), length(length)

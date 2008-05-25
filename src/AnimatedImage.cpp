@@ -21,11 +21,11 @@ AnimatedImage::AnimatedImage(const char *file, int frameWidth, int frameCount)
    : Image(file), frameWidth(frameWidth), frameCount(frameCount)
 {
    if (frameCount == 0) {
-      if (width % frameWidth != 0) {
+      if (GetWidth() % frameWidth != 0) {
          cerr << "Warning: " << file << " with frame width " << frameWidth
               << " does not have whole number of frames" << endl;
       }
-      this->frameCount = width / frameWidth;
+      this->frameCount = GetWidth() / frameWidth;
    }
    currFrame = 0;
 }
@@ -33,9 +33,13 @@ AnimatedImage::AnimatedImage(const char *file, int frameWidth, int frameCount)
 void AnimatedImage::Draw(int x, int y, double rotate, double scale,
                          double alpha, double white) const
 {
+   int width = Texture::GetWidth();
+   int height = GetHeight();
+
+   //cout << width << endl;
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, texture);
+   glBindTexture(GL_TEXTURE_2D, GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + frameWidth/2), (double)(y + height/2), 0.0);
    glScaled(scale, scale, 0);

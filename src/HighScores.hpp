@@ -23,6 +23,7 @@
 #include "ScreenManager.hpp"
 #include "OpenGL.hpp"
 #include "Emitter.hpp"
+#include "Image.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f
@@ -70,7 +71,7 @@ private:
 
 class HighScores : public Screen {
 public:
-   HighScores() : hasloaded(false) { }
+   HighScores();
    virtual ~HighScores() { }
 	
    void Load();
@@ -85,17 +86,12 @@ private:
 	
    enum HighScoreState { hssDisplay, hssEnterName };
 	
-   bool hasloaded;
    int newscore;
-   TextureQuad hscore;
+   Image hscoreImage;
    float flAlpha, fade;
    HighScoreState state;
    ScoreFile scoreFile;
-   
-   GLuint uHighScore;
-	
-   
-	
+   	
    // Fireworks
    static const int MAX_FIREWORKS = 7;
    class Firework {

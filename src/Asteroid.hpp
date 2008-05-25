@@ -21,14 +21,16 @@
 #include "Platform.hpp"
 #include "ObjectGrid.hpp"
 #include "OpenGL.hpp"
+#include "Texture.hpp"
 #include "Ship.hpp"
+#include "Surface.hpp"
 
 class Asteroid : public StaticObject {
 public:
-   Asteroid() {}
+   Asteroid();
    ~Asteroid() {}
 	
-   void ConstructAsteroid(int x, int y, int width, Texture texture);
+   void ConstructAsteroid(int x, int y, int width, int surftex);
    void Draw(int viewadjust_x, int viewadjust_y);
    bool CheckCollision(Ship &ship);
    LineSegment GetUpBoundary(int poly);
@@ -38,6 +40,8 @@ public:
 	
 private:
    static const int AS_VARIANCE = 64;
+
+   static Texture *surfTexture[Surface::NUM_SURF_TEX];
    
    Poly uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
 };

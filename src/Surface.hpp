@@ -18,7 +18,7 @@
 #ifndef INC_SURFACE_HPP
 #define INC_SURFACE_HPP
 
-#include "OpenGL.hpp"
+#include "Texture.hpp"
 #include "Viewport.hpp"
 #include "LandingPad.hpp"
 #include "Ship.hpp"
@@ -38,7 +38,7 @@ public:
    static const int VARIANCE = 50;     // Bumpyness of landscape
    
 private:
-   static GLuint uSurfaceTexture[NUM_SURF_TEX];
+   static Texture *surfTexture[NUM_SURF_TEX];
    
    Viewport *viewport;
    Poly *surface;

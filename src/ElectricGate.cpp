@@ -18,25 +18,20 @@
 #include "ElectricGate.hpp"
 #include "DataFile.hpp"
 #include "LoadOnce.hpp"
+#include "OpenGL.hpp"
 
-extern DataFile *g_pData;
-
-GLuint ElectricGate::uGatewayTexture = 0;
+Image *ElectricGate::gateImage = NULL;
 
 ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
    : length(length), vertical(vertical), viewport(v)
 {
    LOAD_ONCE {
-      OpenGL &opengl = OpenGL::GetInstance();
-      uGatewayTexture = opengl.LoadTextureAlpha(g_pData, "Gateway.bmp");
+      gateImage = new Image("images/gateway.png");
    }
    
    xpos = x;
    ypos = y;
    
-   icon.width = OBJ_GRID_SIZE;
-   icon.height = OBJ_GRID_SIZE;
-   icon.uTexture = uGatewayTexture;
    timer = rand() % 70 + 10;
 }
 
@@ -73,20 +68,20 @@ void ElectricGate::Draw()
    OpenGL &opengl = OpenGL::GetInstance();
    
    // Draw first sphere
-   icon.x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
-   icon.y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
-   opengl.Draw(&icon);
+   int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
+   int draw_y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
+   gateImage->Draw(draw_x, draw_y);
 
    // Draw second sphere
    if (vertical) {
-      icon.x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
-      icon.y = (ypos+length)*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
+      draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
+      draw_y = (ypos+length)*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
    }
    else {
-      icon.x = (xpos+length)*OBJ_GRID_SIZE - viewport->GetXAdjust();
-      icon.y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
+      draw_x = (xpos+length)*OBJ_GRID_SIZE - viewport->GetXAdjust();
+      draw_y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
    }
-   opengl.Draw(&icon);
+   gateImage->Draw(draw_x, draw_y);
 
    // Draw the electricity stuff
    if (--timer < GATEWAY_ACTIVE) { 

@@ -18,73 +18,26 @@
 #include "Image.hpp"
 #include "OpenGL.hpp"
 
-#include <SDL_image.h>
-
 Image::Image(const char *file)
+   : Texture(file)
 {
-   SDL_Surface *surface = IMG_Load(LocateResource(file));
-   if (NULL == surface) {
-      ostringstream os;
-      os << "Failed to load image: " << IMG_GetError();
-      throw runtime_error(os.str());
-   }
-
-   if (!IsPowerOfTwo(surface->w))
-      cerr << "Warning: " << file << " width not a power of 2" << endl;
-   if (!IsPowerOfTwo(surface->h))
-      cerr << "Warning: " << file << " height not a power of 2" << endl;
-
-   if (!OpenGL::GetInstance().IsTextureSizeSupported(surface->w, surface->h))
-      cerr << "Warning: " << file << " bigger than max OpenGL texture" << endl;
-
-   int ncols = surface->format->BytesPerPixel;
-   GLenum texture_format;
-   if (ncols == 4) {
-      // Contains an alpha channel
-      if (surface->format->Rmask == 0x000000ff)
-         texture_format = GL_RGBA;
-      else
-         texture_format = GL_BGRA;
-   }
-   else if (ncols == 3) {
-      if (surface->format->Rmask == 0x000000ff)
-         texture_format = GL_RGB;
-      else
-         texture_format = GL_BGR;
-   }
-   else {
-      ostringstream os;
-      os << "Unsupported image colour format: " << file;
-      throw runtime_error(os.str());
-   }
-
-   width = surface->w;
-   height = surface->h;
-
-   glGenTextures(1, &texture);
-   glBindTexture(GL_TEXTURE_2D, texture);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   // Load the surface's data into the texture
-   glTexImage2D(GL_TEXTURE_2D, 0, ncols, surface->w, surface->h, 0,
-                texture_format, GL_UNSIGNED_BYTE, surface->pixels);
-
-   SDL_FreeSurface(surface);
+   
 }
 
 Image::~Image()
 {
-   glDeleteTextures(1, &texture);
+   
 }
 
 void Image::Draw(int x, int y, double rotate, double scale,
                  double alpha, double white) const
 {
+   int width = GetWidth();
+   int height = GetHeight();
+   
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, texture);
+   glBindTexture(GL_TEXTURE_2D, GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + width/2), (double)(y + height/2), 0.0);
    glScaled(scale, scale, 0);
@@ -98,14 +51,3 @@ void Image::Draw(int x, int y, double rotate, double scale,
    glEnd();
 }
 
-bool Image::IsPowerOfTwo(int n)
-{
-   int pop = 0;
-   for (unsigned i = 0, bit = 1;
-        i < sizeof(int)*8;
-        i++, bit <<= 1) {
-      if (n & bit)
-         pop++;
-   }
-   return pop == 1;
-}
