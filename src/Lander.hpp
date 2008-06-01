@@ -40,7 +40,7 @@
 #include "Key.hpp"
 
 // Different fonts to be loaded
-enum FontType { ftNormal, ftBig, ftScore, ftHollow, ftScoreName, ftLarge };
+enum FontType { ftNormal, ftBig, ftScore, ftScoreName, ftLarge };
 
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
@@ -124,7 +124,7 @@ private:
    Texture fadeTexture;
 
    Image levelComp, smallShip;
-   Image starImage;
+   Image starImage, gameOver;
     
    // Stars
    static const int MAX_GAME_STARS = 2048;

@@ -12,6 +12,8 @@ EXTRA_DIST = images/ship.png images/star.png images/start_option.png \
 	images/snow_surface2.png images/dirt_surface2.png \
 	images/grass_surface2.png images/fade.png images/fuelmeter.png \
 	images/fuelbar.png images/speedmeter.png images/particle.png \
-	images/landingpad.png images/landingpadred.png
+	images/landingpad.png images/landingpadred.png images/title.png \
+	images/gameover.png \
+	Default_Font.ttf
 
 nobase_dist_pkgdata_DATA = $(EXTRA_DIST)

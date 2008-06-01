@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 #ifdef DEBUG_WINDOW 
    width = DEBUG_WIN_X;
    height = DEBUG_WIN_Y;
-   fullscreen = true;
+   fullscreen = false;
 #else
    // width = GetSystemMetrics(SM_CXSCREEN);
    // height = GetSystemMetrics(SM_CYSCREEN);
@@ -81,7 +81,6 @@ int main(int argc, char **argv)
       ft.LoadFont(ftNormal, File::LocateResource("Default_Font", "ttf"), 11);
       ft.LoadFont(ftBig, File::LocateResource("Default_Font", "ttf"), 20);
       ft.LoadFont(ftScore, File::LocateResource("Default_Font", "ttf"), 16);
-      ft.LoadFont(ftHollow, File::LocateResource("Hollow_Font", "ttf"), 40);
       ft.LoadFont(ftScoreName, File::LocateResource("Default_Font", "ttf"), 14);
       ft.LoadFont(ftLarge, File::LocateResource("Default_Font", "ttf"), 15);
       

@@ -16,8 +16,6 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Image.cpp AnimatedImage.hpp AnimatedImage.cpp \
 	Texture.hpp Texture.cpp
 
-dist_pkgdata_DATA = ../Default_Font.ttf ../Hollow_Font.ttf
-
 localedir = $(datadir)/locale
 
 # Add -DSHOW_FPS here to show FPS in title bar

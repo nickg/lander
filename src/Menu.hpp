@@ -75,6 +75,7 @@ private:
    SelOption selOption;
    double fade, bigness;
    MenuState state;
+   Image titleImage;
 	
    int hint_timeout, hintidx;
 

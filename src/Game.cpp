@@ -62,7 +62,8 @@ Game::Game()
      fadeTexture("images/fade.png"),
      starImage("images/star.png"),
      levelComp("images/levelcomp.png"),
-     smallShip("images/shipsmall.png")
+     smallShip("images/shipsmall.png"),
+     gameOver("images/gameover.png")
 {
 
 }
@@ -710,13 +711,9 @@ void Game::Display()
 
    // Draw game over message
    if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
-      opengl.Colour(0.9f, 0.0f, 0.0f);
-      const char *sgo = i18n("Game Over");
-      ft.Print
-         (ftHollow,
-          (opengl.GetWidth() - ft.GetStringWidth(ftHollow, sgo) - 20)/2,
-          (opengl.GetHeight() - 150)/2,
-          sgo);
+      int draw_x = (opengl.GetWidth() - gameOver.GetWidth()) / 2;
+      int draw_y = (opengl.GetHeight() - 150)/2;
+      gameOver.Draw(draw_x, draw_y);
    }
 
    // Draw paused message

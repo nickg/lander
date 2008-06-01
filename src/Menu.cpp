@@ -42,7 +42,8 @@ MainMenu::MainMenu()
    : startOpt("images/start_option.png", OPTIONS_OFFSET, 0),
      scoreOpt("images/score_option.png", OPTIONS_OFFSET, 1),
      optionsOpt("images/options_option.png", OPTIONS_OFFSET, 2),
-     exitOpt("images/exit_option.png", OPTIONS_OFFSET, 3)
+     exitOpt("images/exit_option.png", OPTIONS_OFFSET, 3),
+     titleImage("images/title.png")
 {
    
 }
@@ -213,9 +214,8 @@ void MainMenu::Display()
    OpenGL &opengl = OpenGL::GetInstance();
 
 
-   for (StarListIt it = stars.begin(); it != stars.end(); ++it) {
+   for (StarListIt it = stars.begin(); it != stars.end(); ++it)
       (*it).Display();
-   }
    
    // Draw logo and menu items
    startOpt.Display(selOption == optStart, bigness, fade);
@@ -225,19 +225,23 @@ void MainMenu::Display()
 
    FreeType &ft = FreeType::GetInstance();
 
-   opengl.Colour(0.0f, 1.0f, 0.0f, fade);
-   const char *stitle = i18n("LUNAR  LANDER");
-   ft.Print(ftHollow, (opengl.GetWidth() - ft.GetStringWidth(ftHollow, stitle))/2, 100, stitle);	
+   int title_x = (opengl.GetWidth() - titleImage.GetWidth()) / 2;
+   int title_y = 100;
+   titleImage.Draw(title_x, title_y, 0.0, 1.0, fade);
+   
    // Draw some hint texts
    const int numhints = 7;
    const char *hints[][2] = {
-      { "Use the arrow keys to rotate the ship", "" },
-      { "Press the up arrow to fire the thruster", "" },
-      { "Smaller landing pads give you more points", "" },
-      { "Press P to pause the game", "" },
-      { "Press escape to self destruct", "" },
-      { "You can only land safely when the", "speed bar is green" },
-      { "Collect the spinning rings to", "unlock the landing pads" }
+      { i18n("Use the arrow keys to rotate the ship"), "" },
+      { i18n("Press the up arrow to fire the thruster"), "" },
+      { i18n("Smaller landing pads give you more points"), "" },
+      { i18n("Press P to pause the game"), "" },
+      { i18n("Press escape to self destruct"), "" },
+      // TODO: automatically split text into multiple lines
+      { i18n("You can only land safely when the"),
+        i18n("speed bar is green") },
+      { i18n("Collect the spinning rings to"),
+        i18n("unlock the landing pads") }
    };
 
    if (hint_timeout == 0) {
@@ -246,7 +250,8 @@ void MainMenu::Display()
    }
    else
       hint_timeout--;
-   
+
+   opengl.Colour(0.0f, 1.0f, 0.0f, fade);   
    ft.Print(ftNormal,
             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][0])) / 2,
             opengl.GetHeight() - 120,
