@@ -32,6 +32,7 @@ class Renderable {
 public:
    Renderable(int x, int y, int width, int height,
               float r, float g, float b);
+   virtual ~Renderable() {}
    
    virtual void Render() = 0;
 

@@ -5,7 +5,7 @@ AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	Bitmap.cpp Bitmap.hpp FreeType.cpp FreeType.hpp \
 	HighScores.cpp HighScores.hpp Input.cpp Input.hpp \
-	File.cpp File.hpp Platform.hpp \
+	File.cpp File.hpp Platform.hpp LoadOnce.hpp \
 	OpenGL.cpp OpenGL.hpp Menu.cpp Menu.hpp Emitter.cpp \
 	Emitter.hpp ScreenManager.cpp ScreenManager.hpp \
 	ObjectGrid.hpp ObjectGrid.cpp Asteroid.hpp Asteroid.cpp \

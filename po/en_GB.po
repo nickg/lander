@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-05-23 18:03+0100\n"
+"POT-Creation-Date: 2008-06-04 12:05+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -16,54 +16,88 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/HighScores.cpp:194
+#: src/HighScores.cpp:180
 msgid "Press  SPACE  or  FIRE  to  return"
 msgstr "Press  SPACE  or  FIRE  to  return"
 
-#: src/HighScores.cpp:209
+#: src/HighScores.cpp:198
 msgid "Well  done  -  You  got  a  high  score"
 msgstr "Well  done  -  You  got  a  high  score"
 
-#: src/HighScores.cpp:219
+#: src/HighScores.cpp:208
 msgid "Press  ENTER  or  FIRE  to  continue"
 msgstr "Press  ENTER  or  FIRE  to  continue"
 
-#: src/HighScores.cpp:228
+#: src/HighScores.cpp:217
 #, c-format
 msgid "Name?  %s"
 msgstr "Name?  %s"
 
-#: src/Menu.cpp:229
-msgid "LUNAR  LANDER"
-msgstr "LUNAR  LANDER"
+#: src/Menu.cpp:235
+msgid "Use the arrow keys to rotate the ship"
+msgstr ""
 
-#: src/Game.cpp:647
+#: src/Menu.cpp:236
+msgid "Press the up arrow to fire the thruster"
+msgstr ""
+
+#: src/Menu.cpp:237
+msgid "Smaller landing pads give you more points"
+msgstr ""
+
+#: src/Menu.cpp:238
+msgid "Press P to pause the game"
+msgstr ""
+
+#: src/Menu.cpp:239
+msgid "Press escape to self destruct"
+msgstr ""
+
+#: src/Menu.cpp:241
+msgid "You can only land safely when the"
+msgstr ""
+
+#: src/Menu.cpp:242
+msgid "speed bar is green"
+msgstr ""
+
+#: src/Menu.cpp:243
+msgid "Collect the spinning rings to"
+msgstr ""
+
+#: src/Menu.cpp:244
+msgid "unlock the landing pads"
+msgstr ""
+
+#: src/Game.cpp:614
 msgid "Press  SPACE  to  continue"
 msgstr "Press  SPACE  to  continue"
 
-#: src/Game.cpp:707
+#: src/Game.cpp:674
 msgid "Land  now"
 msgstr "Land  now"
 
-#: src/Game.cpp:715
+#: src/Game.cpp:682
 #, c-format
 msgid "Score:  %d"
 msgstr "Score:  %d"
 
-#: src/Game.cpp:730
+#: src/Game.cpp:700
 #, c-format
 msgid "Level  %d"
 msgstr "Level  %d"
 
-#: src/Game.cpp:745
-msgid "Game Over"
-msgstr "Game Over"
-
-#: src/Game.cpp:755
+#: src/Game.cpp:721
 msgid "Paused"
 msgstr "Paused"
 
-#: src/Main.cpp:108
+#: src/Main.cpp:100
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr "Runtime Error: %s\n"
+
+#~ msgid "LUNAR  LANDER"
+#~ msgstr "LUNAR  LANDER"
+
+#~ msgid "Game Over"
+#~ msgstr "Game Over"

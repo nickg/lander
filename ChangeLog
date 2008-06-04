@@ -1,3 +1,7 @@
+2008-04-04  Nick Gasson  <nick@nickg.me.uk>
+	
+	* src/Makefile.am: Add LoadOnce.hpp missing from dist.
+
 2008-04-18  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add po.
