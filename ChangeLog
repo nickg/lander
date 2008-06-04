@@ -2,6 +2,8 @@
 	
 	* src/Makefile.am: Add LoadOnce.hpp missing from dist.
 
+	* src/OpenGL.hpp: Add virtual destructors.
+	
 2008-04-18  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add po.
