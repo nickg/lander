@@ -76,14 +76,6 @@ int main(int argc, char **argv)
       sm.AddScreen("GAME", g);
       sm.AddScreen("HIGH SCORES", hs);
 
-      // Load fonts
-      /*FreeType &ft = FreeType::GetInstance();
-      ft.LoadFont(ftNormal, File::LocateResource("Default_Font", "ttf"), 11);
-      ft.LoadFont(ftBig, File::LocateResource("Default_Font", "ttf"), 20);
-      ft.LoadFont(ftScore, File::LocateResource("Default_Font", "ttf"), 16);
-      ft.LoadFont(ftScoreName, File::LocateResource("Default_Font", "ttf"), 14);
-      ft.LoadFont(ftLarge, File::LocateResource("Default_Font", "ttf"), 15);*/
-      
       // Run the game
       sm.SelectScreen("MAIN MENU");
       opengl.Run();

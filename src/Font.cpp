@@ -31,6 +31,8 @@ Font::Font(string filename, unsigned int h)
 
    unsigned char i;
 
+   buf = new char[MAX_TXT_BUF];
+
    // Allocate memory for textures
    textures = new GLuint[128];
    height = (float)h;
@@ -61,6 +63,7 @@ Font::~Font()
    glDeleteTextures(128, textures);
    delete[] textures;
    delete[] widths;
+   delete[] buf;
    
    if (--fontRefCount == 0) {
       FT_Done_FreeType(library);
@@ -109,7 +112,9 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    for (j = 0; j < height; j++) {
       for (i = 0; i < width; i++) {
          expandedData[2*(i+j*width)] = expandedData[2*(i+j*width)+1] = 
-            (i >= bitmap.width || j >= bitmap.rows) ? 0 : bitmap.buffer[i + bitmap.width*j];
+            (i >= bitmap.width || j >= bitmap.rows)
+            ? 0
+            : bitmap.buffer[i + bitmap.width*j];
       }
    }
 	
@@ -159,30 +164,15 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    glEndList();
 }
 
-void Font::Print(int x, int y, const char *fmt, ...)
+void Font::SplitIntoLines(vector<string> &lines, const char *fmt, va_list ap)
 {
-   vector<string> lines;
-   
-   // Store the current matrix
-   glPushMatrix();
-
-   GLuint font = listBase;
-   float h = height / 0.63f;		// Add some space between lines  
-   const int MAX_TEXT_LEN = 256;
-   char text[MAX_TEXT_LEN];
-   va_list ap;
-
    if (fmt == NULL)
-      *text=0;
-   else {
-      va_start(ap, fmt);
-      vsnprintf(text, MAX_TEXT_LEN, fmt, ap);
-      va_end(ap);
-   }
-
-   // Split text into lines - based on NeHe code
-   const char *start_line = text, *c;
-   for (c = text; *c; c++)	{
+      *buf = 0;
+   else
+      vsnprintf(buf, MAX_TXT_BUF, fmt, ap);
+   
+   const char *start_line = buf, *c;
+   for (c = buf; *c; c++)	{
       if (*c == '\n')	{
          string line;
          for (const char *n = start_line; n < c; n++) 
@@ -198,6 +188,21 @@ void Font::Print(int x, int y, const char *fmt, ...)
          line.append(1, *n);
       lines.push_back(line);
    }
+}
+
+void Font::Print(int x, int y, const char *fmt, ...)
+{
+   // Store the current matrix
+   glPushMatrix();
+
+   GLuint font = listBase;
+   float h = height / 0.63f;		// Add some space between lines  
+
+   vector<string> lines;
+   va_list ap;
+   va_start(ap, fmt);
+   SplitIntoLines(lines, fmt, ap);
+   va_end(ap);
 
    // Set attributes
    glEnable(GL_TEXTURE_2D);
@@ -221,12 +226,25 @@ void Font::Print(int x, int y, const char *fmt, ...)
    glPopMatrix();
 }
 
-int Font::GetStringWidth(const char *s)
+int Font::GetStringWidth(const char *fmt, ...)
 {
-   size_t i = strlen(s);
-   int result = 0;
-   while (i--)
-      result += widths[s[i]];
+   va_list ap;
+   vector<string> lines;
 
-   return result;
+   va_start(ap, fmt);
+   SplitIntoLines(lines, fmt, ap);
+   va_end(ap);
+
+   int maxlen = 0;
+   vector<string>::iterator it;
+   for (it = lines.begin(); it != lines.end(); ++it) {
+      int len = 0;
+      for (string::iterator ch = (*it).begin(); ch != (*it).end(); ++ch)
+         len += widths[*ch];
+      
+      if (len > maxlen)
+         maxlen = len;
+   }
+
+   return maxlen;
 }

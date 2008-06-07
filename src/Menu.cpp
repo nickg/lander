@@ -230,17 +230,14 @@ void MainMenu::Display()
    
    // Draw some hint texts
    const int numhints = 7;
-   const char *hints[][2] = {
-      { i18n("Use the arrow keys to rotate the ship"), "" },
-      { i18n("Press the up arrow to fire the thruster"), "" },
-      { i18n("Smaller landing pads give you more points"), "" },
-      { i18n("Press P to pause the game"), "" },
-      { i18n("Press escape to self destruct"), "" },
-      // TODO: automatically split text into multiple lines
-      { i18n("You can only land safely when the"),
-        i18n("speed bar is green") },
-      { i18n("Collect the spinning rings to"),
-        i18n("unlock the landing pads") }
+   const char *hints[] = {
+      i18n("Use the arrow keys to rotate the ship"),
+      i18n("Press the up arrow to fire the thruster"),
+      i18n("Smaller landing pads give you more points"),
+      i18n("Press P to pause the game"),
+      i18n("Press escape to self destruct"),
+      i18n("You can only land safely when then speed bar is green"),
+      i18n("Collect the spinning rings to unlock the landing pads")
    };
 
    if (hint_timeout == 0) {
@@ -251,18 +248,9 @@ void MainMenu::Display()
       hint_timeout--;
 
    glColor4d(0.0, 1.0, 0.0, fade);
-   hintFont.Print(0, opengl.GetHeight() - 120, hints[hintidx][0]);
-   
-   /*
-   opengl.Colour(0.0f, 1.0f, 0.0f, fade);   
-   ft.Print(ftNormal,
-            (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][0])) / 2,
-            opengl.GetHeight() - 120,
-            hints[hintidx][0]);
-   ft.Print(ftNormal,
-            (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][1])) / 2,
-            opengl.GetHeight() - 100,
-            hints[hintidx][1]);*/
+   int x = (opengl.GetWidth() - hintFont.GetStringWidth(hints[hintidx])) / 2;
+   int y = opengl.GetHeight() - 120;
+   hintFont.Print(x, y, hints[hintidx]);
 }
 
 double MenuStar::starRotate = 0.0;
