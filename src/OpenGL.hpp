@@ -21,7 +21,6 @@
 #define INC_OPENGL_HPP
 
 #include "Platform.hpp"
-#include "FreeType.hpp"
 #include "Geometry.hpp"
 
 #define WINDOW_TITLE "Lunar Lander"

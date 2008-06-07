@@ -23,7 +23,7 @@
 #include "ScreenManager.hpp"
 #include "Mechanics.hpp"
 #include "Image.hpp"
-#include "FreeType.hpp"
+#include "Font.hpp"
 
 
 class MenuStar {

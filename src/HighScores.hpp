@@ -24,6 +24,7 @@
 #include "OpenGL.hpp"
 #include "Emitter.hpp"
 #include "Image.hpp"
+#include "Font.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f
@@ -66,7 +67,7 @@ private:
    bool needsWrite;
    typedef vector<ScoreEntry> ScoreEntryVec;
    typedef ScoreEntryVec::iterator ScoreEntryVecIt; 
-   ScoreEntryVec scores; 
+   ScoreEntryVec scores;;
 };
 
 class HighScores : public Screen {
@@ -91,6 +92,7 @@ private:
    float flAlpha, fade;
    HighScoreState state;
    ScoreFile scoreFile;
+   Font largeFont, scoreNameFont;
    	
    // Fireworks
    static const int MAX_FIREWORKS = 7;

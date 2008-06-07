@@ -25,6 +25,7 @@
 #include "Emitter.hpp"
 #include "ScreenManager.hpp"
 #include "Input.hpp"
+#include "Font.hpp"
 
 #include "Menu.hpp"
 #include "HighScores.hpp"
@@ -125,6 +126,8 @@ private:
 
    Image levelComp, smallShip;
    Image starImage, gameOver;
+
+   Font normalFont, scoreFont, bigFont;
     
    // Stars
    static const int MAX_GAME_STARS = 2048;

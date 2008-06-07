@@ -19,13 +19,13 @@
 
 #include "HighScores.hpp"
 #include "Input.hpp"
-#include "FreeType.hpp"
 #include "File.hpp"
 
-#include "Lander.hpp" // TODO: Remove
 
 HighScores::HighScores()
-   : hscoreImage("images/hscore.png")
+   : hscoreImage("images/hscore.png"),
+     largeFont(LocateResource("Default_Font.ttf"), 15),
+     scoreNameFont(LocateResource("Default_Font.ttf"), 14)
 {
 
 }
@@ -154,7 +154,6 @@ void HighScores::Process()
 void HighScores::Display()
 {
    OpenGL &opengl = OpenGL::GetInstance();
-   FreeType &ft = FreeType::GetInstance();
 
    // Draw the fireworks
    for (int i = 0; i < MAX_FIREWORKS; i++)	{
@@ -169,64 +168,46 @@ void HighScores::Display()
       int x = (opengl.GetWidth() - 280) / 2;
       int y = (opengl.GetHeight() - 250) / 2;
 
-      opengl.Colour(0.0f, 1.0f, 0.0f, flAlpha);
+      glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
       for (int i = 0; i < 10; i++) {
-         ft.Print(ftScoreName, x, y + 22*i, "%s", scoreFile[i].GetName());
-         ft.Print(ftScoreName, x + 230, y + 22*i, "%d", scoreFile[i].GetScore());
+         scoreNameFont.Print(x, y + 22*i, scoreFile[i].GetName());
+         scoreNameFont.Print(x + 230, y + 22*i, "%d", scoreFile[i].GetScore());
       }	
    }
 
    // Draw other stuff
-   const char *hsnext = i18n("Press  SPACE  or  FIRE  to  return");
+   const char *hsnext = i18n("Press SPACE or FIRE to return");
    if (state == hssDisplay) {
       int title_x = (opengl.GetWidth() - hscoreImage.GetWidth()) / 2;
       int title_y = 50;
       hscoreImage.Draw(title_x, title_y, 0.0, 1.0, flAlpha);
+
+      int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsnext)) / 2;
+      int y = opengl.GetHeight() - 50;
       
-      opengl.Colour(0.0f, 0.5f, 1.0f, flAlpha);
-      ft.Print
-         (
-          ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hsnext)) / 2, 
-          opengl.GetHeight() - 50, 
-          hsnext
-          );
+      glColor4f(0.0f, 0.5f, 1.0f, flAlpha);
+      largeFont.Print(x, y, hsnext);
    }
    else if (state == hssEnterName)	{
       Input &input = Input::GetInstance();
+      
+      const char *hsscore = i18n("Well done - You got a high score");
+      int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsscore)) / 2;
+      glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
+      largeFont.Print(x, 100, hsscore);
 
-      const char *hsscore = i18n("Well  done  -  You  got  a  high  score");
-      opengl.Colour(0.0f, 1.0f, 0.0f, flAlpha);
-      ft.Print
-         (
-          ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hsscore)) / 2,
-          100, 
-          hsscore
-          );
-
-      const char *hscont = i18n("Press  ENTER  or  FIRE  to  continue");
-      ft.Print
-         (
-          ftLarge, 
-          (opengl.GetWidth() - ft.GetStringWidth(ftLarge, hscont)) / 2, 
-          opengl.GetHeight() - 60, 
-          hscont
-          );
+      const char *hscont = i18n("Press ENTER or FIRE to continue");
+      x = (opengl.GetWidth() - largeFont.GetStringWidth(hscont)) / 2;
+      int y = opengl.GetHeight() - 60;
+      largeFont.Print(x, y, hscont);
 
       const char *hsname = i18n("Name?  %s");
-      opengl.Colour(0.8f, 0.0f, 1.0f, flAlpha);
-      ft.Print
-         (
-          ftLarge, 
-          (opengl.GetWidth() 
-           - ft.GetStringWidth(ftLarge, input.GetInput()) 
-           - ft.GetStringWidth(ftLarge, hsname)
-           ) / 2, 
-          (opengl.GetHeight() - 50) / 2, 
-          hsname, 
-          input.GetInput()
-          );
+      x = (opengl.GetWidth() 
+               - largeFont.GetStringWidth(input.GetInput()) 
+               - largeFont.GetStringWidth(hsname)) / 2;
+      y = (opengl.GetHeight() - 50) / 2;
+      glColor4f(0.8f, 0.0f, 1.0f, flAlpha);
+      largeFont.Print(x, y, hsname, input.GetInput());
    }
 }
 
@@ -246,7 +227,6 @@ void HighScores::WriteHighScores()
    scoreFile.Save();
 }
 
-
 /* 
  * Displays the highest scores screen to the user.
  */
@@ -265,7 +245,6 @@ void HighScores::DisplayScores()
    flAlpha = 0.0f;
    fade = HS_FADE_IN_SPEED;
 }
-
 
 /* 
  * Check to see if the player has a high score.

@@ -60,10 +60,13 @@ Game::Game()
      speedmeter(&ship),
      state(gsNone),
      fadeTexture("images/fade.png"),
-     starImage("images/star.png"),
      levelComp("images/levelcomp.png"),
      smallShip("images/shipsmall.png"),
-     gameOver("images/gameover.png")
+     starImage("images/star.png"),
+     gameOver("images/gameover.png"),
+     normalFont(LocateResource("Default_Font.ttf"), 11),
+     scoreFont(LocateResource("Default_Font.ttf"), 16),
+     bigFont(LocateResource("Default_Font.ttf"), 20)
 {
 
 }
@@ -535,7 +538,6 @@ void Game::ExplodeShip()
 
 void Game::Display()
 {
-   FreeType &ft = FreeType::GetInstance();
    OpenGL &opengl = OpenGL::GetInstance();
    
    // Draw the stars
@@ -612,11 +614,9 @@ void Game::Display()
       ship.DrawExplosion(true);
       opengl.Colour(0.0f, 1.0f, 0.0f);
       const char *sdeath = i18n("Press  SPACE  to  continue");
-      ft.Print
-         (ftNormal,
-          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, sdeath)) / 2,
-          opengl.GetHeight() - 40,
-          sdeath); 
+      int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
+      int y = opengl.GetHeight() - 40;
+      normalFont.Print(x, y, sdeath);
    }
    else if (state == gsDeathWait || state == gsGameOver 
             || state == gsFadeToDeath || state == gsFadeToRestart) {
@@ -628,8 +628,8 @@ void Game::Display()
       (*it).DrawArrow(&viewport);
 
    // Draw HUD
-   opengl.Colour(0.0f, 0.9f, 0.0f);
-   ft.Print(ftScore, 10, SCORE_Y, "%.7d", score);
+   glColor3f(0.0f, 0.9f, 0.0f);
+   scoreFont.Print(10, SCORE_Y, "%.7d", score);
 
    fuelmeter.Display();
    speedmeter.Display();
@@ -672,10 +672,8 @@ void Game::Display()
       }
       opengl.Colour(0.0f, 1.0f, 0.0f);
       const char *sland = i18n("Land  now");
-      ft.Print
-         (ftNormal,
-          (opengl.GetWidth() - ft.GetStringWidth(ftNormal, sland))/2,
-          30, sland);
+      int x = (opengl.GetWidth() - normalFont.GetStringWidth(sland)) / 2;
+      normalFont.Print(x, 30, sland);
    }
 
    // Draw level complete messages
@@ -685,24 +683,19 @@ void Game::Display()
       int lc_y = (opengl.GetHeight() - levelComp.GetHeight()) / 2 - 50;
       levelComp.Draw(lc_x, lc_y);
          
-      opengl.Colour(0.0f, 0.5f, 0.9f);
-      ft.Print
-         (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, scoretxt) - 40)/2,
-          (opengl.GetHeight() - 30)/2 + 50,
-          scoretxt,
-          newscore > 0 ? newscore : 0);
+      glColor3f(0.0f, 0.5f, 0.9f);
+      int x = (opengl.GetWidth() - bigFont.GetStringWidth(scoretxt) - 40) / 2;
+      int y = (opengl.GetHeight() - 30)/2 + 50;
+      bigFont.Print(x, y, scoretxt, newscore > 0 ? newscore : 0);
    }
    
    // Draw level number text
    if (leveltext_timeout) {
       opengl.Colour(0.9f, 0.9f, 0.0f);
       const char *lvltxt = i18n("Level  %d");
-      ft.Print
-         (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, lvltxt) - 20)/2,
-          (opengl.GetHeight() - 30)/2,
-          lvltxt, level);
+      int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt) - 20) / 2;
+      int y = (opengl.GetHeight() - 30) / 2;
+      bigFont.Print(x, y, lvltxt, level);
    }
 
    // Draw the fade
@@ -719,12 +712,10 @@ void Game::Display()
    // Draw paused message
    if (state == gsPaused) {
       const char *txtpaused = i18n("Paused");
-      opengl.Colour(0.0f, 0.5f, 1.0f);
-      ft.Print
-         (ftBig,
-          (opengl.GetWidth() - ft.GetStringWidth(ftBig, txtpaused) - 20)/2,
-          (opengl.GetHeight() - 150)/2,
-          txtpaused);
+      glColor3f(0.0f, 0.5f, 1.0f);
+      int x = (opengl.GetWidth() - bigFont.GetStringWidth(txtpaused) - 20) / 2;
+      int y = (opengl.GetHeight() - 150) / 2;
+      bigFont.Print(x, y, txtpaused);
    }
 }
 

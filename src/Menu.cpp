@@ -224,8 +224,6 @@ void MainMenu::Display()
    optionsOpt.Display(selOption == optOptions, bigness, fade);
    exitOpt.Display(selOption == optExit, bigness, fade);
 
-   FreeType &ft = FreeType::GetInstance();
-
    int title_x = (opengl.GetWidth() - titleImage.GetWidth()) / 2;
    int title_y = 100;
    titleImage.Draw(title_x, title_y, 0.0, 1.0, fade);

@@ -1,5 +1,5 @@
 /*
- * FreeType.hpp - Definition of FreeType wrapper class.
+ * FreeType.hpp -- A wrapper around FreeType.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,39 +43,5 @@ private:
    static FT_Library library;
 };
 
-/* 
- * Wrapper around the GNU FreeType font library. Code adapted from NeHe.
- * tutorial #43. 
- */
-class FreeType 
-{
-    public:
-    FreeType();
-    ~FreeType();
-	
-    // Public methods
-    static FreeType &GetInstance();
-    void LoadFont(int index, string face, unsigned int h);
-    void Print(int index, int x, int y, const char *fmt, ...);
-    int GetStringWidth(int index, const char *s);
-    private:
-    // Holds data about a single font
-    struct FreeTypeFont 
-    {
-        float	height;			// The height of the font in pixels
-        GLuint	*textures;		// Array of texture IDs
-        GLuint	listBase;		// Display list base
-        unsigned short *widths;	// The widths of each character
-    };
-
-    // Private methods
-    int NextPowerOf2(int a);
-    void MakeDisplayList(FT_Face face, char ch, GLuint listBase, GLuint *texBase, unsigned short *widths);
-    void CreateFont(FreeTypeFont *font, string filename, unsigned int height);
-    void DeleteFont(FreeTypeFont *font);
-
-    FT_Library library;
-    map<int, FreeTypeFont *> fonts; 
-};
 
 #endif
