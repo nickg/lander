@@ -23,6 +23,7 @@
 #include "ScreenManager.hpp"
 #include "Mechanics.hpp"
 #include "Image.hpp"
+#include "FreeType.hpp"
 
 
 class MenuStar {
@@ -76,6 +77,7 @@ private:
    double fade, bigness;
    MenuState state;
    Image titleImage;
+   Font hintFont;
 	
    int hint_timeout, hintidx;
 

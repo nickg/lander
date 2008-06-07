@@ -43,7 +43,8 @@ MainMenu::MainMenu()
      scoreOpt("images/score_option.png", OPTIONS_OFFSET, 1),
      optionsOpt("images/options_option.png", OPTIONS_OFFSET, 2),
      exitOpt("images/exit_option.png", OPTIONS_OFFSET, 3),
-     titleImage("images/title.png")
+     titleImage("images/title.png"),
+     hintFont(LocateResource("Default_Font.ttf"), 11)
 {
    
 }
@@ -251,6 +252,10 @@ void MainMenu::Display()
    else
       hint_timeout--;
 
+   glColor4d(0.0, 1.0, 0.0, fade);
+   hintFont.Print(0, opengl.GetHeight() - 120, hints[hintidx][0]);
+   
+   /*
    opengl.Colour(0.0f, 1.0f, 0.0f, fade);   
    ft.Print(ftNormal,
             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][0])) / 2,
@@ -259,7 +264,7 @@ void MainMenu::Display()
    ft.Print(ftNormal,
             (opengl.GetWidth() - ft.GetStringWidth(ftNormal, hints[hintidx][1])) / 2,
             opengl.GetHeight() - 100,
-            hints[hintidx][1]);
+            hints[hintidx][1]);*/
 }
 
 double MenuStar::starRotate = 0.0;

@@ -22,6 +22,27 @@
 
 #include "Platform.hpp"
 
+class Font {
+public:
+   Font(string filename, unsigned int h);
+   ~Font();
+
+    void Print(int x, int y, const char *fmt, ...);
+    int GetStringWidth(const char *s);
+private:   
+   int NextPowerOf2(int a);
+   void MakeDisplayList(FT_Face face, char ch, GLuint listBase,
+                        GLuint *texBase, unsigned short *widths);
+   
+   GLuint *textures;
+   GLuint listBase;
+   float height;
+   unsigned short *widths;
+   
+   static int fontRefCount;
+   static FT_Library library;
+};
+
 /* 
  * Wrapper around the GNU FreeType font library. Code adapted from NeHe.
  * tutorial #43. 
