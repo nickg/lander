@@ -17,13 +17,11 @@
 
 #include "ElectricGate.hpp"
 #include "LoadOnce.hpp"
-#include "OpenGL.hpp"
 
 Image *ElectricGate::gateImage = NULL;
 
 ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
-   : length(length), vertical(vertical), viewport(v),
-     StaticObject(x, y)
+   : StaticObject(x, y), length(length), vertical(vertical), viewport(v)
 {
    LOAD_ONCE {
       gateImage = new Image("images/gateway.png");
@@ -62,8 +60,6 @@ bool ElectricGate::CheckCollision(Ship &ship)
 
 void ElectricGate::Draw()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
-   
    // Draw first sphere
    int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
@@ -84,7 +80,7 @@ void ElectricGate::Draw()
    if (--timer < GATEWAY_ACTIVE) { 
       int x, y, deviation;
       
-      opengl.DisableTexture();
+      glDisable(GL_TEXTURE_2D);
       
       for (int j = 0; j < 10; j++) {
          deviation = 0;

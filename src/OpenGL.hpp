@@ -111,14 +111,7 @@ public:
 
    void SelectTexture(GLuint uTexture);
    void ClearColour(float r, float g, float b);
-   
-   void EnableTexture();
-   void DisableTexture();
-   void EnableBlending();
-   void DisableBlending();
-   void EnableDepthBuffer();
-   void DisableDepthBuffer();
-
+  
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);
      	
@@ -140,9 +133,6 @@ private:
    int screen_width, screen_height, screen_depth;
    bool fullscreen;
    bool running, active, dodisplay;
-
-   // State variables
-   bool textureon, blendon, depthon;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

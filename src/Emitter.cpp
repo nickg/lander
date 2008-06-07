@@ -102,10 +102,9 @@ void Emitter::NewCluster(int x, int y)
 void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
 {
    int i, created = 0;
-   OpenGL &opengl = OpenGL::GetInstance();
 
-   opengl.EnableTexture();
-   opengl.EnableBlending();
+   glEnable(GL_TEXTURE_2D);
+   glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
    glLoadIdentity();
   

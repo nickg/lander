@@ -24,7 +24,7 @@
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0), screen_depth(0),
      fullscreen(false), running(false), active(true),
-     dodisplay(true), textureon(false), blendon(false), depthon(false),
+     dodisplay(true),
      fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0)
 {
    // Start random number generator
@@ -160,7 +160,7 @@ void OpenGL::Viewport(int x, int y, int width, int height)
 
 void OpenGL::Draw(Renderable *r)
 {
-   DisableBlending();
+   glDisable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    r->ApplyColour();
@@ -169,8 +169,8 @@ void OpenGL::Draw(Renderable *r)
 
 void OpenGL::Draw(Poly *cp)
 {
-   DisableBlending();
-   EnableTexture();
+   glDisable(GL_BLEND);
+   glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, cp->uTexture);
    glLoadIdentity();
    glTranslatef((float)cp->xpos, (float)cp->ypos, 0.0f);
@@ -189,8 +189,8 @@ void OpenGL::Draw(Poly *cp)
 
 void OpenGL::DrawRotate(Renderable *r, float angle)
 {
-   DisableBlending();
-   DisableTexture();
+   glDisable(GL_BLEND);
+   glDisable(GL_TEXTURE_2D);
    glLoadIdentity();
    r->TranslateTo();
    glRotatef(angle, 0.0f, 0.0f, 1.0f);
@@ -200,8 +200,8 @@ void OpenGL::DrawRotate(Renderable *r, float angle)
 
 void OpenGL::DrawBlend(Renderable *r, float alpha)
 {
-   DisableDepthBuffer();
-   EnableBlending();
+   glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    r->ApplyColour(alpha);
@@ -210,8 +210,8 @@ void OpenGL::DrawBlend(Renderable *r, float alpha)
 
 void OpenGL::DrawRotateBlend(Renderable *r, float angle, float alpha)
 {
-   DisableDepthBuffer();
-   EnableBlending();
+   glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    glRotatef(angle, 0.0f, 0.0f, 1.0f);
@@ -221,7 +221,7 @@ void OpenGL::DrawRotateBlend(Renderable *r, float angle, float alpha)
 
 void OpenGL::DrawScale(Renderable *r, float factor)
 {
-   DisableBlending();
+   glDisable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    glScalef(factor, factor, 0);
@@ -231,7 +231,7 @@ void OpenGL::DrawScale(Renderable *r, float factor)
 
 void OpenGL::DrawRotateScale(Renderable *r, float angle, float factor)
 {
-   DisableBlending();
+   glDisable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    glScalef(factor, factor, 0);
@@ -242,8 +242,8 @@ void OpenGL::DrawRotateScale(Renderable *r, float angle, float factor)
 
 void OpenGL::DrawBlendScale(Renderable *r, float alpha, float factor)
 {
-   DisableDepthBuffer();
-   EnableBlending();
+   glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    glScalef(factor, factor, 0);
@@ -253,8 +253,8 @@ void OpenGL::DrawBlendScale(Renderable *r, float alpha, float factor)
 
 void OpenGL::DrawRotateBlendScale(Renderable *r, float angle, float alpha, float factor)
 {
-   DisableDepthBuffer();
-   EnableBlending();
+   glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
    glLoadIdentity();
    r->TranslateTo();
    glScalef(factor, factor, 0);
@@ -359,63 +359,6 @@ void OpenGL::SkipDisplay()
    dodisplay = false;
 }
 
-void OpenGL::SelectTexture(GLuint uTexture)
-{
-   glBindTexture(GL_TEXTURE_2D, uTexture);
-}
-
-void OpenGL::ClearColour(float r, float g, float b)
-{
-   glClearColor(r, g, b, 0.0f); 
-}
-
-void OpenGL::EnableTexture() 
-{ 
-   if (!textureon) { 
-      glEnable(GL_TEXTURE_2D); 
-      textureon = true; 
-   } 
-}
-
-void OpenGL::DisableTexture() 
-{ 
-   if (textureon) { 
-      glDisable(GL_TEXTURE_2D); 
-      textureon = false; 
-   } 
-}
-
-void OpenGL::EnableBlending() 
-{ 
-   if (!blendon) { 
-      glEnable(GL_BLEND); 
-      blendon = true; 
-   } 
-}
-
-void OpenGL::DisableBlending() 
-{ 
-   if (blendon) { 
-      glDisable(GL_BLEND);
-      blendon = false;
-   }
-} 
-	
-void OpenGL::EnableDepthBuffer() 
-{ 
-   if (!depthon) {
-      glEnable(GL_DEPTH_TEST); 
-      depthon = true; 
-   } 
-}
-
-void OpenGL::DisableDepthBuffer() 
-{ 
-   if (depthon) { 
-      glDisable(GL_DEPTH_TEST); 
-      depthon = false; 
-   } 
-} 
 
 Renderable::Renderable(int x, int y, int width, int height,
                        float r, float g, float b)
