@@ -369,11 +369,6 @@ void OpenGL::ClearColour(float r, float g, float b)
    glClearColor(r, g, b, 0.0f); 
 }
 
-void OpenGL::Colour(float r, float g, float b, float a)
-{
-   glColor4f(r, g, b, a); 
-}
-
 void OpenGL::EnableTexture() 
 { 
    if (!textureon) { 

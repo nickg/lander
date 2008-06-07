@@ -111,7 +111,6 @@ public:
 
    void SelectTexture(GLuint uTexture);
    void ClearColour(float r, float g, float b);
-   void Colour(float r, float g, float b, float a=1.0f);
    
    void EnableTexture();
    void DisableTexture();

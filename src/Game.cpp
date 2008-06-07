@@ -571,9 +571,9 @@ void Game::Display()
    if (bDebugMode) {
       // Draw red squares around no-go areas
       int x, y;
-      opengl.DisableTexture();
-      opengl.EnableBlending();
-      opengl.Colour(1.0f, 0.0f, 0.0f, 0.4f);
+      glDisable(GL_DEPTH_TEST);
+      glEnable(GL_BLEND);
+      glColor4f(1.0f, 0.0f, 0.0f, 0.4f);
       for (x = 0; x < objgrid.GetWidth(); x++) {
          for (y = 0; y < objgrid.GetHeight(); y++) {
             if (objgrid.IsFilled(x, y)) {
@@ -612,7 +612,7 @@ void Game::Display()
    // Draw the explosion if necessary
    if (state == gsExplode) {
       ship.DrawExplosion(true);
-      opengl.Colour(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);
       const char *sdeath = i18n("Press  SPACE  to  continue");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
       int y = opengl.GetHeight() - 40;
@@ -670,7 +670,7 @@ void Game::Display()
          (*it).DrawIcon(offset + i*32, 0.0f);
          i += 32;
       }
-      opengl.Colour(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);
       const char *sland = i18n("Land  now");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sland)) / 2;
       normalFont.Print(x, 30, sland);
@@ -691,7 +691,7 @@ void Game::Display()
    
    // Draw level number text
    if (leveltext_timeout) {
-      opengl.Colour(0.9f, 0.9f, 0.0f);
+      glColor3f(0.9f, 0.9f, 0.0f);
       const char *lvltxt = i18n("Level  %d");
       int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt) - 20) / 2;
       int y = (opengl.GetHeight() - 30) / 2;
@@ -737,9 +737,9 @@ void FuelMeter::Display()
    
    int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
    float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
-   opengl.EnableTexture();
-   opengl.DisableBlending();
-   opengl.Colour(1.0f, 1.0f, 1.0f);
+   glEnable(GL_BLEND);
+   glDisable(GL_DEPTH_TEST);
+   glColor3f(1.0f, 1.0f, 1.0f);
    opengl.SelectTexture(fuelBarTexture->GetGLTexture());
    glLoadIdentity();
    glBegin(GL_QUADS);
