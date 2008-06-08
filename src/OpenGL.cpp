@@ -68,8 +68,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 
    SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
-   if (fullscreen)
-      SDL_ShowCursor(0);
+   SDL_ShowCursor(SDL_DISABLE);
     
    ResizeGLScene(screen_width, screen_height);
 
