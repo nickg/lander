@@ -20,7 +20,7 @@
 #include "Menu.hpp"
 #include "Input.hpp"
 #include "OpenGL.hpp"
-#include "Lander.hpp"
+#include "Game.hpp"
 #include "HighScores.hpp"
 
 const double MenuStar::ROTATE_SPEED(0.005);

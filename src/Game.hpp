@@ -1,5 +1,5 @@
 /*
- * Lander.hpp -- Definition of core game classes.
+ * Game.hpp -- Definition of core game classes.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INC_LANDER_HPP
-#define INC_LANDER_HPP
+#ifndef INC_GAME_HPP
+#define INC_GAME_HPP
 
 #include "Platform.hpp"
 #include "OpenGL.hpp" 

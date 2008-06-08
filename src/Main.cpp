@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "Lander.hpp"
+#include "Game.hpp"
 
 #define DEBUG_WINDOW
 #define DEBUG_WIN_X 800
