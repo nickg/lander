@@ -16,6 +16,7 @@
  */
 
 #include "Options.hpp"
+#include "Menu.hpp"
 
 Options::Options()
 {
@@ -24,16 +25,21 @@ Options::Options()
 
 void Options::Load()
 {
-   cout << "Options loaded" << endl;
+   
 }
 
 void Options::Process()
 {
-
+   static_cast<MainMenu*>
+      (ScreenManager::GetInstance().GetScreenById("MAIN MENU"))
+      ->MoveStars();
 }
 
 void Options::Display()
 {
-
+   // Delegate star drawing to the menu
+   static_cast<MainMenu*>
+      (ScreenManager::GetInstance().GetScreenById("MAIN MENU"))
+      ->DisplayStars();
 }
 

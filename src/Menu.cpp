@@ -174,8 +174,7 @@ void MainMenu::Process()
       // Apply fade
       if (fade <= 0.0f) {
          // Move to the options screen
-         // TODO!
-         sm.SelectScreen("MAIN MENU");
+         sm.SelectScreen("OPTIONS");
       }
       else {
          fade -= MENU_FADE_SPEED;
@@ -194,7 +193,11 @@ void MainMenu::Process()
       }
    }
 
-   // Move the stars
+   MoveStars();
+}
+
+void MainMenu::MoveStars()
+{
    StarListIt it = stars.begin();
    while (it != stars.end()) {
       if ((*it).Move()) {
@@ -210,13 +213,20 @@ void MainMenu::Process()
       stars.push_back(MenuStar()); 
 }
 
+/*
+ * This is also used by the options screen.
+ */
+void MainMenu::DisplayStars()
+{
+   for (StarListIt it = stars.begin(); it != stars.end(); ++it)
+      (*it).Display(); 
+}
+
 void MainMenu::Display()
 {
    OpenGL &opengl = OpenGL::GetInstance();
 
-
-   for (StarListIt it = stars.begin(); it != stars.end(); ++it)
-      (*it).Display();
+   DisplayStars();
    
    // Draw logo and menu items
    startOpt.Display(selOption == optStart, bigness, fade);

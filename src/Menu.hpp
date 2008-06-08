@@ -66,6 +66,8 @@ public:
    void Load();
    void Process();
    void Display();
+   void DisplayStars();
+   void MoveStars();
    
 private:
    enum MenuState { msFadeIn, msInMenu, msFadeToStart,

@@ -18,6 +18,7 @@
  */
 
 #include "Game.hpp"
+#include "Options.hpp"
 
 #define DEBUG_WINDOW
 #define DEBUG_WIN_X 800
@@ -69,11 +70,13 @@ int main(int argc, char **argv)
       MainMenu *mm = new MainMenu();
       Game *g = new Game();
       HighScores *hs = new HighScores();
+      Options *opt = new Options();
 
       ScreenManager &sm = ScreenManager::GetInstance();
       sm.AddScreen("MAIN MENU", mm);
       sm.AddScreen("GAME", g);
       sm.AddScreen("HIGH SCORES", hs);
+      sm.AddScreen("OPTIONS", opt);
 
       // Run the game
       sm.SelectScreen("MAIN MENU");
@@ -83,6 +86,7 @@ int main(int argc, char **argv)
       delete mm;
       delete g;
       delete hs;
+      delete opt;
    }
    catch (std::runtime_error e) {
 #ifdef WIN32
