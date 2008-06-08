@@ -19,8 +19,6 @@
 
 #include "HighScores.hpp"
 #include "Input.hpp"
-#include "File.hpp"
-
 
 HighScores::HighScores()
    : hscoreImage("images/hscore.png"),
@@ -298,13 +296,13 @@ void ScoreFile::Sort()
 void ScoreFile::Load()
 {
    // Check for file's existence
-   if (!File::Exists(File::LocateResource("Highscores", "dat"))) {
+   if (!FileExists(LocateResource("Highscores.dat"))) {
       // Write a dummy score file
       Save();
    }
    else {
       // Open highscores file
-      const char *fname = File::LocateResource("Highscores", "dat");
+      const char *fname = LocateResource("Highscores.dat");
       ifstream fin(fname);
       for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
          (*it).ReadFromStream(fin);
@@ -318,7 +316,7 @@ void ScoreFile::Save()
    if (!needsWrite)
       return;
 
-   const char *fname = File::LocateResource("Highscores", "dat");
+   const char *fname = LocateResource("Highscores.dat");
    ofstream fout(fname);
    for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
       (*it).WriteOnStream(fout);

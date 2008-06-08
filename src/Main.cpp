@@ -18,7 +18,6 @@
  */
 
 #include "Lander.hpp"
-#include "File.hpp"
 
 #define DEBUG_WINDOW
 #define DEBUG_WIN_X 800
@@ -101,11 +100,51 @@ int main(int argc, char **argv)
  */
 const char *LocateResource(const char *file)
 {
+#ifdef MACOSX
+   static char path[MAX_RES_PATH];
+   
+   CFURLRef resURL;
+   CFBundleRef mainBundle;
+   CFStringRef cfBase, cfExt, cfPath;
+    
+   cfBase = CFStringCreateWithCString(NULL, base, kCFStringEncodingASCII);
+   cfExt = CFStringCreateWithCString(NULL, ext, kCFStringEncodingASCII);
+    
+   mainBundle = CFBundleGetMainBundle();
+    
+   resURL = CFBundleCopyResourceURL(mainBundle, cfBase, cfExt, NULL);
+    
+   if (resURL == NULL)
+      throw runtime_error("Failed to locate " + string(base) + "." + string(ext));
+	
+   cfPath = CFURLCopyPath(resURL);
+    
+   CFStringGetCString(cfPath, path, MAX_RES_PATH, kCFStringEncodingASCII);
+
+   return patch;
+#endif
+   
 #ifdef DATADIR
    static char path[PATH_MAX];
    snprintf(path, PATH_MAX, "%s/%s", DATADIR, file);
    return path;   
-#endif
-
+#else
    return file;
+#endif
+}
+
+bool FileExists(const char *file)
+{
+#ifdef UNIX
+   struct stat buf;
+   return stat(file, &buf) == 0;
+#else
+   FILE *f = fopen(file, "r");
+   if (NULL == f)
+      return false;
+   else {
+      fclose(f);
+      return true;
+   }
+#endif   
 }

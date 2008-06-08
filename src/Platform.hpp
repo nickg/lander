@@ -151,5 +151,6 @@ using namespace std;
 #endif /* #ifdef LANDER_BIG_ENDIAN */
 
 const char *LocateResource(const char *file);
+bool FileExists(const char *file);
 
 #endif /* #ifdef INC_PLATFORM_HPP */
