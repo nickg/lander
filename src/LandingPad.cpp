@@ -23,7 +23,7 @@ Texture *LandingPad::landTexture = NULL;
 Texture *LandingPad::noLandTexture = NULL;
 
 LandingPad::LandingPad(Viewport *v, int index, int length)
-   : viewport(v), index(index), length(length)
+   : index(index), length(length), viewport(v)
 {
    LOAD_ONCE {
       landTexture = new Texture("images/landingpad.png");

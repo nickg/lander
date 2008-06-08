@@ -25,7 +25,7 @@ const int Surface::SURFACE_SIZE = 20;
 Texture *Surface::surfTexture[Surface::NUM_SURF_TEX];
 
 Surface::Surface(Viewport *v)
-   : surface(NULL), viewport(v)
+   :  viewport(v), surface(NULL)
 {
    LOAD_ONCE {
       surfTexture[0] = new Texture("images/grass_surface.png");

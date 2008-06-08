@@ -100,6 +100,7 @@ void Mine::Move()
             nexty = ypos;
             nextx = xpos + 1; 
             break;
+         case dirNone:
          default:
             nextx = xpos;
             nexty = ypos;
@@ -126,6 +127,7 @@ void Mine::Move()
       case dirDown: displace_y++; break;
       case dirLeft: displace_x--; break;
       case dirRight: displace_x++; break;
+      default: break;
       }
       movedelay = MINE_MOVE_SPEED;
    }
