@@ -108,9 +108,6 @@ public:
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
-
-   void SelectTexture(GLuint uTexture);
-   void ClearColour(float r, float g, float b);
   
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);

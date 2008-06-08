@@ -33,10 +33,10 @@ public:
    bool CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex);
    void Display();
 
-   static const int NUM_SURF_TEX = 5;  // Number of available surface textures
-   static const int SURFACE_SIZE = 20;
-   static const int MAX_SURFACE_HEIGHT = 300;
-   static const int VARIANCE = 50;     // Bumpyness of landscape
+   static const int NUM_SURF_TEX = 5;   // Number of available surface textures
+   static const int SURFACE_SIZE;
+   static const int MAX_SURFACE_HEIGHT;
+   static const int VARIANCE;
    
 private:
    static Texture *surfTexture[NUM_SURF_TEX];

@@ -18,6 +18,10 @@
 #include "Surface.hpp"
 #include "LoadOnce.hpp"
 
+const int Surface::VARIANCE = 65;     // Bumpyness of landscape
+const int Surface::MAX_SURFACE_HEIGHT = 300;
+const int Surface::SURFACE_SIZE = 20;
+
 Texture *Surface::surfTexture[Surface::NUM_SURF_TEX];
 
 Surface::Surface(Viewport *v)
