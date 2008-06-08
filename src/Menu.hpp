@@ -61,7 +61,7 @@ private:
 class MainMenu : public Screen {
 public:
    MainMenu();
-   virtual ~MainMenu() { }
+   virtual ~MainMenu() {}
 
    void Load();
    void Process();
