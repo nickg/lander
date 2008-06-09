@@ -34,17 +34,32 @@ private:
    void ProcessFadeIn();
    void ProcessMain();
    void ProcessFadeOut();
+   
    void DisplayHelpText();
+   void DisplayItems();
 
    static const double FADE_SPEED;
    
    enum OptionState {
       optFadeIn, optMain, optFadeOut
    };
+
+   typedef vector<string> StringList;
+   typedef StringList::iterator StringListIt;
+
+   struct Item {
+      string name;
+      unsigned int active;
+      StringList values;
+   };
+   typedef vector<Item> ItemList;
+   typedef ItemList::iterator ItemListIt;
    
    OptionState state;
-   Font helpFont;
+   Font helpFont, itemFont;
    double fadeAlpha;
+   ItemList items;
+   unsigned int selected;
 };
 
 #endif

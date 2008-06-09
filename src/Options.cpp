@@ -18,21 +18,36 @@
 #include "Options.hpp"
 #include "Menu.hpp"
 #include "OpenGL.hpp"
+#include "Input.hpp"
 
 const double Options::FADE_SPEED = 0.1;
 
 Options::Options()
    : state(optFadeIn),
      helpFont(LocateResource("Default_Font.ttf"), 12),
-     fadeAlpha(0.0)
+     itemFont(LocateResource("Default_Font.ttf"), 16),
+     fadeAlpha(0.0),
+     selected(0)
 {
-   
+   Item fullscreen = { "Fullscreen", 0 };
+   fullscreen.values.push_back("Yes");
+   fullscreen.values.push_back("No");
+
+   // TODO: It would be better to query SDL for these values
+   Item resolution = { "Resolution", 0 };
+   resolution.values.push_back("800x600");
+   resolution.values.push_back("1024x768");
+   resolution.values.push_back("1280x1024");
+
+   items.push_back(fullscreen);
+   items.push_back(resolution);
 }
 
 void Options::Load()
 {
    state = optFadeIn;
    fadeAlpha = 0.0;
+   selected = 0;
 }
 
 void Options::ProcessFadeIn()
@@ -47,7 +62,34 @@ void Options::ProcessFadeIn()
 
 void Options::ProcessMain()
 {
-
+   Input &input = Input::GetInstance();
+   
+   if (input.GetKeyState(SDLK_RETURN)) {
+      state = optFadeOut;
+   }
+   else if (input.GetKeyState(SDLK_UP)) {
+      if (selected > 0)
+         selected--;
+      input.ResetKey(SDLK_UP);
+   }
+   else if (input.GetKeyState(SDLK_DOWN)) {
+      if (selected + 1 < items.size())
+         selected++;
+      input.ResetKey(SDLK_DOWN);
+   }
+   else if (input.GetKeyState(SDLK_LEFT)) {
+      Item &item = items[selected];
+      if (item.active == 0)
+         item.active = item.values.size() - 1;
+      else
+         item.active = (item.active - 1) % item.values.size();
+      input.ResetKey(SDLK_LEFT);
+   }
+   else if (input.GetKeyState(SDLK_RIGHT)) {
+      Item &item = items[selected];
+      item.active = (item.active + 1) % item.values.size();
+      input.ResetKey(SDLK_RIGHT);
+   }
 }
 
 void Options::ProcessFadeOut()
@@ -77,6 +119,43 @@ void Options::Process()
    case optFadeOut:
       ProcessFadeOut();
       break;
+   }
+}
+
+void Options::DisplayItems()
+{
+   int screen_w = OpenGL::GetInstance().GetWidth();
+   int screen_h = OpenGL::GetInstance().GetHeight();
+
+   const int H_PER_ITEM = 30;
+   int item_height = H_PER_ITEM * items.size();
+   int y = (screen_h - item_height) / 2;
+
+   unsigned int i = 0;
+   for (ItemListIt it = items.begin(); it != items.end(); ++it) {
+      assert((*it).active < (*it).values.size());
+
+      int all_w = itemFont.GetStringWidth
+         ("%s  %s", (*it).name.c_str(), (*it).values[(*it).active].c_str());
+      int name_w = itemFont.GetStringWidth((*it).name.c_str());
+      int space_w = itemFont.GetStringWidth("  ");
+
+      if (i == selected)
+         glColor4d(0.0, 1.0, 0.0, fadeAlpha);
+      else
+         glColor4d(0.0, 0.5, 0.0, fadeAlpha);
+      int x = (screen_w - all_w) / 2;
+      itemFont.Print(x, y, (*it).name.c_str());
+
+      if (i == selected)
+         glColor4d(0.0, 0.7, 1.0, fadeAlpha);
+      else
+         glColor4d(0.0, 0.2, 0.7, fadeAlpha);
+      x += name_w + space_w;
+      itemFont.Print(x, y, (*it).values[(*it).active].c_str());
+
+      y += H_PER_ITEM;
+      i++;
    }
 }
 
@@ -113,5 +192,6 @@ void Options::Display()
       ->DisplayStars();
 
    DisplayHelpText();
+   DisplayItems();
 }
 
