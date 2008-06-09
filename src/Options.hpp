@@ -20,6 +20,7 @@
 
 #include "Platform.hpp"
 #include "ScreenManager.hpp"
+#include "Font.hpp"
 
 class Options : public Screen {
 public:
@@ -29,8 +30,18 @@ public:
    void Load();
    void Process();
    void Display();
-   
 private:
+   void ProcessFadeIn();
+   void ProcessMain();
+   void ProcessFadeOut();
+   
+   enum OptionState {
+      optFadeIn, optMain, optFadeOut
+   };
+   
+   OptionState state;
+   Font helpFont;
+
 };
 
 #endif

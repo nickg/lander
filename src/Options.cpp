@@ -19,6 +19,8 @@
 #include "Menu.hpp"
 
 Options::Options()
+   : state(optFadeIn),
+     helpFont(LocateResource("Default_Font.ttf"), 14)
 {
    
 }
@@ -28,11 +30,38 @@ void Options::Load()
    
 }
 
+void Options::ProcessFadeIn()
+{
+
+}
+
+void Options::ProcessMain()
+{
+
+}
+
+void Options::ProcessFadeOut()
+{
+
+}
+
 void Options::Process()
 {
    static_cast<MainMenu*>
       (ScreenManager::GetInstance().GetScreenById("MAIN MENU"))
       ->MoveStars();
+
+   switch (state) {
+   case optFadeIn:
+      ProcessFadeIn();
+      break;
+   case optMain:
+      ProcessMain();
+      break;
+   case optFadeOut:
+      ProcessFadeOut();
+      break;
+   }
 }
 
 void Options::Display()
