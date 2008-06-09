@@ -18,21 +18,30 @@
 #include "Options.hpp"
 #include "Menu.hpp"
 
+const double Options::FADE_SPEED = 0.1;
+
 Options::Options()
    : state(optFadeIn),
-     helpFont(LocateResource("Default_Font.ttf"), 14)
+     helpFont(LocateResource("Default_Font.ttf"), 14),
+     fadeAlpha(0.0)
 {
    
 }
 
 void Options::Load()
 {
-   
+   state = optFadeIn;
+   fadeAlpha = 0.0;
 }
 
 void Options::ProcessFadeIn()
 {
-
+   fadeAlpha += FADE_SPEED;
+   
+   if (fadeAlpha >= 1.0) {
+      state = optMain;
+      fadeAlpha = 1.0;
+   }
 }
 
 void Options::ProcessMain()
@@ -42,7 +51,13 @@ void Options::ProcessMain()
 
 void Options::ProcessFadeOut()
 {
+   fadeAlpha -= FADE_SPEED;
 
+   if (fadeAlpha <= 0.0) {
+      fadeAlpha = 0.0;
+
+      ScreenManager::GetInstance().SelectScreen("MAIN MENU");
+   }
 }
 
 void Options::Process()

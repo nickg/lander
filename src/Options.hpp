@@ -34,6 +34,8 @@ private:
    void ProcessFadeIn();
    void ProcessMain();
    void ProcessFadeOut();
+
+   static const double FADE_SPEED;
    
    enum OptionState {
       optFadeIn, optMain, optFadeOut
@@ -41,7 +43,7 @@ private:
    
    OptionState state;
    Font helpFont;
-
+   double fadeAlpha;
 };
 
 #endif
