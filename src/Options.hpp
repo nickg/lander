@@ -34,6 +34,7 @@ private:
    void ProcessFadeIn();
    void ProcessMain();
    void ProcessFadeOut();
+   void DisplayHelpText();
 
    static const double FADE_SPEED;
    

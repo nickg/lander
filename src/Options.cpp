@@ -17,12 +17,13 @@
 
 #include "Options.hpp"
 #include "Menu.hpp"
+#include "OpenGL.hpp"
 
 const double Options::FADE_SPEED = 0.1;
 
 Options::Options()
    : state(optFadeIn),
-     helpFont(LocateResource("Default_Font.ttf"), 14),
+     helpFont(LocateResource("Default_Font.ttf"), 12),
      fadeAlpha(0.0)
 {
    
@@ -79,11 +80,38 @@ void Options::Process()
    }
 }
 
+void Options::DisplayHelpText()
+{
+   int x, y;
+
+   int screen_w = OpenGL::GetInstance().GetWidth();
+   int screen_h = OpenGL::GetInstance().GetHeight();
+   
+   glColor4d(0.0, 1.0, 0.0, fadeAlpha);
+
+   const char *help1 = i18n("Use UP and DOWN to select options");
+   x = (screen_w - helpFont.GetStringWidth(help1)) / 2;
+   y = screen_h - 100;
+   helpFont.Print(x, y, help1);
+      
+   const char *help2 = i18n("Use LEFT and RIGHT to change values");
+   x = (screen_w - helpFont.GetStringWidth(help2)) / 2;
+   y += 25;
+   helpFont.Print(x, y, help2);
+
+   const char *help3 = i18n("Press FIRE or RETURN to exit");
+   x = (screen_w - helpFont.GetStringWidth(help3)) / 2;
+   y += 25;
+   helpFont.Print(x, y, help3);   
+}
+
 void Options::Display()
 {
    // Delegate star drawing to the menu
    static_cast<MainMenu*>
       (ScreenManager::GetInstance().GetScreenById("MAIN MENU"))
       ->DisplayStars();
+
+   DisplayHelpText();
 }
 
