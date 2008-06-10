@@ -19,12 +19,10 @@
 
 #include "Game.hpp"
 #include "Options.hpp"
-
-#define DEBUG_WINDOW
-#define DEBUG_WIN_X 800
-#define DEBUG_WIN_Y 600
+#include "ConfigFile.hpp"
 
 #include <SDL_main.h>
+
 
 /* 
  * Entry point.
@@ -37,19 +35,15 @@ int main(int argc, char **argv)
    setlocale(LC_ALL, "");
    bindtextdomain(PACKAGE, LOCALEDIR);
    textdomain(PACKAGE);
-   
-   // Get current resolution from Windows
-#ifdef DEBUG_WINDOW 
-   width = DEBUG_WIN_X;
-   height = DEBUG_WIN_Y;
-   fullscreen = false;
-#else
-   // width = GetSystemMetrics(SM_CXSCREEN);
-   // height = GetSystemMetrics(SM_CYSCREEN);
-   width = 800;
-   height = 600;
-   fullscreen = true;
-#endif
+
+   const int DEFAULT_HRES = 800;
+   const int DEFAULT_VRES = 600;
+   const int DEFAULT_FSCREEN = false;
+
+   ConfigFile cfile;   
+   width = cfile.get_int("hres", DEFAULT_HRES);
+   height = cfile.get_int("vres", DEFAULT_VRES);
+   fullscreen = cfile.get_bool("fullscreen", DEFAULT_FSCREEN);
 
 #ifdef WIN32
    // Work out colour depth
@@ -151,4 +145,13 @@ bool FileExists(const char *file)
       return true;
    }
 #endif   
+}
+
+string GetConfigDir()
+{
+#ifdef UNIX
+   return string(getenv("HOME")) + "/";
+#else
+#error "Need to port GetConfigDir to this platform"
+#endif
 }

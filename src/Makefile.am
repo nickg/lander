@@ -13,7 +13,8 @@ lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
 	ElectricGate.hpp ElectricGate.cpp Key.hpp Key.cpp \
 	Mechanics.hpp Mechanics.cpp Geometry.hpp Image.hpp \
 	Image.cpp AnimatedImage.hpp AnimatedImage.cpp \
-	Texture.hpp Texture.cpp Options.hpp Options.cpp
+	Texture.hpp Texture.cpp Options.hpp Options.cpp \
+	ConfigFile.hpp ConfigFile.cpp
 
 localedir = $(datadir)/locale
 

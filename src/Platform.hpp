@@ -152,5 +152,6 @@ using namespace std;
 
 const char *LocateResource(const char *file);
 bool FileExists(const char *file);
+string GetConfigDir();
 
 #endif /* #ifdef INC_PLATFORM_HPP */
