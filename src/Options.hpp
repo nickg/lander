@@ -21,6 +21,7 @@
 #include "Platform.hpp"
 #include "ScreenManager.hpp"
 #include "Font.hpp"
+#include "ConfigFile.hpp"
 
 class Options : public Screen {
 public:
@@ -37,6 +38,8 @@ private:
    
    void DisplayHelpText();
    void DisplayItems();
+
+   void Apply();
 
    static const double FADE_SPEED;
    
@@ -60,6 +63,7 @@ private:
    double fadeAlpha;
    ItemList items;
    unsigned int selected;
+   ConfigFile cfile;
 };
 
 #endif

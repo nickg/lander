@@ -29,9 +29,10 @@ Options::Options()
      fadeAlpha(0.0),
      selected(0)
 {
-   Item fullscreen = { "Fullscreen", 0 };
+   Item fullscreen = { "Fullscreen" };
    fullscreen.values.push_back("Yes");
    fullscreen.values.push_back("No");
+   fullscreen.active = (cfile.get_bool("fullscreen") ? 0 : 1);
 
    // TODO: It would be better to query SDL for these values
    Item resolution = { "Resolution", 0 };
@@ -92,6 +93,11 @@ void Options::ProcessMain()
    }
 }
 
+void Options::Apply()
+{
+   
+}
+
 void Options::ProcessFadeOut()
 {
    fadeAlpha -= FADE_SPEED;
@@ -99,6 +105,7 @@ void Options::ProcessFadeOut()
    if (fadeAlpha <= 0.0) {
       fadeAlpha = 0.0;
 
+      Apply();
       ScreenManager::GetInstance().SelectScreen("MAIN MENU");
    }
 }
