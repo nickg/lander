@@ -40,6 +40,19 @@ Options::Options()
    resolution.values.push_back("1024x768");
    resolution.values.push_back("1280x1024");
 
+   int hres = cfile.get_int("hres");
+   int vres = cfile.get_int("vres");
+   string currentRes = MakeResolutionString(hres, vres);
+   int i = 0;
+   for (StringListIt it = resolution.values.begin();
+        it != resolution.values.end();
+        ++it, ++i) {
+      if (*it == currentRes) {
+         resolution.active = i;
+         break;
+      }
+   }
+
    items.push_back(fullscreen);
    items.push_back(resolution);
 }
@@ -97,15 +110,14 @@ void Options::Apply()
 {
    for (ItemListIt it = items.begin(); it != items.end(); ++it) {
       if ((*it).name == "Fullscreen") {
-         cout << "Set fullscreen" << endl;
          cfile.put("fullscreen", (*it).active == 0);
       }
       if ((*it).name == "Resolution") {
          int hres, vres;
-
          ParseResolutionString((*it).values[(*it).active], &hres, &vres);
 
-         cout << "set res " << hres << "x" << vres << endl;
+         cfile.put("hres", hres);
+         cfile.put("vres", vres);
       }
    }
 }
