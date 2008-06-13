@@ -39,6 +39,9 @@ private:
    void DisplayHelpText();
    void DisplayItems();
 
+   string MakeResolutionString(int hres, int vres) const;
+   void ParseResolutionString(const string &str, int *hres, int *vres) const;
+
    void Apply();
 
    static const double FADE_SPEED;

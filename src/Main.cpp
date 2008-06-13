@@ -40,10 +40,12 @@ int main(int argc, char **argv)
    const int DEFAULT_VRES = 600;
    const int DEFAULT_FSCREEN = false;
 
-   ConfigFile cfile;   
-   width = cfile.get_int("hres", DEFAULT_HRES);
-   height = cfile.get_int("vres", DEFAULT_VRES);
-   fullscreen = cfile.get_bool("fullscreen", DEFAULT_FSCREEN);
+   {
+      ConfigFile cfile;   
+      width = cfile.get_int("hres", DEFAULT_HRES);
+      height = cfile.get_int("vres", DEFAULT_VRES);
+      fullscreen = cfile.get_bool("fullscreen", DEFAULT_FSCREEN);
+   }
 
 #ifdef WIN32
    // Work out colour depth

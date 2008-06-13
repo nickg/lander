@@ -31,6 +31,8 @@ ConfigFile::ConfigFile(string filename)
          break;
 
       cout << "key=" << key << " value=" << value << endl;
+      
+      settings[key] = value;
    }
 
    ifs.close();
@@ -40,6 +42,8 @@ ConfigFile::~ConfigFile()
 {
    if (dirty) {
       ofstream of((GetConfigDir() + filename).c_str());
+
+      cout << "Writing config file" << endl;
 
       for (map<string, string>::iterator it = settings.begin();
            it != settings.end();
@@ -110,6 +114,7 @@ bool ConfigFile::get_bool(const string &key, bool def)
 
 void ConfigFile::put(string key, string value)
 {
+   cout << "put " << key << "=" << value << endl;
    settings[key] = value;
    dirty = true;
 }

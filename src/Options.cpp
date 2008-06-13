@@ -95,7 +95,19 @@ void Options::ProcessMain()
 
 void Options::Apply()
 {
-   
+   for (ItemListIt it = items.begin(); it != items.end(); ++it) {
+      if ((*it).name == "Fullscreen") {
+         cout << "Set fullscreen" << endl;
+         cfile.put("fullscreen", (*it).active == 0);
+      }
+      if ((*it).name == "Resolution") {
+         int hres, vres;
+
+         ParseResolutionString((*it).values[(*it).active], &hres, &vres);
+
+         cout << "set res " << hres << "x" << vres << endl;
+      }
+   }
 }
 
 void Options::ProcessFadeOut()
@@ -202,3 +214,19 @@ void Options::Display()
    DisplayItems();
 }
 
+string Options::MakeResolutionString(int hres, int vres) const
+{
+   ostringstream ss;
+   ss << hres << "x" << vres;
+   return ss.str();
+}
+
+void Options::ParseResolutionString(const string &str, int *hres, int *vres) const
+{
+   char x;
+   istringstream ss(str);
+   ss >> *hres;
+   ss >> x;
+   assert(x == 'x');
+   ss >> *vres;
+}
