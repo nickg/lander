@@ -23,6 +23,43 @@
 
 #include <SDL_main.h>
 
+static MainMenu *menu = NULL;
+static Game *game = NULL;
+static HighScores *scores = NULL;
+static Options *options = NULL;
+
+static void DestroyScreens()
+{
+   ScreenManager::GetInstance().RemoveAllScreens();
+   if (menu)
+      delete menu;
+   if (game)
+      delete game;
+   if (scores)
+      delete scores;
+   if (options)
+      delete options;
+}
+
+/*
+ * Recreate all the screens. After a resolution switch for
+ * example.
+ */
+void RecreateScreens()
+{
+   DestroyScreens();
+   
+   menu = new MainMenu();
+   game = new Game();
+   scores = new HighScores();
+   options = new Options();
+   
+   ScreenManager &sm = ScreenManager::GetInstance();
+   sm.AddScreen("MAIN MENU", menu);
+   sm.AddScreen("GAME", game);
+   sm.AddScreen("HIGH SCORES", scores);
+   sm.AddScreen("OPTIONS", options);
+}
 
 /* 
  * Entry point.
@@ -62,27 +99,13 @@ int main(int argc, char **argv)
       OpenGL &opengl = OpenGL::GetInstance();
       opengl.Init(width, height, depth, fullscreen);
 
-      // Create screens
-      MainMenu *mm = new MainMenu();
-      Game *g = new Game();
-      HighScores *hs = new HighScores();
-      Options *opt = new Options();
-
-      ScreenManager &sm = ScreenManager::GetInstance();
-      sm.AddScreen("MAIN MENU", mm);
-      sm.AddScreen("GAME", g);
-      sm.AddScreen("HIGH SCORES", hs);
-      sm.AddScreen("OPTIONS", opt);
-
-      // Run the game
-      sm.SelectScreen("MAIN MENU");
-      opengl.Run();
+      RecreateScreens();
       
-      sm.RemoveAllScreens();
-      delete mm;
-      delete g;
-      delete hs;
-      delete opt;
+      // Run the game
+      ScreenManager::GetInstance().SelectScreen("MAIN MENU");
+      opengl.Run();
+
+      DestroyScreens();
    }
    catch (std::runtime_error e) {
 #ifdef WIN32

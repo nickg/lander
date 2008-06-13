@@ -108,6 +108,8 @@ public:
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
+
+   bool SetVideoMode(bool fullscreen, int width, int height);
   
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);
@@ -127,9 +129,10 @@ private:
    void RuntimeError(string mess);
 
    // Window related variables
-   int screen_width, screen_height, screen_depth;
+   int screen_width, screen_height;
    bool fullscreen;
    bool running, active, dodisplay;
+   int sdl_flags;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

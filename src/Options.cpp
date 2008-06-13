@@ -108,17 +108,28 @@ void Options::ProcessMain()
 
 void Options::Apply()
 {
+   int hres = 0, vres = 0;
+   bool fullscreen = false;
+   
    for (ItemListIt it = items.begin(); it != items.end(); ++it) {
       if ((*it).name == "Fullscreen") {
-         cfile.put("fullscreen", (*it).active == 0);
+         fullscreen = (*it).active == 0;
+         
+         cfile.put("fullscreen", fullscreen);
       }
       if ((*it).name == "Resolution") {
-         int hres, vres;
          ParseResolutionString((*it).values[(*it).active], &hres, &vres);
 
          cfile.put("hres", hres);
          cfile.put("vres", vres);
       }
+   }
+
+   assert(hres > 0 && vres > 0);
+
+   if (OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres)) {
+      // This *must* be the very last thing that is done!
+      RecreateScreens();
    }
 }
 

@@ -150,6 +150,7 @@ using namespace std;
 
 #endif /* #ifdef LANDER_BIG_ENDIAN */
 
+void RecreateScreens();
 const char *LocateResource(const char *file);
 bool FileExists(const char *file);
 string GetConfigDir();

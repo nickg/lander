@@ -22,7 +22,7 @@
 #include "ScreenManager.hpp"
 
 OpenGL::OpenGL()
-   : screen_width(0), screen_height(0), screen_depth(0),
+   : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
      dodisplay(true),
      fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0)
@@ -46,31 +46,17 @@ OpenGL &OpenGL::GetInstance()
  * necessary initialisation.
  */
 void OpenGL::Init(int width, int height, int depth, bool fullscreen)
-{
-   // Store parameters
-   screen_height = height;
-   screen_width = width;
-   screen_depth = depth;
-   this->fullscreen = fullscreen;
-
+{   
    // Start SDL
    if (SDL_Init(SDL_INIT_VIDEO) < 0)
       RuntimeError("Unable to initialise SDL: " + SDLErrorString());
    atexit(SDL_Quit);
 
-   int flags = SDL_OPENGL;
-   if (fullscreen)
-      flags |= SDL_FULLSCREEN;
+   SetVideoMode(fullscreen, width, height);
     
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-   if (SDL_SetVideoMode(screen_width, screen_height, 0, flags) == NULL)
-      RuntimeError("Unable to create OpenGL screen: " + SDLErrorString());;
-
    SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
    SDL_ShowCursor(SDL_DISABLE);
-    
-   ResizeGLScene(screen_width, screen_height);
 
    // Start OpenGL
    if (!InitGL())
@@ -80,6 +66,27 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 void OpenGL::RuntimeError(string mess)
 {
    throw runtime_error(mess);
+}
+
+bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
+{
+   bool resized = !(width == screen_width && height == screen_height);
+   
+   screen_height = height;
+   screen_width = width;
+   this->fullscreen = fullscreen;
+
+   sdl_flags = SDL_OPENGL;
+   if (fullscreen)
+      sdl_flags |= SDL_FULLSCREEN;
+   
+   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+   if (SDL_SetVideoMode(screen_width, screen_height, 0, sdl_flags) == NULL)
+      RuntimeError("Unable to create OpenGL screen: " + SDLErrorString());;
+    
+   ResizeGLScene(screen_width, screen_height);
+
+   return resized;
 }
 
 /*

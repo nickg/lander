@@ -2,7 +2,7 @@ bin_PROGRAMS = lander
 
 AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall
 AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
-lander_SOURCES = Main.cpp Lander.hpp Game.cpp \
+lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Font.cpp Font.hpp HighScores.cpp HighScores.hpp Input.cpp \
 	Input.hpp Platform.hpp LoadOnce.hpp \
 	OpenGL.cpp OpenGL.hpp Menu.cpp Menu.hpp Emitter.cpp \
