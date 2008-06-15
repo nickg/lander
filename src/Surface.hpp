@@ -36,6 +36,7 @@ public:
    static const int NUM_SURF_TEX = 5;   // Number of available surface textures
    static const int SURFACE_SIZE;
    static const int MAX_SURFACE_HEIGHT;
+   static const int MIN_SURFACE_HEIGHT;
    static const int VARIANCE;
    
 private:

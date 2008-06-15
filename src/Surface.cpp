@@ -18,9 +18,10 @@
 #include "Surface.hpp"
 #include "LoadOnce.hpp"
 
-const int Surface::VARIANCE = 65;     // Bumpyness of landscape
-const int Surface::MAX_SURFACE_HEIGHT = 300;
-const int Surface::SURFACE_SIZE = 20;
+const int Surface::VARIANCE(65);     // Bumpyness of landscape
+const int Surface::MAX_SURFACE_HEIGHT(300);
+const int Surface::MIN_SURFACE_HEIGHT(10);
+const int Surface::SURFACE_SIZE(20);
 
 Texture *Surface::surfTexture[Surface::NUM_SURF_TEX];
 
@@ -88,7 +89,7 @@ void Surface::Generate(int surftex, LandingPadList &pads)
          
          do
             change = surface[i].points[1].y + (rand()%VARIANCE-(VARIANCE/2));
-         while (change > MAX_SURFACE_HEIGHT || change < 0);
+         while (change > MAX_SURFACE_HEIGHT || change < MIN_SURFACE_HEIGHT);
          surface[i].points[2].x = SURFACE_SIZE;
          surface[i].points[2].y = change;
       }
@@ -96,8 +97,11 @@ void Surface::Generate(int surftex, LandingPadList &pads)
          // Make flat terrain for landing pad
          if (i != 0)
             change = surface[i-1].points[2].y;
-         else
-            change = rand()%MAX_SURFACE_HEIGHT;
+         else {
+            do
+               change = rand()%MAX_SURFACE_HEIGHT;
+            while (change > MAX_SURFACE_HEIGHT || change < MIN_SURFACE_HEIGHT);
+         }
          surface[i].points[1].x = 0;
          surface[i].points[1].y = change;
          surface[i].points[2].x = SURFACE_SIZE;
