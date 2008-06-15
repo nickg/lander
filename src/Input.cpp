@@ -86,11 +86,23 @@ void Input::Update()
          if (textinput) {
             if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
                 || (e.key.keysym.sym == SDLK_SPACE)) {
-               text += (char)e.key.keysym.sym;
+               char ch = (char)e.key.keysym.sym;
+               text += shift ? toupper(ch) : ch;
+            }
+            else if (e.key.keysym.sym == SDLK_LSHIFT
+                     || e.key.keysym.sym == SDLK_RSHIFT) {
+               shift = true;
             }
             else if (e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 0)	{
                text.erase(text.length() - 1, 1);
             }
+         }
+         break;
+
+      case SDL_KEYUP:
+         if (e.key.keysym.sym == SDLK_LSHIFT
+                     || e.key.keysym.sym == SDLK_RSHIFT) {
+            shift = false;
          }
          break;
 
@@ -173,6 +185,7 @@ void Input::OpenCharBuffer(int max)
 {
    assert(!textinput);
 
+   shift = false;
    maxchar = max;
    text = "";
    textinput = true;

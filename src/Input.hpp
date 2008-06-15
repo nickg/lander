@@ -53,6 +53,7 @@ private:
    int ignore[NUM_KEYS];		// Timeout for keys being ignored
    int jignore[NUM_BUTTONS];	// Timeout for buttons being ignored
 
+   bool shift;
    bool textinput;			// Is a character buffer open?
    string text;				// Text read so far
    int maxchar;				// Maximum number of characters to read

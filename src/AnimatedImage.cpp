@@ -43,7 +43,6 @@ void AnimatedImage::Draw(int x, int y, double rotate, double scale,
    int width = Texture::GetWidth();
    int height = Texture::GetHeight();
 
-   //cout << width << endl;
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
    glBindTexture(GL_TEXTURE_2D, GetGLTexture());
