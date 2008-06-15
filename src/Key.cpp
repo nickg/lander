@@ -36,11 +36,11 @@ Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
 {
    // Static initialisation
    LOAD_ONCE {
-      blueImage = new AnimatedImage("images/keyblue.png", 32, KEY_FRAMES);
-      redImage = new AnimatedImage("images/keyred.png", 32, KEY_FRAMES);
-      greenImage = new AnimatedImage("images/keygreen.png", 32, KEY_FRAMES);
-      yellowImage = new AnimatedImage("images/keyyellow.png", 32, KEY_FRAMES);
-      pinkImage = new AnimatedImage("images/keypink.png", 32, KEY_FRAMES);
+      blueImage = new AnimatedImage("images/keyblue.png", 32, 32, KEY_FRAMES);
+      redImage = new AnimatedImage("images/keyred.png", 32, 32, KEY_FRAMES);
+      greenImage = new AnimatedImage("images/keygreen.png", 32, 32, KEY_FRAMES);
+      yellowImage = new AnimatedImage("images/keyyellow.png", 32, 32, KEY_FRAMES);
+      pinkImage = new AnimatedImage("images/keypink.png", 32, 32, KEY_FRAMES);
 
       blueArrow = new Image("images/arrowblue.png");
       redArrow = new Image("images/arrowred.png");

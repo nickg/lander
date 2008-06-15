@@ -25,7 +25,7 @@ Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
    : objgrid(o), viewport(v)
 {
    LOAD_ONCE {
-      image = new AnimatedImage("images/mine.png", 64, MINE_FRAME_COUNT);
+      image = new AnimatedImage("images/mine.png", 64, 64, MINE_FRAME_COUNT);
    }
    
    current = 0;

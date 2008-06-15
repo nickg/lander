@@ -17,55 +17,89 @@
 
 #include "AnimatedImage.hpp"
 
-AnimatedImage::AnimatedImage(const char *file, int frameWidth, int frameCount)
-   : Image(file), frameWidth(frameWidth), frameCount(frameCount)
+AnimatedImage::AnimatedImage(const char *file, int frameWidth, int frameHeight,
+                             int frameCount)
+   : Image(file), frameWidth(frameWidth), frameHeight(frameHeight),
+     frameCount(frameCount)
 {
    if (frameCount == 0) {
-      if (GetWidth() % frameWidth != 0) {
+      if (Texture::GetWidth() % frameWidth != 0) {
          cerr << "Warning: " << file << " with frame width " << frameWidth
               << " does not have whole number of frames" << endl;
       }
-      this->frameCount = GetWidth() / frameWidth;
+      if (Texture::GetHeight() % frameHeight != 0) {
+         cerr << "Warning: " << file << " with frame height " << frameHeight
+              << " does not have whole number of frames" << endl;
+      }
+      this->frameCount = FramesPerRow() * FramesPerCol();
    }
-   currFrame = 0;
+   currFrameX = 0;
+   currFrameY = 0;
 }
 
 void AnimatedImage::Draw(int x, int y, double rotate, double scale,
                          double alpha, double white) const
 {
    int width = Texture::GetWidth();
-   int height = GetHeight();
+   int height = Texture::GetHeight();
 
    //cout << width << endl;
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
    glBindTexture(GL_TEXTURE_2D, GetGLTexture());
    glLoadIdentity();
-   glTranslated((double)(x + frameWidth/2), (double)(y + height/2), 0.0);
+   glTranslated((double)(x + frameWidth/2), (double)(y + frameHeight/2), 0.0);
    glScaled(scale, scale, 0);
    glRotated(rotate, 0.0, 0.0, 1.0);
    glColor4d(white, white, white, alpha);
 
-   double tex_l = ((double)(currFrame * frameWidth))/(double)width;
+   double tex_l = ((double)(currFrameX * frameWidth))/(double)width;
    double tex_r = tex_l + (double)frameWidth/(double)width;
+
+   double tex_t = ((double)(currFrameY * frameHeight))/(double)height;
+   double tex_b = tex_t + (double)frameHeight/(double)height;
    
    glBegin(GL_QUADS);
-   glTexCoord2d(tex_l, 0.0); glVertex2i(-(frameWidth/2), -(height/2));
-   glTexCoord2d(tex_l, 1.0); glVertex2i(-(frameWidth/2), height/2);
-   glTexCoord2d(tex_r, 1.0); glVertex2i(frameWidth/2, height/2);
-   glTexCoord2d(tex_r, 0.0); glVertex2i(frameWidth/2, -(height/2));
+   glTexCoord2d(tex_l, tex_t); glVertex2i(-(frameWidth/2), -(frameHeight/2));
+   glTexCoord2d(tex_l, tex_b); glVertex2i(-(frameWidth/2), frameHeight/2);
+   glTexCoord2d(tex_r, tex_b); glVertex2i(frameWidth/2, frameHeight/2);
+   glTexCoord2d(tex_r, tex_t); glVertex2i(frameWidth/2, -(frameHeight/2));
    glEnd();
+}
+
+int AnimatedImage::FramesPerRow() const
+{
+   return Texture::GetWidth() / frameWidth;
+}
+
+int AnimatedImage::FramesPerCol() const
+{
+   return Texture::GetHeight() / frameHeight;
 }
 
 void AnimatedImage::NextFrame()
 {
-   currFrame = (currFrame + 1) % frameCount;
+   currFrameX = (currFrameX + 1) % FramesPerRow();
+   if (currFrameX == 0)
+      currFrameY = (currFrameY + 1) % FramesPerCol();
+   if (GetFrame() >= frameCount) {
+      currFrameX = 0;
+      currFrameY = 0;
+   }
 }
 
 void AnimatedImage::SetFrame(int f)
-{
+{   
    if (f >= frameCount)
-      throw new runtime_error("SetFrame frame out of range");
-   else
-      currFrame = f;
+      throw runtime_error("SetFrame frame out of range");
+   else {
+      currFrameX = f % FramesPerRow();
+      currFrameY = f / FramesPerRow();
+   }
 }
+
+int AnimatedImage::GetFrame() const
+{
+   return (currFrameY * FramesPerRow()) + currFrameX;
+}
+

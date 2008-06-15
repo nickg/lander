@@ -22,18 +22,22 @@
 
 class AnimatedImage : public Image {
 public:
-   AnimatedImage(const char *file, int frameWidth, int frameCount=0);
+   AnimatedImage(const char *file, int frameWidth, int frameHeight, int frameCount=0);
    
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;
    void NextFrame();
    void SetFrame(int f);
 
-   int GetFrame() const { return currFrame; }
+   int GetFrame() const;
    int GetWidth() const { return frameWidth; }
+   int GetHeight() const { return frameHeight; }
 private:
-   int frameWidth, frameCount;
-   int currFrame;
+   int FramesPerRow() const;
+   int FramesPerCol() const;
+   
+   int frameWidth, frameHeight, frameCount;
+   int currFrameX, currFrameY;
 };
 
 #endif
