@@ -48,7 +48,7 @@ OpenGL &OpenGL::GetInstance()
 void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 {   
    // Start SDL
-   if (SDL_Init(SDL_INIT_VIDEO) < 0)
+   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
       RuntimeError("Unable to initialise SDL: " + SDLErrorString());
    atexit(SDL_Quit);
 

@@ -25,6 +25,7 @@
 #include "Emitter.hpp"
 #include "Image.hpp"
 #include "Font.hpp"
+#include "SoundEffect.hpp"
 
 #define HS_FADE_IN_SPEED	0.2f
 #define HS_FADE_OUT_SPEED	-0.02f
@@ -93,6 +94,7 @@ private:
    HighScoreState state;
    ScoreFile scoreFile;
    Font largeFont, scoreNameFont;
+   SoundEffect fwBang;
    	
    // Fireworks
    static const int MAX_FIREWORKS = 7;

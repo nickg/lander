@@ -1,5 +1,5 @@
 /*
- * Bitmap.cpp - Implementation of high scores screen.
+ * HighScores.cpp - Implementation of high scores screen.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,8 @@
 HighScores::HighScores()
    : hscoreImage("images/hscore.png"),
      largeFont(LocateResource("Default_Font.ttf"), 15),
-     scoreNameFont(LocateResource("Default_Font.ttf"), 14)
+     scoreNameFont(LocateResource("Default_Font.ttf"), 14),
+     fwBang(LocateResource("sounds/firework_1.wav"))
 {
 
 }
@@ -103,6 +104,8 @@ void HighScores::Process()
             fw[i].em->createrate = 2.0f;
             fw[i].timeout = 5;
             fw[i].em->life = 1.0f;
+
+            fwBang.Play();
          }
          else if (fw[i].timeout > 0)	{
             if (--fw[i].timeout == 0)

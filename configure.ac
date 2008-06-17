@@ -34,6 +34,10 @@ AM_PATH_SDL($SDL_VERSION,
 dnl Check for SDL_Image
 AC_CHECK_LIB(SDL_image, IMG_Load, [],
              AC_MSG_ERROR([*** SDL_image not found!]))
+
+dnl Check for SDL_Mixer
+AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [],
+             AC_MSG_ERROR([*** SDL_mixer not found!]))
                                                                
 
 dnl Check for Freetype and libpng
