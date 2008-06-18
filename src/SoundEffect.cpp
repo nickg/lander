@@ -25,7 +25,7 @@ Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
 SoundEffect::SoundEffect(const char *filename)
-   : channel(-1)
+   : sound(NULL), channel(-1)
 {
    if (++loadCount == 1) {
       
@@ -38,13 +38,13 @@ SoundEffect::SoundEffect(const char *filename)
 
       // Get the actual settings used
       Mix_QuerySpec(&audioRate, &audioFormat, &audioChannels);
+   }
 
-      if (!(sound = Mix_LoadWAV(filename))) {
-         ostringstream ss;
-         ss << "Error loading " << filename << ": ";
-         ss << Mix_GetError();
-         throw runtime_error(ss.str());
-      }
+   if (!(sound = Mix_LoadWAV(filename))) {
+      ostringstream ss;
+      ss << "Error loading " << filename << ": ";
+      ss << Mix_GetError();
+      throw runtime_error(ss.str());
    }
 }
 
@@ -52,10 +52,10 @@ SoundEffect::~SoundEffect()
 {
    if (channel != -1)
       Mix_HaltChannel(channel);
-   
+
    Mix_FreeChunk(sound);
    
-   if (--loadCount == 0)      
+   if (--loadCount == 0)
       Mix_CloseAudio();
 }
 

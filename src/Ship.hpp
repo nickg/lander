@@ -23,6 +23,7 @@
 #include "Viewport.hpp"
 #include "Emitter.hpp"
 #include "Image.hpp"
+#include "SoundEffect.hpp"
 
 class Ship {
 public:
@@ -67,6 +68,8 @@ private:
    Explosion explosion;
    SmokeTrail exhaust;
    bool thrusting;
+
+   SoundEffect boingSound;
    
    static const int NUM_HOTSPOTS = 8;
    Point points[NUM_HOTSPOTS];

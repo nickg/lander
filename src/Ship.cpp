@@ -29,7 +29,8 @@ const Point Ship::hotspots[] = {
 Ship::Ship(Viewport *v)
    : shipImage("images/ship.png"),
      xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
-     thrusting(false)
+     thrusting(false),
+     boingSound(LocateResource("sounds/boing1.wav"))
 {
    
 }
@@ -83,18 +84,22 @@ void Ship::Move()
     if (xpos <= 0.0) {
        xpos = 0.0;
        speedX *= -0.5;
+        boingSound.Play();
     }
     else if (xpos + shipImage.GetWidth() > viewport->GetLevelWidth()) {
        xpos = (double)(viewport->GetLevelWidth() - shipImage.GetWidth());
        speedX *= -0.5;
+       boingSound.Play();
     }
     if (ypos <= 0.0) {
        ypos = 0.0;
        speedY *= -0.5;
+       boingSound.Play();
     }
     else if (ypos + shipImage.GetHeight() > viewport->GetLevelHeight()) {
        ypos = (double)(viewport->GetLevelHeight() - shipImage.GetHeight());
        speedY *= -0.5;
+       boingSound.Play();
     }
     
     exhaust.xpos = xpos + shipImage.GetWidth()/2

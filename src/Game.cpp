@@ -66,7 +66,8 @@ Game::Game()
      gameOver("images/gameover.png"),
      normalFont(LocateResource("Default_Font.ttf"), 11),
      scoreFont(LocateResource("Default_Font.ttf"), 16),
-     bigFont(LocateResource("Default_Font.ttf"), 20)
+     bigFont(LocateResource("Default_Font.ttf"), 20),
+     impactSound(LocateResource("sounds/bomb_explosion.wav"))
 {
 
 }
@@ -535,6 +536,8 @@ void Game::ExplodeShip()
 
    // Decrement lives
    life_alpha = LIFE_ALPHA_BASE - 1.0f;
+
+   impactSound.Play();
 }
 
 void Game::Display()

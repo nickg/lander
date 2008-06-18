@@ -14,7 +14,8 @@ EXTRA_DIST = images/ship.png images/star.png images/start_option.png \
 	images/fuelbar.png images/speedmeter.png images/particle.png \
 	images/landingpad.png images/landingpadred.png images/title.png \
 	images/gameover.png \
-	sounds/firework_1.wav \
+	sounds/firework_1.wav sounds/bomb_explosion.wav \
+	sounds/boing1.wav \
 	Default_Font.ttf
 
 nobase_dist_pkgdata_DATA = $(EXTRA_DIST)

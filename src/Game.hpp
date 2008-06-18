@@ -26,6 +26,7 @@
 #include "ScreenManager.hpp"
 #include "Input.hpp"
 #include "Font.hpp"
+#include "SoundEffect.hpp"
 
 #include "Menu.hpp"
 #include "HighScores.hpp"
@@ -128,6 +129,8 @@ private:
    Image starImage, gameOver;
 
    Font normalFont, scoreFont, bigFont;
+
+   SoundEffect impactSound;
     
    // Stars
    static const int MAX_GAME_STARS = 2048;
