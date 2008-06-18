@@ -274,11 +274,15 @@ MenuStar::MenuStar()
    const int screenWidth = OpenGL::GetInstance().GetWidth();
    const int screenHeight = OpenGL::GetInstance().GetHeight();
 
-   pos = Position((float)(rand()%(screenWidth/2) + screenWidth/4),
-                  (float)(rand()%(screenHeight/2) + screenHeight/4));
-
-   float ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
-   float angle = atanf(ratio);
+   double x = (double)(rand()%(screenWidth/2) + screenWidth/4);
+   double y;
+   do 
+      y = (double)(rand()%(screenHeight/2) + screenHeight/4);
+   while (y == 0);
+   pos = Position(x, y);
+   
+   double ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
+   double angle = atan(ratio);
    vel = Velocity::Project(SPEED, angle);
 }
 
