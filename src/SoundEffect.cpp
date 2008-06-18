@@ -22,6 +22,7 @@ int SoundEffect::audioRate(22050);
 int SoundEffect::audioChannels(2);
 int SoundEffect::audioBuffers(4096);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
+bool SoundEffect::enabled(true);
 
 SoundEffect::SoundEffect(const char *filename)
    : channel(-1)
@@ -60,5 +61,6 @@ SoundEffect::~SoundEffect()
 
 void SoundEffect::Play()
 {
-   channel = Mix_PlayChannel(-1, sound, 0);
+   if (enabled)
+      channel = Mix_PlayChannel(-1, sound, 0);
 }

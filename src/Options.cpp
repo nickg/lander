@@ -19,6 +19,7 @@
 #include "Menu.hpp"
 #include "OpenGL.hpp"
 #include "Input.hpp"
+#include "SoundEffect.hpp"
 
 const double Options::FADE_SPEED = 0.1;
 
@@ -53,8 +54,14 @@ Options::Options()
       }
    }
 
+   Item sound = { "Sound Effects" };
+   sound.values.push_back("On");
+   sound.values.push_back("Off");
+   sound.active = (cfile.get_bool("sound") ? 0 : 1);
+
    items.push_back(fullscreen);
    items.push_back(resolution);
+   items.push_back(sound);
 }
 
 void Options::Load()
@@ -117,11 +124,17 @@ void Options::Apply()
          
          cfile.put("fullscreen", fullscreen);
       }
-      if ((*it).name == "Resolution") {
+      else if ((*it).name == "Resolution") {
          ParseResolutionString((*it).values[(*it).active], &hres, &vres);
 
          cfile.put("hres", hres);
          cfile.put("vres", vres);
+      }
+      else if ((*it).name == "Sound Effects") {
+         bool sound = (*it).active == 0;
+         SoundEffect::SetEnabled(sound);
+         
+         cfile.put("sound", sound);
       }
    }
 

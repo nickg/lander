@@ -27,6 +27,8 @@ public:
    SoundEffect(const char *filename);
    ~SoundEffect();
 
+   static void SetEnabled(bool state) { enabled = state; }
+
    void Play();
 private:
    Mix_Chunk *sound;
@@ -35,6 +37,8 @@ private:
    static int loadCount;
    static int audioChannels, audioBuffers, audioRate;
    static Uint16 audioFormat;
+
+   static bool enabled;
 };
 
 #endif

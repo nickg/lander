@@ -20,6 +20,7 @@
 #include "Game.hpp"
 #include "Options.hpp"
 #include "ConfigFile.hpp"
+#include "SoundEffect.hpp"
 
 #include <SDL_main.h>
 
@@ -76,12 +77,14 @@ int main(int argc, char **argv)
    const int DEFAULT_HRES = 800;
    const int DEFAULT_VRES = 600;
    const int DEFAULT_FSCREEN = false;
+   const int DEFAULT_SOUND = true;
 
    {
       ConfigFile cfile;   
       width = cfile.get_int("hres", DEFAULT_HRES);
       height = cfile.get_int("vres", DEFAULT_VRES);
       fullscreen = cfile.get_bool("fullscreen", DEFAULT_FSCREEN);
+      SoundEffect::SetEnabled(cfile.get_bool("sound", DEFAULT_SOUND));
    }
 
 #ifdef WIN32
