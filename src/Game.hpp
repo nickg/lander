@@ -114,7 +114,7 @@ private:
    bool bDebugMode;
    float flGravity, starrotate, fade_alpha, life_alpha;
    TextureQuad fade;
-   int score, newscore, nextnewlife;
+   int score, newscore, nextnewlife, newscore_width;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
    enum GameState { gsNone, gsInGame, gsExplode, gsGameOver, gsDeathWait, 

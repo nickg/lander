@@ -110,6 +110,7 @@ void Game::CalculateScore(int padIndex)
       (level * SCORE_LEVEL)
       + ((MAX_PAD_SIZE + 2 - pads[padIndex].GetLength()) * SCORE_PAD_SIZE)
       + (fuelmeter.GetFuel() / SCORE_FUEL_DIV);
+   newscore_width = bigFont.GetStringWidth(i18n("Score:  %d"), newscore);
 }
 
 void Game::Process()
@@ -613,7 +614,7 @@ void Game::Display()
    if (state == gsExplode) {
       ship.DrawExplosion(true);
       glColor3f(0.0f, 1.0f, 0.0f);
-      const char *sdeath = i18n("Press  SPACE  to  continue");
+      const char *sdeath = i18n("Press SPACE to continue");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
       int y = opengl.GetHeight() - 40;
       normalFont.Print(x, y, sdeath);
@@ -684,9 +685,10 @@ void Game::Display()
       levelComp.Draw(lc_x, lc_y);
          
       glColor3f(0.0f, 0.5f, 0.9f);
-      int x = (opengl.GetWidth() - bigFont.GetStringWidth(scoretxt) - 40) / 2;
+      int printScore = newscore > 0 ? newscore : 0;
+      int x = (opengl.GetWidth() - newscore_width) / 2;
       int y = (opengl.GetHeight() - 30)/2 + 50;
-      bigFont.Print(x, y, scoretxt, newscore > 0 ? newscore : 0);
+      bigFont.Print(x, y, scoretxt, printScore);
    }
    
    // Draw level number text
