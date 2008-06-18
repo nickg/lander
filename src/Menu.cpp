@@ -274,11 +274,11 @@ MenuStar::MenuStar()
    const int screenWidth = OpenGL::GetInstance().GetWidth();
    const int screenHeight = OpenGL::GetInstance().GetHeight();
 
-   double x = (double)(rand()%(screenWidth/2) + screenWidth/4);
-   double y;
-   do 
+   double x, y;
+   do {
+      x = (double)(rand()%(screenWidth/2) + screenWidth/4);
       y = (double)(rand()%(screenHeight/2) + screenHeight/4);
-   while (y == 0);
+   } while (y == 0);
    pos = Position(x, y);
    
    double ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
