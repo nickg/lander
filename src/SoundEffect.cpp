@@ -16,6 +16,7 @@
  */
 
 #include "SoundEffect.hpp"
+#include "ConfigFile.hpp"
 
 int SoundEffect::loadCount(0);
 int SoundEffect::audioRate(22050);
@@ -30,17 +31,18 @@ SoundEffect::SoundEffect(const char *filename)
    if (++loadCount == 1) {
       
       if (Mix_OpenAudio(audioRate, audioFormat, audioChannels, audioBuffers)) {
-         ostringstream ss;
-         ss << "Failed to open audio: ";
-         ss << Mix_GetError();
-         throw runtime_error(ss.str());
+         cerr << "Failed to open audio: " << Mix_GetError() << endl;
+         cerr << "(Disabling sound effects)" << endl;
+         
+         SetEnabled(false);
+         return;
       }
 
       // Get the actual settings used
       Mix_QuerySpec(&audioRate, &audioFormat, &audioChannels);
    }
 
-   if (!(sound = Mix_LoadWAV(filename))) {
+   if (enabled && !(sound = Mix_LoadWAV(filename))) {
       ostringstream ss;
       ss << "Error loading " << filename << ": ";
       ss << Mix_GetError();
