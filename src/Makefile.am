@@ -1,6 +1,7 @@
 bin_PROGRAMS = lander
 
-AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall
+# Add -pg for profiling
+AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall -pg
 AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Font.cpp Font.hpp HighScores.cpp HighScores.hpp Input.cpp \

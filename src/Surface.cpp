@@ -117,12 +117,17 @@ void Surface::Generate(int surftex, LandingPadList &pads)
 
 void Surface::Display()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
-   for (int i = 0; i < viewport->GetLevelWidth()/SURFACE_SIZE; i++) {
+   int left = viewport->GetXAdjust()/SURFACE_SIZE;
+   int right = left + OpenGL::GetInstance().GetWidth()/SURFACE_SIZE + 1;
+   int max = viewport->GetLevelWidth()/SURFACE_SIZE;
+   if (right > max)
+      right = max;
+   
+   for (int i = left; i < right; i++) {
       surface[i].xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
       surface[i].ypos = viewport->GetLevelHeight()
          - viewport->GetYAdjust() - MAX_SURFACE_HEIGHT;
-      opengl.Draw(&surface[i]);
+      OpenGL::GetInstance().Draw(&surface[i]);
    }
 }
 
@@ -139,6 +144,9 @@ bool Surface::CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex)
    if (lookmax >= viewport->GetLevelWidth()/SURFACE_SIZE)
       lookmax = viewport->GetLevelWidth()/SURFACE_SIZE - 1;
 
+   if (ship.GetY() < viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT)
+      return false;
+   
    *padIndex = -1;
    
    for (int i = lookmin; i <= lookmax; i++) {

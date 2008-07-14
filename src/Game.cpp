@@ -548,6 +548,7 @@ void Game::Display()
    for (int i = 0; i < nStarCount; i++) {
       int x = stars[i].xpos - viewport.GetXAdjust();
       int y = stars[i].ypos - viewport.GetYAdjust();
+      
       starImage.Draw(x, y, starrotate, stars[i].scale);
       starrotate += 0.005f;
    }
