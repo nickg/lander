@@ -41,9 +41,16 @@ public:
 private:
    static const int AS_VARIANCE = 64;
 
+   void GenerateDisplayList(int texidx);
+
    static Texture *surfTexture[Surface::NUM_SURF_TEX];
+   GLuint display_list;
    
-   Poly uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
+   struct AsteroidSection {
+      double texX, texwidth;
+      Point points[4];
+   };
+   AsteroidSection uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
 };
 
 

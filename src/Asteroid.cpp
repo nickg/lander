@@ -30,6 +30,8 @@ Asteroid::Asteroid()
       surfTexture[3] = new Texture("images/red_rock_surface2.png");
       surfTexture[4] = new Texture("images/rock_surface2.png");
    }
+
+   display_list = glGenLists(1);
 }
 
 void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
@@ -38,18 +40,16 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
    ypos = y;
    this->width = width;
    height = 4;
-
+   
    int change, texloop=0;
 
    // Build up Polys
    for (int i = 0; i < width; i++) {
       // Set Poly parameters
-      uppolys[i].texwidth = 0.1f;
+      uppolys[i].texwidth = 0.1;
       uppolys[i].texX = ((float)texloop)/10;
       if (texloop++ == 10)
          texloop = 0;
-      uppolys[i].pointcount = 4;
-      uppolys[i].uTexture = surfTexture[surftex]->GetGLTexture();
 
       // Lower left vertex
       uppolys[i].points[0].x = i * OBJ_GRID_SIZE;
@@ -82,12 +82,10 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
    texloop = 0;
    for (int i = 0; i < width; i++) {
       // Set Poly parameters
-      downpolys[i].texwidth = 0.1f;
+      downpolys[i].texwidth = 0.1;
       downpolys[i].texX = ((float)texloop) / 10;
       if (texloop++ == 10)
          texloop = 0;
-      downpolys[i].pointcount = 4;
-      downpolys[i].uTexture = surfTexture[surftex]->GetGLTexture();
 
       // Upper left vertex
       downpolys[i].points[0].x = i * OBJ_GRID_SIZE;
@@ -115,6 +113,50 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
    // Taper last poly
    downpolys[width-1].points[2].y = 0;
    downpolys[0].points[1].y = 0;
+
+   GenerateDisplayList(surftex);
+}
+
+void Asteroid::GenerateDisplayList(int texidx)
+{
+   glNewList(display_list, GL_COMPILE);
+   
+   glDisable(GL_BLEND);
+   glEnable(GL_TEXTURE_2D);
+   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx]->GetGLTexture());
+   glColor4d(1.0, 1.0, 1.0, 1.0);
+   
+   for (int i = 0; i < width; i++) {   
+      // Up   
+      glBegin(GL_QUADS);
+        glTexCoord2d(uppolys[i].texX, 0.0);
+        glVertex2i(uppolys[i].points[0].x, uppolys[i].points[0].y);
+        glTexCoord2d(uppolys[i].texX, 1.0);
+        glVertex2i(uppolys[i].points[1].x, uppolys[i].points[1].y);
+        glTexCoord2d(uppolys[i].texX + uppolys[i].texwidth, 1.0);
+        glVertex2i(uppolys[i].points[2].x, uppolys[i].points[2].y);
+        glTexCoord2d(uppolys[i].texX + uppolys[i].texwidth, 0.0);
+        glVertex2i(uppolys[i].points[3].x, uppolys[i].points[3].y);
+      glEnd();
+      
+      glTranslated(0.0, 2.0*OBJ_GRID_SIZE, 0.0);
+      
+      // Down
+      glBegin(GL_QUADS);
+        glTexCoord2d(downpolys[i].texX, 0.0);
+        glVertex2i(downpolys[i].points[0].x, downpolys[i].points[0].y);
+        glTexCoord2d(downpolys[i].texX, 1.0);
+        glVertex2i(downpolys[i].points[1].x, downpolys[i].points[1].y);
+        glTexCoord2d(downpolys[i].texX + downpolys[i].texwidth, 1.0);
+        glVertex2i(downpolys[i].points[2].x, downpolys[i].points[2].y);
+        glTexCoord2d(downpolys[i].texX + downpolys[i].texwidth, 0.0);
+        glVertex2i(downpolys[i].points[3].x, downpolys[i].points[3].y);
+      glEnd();
+      
+      glTranslated(0.0, -2.0*OBJ_GRID_SIZE, 0.0);
+   }
+
+   glEndList();
 }
 
 /*
@@ -143,19 +185,12 @@ LineSegment Asteroid::GetDownBoundary(int poly)
 
 void Asteroid::Draw(int viewadjust_x, int viewadjust_y)
 {
-   OpenGL &opengl = OpenGL::GetInstance();
+   double ix = xpos*OBJ_GRID_SIZE - viewadjust_x;
+   double iy = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
 
-   for (int i = 0; i < width; i++) {
-      // Up
-      uppolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
-      uppolys[i].ypos = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
-      opengl.Draw(&uppolys[i]);
-
-      // Down
-      downpolys[i].xpos = xpos*OBJ_GRID_SIZE - viewadjust_x;
-      downpolys[i].ypos = (ypos+2)*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
-      opengl.Draw(&downpolys[i]);
-   }
+   glLoadIdentity();
+   glTranslated(ix, iy, 0.0);
+   glCallList(display_list);
 } 
 
 bool Asteroid::CheckCollision(Ship &ship)
