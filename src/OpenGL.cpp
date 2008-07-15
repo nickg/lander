@@ -131,7 +131,7 @@ void OpenGL::Run()
 void OpenGL::DrawGLScene()
 {
    // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
    glLoadIdentity();
 
    // Render the scene
@@ -290,10 +290,12 @@ bool OpenGL::InitGL()
    glShadeModel(GL_SMOOTH);			        // Enable smooth shading
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// Black background
    glClearDepth(1.0f);					// Depth buffer setup
+   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	// Basic blending function
    glEnable(GL_ALPHA_TEST);				// Enable alpha testing
    glAlphaFunc(GL_GREATER, 0.0);			// Alpha testing function
    glDisable(GL_NORMALIZE);
+   glDisable(GL_DEPTH_TEST);
 
    // All went OK
    return true;

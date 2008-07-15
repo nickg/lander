@@ -42,8 +42,14 @@ public:
 private:
    static Texture *surfTexture[NUM_SURF_TEX];
    
+   int texidx;
    Viewport *viewport;
-   Poly *surface;
+
+   struct SurfaceSection {
+      double texX, texwidth;
+      Point points[4];
+   };   
+   SurfaceSection *surface;
 };
 
 #endif

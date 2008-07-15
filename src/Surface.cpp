@@ -49,18 +49,16 @@ void Surface::Generate(int surftex, LandingPadList &pads)
       delete[] surface;
 
    int nPolys = viewport->GetLevelWidth()/SURFACE_SIZE;
-   surface = new Poly[nPolys];
+   surface = new SurfaceSection[nPolys];
+
+   texidx = surftex;
 
    int texloop = 0;
    for (int i = 0; i < nPolys; i++) {
-      surface[i].pointcount = 4;
-      surface[i].xpos = i * SURFACE_SIZE;
-      surface[i].ypos = viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT;
-      surface[i].uTexture = surfTexture[surftex]->GetGLTexture();
-      surface[i].texX = ((float)texloop)/10;
+      surface[i].texX = ((double)texloop)/10.0;
       if (texloop++ == 10)
          texloop = 0;
-      surface[i].texwidth = 0.1f;
+      surface[i].texwidth = 0.1;
 
       surface[i].points[0].x = 0;
       surface[i].points[0].y = MAX_SURFACE_HEIGHT;
@@ -123,11 +121,28 @@ void Surface::Display()
    if (right > max)
       right = max;
    
+   glDisable(GL_BLEND);
+   glEnable(GL_TEXTURE_2D);
+   glColor4d(1.0, 1.0, 1.0, 1.0);
+   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx]->GetGLTexture());
+      
    for (int i = left; i < right; i++) {
-      surface[i].xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
-      surface[i].ypos = viewport->GetLevelHeight()
+      double xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
+      double ypos = viewport->GetLevelHeight()
          - viewport->GetYAdjust() - MAX_SURFACE_HEIGHT;
-      OpenGL::GetInstance().Draw(&surface[i]);
+      
+      glLoadIdentity();
+      glTranslated(xpos, ypos, 0.0);
+      glBegin(GL_QUADS);
+        glTexCoord2d(surface[i].texX, 0.0);
+        glVertex2i(surface[i].points[0].x, surface[i].points[0].y);
+        glTexCoord2d(surface[i].texX, 1.0);
+        glVertex2i(surface[i].points[1].x, surface[i].points[1].y);
+        glTexCoord2d(surface[i].texX + surface[i].texwidth, 1.0);
+        glVertex2i(surface[i].points[2].x, surface[i].points[2].y);
+        glTexCoord2d(surface[i].texX + surface[i].texwidth, 0.0);
+        glVertex2i(surface[i].points[3].x, surface[i].points[3].y);
+      glEnd();
    }
 }
 
