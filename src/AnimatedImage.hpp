@@ -30,8 +30,8 @@ public:
    void SetFrame(int f);
 
    int GetFrame() const;
-   int GetWidth() const { return frameWidth; }
-   int GetHeight() const { return frameHeight; }
+   int GetFrameWidth() const { return frameWidth; }
+   int GetFrameHeight() const { return frameHeight; }
 private:
    int FramesPerRow() const;
    int FramesPerCol() const;

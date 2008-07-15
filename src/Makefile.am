@@ -1,7 +1,7 @@
 bin_PROGRAMS = lander
 
 # Add -pg for profiling
-AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall -pg
+AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall
 AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Font.cpp Font.hpp HighScores.cpp HighScores.hpp Input.cpp \
@@ -22,4 +22,4 @@ localedir = $(datadir)/locale
 
 # Add -DSHOW_FPS here to show FPS in title bar
 DEFS = -DLOCALEDIR=\"$(localedir)\" -DLINUX -DUNIX \
-	-DDATADIR=\"$(pkgdatadir)\" @DEFS@
+	-DDATADIR=\"$(pkgdatadir)\" -DSHOW_FPS @DEFS@

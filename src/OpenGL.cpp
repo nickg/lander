@@ -290,10 +290,10 @@ bool OpenGL::InitGL()
    glShadeModel(GL_SMOOTH);			        // Enable smooth shading
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// Black background
    glClearDepth(1.0f);					// Depth buffer setup
-   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Nicest perspective correction
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	// Basic blending function
    glEnable(GL_ALPHA_TEST);				// Enable alpha testing
    glAlphaFunc(GL_GREATER, 0.0);			// Alpha testing function
+   glDisable(GL_NORMALIZE);
 
    // All went OK
    return true;

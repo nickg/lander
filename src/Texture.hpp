@@ -27,8 +27,8 @@ public:
 
    GLuint GetGLTexture() const { return texture; }
    
-   virtual int GetWidth() const { return width; }
-   virtual int GetHeight() const { return height; }
+   int GetWidth() const { return width; }
+   int GetHeight() const { return height; }
    
 private:
    GLuint texture;
