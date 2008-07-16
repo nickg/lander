@@ -32,7 +32,6 @@ public:
    void Reset();
 
    void Display();
-   void DrawExhaust(bool paused);
    void DrawExplosion(bool createNew);
    void Move();
    void ThrustOn();
@@ -59,14 +58,13 @@ private:
    void RotatePoints(const Point *pPoints, Point *pDest, int nCount,
                      double angle, int adjustx=0, int adjusty=0);
 
-   Image shipImage;
+   Image shipImage, exhaustImage;
    
    double xpos, ypos;
    double speedX, speedY, angle;
 
    Viewport *viewport;
    Explosion explosion;
-   SmokeTrail exhaust;
    bool thrusting;
 
    SoundEffect boingSound;

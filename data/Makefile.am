@@ -13,7 +13,7 @@ EXTRA_DIST = images/ship.png images/star.png images/start_option.png \
 	images/grass_surface2.png images/fuelmeter.png \
 	images/fuelbar.png images/speedmeter.png images/particle.png \
 	images/landingpad.png images/landingpadred.png images/title.png \
-	images/gameover.png \
+	images/gameover.png images/exhaust.png \
 	sounds/firework_1.wav sounds/bomb_explosion.wav \
 	sounds/boing1.wav \
 	Default_Font.ttf

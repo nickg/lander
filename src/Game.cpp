@@ -576,9 +576,6 @@ void Game::Display()
    // Draw the landing pads
    for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it)
       (*it).Draw(nKeysRemaining > 0);
-
-   // Draw the exhaust
-   ship.DrawExhaust(state == gsPaused);
    
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart) {
