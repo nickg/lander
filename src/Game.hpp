@@ -27,6 +27,7 @@
 #include "Input.hpp"
 #include "Font.hpp"
 #include "SoundEffect.hpp"
+#include "Fade.hpp"
 
 #include "Viewport.hpp"
 #include "ObjectGrid.hpp"
@@ -111,8 +112,7 @@ private:
    SpeedMeter speedmeter;
    int death_timeout, level, lives;
    bool bDebugMode;
-   float flGravity, starrotate, fade_alpha, life_alpha;
-   TextureQuad fade;
+   float flGravity, starrotate, life_alpha;
    int score, newscore, nextnewlife, newscore_width;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
@@ -121,10 +121,10 @@ private:
                     gsPaused };
    GameState state;
 
-   Texture fadeTexture;
-
    Image levelComp, smallShip;
    Image starImage, gameOver;
+
+   Fade fade;
 
    Font normalFont, scoreFont, bigFont;
 

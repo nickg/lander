@@ -16,7 +16,7 @@ lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Image.cpp AnimatedImage.hpp AnimatedImage.cpp \
 	Texture.hpp Texture.cpp Options.hpp Options.cpp \
 	ConfigFile.hpp ConfigFile.cpp SoundEffect.hpp \
-	SoundEffect.cpp
+	SoundEffect.cpp Fade.hpp Fade.cpp
 
 localedir = $(datadir)/locale
 

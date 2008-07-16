@@ -1,5 +1,5 @@
 /*
- * FreeType.cpp -- A wrapper around FreeType.
+ * Font.cpp -- A wrapper around FreeType.
  * Copyright (C) 2006  Nick Gasson
  *
  * This program is free software; you can redistribute it and/or modify

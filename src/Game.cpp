@@ -62,7 +62,6 @@ Game::Game()
      surface(&viewport),
      speedmeter(&ship),
      state(gsNone),
-     fadeTexture("images/fade.png"),
      levelComp("images/levelcomp.png"),
      smallShip("images/shipsmall.png"),
      starImage("images/star.png"),
@@ -77,13 +76,6 @@ Game::Game()
 
 void Game::Load()
 {
-   // Create the fade
-   fade.x = 0;
-   fade.y = 0;
-   fade.width = OpenGL::GetInstance().GetWidth();
-   fade.height = OpenGL::GetInstance().GetHeight();
-   fade.uTexture = fadeTexture.GetGLTexture();
-
    starrotate = 0.0f;
    death_timeout = 0;
    state = gsNone;
@@ -285,10 +277,8 @@ void Game::Process()
    if (state == gsDeathWait) {
       if (--death_timeout == 0) {
          // Fade out
-         if (lives == 0  || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
+         if (lives == 0  || (lives == 1 && life_alpha < LIFE_ALPHA_BASE))
             state = gsFadeToDeath;
-            fade_alpha = LIFE_ALPHA_BASE + 1.0f;
-         }
          else if (lives > 0) {
             if (life_alpha < LIFE_ALPHA_BASE) {
                life_alpha = LIFE_ALPHA_BASE + 1.0f;
@@ -296,35 +286,33 @@ void Game::Process()
             }
 
             state = gsFadeToRestart;
-            fade_alpha = 0.0f;
          }
+
+         fade.BeginFadeOut();
       }
    }
    else if (state == gsGameOver) {
       if (--death_timeout == 0) {
          // Fade out
          state = gsFadeToDeath;
-         fade_alpha = 0.0f;
+         fade.BeginFadeOut();
       }
    }
    else if (state == gsFadeIn) {
       // Fade in
-      fade_alpha -= GAME_FADE_IN_SPEED;
-      if (fade_alpha < 0.0f)
+      if (fade.Process())
          state = gsInGame;
    }
    else if (state == gsFadeToRestart) {
       // Fade out
-      fade_alpha += GAME_FADE_OUT_SPEED;
-      if (fade_alpha > 1.0f) {
+      if (fade.Process()) {
          // Restart the level
          StartLevel(level);
          opengl.SkipDisplay();
       }
    }
    else if (state == gsFadeToDeath) {
-      fade_alpha += GAME_FADE_OUT_SPEED;
-      if (fade_alpha > 1.0f) {
+      if (fade.Process()) {
          // Return to main menu
          ScreenManager &sm = ScreenManager::GetInstance();
          HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
@@ -505,7 +493,7 @@ void Game::StartLevel(int level)
    // Start the game
    levelcomp_timeout = 0;
    state = gsFadeIn;
-   fade_alpha = 1.0f;
+   fade.BeginFadeIn();
    life_alpha = LIFE_ALPHA_BASE + 1.0f;
 }
 
@@ -689,7 +677,7 @@ void Game::Display()
 
    // Draw the fade
    if (state == gsFadeIn || state == gsFadeToDeath || state == gsFadeToRestart)
-      opengl.DrawBlend(&fade, fade_alpha);
+      fade.Display();
 
    // Draw game over message
    if (lives == 0 || (lives == 1 && life_alpha < LIFE_ALPHA_BASE)) {
