@@ -72,9 +72,11 @@ int main(int argc, char **argv)
    int width, height, depth;
    bool fullscreen;
 
+#ifndef WIN32
    setlocale(LC_ALL, "");
    bindtextdomain(PACKAGE, LOCALEDIR);
    textdomain(PACKAGE);
+#endif
 
    const int DEFAULT_HRES = 800;
    const int DEFAULT_VRES = 600;
@@ -182,6 +184,10 @@ string GetConfigDir()
 #ifdef UNIX
    return string(getenv("HOME")) + "/";
 #else
+#ifdef WIN32
+   return string(getenv("UserProfile")) + "\\";
+#else
 #error "Need to port GetConfigDir to this platform"
+#endif
 #endif
 }

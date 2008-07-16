@@ -63,6 +63,18 @@ using namespace std;
 
 #define msleep(n) Sleep(n)
 
+#define i18n(x) x
+
+#define PATH_MAX  256
+
+/* Don't have these on Windows for some reason */
+#ifndef GL_BGRA
+#define GL_BGRA 0
+#endif
+#ifndef GL_BGR
+#define GL_BGR 0
+#endif
+
 /* Define safe snprintf, etc. for MSCV8 */
 #if (_MSC_VER >= 1400)
 
