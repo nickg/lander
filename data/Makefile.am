@@ -10,7 +10,7 @@ EXTRA_DIST = images/ship.png images/star.png images/start_option.png \
 	images/dirt_surface.png images/grass_surface.png \
 	images/red_rock_surface2.png images/rock_surface2.png \
 	images/snow_surface2.png images/dirt_surface2.png \
-	images/grass_surface2.png images/fade.png images/fuelmeter.png \
+	images/grass_surface2.png images/fuelmeter.png \
 	images/fuelbar.png images/speedmeter.png images/particle.png \
 	images/landingpad.png images/landingpadred.png images/title.png \
 	images/gameover.png \
