@@ -104,6 +104,8 @@ void OpenGL::Run()
    running = true;
    active = true;
 
+   const unsigned window = 1000/FRAME_RATE;
+
    // Loop until program ends
    do {
       tick_start = SDL_GetTicks();
@@ -114,29 +116,38 @@ void OpenGL::Run()
       ScreenManager::GetInstance().Process();
 
       // Draw the next frame
-      if (active)	{
+      if (active)
          DrawGLScene();
-         SDL_GL_SwapBuffers();
-      }
 
       // Limit the frame rate
       tick_now = SDL_GetTicks();
-      while (tick_now < tick_start + 1000/FRAME_RATE)	{
-         msleep(tick_start + 1000/FRAME_RATE - tick_now);
-         tick_now = SDL_GetTicks();
+      if (tick_now > tick_start + window) {
+         //cout << "Missed window by " << tick_now - tick_start - window
+         //     << "ms (skipping next frame)" << endl;
+         SkipDisplay();
+      }
+      else {
+         while (tick_now < tick_start + window)	{
+            msleep(tick_start + window - tick_now);
+            tick_now = SDL_GetTicks();
+         }
       }
    } while (running);
 }
 
 void OpenGL::DrawGLScene()
 {
-   // Clear the screen
-   glClear(GL_COLOR_BUFFER_BIT);
-   glLoadIdentity();
-
    // Render the scene
-   if (dodisplay)
+   if (dodisplay) {
+      // Clear the screen
+      glClear(GL_COLOR_BUFFER_BIT);
+      glLoadIdentity();
+      
       ScreenManager::GetInstance().Display();
+      SDL_GL_SwapBuffers();
+
+      fps_framesdrawn++;
+   }
    else
       dodisplay = true;
 
@@ -145,18 +156,17 @@ void OpenGL::DrawGLScene()
       fps_lastcheck = SDL_GetTicks();
       fps_rate = fps_framesdrawn;
       fps_framesdrawn = 0;
-
+      
 #ifdef SHOW_FPS
       const int TITLE_BUF_LEN = 256;
       char buf[TITLE_BUF_LEN];
-
+      
       if (!fullscreen) {
          snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, fps_rate);
          SDL_WM_SetCaption(buf, NULL);
       }
 #endif /* #ifdef SHOW_FPS */
    }
-   fps_framesdrawn++;
 }
 
 void OpenGL::Viewport(int x, int y, int width, int height)
