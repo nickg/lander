@@ -18,6 +18,8 @@
  */
 
 #include "Game.hpp"
+#include "Menu.hpp"
+#include "HighScores.hpp"
 #include "LoadOnce.hpp"
 
 /*
@@ -32,9 +34,9 @@
 /*
  * Constants affecting state transitions.
  */
+const int Game::DEATH_TIMEOUT(50);		// Frames to wait for ending level
 #define GAME_FADE_IN_SPEED	0.1f	// Rate of alpha change at level start
 #define GAME_FADE_OUT_SPEED	0.1f	// Rate of alpha change at level end
-#define DEATH_TIMEOUT		    50		// Frames to wait for ending level
 #define LIFE_ALPHA_BASE		  2.0f
 #define LEVEL_TEXT_TIMEOUT	75
 
@@ -48,6 +50,7 @@ const int Game::SCORE_LEVEL(100);
 const int Game::SCORE_FUEL_DIV(10);
 
 const int Game::SCORE_Y(30);
+
 
 const float SpeedMeter::LAND_SPEED(2.0f);
 
@@ -114,6 +117,12 @@ void Game::CalculateScore(int padIndex)
    newscore_width = bigFont.GetStringWidth(i18n("Score:  %d"), newscore);
 }
 
+void Game::EnterDeathWait(int timeout)
+{
+   state = gsDeathWait;
+   death_timeout = timeout;
+}
+
 void Game::Process()
 {
    Input &input = Input::GetInstance();
@@ -161,11 +170,7 @@ void Game::Process()
    
    if (input.GetKeyState(SDLK_SPACE) && state == gsExplode) {
       // Skip explosion
-      state = gsDeathWait; 
-      if (lives == 0)
-         death_timeout = DEATH_TIMEOUT;
-      else	
-         death_timeout = 1;
+      EnterDeathWait(lives == 0 ? DEATH_TIMEOUT : 1);
    }
 
    if (input.GetKeyState(SDLK_ESCAPE) && state == gsInGame) {
@@ -218,15 +223,8 @@ void Game::Process()
             ship.Bounce();
          }
       }
-      else if (state == gsExplode) {
-         ship.Bounce();
-         
-         // See if we need to stop the madness
-         if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
-            state = gsDeathWait; 
-            death_timeout = DEATH_TIMEOUT;
-         }
-      }
+      else if (state == gsExplode)
+         EnterDeathWait();
    }
    
    // Check for collisions with asteroids
@@ -240,15 +238,8 @@ void Game::Process()
                ExplodeShip();
                ship.Bounce();
             }
-            else if (state == gsExplode) {
-               ship.Bounce();
-               
-               // See if we need to stop the madness
-               if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
-                  state = gsDeathWait; 
-                  death_timeout = DEATH_TIMEOUT;
-               }
-            }
+            else if (state == gsExplode)
+               EnterDeathWait();
          }
       }
    }
@@ -263,8 +254,7 @@ void Game::Process()
          }
          else if (state == gsExplode) {
             // Destroy the ship anyway
-            state = gsDeathWait; 
-            death_timeout = DEATH_TIMEOUT;
+            EnterDeathWait();
          }
       }
    }
@@ -277,15 +267,8 @@ void Game::Process()
             ExplodeShip();
             ship.Bounce();
          }
-         else if (state == gsExplode) {
-            ship.Bounce();
-            
-            // See if we need to stop the madness
-            if (state == gsExplode && -ship.GetYSpeed() < 0.05f) {
-               state = gsDeathWait; 
-               death_timeout = DEATH_TIMEOUT;
-            }
-         }
+         else if (state == gsExplode)
+            EnterDeathWait();
       }
    }
 

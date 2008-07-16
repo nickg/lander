@@ -28,9 +28,6 @@
 #include "Font.hpp"
 #include "SoundEffect.hpp"
 
-#include "Menu.hpp"
-#include "HighScores.hpp"
-
 #include "Viewport.hpp"
 #include "ObjectGrid.hpp"
 #include "Asteroid.hpp"
@@ -100,9 +97,10 @@ private:
    static const float TURN_ANGLE, DEATH_SPIN_RATE;
    static const int FUEL_BASE, FUEL_PER_LEVEL;
    static const int SCORE_PAD_SIZE, SCORE_LEVEL, SCORE_FUEL_DIV;
-   static const int SCORE_Y;
+   static const int SCORE_Y, DEATH_TIMEOUT;
    
    void ExplodeShip();
+   void EnterDeathWait(int timeout = DEATH_TIMEOUT);
    void CalculateScore(int padIndex);
 
    Viewport viewport;

@@ -18,6 +18,8 @@
  */
 
 #include "Game.hpp"
+#include "Menu.hpp"
+#include "HighScores.hpp"
 #include "Options.hpp"
 #include "ConfigFile.hpp"
 #include "SoundEffect.hpp"
