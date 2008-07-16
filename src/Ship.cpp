@@ -18,6 +18,12 @@
 #include "Ship.hpp"
 #include "OpenGL.hpp"
 
+const double Ship::EXHAUST_ALPHA_DELTA(0.01);
+const double Ship::EXHAUST_WIDTH_DELTA(2.0);
+const double Ship::EXHAUST_HEIGHT_DELTA(1.0);
+const double Ship::EXHAUST_WIDTH_BASE(8.0);
+const double Ship::EXHAUST_ALPHA_BASE(0.3);
+
 /*
  * Defines a simplified polygon representing the ship.
  */
@@ -29,7 +35,8 @@ const Point Ship::hotspots[] = {
 Ship::Ship(Viewport *v)
    : shipImage("images/ship.png"), exhaustImage("images/exhaust.png"),
      xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
-     thrusting(false),
+     thrusting(false), exhaust_alpha(0.0), exhaust_width(EXHAUST_WIDTH_BASE),
+     exhaust_height(0.0),
      boingSound(LocateResource("sounds/boing1.wav"))
 {
    
@@ -42,8 +49,8 @@ void Ship::Display()
 
    double width = shipImage.GetWidth();
    double height = shipImage.GetHeight();
-   double e_width = exhaustImage.GetWidth();
-   double e_height = exhaustImage.GetHeight();
+   double e_width = exhaust_width;
+   double e_height = exhaust_height;
    
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
@@ -59,16 +66,15 @@ void Ship::Display()
      glTexCoord2d(1.0, 0.0); glVertex2i(width/2, -(height/2));
    glEnd();
 
-   if (thrusting) {
-      glTranslated(0.0, height/2 + e_height/2, 0.0);
-      glBindTexture(GL_TEXTURE_2D, exhaustImage.GetGLTexture());
-      glBegin(GL_QUADS);
-        glTexCoord2d(0.0, 0.0); glVertex2i(-(e_width/2), -(e_height/2));
-        glTexCoord2d(0.0, 1.0); glVertex2i(-(e_width/2), e_height/2);
-        glTexCoord2d(1.0, 1.0); glVertex2i(e_width/2, e_height/2);
-        glTexCoord2d(1.0, 0.0); glVertex2i(e_width/2, -(e_height/2));
-      glEnd();
-   }   
+   glColor4d(1.0, 1.0, 1.0, exhaust_alpha);
+   glTranslated(0.0, height/2 + e_height/2, 0.0);
+   glBindTexture(GL_TEXTURE_2D, exhaustImage.GetGLTexture());
+   glBegin(GL_QUADS);
+     glTexCoord2d(0.0, 0.0); glVertex2i(-(e_width/2), -(e_height/2));
+     glTexCoord2d(0.0, 1.0); glVertex2i(-(e_width/2), e_height/2);
+     glTexCoord2d(1.0, 1.0); glVertex2i(e_width/2, e_height/2);
+     glTexCoord2d(1.0, 0.0); glVertex2i(e_width/2, -(e_height/2));
+   glEnd();
 }
 
 void Ship::DrawExplosion(bool createNew)
@@ -113,11 +119,23 @@ void Ship::Move()
 void Ship::ThrustOn()
 {
    thrusting = true;
+   if (exhaust_alpha < 1.0f)
+      exhaust_alpha += EXHAUST_ALPHA_DELTA;
+   if (exhaust_width < exhaustImage.GetWidth())
+      exhaust_width += EXHAUST_WIDTH_DELTA;
+   if (exhaust_height < exhaustImage.GetHeight())
+      exhaust_height += EXHAUST_HEIGHT_DELTA;
 }
 
 void Ship::ThrustOff()
 {
    thrusting = false;
+   if (exhaust_alpha > EXHAUST_ALPHA_BASE)
+      exhaust_alpha -= EXHAUST_ALPHA_DELTA;
+   if (exhaust_width > EXHAUST_WIDTH_BASE)
+      exhaust_width -= EXHAUST_WIDTH_DELTA;
+   if (exhaust_height > 0.0)
+      exhaust_height -= EXHAUST_HEIGHT_DELTA;
 }
 
 void Ship::Thrust(double speed)

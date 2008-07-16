@@ -66,8 +66,12 @@ private:
    Viewport *viewport;
    Explosion explosion;
    bool thrusting;
+   float exhaust_alpha, exhaust_width, exhaust_height;
 
    SoundEffect boingSound;
+
+   static const double EXHAUST_ALPHA_DELTA, EXHAUST_WIDTH_DELTA,
+      EXHAUST_HEIGHT_DELTA, EXHAUST_WIDTH_BASE, EXHAUST_ALPHA_BASE;
    
    static const int NUM_HOTSPOTS = 8;
    Point points[NUM_HOTSPOTS];
