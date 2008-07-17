@@ -119,7 +119,7 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    }
 	
    // Set texture parameters
-   glBindTexture(GL_TEXTURE_2D, texBase[ch]);
+   glBindTexture(GL_TEXTURE_2D, texBase[(int)ch]);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -132,13 +132,13 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
 
    // Create the display list
    glNewList(listBase+ch, GL_COMPILE);
-   glBindTexture(GL_TEXTURE_2D, texBase[ch]);
+   glBindTexture(GL_TEXTURE_2D, texBase[(int)ch]);
 
    glPushMatrix();
 
    // Insert some space between characters
    glTranslatef((float)bitmapGlyph->left, 0, 0);
-   widths[ch] = bitmapGlyph->left;
+   widths[(int)ch] = bitmapGlyph->left;
 
    // Move down a bit to accomodate characters such as p and q
    glTranslatef(0, (float)(-bitmapGlyph->top), 0);
@@ -158,7 +158,7 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
 
    // Move along to the next character
    glTranslatef((float)(face->glyph->advance.x >> 6), 0, 0);
-   widths[ch] += (short)face->glyph->advance.x >> 6;
+   widths[(int)ch] += (short)face->glyph->advance.x >> 6;
 
    // Finish display list
    glEndList();
@@ -240,7 +240,7 @@ int Font::GetStringWidth(const char *fmt, ...)
    for (it = lines.begin(); it != lines.end(); ++it) {
       int len = 0;
       for (string::iterator ch = (*it).begin(); ch != (*it).end(); ++ch)
-         len += widths[*ch];
+         len += widths[(int)*ch];
       
       if (len > maxlen)
          maxlen = len;
