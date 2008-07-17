@@ -327,6 +327,7 @@ void Game::Process()
          if (--levelcomp_timeout == 0) {
             level++;
             state = gsFadeToRestart;
+            fade.BeginFadeOut();
          }
       }
       else {

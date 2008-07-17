@@ -18,11 +18,11 @@
 #include "Ship.hpp"
 #include "OpenGL.hpp"
 
-const double Ship::EXHAUST_ALPHA_DELTA(0.01);
+const double Ship::EXHAUST_ALPHA_DELTA(0.02);
 const double Ship::EXHAUST_WIDTH_DELTA(2.0);
 const double Ship::EXHAUST_HEIGHT_DELTA(1.0);
 const double Ship::EXHAUST_WIDTH_BASE(8.0);
-const double Ship::EXHAUST_ALPHA_BASE(0.3);
+const double Ship::EXHAUST_ALPHA_BASE(0.4);
 
 /*
  * Defines a simplified polygon representing the ship.
