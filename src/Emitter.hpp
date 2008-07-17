@@ -23,7 +23,7 @@
 #include "Platform.hpp"
 #include "Texture.hpp"
 
-#define MAX_PARTICLES 256
+#define MAX_PARTICLES 512
 
 
 /*
