@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-07-18 19:14+0100\n"
+"POT-Creation-Date: 2008-07-18 19:28+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -15,11 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: src/Main.cpp:121
-#, c-format
-msgid "Runtime Error: %s\n"
-msgstr "Runtime Error: %s\n"
 
 #: src/Game.cpp:109 src/Game.cpp:659
 #, c-format
@@ -43,26 +38,6 @@ msgstr "Level  %d"
 #: src/Game.cpp:694
 msgid "Paused"
 msgstr "Paused"
-
-#: src/HighScores.cpp:178
-#, fuzzy
-msgid "Press SPACE or FIRE to return"
-msgstr "Press  SPACE  or  FIRE  to  return"
-
-#: src/HighScores.cpp:193
-#, fuzzy
-msgid "Well done - You got a high score"
-msgstr "Well  done  -  You  got  a  high  score"
-
-#: src/HighScores.cpp:198
-#, fuzzy
-msgid "Press ENTER or FIRE to continue"
-msgstr "Press  ENTER  or  FIRE  to  continue"
-
-#: src/HighScores.cpp:204
-#, c-format
-msgid "Name?  %s"
-msgstr "Name?  %s"
 
 #: src/Options.cpp:226
 msgid "Use UP and DOWN to select options"
@@ -104,6 +79,31 @@ msgstr ""
 #: src/Menu.cpp:250
 msgid "Collect the spinning rings to unlock the landing pads"
 msgstr ""
+
+#: src/HighScores.cpp:178
+#, fuzzy
+msgid "Press SPACE or FIRE to return"
+msgstr "Press  SPACE  or  FIRE  to  return"
+
+#: src/HighScores.cpp:193
+#, fuzzy
+msgid "Well done - You got a high score"
+msgstr "Well  done  -  You  got  a  high  score"
+
+#: src/HighScores.cpp:198
+#, fuzzy
+msgid "Press ENTER or FIRE to continue"
+msgstr "Press  ENTER  or  FIRE  to  continue"
+
+#: src/HighScores.cpp:204
+#, c-format
+msgid "Name?  %s"
+msgstr "Name?  %s"
+
+#: src/Main.cpp:121
+#, c-format
+msgid "Runtime Error: %s\n"
+msgstr "Runtime Error: %s\n"
 
 #~ msgid "LUNAR  LANDER"
 #~ msgstr "LUNAR  LANDER"

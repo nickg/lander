@@ -283,6 +283,11 @@ ScoreFile::~ScoreFile()
       Save();
 }
 
+string ScoreFile::GetHighScoreFile()
+{
+   return GetConfigDir() + ".lander.scores";
+}
+
 bool operator<(const ScoreFile::ScoreEntry &a, const ScoreFile::ScoreEntry &b)
 {
    return a.GetScore() > b.GetScore();
@@ -296,7 +301,7 @@ void ScoreFile::Sort()
 void ScoreFile::Load()
 {
    // Check for file's existence
-   string hsname = GetConfigDir() + ".lander.scores";
+   string hsname(GetHighScoreFile());
    if (!FileExists(hsname)) {
       // Write a dummy score file
       Save();
@@ -316,8 +321,7 @@ void ScoreFile::Save()
    if (!needsWrite)
       return;
 
-   const char *fname = LocateResource("Highscores.dat");
-   ofstream fout(fname);
+   ofstream fout(GetHighScoreFile().c_str());
    for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
       (*it).WriteOnStream(fout);
 }

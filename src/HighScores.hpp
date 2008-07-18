@@ -65,6 +65,8 @@ private:
    void Sort();
    void SwapScores(int a, int b);
    
+   static string GetHighScoreFile();
+   
    bool needsWrite;
    typedef vector<ScoreEntry> ScoreEntryVec;
    typedef ScoreEntryVec::iterator ScoreEntryVecIt; 
@@ -84,8 +86,7 @@ public:
    void DisplayScores();
    void CheckScore(int score);
    
-private:
-	
+private:	
    enum HighScoreState { hssDisplay, hssEnterName };
 	
    int newscore;
