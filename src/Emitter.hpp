@@ -43,6 +43,8 @@ public:
    
    float partsize, r, g, b, deviation, xg, yg, life, maxspeed, flSize;
    float xpos, ypos, slowdown, createrate;
+
+   float xi_bias, yi_bias;
    
 protected:
    void NewParticle(int index);
@@ -55,7 +57,7 @@ protected:
       float xi, yi;
       float xg, yg;
    } particle[MAX_PARTICLES];
-
+   
    static Texture *texture;
 };
 

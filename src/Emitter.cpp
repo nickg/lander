@@ -40,7 +40,7 @@ Emitter::Emitter(int x, int y, float r, float g, float b, bool createnew,
                  float max_speed, float size, float slowdown)
   : partsize(size), r(r), g(g), b(b), deviation(deviation), xg(xg), yg(yg),
     life(life), maxspeed(max_speed), xpos((float)x), ypos((float)y),
-    slowdown(slowdown), createrate(64.0f)
+    slowdown(slowdown), createrate(128.0f), xi_bias(0.0f), yi_bias(0.0f)
 {
    LOAD_ONCE {
       texture = new Texture("images/particle.png");
@@ -188,6 +188,9 @@ void Emitter::NewParticle(int index)
       particle[index].xi = (float)((rand()%50)-26.0f)*maxspeed;
       particle[index].yi = (float)((rand()%50)-25.0f)*maxspeed;
    } while (pow(particle[index].yi, 2) + pow(particle[index].xi, 2) > pow(25.0f*maxspeed, 2));
+
+   particle[index].xi += xi_bias;
+   particle[index].yi += yi_bias;
 }
 
 
@@ -195,12 +198,12 @@ void Emitter::NewParticle(int index)
  * Smoke trail constructor. Sets special Emitter constants.
  */
 SmokeTrail::SmokeTrail()
-  : Emitter(0, 0, 0.9f, 0.9f, 0.0f,
+  : Emitter(0, 0, 0.9f, 0.7f, 0.0f,
             false, 0.2f,
-            0.0f, 0.1f,
-            0.3f, 20.0f, 4.0f, 2.0f)
+            0.0f, 0.0f,
+            0.3f, 0.0f, 5.0f, 0.001f)
 {
-	
+   createrate = 64.0f;
 }
 
 

@@ -106,12 +106,10 @@ void Ship::Move()
        - (shipImage.GetWidth()/2)*(double)sin(angle*(PI/180));
     exhaust.ypos = ypos + shipImage.GetHeight()/2
        + (shipImage.GetHeight()/2)*(double)cos(angle*(PI/180));
-    //exhaust.yg = speedY; //+ (flGravity * 10);
-    //exhaust.xg = speedX;
 
-    const float SCALE = 10.0f;
-    exhaust.yg = SCALE * sin(angle);
-    exhaust.xg = SCALE * cos(angle);
+    const float SCALE = 1.0f;
+    exhaust.yi_bias = SCALE * cos(angle*PI/180) + speedY;
+    exhaust.xi_bias = SCALE * -sin(angle*PI/180) + speedX;
     
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
