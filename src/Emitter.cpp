@@ -195,7 +195,10 @@ void Emitter::NewParticle(int index)
  * Smoke trail constructor. Sets special Emitter constants.
  */
 SmokeTrail::SmokeTrail()
-  : Emitter(0, 0, 0.9f, 0.9f, 0.0f, false, 0.2f, 0.0f, 0.5f, 0.5f, 20.0f, 2.0f, 2.0f)
+  : Emitter(0, 0, 0.9f, 0.9f, 0.0f,
+            false, 0.2f,
+            0.0f, 0.1f,
+            0.3f, 20.0f, 4.0f, 2.0f)
 {
 	
 }
