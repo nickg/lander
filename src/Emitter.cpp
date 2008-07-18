@@ -99,10 +99,8 @@ void Emitter::NewCluster(int x, int y)
 /* 
  * Draws all the particles created by this emitter.
  */
-void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
+void Emitter::Draw(float adjust_x, float adjust_y) const
 {
-   int i, created = 0;
-
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
@@ -110,7 +108,7 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
   
    glBindTexture(GL_TEXTURE_2D, texture->GetGLTexture());
 			
-   for (i = 0; i < MAX_PARTICLES; i++)	{
+   for (int i = 0; i < MAX_PARTICLES; i++)	{
       if (particle[i].active)	{
          float x = particle[i].x - adjust_x;
          float y = particle[i].y - adjust_y;
@@ -123,6 +121,18 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
          glTexCoord2d(0, 0); glVertex3f(x-partsize, y-partsize, 0); 
          glEnd();
 
+         
+      }
+   }
+
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void Emitter::Process(bool createnew, bool evolve)
+{
+   int created = 0;
+   for (int i = 0; i < MAX_PARTICLES; i++) {
+      if (particle[i].active) {
          if (evolve)	{
             // Move particle
             particle[i].x += particle[i].xi/(slowdown*1000);
@@ -154,10 +164,7 @@ void Emitter::Draw(float adjust_x, float adjust_y, bool createnew, bool evolve)
          created++;
       }
    }
-
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-
 
 /* 
  * Creates one new particle at the specified index.

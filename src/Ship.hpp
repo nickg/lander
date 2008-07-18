@@ -32,9 +32,10 @@ public:
    void Reset();
 
    void Display();
-   void DrawExhaust(bool paused);
-   void DrawExplosion(bool createNew);
+   void DrawExhaust();
+   void DrawExplosion();
    void Move();
+   void ProcessEffects(bool paused, bool exploding);
    void ThrustOn();
    void ThrustOff();
    void Thrust(double speed);

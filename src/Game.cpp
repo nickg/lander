@@ -185,6 +185,8 @@ void Game::Process()
       ship.Move();
    }
 
+   ship.ProcessEffects(state == gsPaused, state == gsExplode);
+
    // Move mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       (*it).Move();
@@ -579,16 +581,16 @@ void Game::Display()
       (*it).Draw(nKeysRemaining > 0);
 
    // Draw the exhaust
-   ship.DrawExhaust(state == gsPaused);
+   ship.DrawExhaust();
    
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart) {
       ship.Display();
    }
-
+   
    // Draw the explosion if necessary
    if (state == gsExplode) {
-      ship.DrawExplosion(true);
+      ship.DrawExplosion();
       glColor3f(0.0f, 1.0f, 0.0f);
       const char *sdeath = i18n("Press SPACE to continue");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
@@ -597,7 +599,7 @@ void Game::Display()
    }
    else if (state == gsDeathWait || state == gsGameOver 
             || state == gsFadeToDeath || state == gsFadeToRestart) {
-      ship.DrawExplosion(false);
+      ship.DrawExplosion();
    }
    
    // Draw the arrows

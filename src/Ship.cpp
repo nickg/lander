@@ -43,7 +43,7 @@ void Ship::Display()
    shipImage.Draw(dx, dy, angle);
 }
 
-void Ship::DrawExhaust(bool paused)
+void Ship::DrawExhaust()
 {
    static double xlast, ylast;
    
@@ -53,24 +53,19 @@ void Ship::DrawExhaust(bool paused)
             ((int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
              (int)(exhaust.ypos + (exhaust.ypos - ylast)/2));
       }
-      exhaust.Draw((double)viewport->GetXAdjust(),
-                   (double)viewport->GetYAdjust(), true);
    }
-   else if (paused)
-      exhaust.Draw((double)viewport->GetXAdjust(),
-                   (double)viewport->GetYAdjust(), false, false);
-   else
-      exhaust.Draw((double)viewport->GetXAdjust(),
-                   (double)viewport->GetYAdjust(), false);
+   
+   exhaust.Draw((double)viewport->GetXAdjust(),
+                (double)viewport->GetYAdjust());
 
    xlast = exhaust.xpos;
    ylast = exhaust.ypos;
 }
 
-void Ship::DrawExplosion(bool createNew)
+void Ship::DrawExplosion()
 {
    explosion.Draw((double)viewport->GetXAdjust(),
-                  (double)viewport->GetYAdjust(), createNew);
+                  (double)viewport->GetYAdjust());
 }
 
 void Ship::Move()
@@ -113,6 +108,12 @@ void Ship::Move()
     
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
+}
+
+void Ship::ProcessEffects(bool paused, bool exploding)
+{
+   exhaust.Process(thrusting, !paused);
+   explosion.Process(exploding);
 }
 
 void Ship::ThrustOn()

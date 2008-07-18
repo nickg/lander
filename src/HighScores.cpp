@@ -128,6 +128,8 @@ void HighScores::Process()
          fw[i].em->ypos = (float)fw[i].y;
          fw[i].active = true;
       }
+
+      fw[i].em->Process(fw[i].active);
    }
 
    // Fade in or out
@@ -157,12 +159,8 @@ void HighScores::Display()
    OpenGL &opengl = OpenGL::GetInstance();
 
    // Draw the fireworks
-   for (int i = 0; i < MAX_FIREWORKS; i++)	{
-      if (fw[i].active)
-         fw[i].em->Draw();
-      else
-         fw[i].em->Draw(0, 0, false);
-   }
+   for (int i = 0; i < MAX_FIREWORKS; i++)
+      fw[i].em->Draw(0, 0);
 
    // Draw scores
    if (state == hssDisplay) {

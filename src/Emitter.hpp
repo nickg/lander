@@ -35,9 +35,10 @@ public:
            float life=1.0f, float max_speed=10.0f, float size=2.0f, float slowdown=2.0f);
    virtual ~Emitter() { }
 
-   void Draw(float adjust_x=0.0f, float adjust_y=0.0f, bool bCreateNew=true, bool evolve=true);
+   void Draw(float adjust_x=0.0f, float adjust_y=0.0f) const;
    void NewCluster(int x, int y);
    void Reset();
+   void Process(bool createnew, bool evolve = true);
    
    virtual void ProcessEffect(int particle) { }
    
