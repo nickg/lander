@@ -173,7 +173,7 @@ bool FileExists(const string &file)
    if (NULL == f)
       return false;
    else {
-      fclose(f.c_str());
+      fclose(f);
       return true;
    }
 #endif   

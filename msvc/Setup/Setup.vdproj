@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_05BD374D7415415CB0694C8A176CCAB2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_12A84901D3714CD9B631235E8CC558C1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,14 +45,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1C87EEE4D7F128555194ABB306B74478"
+        "MsmKey" = "8:_1CDA7F3A3DBD5C6FE502F0ABA180B1EE"
         "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_217ADDEE8D9F47BFA460DC7707D4FAF3"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -77,12 +65,6 @@
         {
         "MsmKey" = "8:_2B13CF18A79243D98CFA58E3F80AB72B"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2B43515CF2904ED68464B3AA2A9C0CAA"
-        "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -123,13 +105,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_51CF02B5BB674E3F824190F9ECABF978"
+        "MsmKey" = "8:_5EDA51969E374E1499817303D1C08DEA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5EDA51969E374E1499817303D1C08DEA"
+        "MsmKey" = "8:_60A9A8B977FF4A20BC439C4790CCEAB9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -155,6 +137,12 @@
         {
         "MsmKey" = "8:_6F77F81452834D3082FA4BA3206F3210"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_718FE446BEE1493A98D7AC1BA50F528E"
+        "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -227,6 +215,18 @@
         {
         "MsmKey" = "8:_90DF492A714E4EA19E65ACA10F86527E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_95683BABAF054B6996A10B7D6F11BD49"
+        "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9CF6E6E549F4422111A1D707457654F1"
+        "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -315,12 +315,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C76EE58972444F638DF4529B9D767432"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D05E9681D730400FB07E9B725407B788"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -351,6 +345,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E5C27624A3D036BA86A2B72CBBB7F88A"
+        "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E783A0E56832F45BC89591091450E044"
         "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
         "MsmSig" = "8:_UNDEFINED"
@@ -369,7 +369,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FD1766E3DB324E938C053344F3B8F316"
+        "MsmKey" = "8:_F9CA9062EA578816F62BBC4821AC350C"
         "OwnerKey" = "8:_F35D5FC8AAD2433392D67BA97A8D7A54"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -431,26 +431,6 @@
         }
         "File"
         {
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_05BD374D7415415CB0694C8A176CCAB2"
-            {
-            "SourcePath" = "8:..\\..\\data\\images\\exhaust.png"
-            "TargetName" = "8:exhaust.png"
-            "Tag" = "8:"
-            "Folder" = "8:_D3119530ADDE4EA7B720A6DC5BF63EE2"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_12A84901D3714CD9B631235E8CC558C1"
             {
             "SourcePath" = "8:..\\..\\README"
@@ -551,30 +531,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_1C87EEE4D7F128555194ABB306B74478"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_1CDA7F3A3DBD5C6FE502F0ABA180B1EE"
             {
-            "SourcePath" = "8:freetype6.dll"
-            "TargetName" = "8:freetype6.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_217ADDEE8D9F47BFA460DC7707D4FAF3"
-            {
-            "SourcePath" = "8:..\\redist\\SDL.dll"
-            "TargetName" = "8:SDL.dll"
+            "SourcePath" = "8:SDL_mixer.dll"
+            "TargetName" = "8:SDL_mixer.dll"
             "Tag" = "8:"
             "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
             "Condition" = "8:"
@@ -588,7 +548,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_221E5C73DFDF40969AC59B7D2A32AAD7"
@@ -771,12 +731,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_51CF02B5BB674E3F824190F9ECABF978"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5EDA51969E374E1499817303D1C08DEA"
             {
-            "SourcePath" = "8:..\\redist\\SDL_image.dll"
-            "TargetName" = "8:SDL_image.dll"
+            "SourcePath" = "8:..\\..\\data\\images\\mine.png"
+            "TargetName" = "8:mine.png"
             "Tag" = "8:"
-            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
+            "Folder" = "8:_D3119530ADDE4EA7B720A6DC5BF63EE2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -791,12 +751,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5EDA51969E374E1499817303D1C08DEA"
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_60A9A8B977FF4A20BC439C4790CCEAB9"
             {
-            "SourcePath" = "8:..\\..\\data\\images\\mine.png"
-            "TargetName" = "8:mine.png"
+            "SourcePath" = "8:..\\redist\\COPYING.rtf"
+            "TargetName" = "8:COPYING.rtf"
             "Tag" = "8:"
-            "Folder" = "8:_D3119530ADDE4EA7B720A6DC5BF63EE2"
+            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1131,6 +1091,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_9CF6E6E549F4422111A1D707457654F1"
+            {
+            "SourcePath" = "8:SDL_image.dll"
+            "TargetName" = "8:SDL_image.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_9D86037770BD4C30BC79C2A45AE6D184"
             {
             "SourcePath" = "8:..\\..\\data\\images\\exit_option.png"
@@ -1411,26 +1391,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_C76EE58972444F638DF4529B9D767432"
-            {
-            "SourcePath" = "8:..\\redist\\SDL_mixer.dll"
-            "TargetName" = "8:SDL_mixer.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_D05E9681D730400FB07E9B725407B788"
             {
             "SourcePath" = "8:..\\..\\data\\images\\snow_surface2.png"
@@ -1531,6 +1491,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_E5C27624A3D036BA86A2B72CBBB7F88A"
+            {
+            "SourcePath" = "8:SDL.dll"
+            "TargetName" = "8:SDL.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_E783A0E56832F45BC89591091450E044"
             {
             "SourcePath" = "8:OPENGL32.dll"
@@ -1569,6 +1549,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_F9CA9062EA578816F62BBC4821AC350C"
+            {
+            "SourcePath" = "8:freetype6.dll"
+            "TargetName" = "8:freetype6.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -1658,14 +1658,14 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Lander"
-        "ProductCode" = "8:{6C65D065-552E-48BE-9C66-BF0C3999DF96}"
-        "PackageCode" = "8:{A534AF8E-1458-48AC-BA8C-EF1269DE39FA}"
+        "ProductName" = "8:Lunar Lander"
+        "ProductCode" = "8:{E62B2DF8-42BD-41BB-85F1-599FC9413BD7}"
+        "PackageCode" = "8:{BDF52974-43A5-4AFF-A950-626125F02AB9}"
         "UpgradeCode" = "8:{560B6568-BFDC-4648-8352-AEEA37396A77}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "DetectNewerInstalledVersion" = "11:FALSE"
+        "ProductVersion" = "8:0.4"
         "Manufacturer" = "8:doof.me.uk"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1674,7 +1674,7 @@
         "ARPCONTACT" = "8:Nick Gasson"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPURLINFOABOUT" = "8:www.doof.me.uk"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -2008,8 +2008,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:This program is distributed under the terms of the GNU General Pulic License."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -2024,6 +2024,53 @@
                             "Setting" = "3:1"
                             "Value" = "8:#1203"
                             "DefaultValue" = "8:#1203"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_A1331CB7BDE6499EB0588135FD68C950"
+                    {
+                    "Sequence" = "3:110"
+                    "DisplayName" = "8:License Agreement"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "EulaText"
+                            {
+                            "Name" = "8:EulaText"
+                            "DisplayName" = "8:#1008"
+                            "Description" = "8:#1108"
+                            "Type" = "3:6"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_60A9A8B977FF4A20BC439C4790CCEAB9"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Sunken"
+                            {
+                            "Name" = "8:Sunken"
+                            "DisplayName" = "8:#1007"
+                            "Description" = "8:#1107"
+                            "Type" = "3:5"
+                            "ContextData" = "8:4;True=4;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:4"
+                            "DefaultValue" = "3:4"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -2171,11 +2218,11 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_2B43515CF2904ED68464B3AA2A9C0CAA"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_718FE446BEE1493A98D7AC1BA50F528E"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_stl71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
                 "Properties"
                 {
                     "DIR_RETARGET_TARGETDIR"
@@ -2196,11 +2243,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_FD1766E3DB324E938C053344F3B8F316"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_95683BABAF054B6996A10B7D6F11BD49"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_stl71_rtl_x86_---.msm"
                 "Properties"
                 {
                     "DIR_RETARGET_TARGETDIR"
@@ -2226,7 +2273,7 @@
         {
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_F35D5FC8AAD2433392D67BA97A8D7A54"
             {
-            "SourcePath" = "8:..\\lander\\release\\Lander.exe"
+            "SourcePath" = "8:..\\Lander\\Release\\Lander.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DA326303B7704FBFA05D2E399C6CD9DF"

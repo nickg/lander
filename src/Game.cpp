@@ -673,7 +673,7 @@ void Game::Display()
    if (leveltext_timeout) {
       glColor3f(0.9f, 0.9f, 0.0f);
       const char *lvltxt = i18n("Level  %d");
-      int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt) - 20) / 2;
+      int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt, level)) / 2;
       int y = (opengl.GetHeight() - 30) / 2;
       bigFont.Print(x, y, lvltxt, level);
    }
