@@ -18,12 +18,6 @@
 #include "Ship.hpp"
 #include "OpenGL.hpp"
 
-const double Ship::EXHAUST_ALPHA_DELTA(0.02);
-const double Ship::EXHAUST_WIDTH_DELTA(2.0);
-const double Ship::EXHAUST_HEIGHT_DELTA(1.0);
-const double Ship::EXHAUST_WIDTH_BASE(8.0);
-const double Ship::EXHAUST_ALPHA_BASE(0.4);
-
 /*
  * Defines a simplified polygon representing the ship.
  */
@@ -33,10 +27,9 @@ const Point Ship::hotspots[] = {
 
 
 Ship::Ship(Viewport *v)
-   : shipImage("images/ship.png"), exhaustImage("images/exhaust.png"),
+   : shipImage("images/ship.png"),
      xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
-     thrusting(false), exhaust_alpha(0.0), exhaust_width(EXHAUST_WIDTH_BASE),
-     exhaust_height(0.0),
+     thrusting(false),
      boingSound(LocateResource("sounds/boing1.wav"))
 {
    
@@ -44,37 +37,34 @@ Ship::Ship(Viewport *v)
 
 void Ship::Display()
 {
-   double dx = xpos - viewport->GetXAdjust();
-   double dy = ypos - viewport->GetYAdjust();
+   int dx = (int)xpos - viewport->GetXAdjust();
+   int dy = (int)ypos - viewport->GetYAdjust();
 
-   double width = shipImage.GetWidth();
-   double height = shipImage.GetHeight();
-   double e_width = exhaust_width;
-   double e_height = exhaust_height;
+   shipImage.Draw(dx, dy, angle);
+}
+
+void Ship::DrawExhaust(bool paused)
+{
+   static double xlast, ylast;
    
-   glEnable(GL_TEXTURE_2D);
-   glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, shipImage.GetGLTexture());
-   glLoadIdentity();
-   glTranslated(dx + width/2, dy + height/2, 0.0);
-   glRotated(angle, 0.0, 0.0, 1.0);
-   glColor4d(1.0, 1.0, 1.0, 1.0);
-   glBegin(GL_QUADS);
-     glTexCoord2d(0.0, 0.0); glVertex2i(-(width/2), -(height/2));
-     glTexCoord2d(0.0, 1.0); glVertex2i(-(width/2), height/2);
-     glTexCoord2d(1.0, 1.0); glVertex2i(width/2, height/2);
-     glTexCoord2d(1.0, 0.0); glVertex2i(width/2, -(height/2));
-   glEnd();
+   if (thrusting) {
+      if (sqrt(speedX*speedX + speedY*speedY) > 2.0f) {
+         exhaust.NewCluster
+            ((int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
+             (int)(exhaust.ypos + (exhaust.ypos - ylast)/2));
+      }
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), true);
+   }
+   else if (paused)
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), false, false);
+   else
+      exhaust.Draw((double)viewport->GetXAdjust(),
+                   (double)viewport->GetYAdjust(), false);
 
-   glColor4d(1.0, 1.0, 1.0, exhaust_alpha);
-   glTranslated(0.0, height/2 + e_height/2, 0.0);
-   glBindTexture(GL_TEXTURE_2D, exhaustImage.GetGLTexture());
-   glBegin(GL_QUADS);
-     glTexCoord2d(0.0, 0.0); glVertex2i(-(e_width/2), -(e_height/2));
-     glTexCoord2d(0.0, 1.0); glVertex2i(-(e_width/2), e_height/2);
-     glTexCoord2d(1.0, 1.0); glVertex2i(e_width/2, e_height/2);
-     glTexCoord2d(1.0, 0.0); glVertex2i(e_width/2, -(e_height/2));
-   glEnd();
+   xlast = exhaust.xpos;
+   ylast = exhaust.ypos;
 }
 
 void Ship::DrawExplosion(bool createNew)
@@ -112,6 +102,12 @@ void Ship::Move()
        boingSound.Play();
     }
     
+    exhaust.xpos = xpos + shipImage.GetWidth()/2
+       - (shipImage.GetWidth()/2)*(double)sin(angle*(PI/180));
+    exhaust.ypos = ypos + shipImage.GetHeight()/2
+       + (shipImage.GetHeight()/2)*(double)cos(angle*(PI/180));
+    exhaust.yg = speedY; //+ (flGravity * 10);
+    exhaust.xg = speedX;
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
 }
@@ -119,23 +115,11 @@ void Ship::Move()
 void Ship::ThrustOn()
 {
    thrusting = true;
-   if (exhaust_alpha < 1.0f)
-      exhaust_alpha += EXHAUST_ALPHA_DELTA;
-   if (exhaust_width < exhaustImage.GetWidth())
-      exhaust_width += EXHAUST_WIDTH_DELTA;
-   if (exhaust_height < exhaustImage.GetHeight())
-      exhaust_height += EXHAUST_HEIGHT_DELTA;
 }
 
 void Ship::ThrustOff()
 {
    thrusting = false;
-   if (exhaust_alpha > EXHAUST_ALPHA_BASE)
-      exhaust_alpha -= EXHAUST_ALPHA_DELTA;
-   if (exhaust_width > EXHAUST_WIDTH_BASE)
-      exhaust_width -= EXHAUST_WIDTH_DELTA;
-   if (exhaust_height > 0.0)
-      exhaust_height -= EXHAUST_HEIGHT_DELTA;
 }
 
 void Ship::Thrust(double speed)
@@ -176,6 +160,7 @@ void Ship::CentreInViewport()
  */
 void Ship::Reset()
 {
+   exhaust.Reset();
    explosion.Reset();
 
    xpos = (double)viewport->GetLevelWidth()/2;
