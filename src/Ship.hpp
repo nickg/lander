@@ -31,7 +31,7 @@ public:
 
    void Reset();
 
-   void Display();
+   void Display() const;
    void DrawExhaust();
    void DrawExplosion();
    void Move();

@@ -183,7 +183,7 @@ LineSegment Asteroid::GetDownBoundary(int poly)
        (ypos+2)*OBJ_GRID_SIZE + downpolys[poly].points[2].y + OBJ_GRID_TOP);
 }
 
-void Asteroid::Draw(int viewadjust_x, int viewadjust_y)
+void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 {
    double ix = xpos*OBJ_GRID_SIZE - viewadjust_x;
    double iy = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;

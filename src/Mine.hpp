@@ -28,7 +28,7 @@ public:
    Mine(ObjectGrid *o, Viewport *v, int x, int y);
 
    void Move();
-   void Draw();
+   void Draw() const;
    bool CheckCollision(Ship &ship);
 
    static const int MINE_FRAME_COUNT = 18;

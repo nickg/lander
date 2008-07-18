@@ -35,7 +35,7 @@ Ship::Ship(Viewport *v)
    
 }
 
-void Ship::Display()
+void Ship::Display() const
 {
    int dx = (int)xpos - viewport->GetXAdjust();
    int dy = (int)ypos - viewport->GetYAdjust();

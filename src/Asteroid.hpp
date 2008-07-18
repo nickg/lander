@@ -31,7 +31,7 @@ public:
    ~Asteroid() {}
 	
    void ConstructAsteroid(int x, int y, int width, int surftex);
-   void Draw(int viewadjust_x, int viewadjust_y);
+   void Draw(int viewadjust_x, int viewadjust_y) const;
    bool CheckCollision(Ship &ship);
    LineSegment GetUpBoundary(int poly);
    LineSegment GetDownBoundary(int poly);

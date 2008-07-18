@@ -131,6 +131,11 @@ void Mine::Move()
       }
       movedelay = MINE_MOVE_SPEED;
    }
+
+   if (--rotcount == 0) {
+      current = (current + 1) % MINE_FRAME_COUNT;
+      rotcount = MINE_ROTATION_SPEED;
+   }
 }
 
 bool Mine::CheckCollision(Ship &ship)
@@ -142,7 +147,7 @@ bool Mine::CheckCollision(Ship &ship)
        OBJ_GRID_SIZE*2 - 12); 
 }
 
-void Mine::Draw()
+void Mine::Draw() const
 {
    int draw_x = xpos*OBJ_GRID_SIZE + displace_x
       - viewport->GetXAdjust();
@@ -150,9 +155,4 @@ void Mine::Draw()
       - viewport->GetYAdjust() + OBJ_GRID_TOP;
    image->SetFrame(current);
    image->Draw(draw_x, draw_y);
-   
-   if (--rotcount == 0) {
-      current = (current + 1) % MINE_FRAME_COUNT;
-      rotcount = MINE_ROTATION_SPEED;
-   }
 }
