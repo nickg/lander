@@ -208,7 +208,7 @@ SmokeTrail::SmokeTrail()
   : Emitter(0, 0, 0.9f, 0.7f, 0.0f,
             false, 0.2f,
             0.0f, 0.0f,
-            0.3f, 0.0f, 5.0f, 0.001f)
+            0.3f, 0.0f, 4.0f, 0.001f)
 {
    createrate = 64.0f;
 }

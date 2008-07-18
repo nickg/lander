@@ -44,22 +44,9 @@ void Ship::Display() const
 }
 
 void Ship::DrawExhaust()
-{
-   static double xlast, ylast;
-   
-   if (thrusting) {
-      if (sqrt(speedX*speedX + speedY*speedY) > 2.0f) {
-         exhaust.NewCluster
-            ((int)(exhaust.xpos + (exhaust.xpos - xlast)/2), 
-             (int)(exhaust.ypos + (exhaust.ypos - ylast)/2));
-      }
-   }
-   
+{   
    exhaust.Draw((double)viewport->GetXAdjust(),
                 (double)viewport->GetYAdjust());
-
-   xlast = exhaust.xpos;
-   ylast = exhaust.ypos;
 }
 
 void Ship::DrawExplosion()

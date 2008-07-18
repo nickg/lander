@@ -200,13 +200,12 @@ void HighScores::Display()
       int y = opengl.GetHeight() - 60;
       largeFont.Print(x, y, hscont);
 
+      const char *name = input.GetInput();
       const char *hsname = i18n("Name?  %s");
-      x = (opengl.GetWidth() 
-               - largeFont.GetStringWidth(input.GetInput()) 
-               - largeFont.GetStringWidth(hsname)) / 2;
+      x = (opengl.GetWidth() - largeFont.GetStringWidth(hsname, name)) / 2;
       y = (opengl.GetHeight() - 50) / 2;
       glColor4f(0.8f, 0.0f, 1.0f, flAlpha);
-      largeFont.Print(x, y, hsname, input.GetInput());
+      largeFont.Print(x, y, hsname, name);
    }
 }
 
