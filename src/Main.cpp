@@ -163,17 +163,17 @@ const char *LocateResource(const char *file)
 #endif
 }
 
-bool FileExists(const char *file)
+bool FileExists(const string &file)
 {
 #ifdef UNIX
    struct stat buf;
-   return stat(file, &buf) == 0;
+   return stat(file.c_str(), &buf) == 0;
 #else
-   FILE *f = fopen(file, "r");
+   FILE *f = fopen(file.c_str(), "r");
    if (NULL == f)
       return false;
    else {
-      fclose(f);
+      fclose(f.c_str());
       return true;
    }
 #endif   

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-06-13 22:08+0100\n"
+"POT-Creation-Date: 2008-07-18 19:14+0100\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -16,62 +16,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Main.cpp:114
+#: src/Main.cpp:121
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr "Runtime Error: %s\n"
 
-#: src/Game.cpp:616
-msgid "Press  SPACE  to  continue"
-msgstr "Press  SPACE  to  continue"
-
-#: src/Game.cpp:674
-msgid "Land  now"
-msgstr "Land  now"
-
-#: src/Game.cpp:680
+#: src/Game.cpp:109 src/Game.cpp:659
 #, c-format
 msgid "Score:  %d"
 msgstr "Score:  %d"
 
-#: src/Game.cpp:695
+#: src/Game.cpp:595
+#, fuzzy
+msgid "Press SPACE to continue"
+msgstr "Press  SPACE  to  continue"
+
+#: src/Game.cpp:653
+msgid "Land  now"
+msgstr "Land  now"
+
+#: src/Game.cpp:675
 #, c-format
 msgid "Level  %d"
 msgstr "Level  %d"
 
-#: src/Game.cpp:714
+#: src/Game.cpp:694
 msgid "Paused"
 msgstr "Paused"
 
-#: src/HighScores.cpp:177
+#: src/HighScores.cpp:178
 #, fuzzy
 msgid "Press SPACE or FIRE to return"
 msgstr "Press  SPACE  or  FIRE  to  return"
 
-#: src/HighScores.cpp:192
+#: src/HighScores.cpp:193
 #, fuzzy
 msgid "Well done - You got a high score"
 msgstr "Well  done  -  You  got  a  high  score"
 
-#: src/HighScores.cpp:197
+#: src/HighScores.cpp:198
 #, fuzzy
 msgid "Press ENTER or FIRE to continue"
 msgstr "Press  ENTER  or  FIRE  to  continue"
 
-#: src/HighScores.cpp:202
+#: src/HighScores.cpp:204
 #, c-format
 msgid "Name?  %s"
 msgstr "Name?  %s"
 
-#: src/Options.cpp:213
+#: src/Options.cpp:226
 msgid "Use UP and DOWN to select options"
 msgstr ""
 
-#: src/Options.cpp:218
+#: src/Options.cpp:231
 msgid "Use LEFT and RIGHT to change values"
 msgstr ""
 
-#: src/Options.cpp:223
+#: src/Options.cpp:236
 #, fuzzy
 msgid "Press FIRE or RETURN to exit"
 msgstr "Press  SPACE  or  FIRE  to  return"

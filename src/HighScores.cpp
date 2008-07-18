@@ -296,14 +296,14 @@ void ScoreFile::Sort()
 void ScoreFile::Load()
 {
    // Check for file's existence
-   if (!FileExists(LocateResource("Highscores.dat"))) {
+   string hsname = GetConfigDir() + ".lander.scores";
+   if (!FileExists(hsname)) {
       // Write a dummy score file
       Save();
    }
    else {
       // Open highscores file
-      const char *fname = LocateResource("Highscores.dat");
-      ifstream fin(fname);
+      ifstream fin(hsname.c_str());
       for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
          (*it).ReadFromStream(fin);
       

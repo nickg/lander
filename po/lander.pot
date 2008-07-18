@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lander 0.3\n"
+"Project-Id-Version: lander 0.4\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-06-13 22:08+0100\n"
+"POT-Creation-Date: 2008-07-18 19:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,59 +16,59 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Main.cpp:114
+#: src/Main.cpp:121
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr ""
 
-#: src/Game.cpp:616
-msgid "Press  SPACE  to  continue"
-msgstr ""
-
-#: src/Game.cpp:674
-msgid "Land  now"
-msgstr ""
-
-#: src/Game.cpp:680
+#: src/Game.cpp:109 src/Game.cpp:659
 #, c-format
 msgid "Score:  %d"
 msgstr ""
 
-#: src/Game.cpp:695
+#: src/Game.cpp:595
+msgid "Press SPACE to continue"
+msgstr ""
+
+#: src/Game.cpp:653
+msgid "Land  now"
+msgstr ""
+
+#: src/Game.cpp:675
 #, c-format
 msgid "Level  %d"
 msgstr ""
 
-#: src/Game.cpp:714
+#: src/Game.cpp:694
 msgid "Paused"
 msgstr ""
 
-#: src/HighScores.cpp:177
+#: src/HighScores.cpp:178
 msgid "Press SPACE or FIRE to return"
 msgstr ""
 
-#: src/HighScores.cpp:192
+#: src/HighScores.cpp:193
 msgid "Well done - You got a high score"
 msgstr ""
 
-#: src/HighScores.cpp:197
+#: src/HighScores.cpp:198
 msgid "Press ENTER or FIRE to continue"
 msgstr ""
 
-#: src/HighScores.cpp:202
+#: src/HighScores.cpp:204
 #, c-format
 msgid "Name?  %s"
 msgstr ""
 
-#: src/Options.cpp:213
+#: src/Options.cpp:226
 msgid "Use UP and DOWN to select options"
 msgstr ""
 
-#: src/Options.cpp:218
+#: src/Options.cpp:231
 msgid "Use LEFT and RIGHT to change values"
 msgstr ""
 
-#: src/Options.cpp:223
+#: src/Options.cpp:236
 msgid "Press FIRE or RETURN to exit"
 msgstr ""
 

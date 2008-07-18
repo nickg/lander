@@ -164,7 +164,7 @@ using namespace std;
 
 void RecreateScreens();
 const char *LocateResource(const char *file);
-bool FileExists(const char *file);
+bool FileExists(const string &file);
 string GetConfigDir();
 
 #endif /* #ifdef INC_PLATFORM_HPP */
