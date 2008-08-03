@@ -64,10 +64,11 @@ void HighScores::Process()
             fw[i].speed = 0;
             fw[i].em->createrate = 2.0f;
             fw[i].timeout = 5;
-            fw[i].em->life = 1.0f;
-            input.ResetKey(SDLK_RETURN);
-            input.ResetKey(SDLK_SPACE);
+            fw[i].em->life = 0.5f;
          }
+         
+         input.ResetKey(SDLK_RETURN);
+         input.ResetKey(SDLK_SPACE);
       }
    }
    else if (state == hssEnterName)	{
@@ -103,7 +104,7 @@ void HighScores::Process()
             fw[i].speed = 0;
             fw[i].em->createrate = 2.0f;
             fw[i].timeout = 5;
-            fw[i].em->life = 1.0f;
+            fw[i].em->life = 0.5f;
 
             fwBang.Play();
          }
