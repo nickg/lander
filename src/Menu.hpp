@@ -21,7 +21,6 @@
 #define INC_MENU_HPP
 
 #include "ScreenManager.hpp"
-#include "Mechanics.hpp"
 #include "Image.hpp"
 #include "Font.hpp"
 
@@ -38,8 +37,7 @@ private:
    
    double scale;
    bool active;
-   Position pos;
-   Velocity vel;
+   double x, y, angle;
 
    static double starRotate;
    static Image *starImage;

@@ -274,38 +274,39 @@ MenuStar::MenuStar()
    const int screenWidth = OpenGL::GetInstance().GetWidth();
    const int screenHeight = OpenGL::GetInstance().GetHeight();
 
-   double x, y;
    do {
       x = (double)(rand()%(screenWidth/2) + screenWidth/4);
       y = (double)(rand()%(screenHeight/2) + screenHeight/4);
-   } while (y == 0);
-   pos = Position(x, y);
+   } while (y == screenHeight/2 || x == screenWidth/2);
    
-   double ratio = (pos.GetY() - screenHeight/2) / (pos.GetX() - screenWidth/2);
-   double angle = atan(ratio);
-   vel = Velocity::Project(SPEED, angle);
+   double ratio = (y - screenHeight/2) / (x - screenWidth/2);
+   angle = atan(ratio);
 }
 
 void MenuStar::Display(double fade)
 {
-   starImage->Draw(pos.GetX(), pos.GetY(), starRotate, scale);
+   starImage->Draw(x, y, starRotate, scale);
    starRotate += ROTATE_SPEED;
 }
 
 bool MenuStar::Move()
 {
-   if (pos.GetX() > OpenGL::GetInstance().GetWidth() / 2)
-      pos += vel;
-   else
-      pos -= vel;
+   if (x > OpenGL::GetInstance().GetWidth() / 2) {
+      x += SPEED * cos(angle);
+      y += SPEED * sin(angle);
+   }
+   else {
+      x -= SPEED * cos(angle);
+      y -= SPEED * sin(angle);
+   }
    
    scale += ENLARGE_RATE;
 
    // Has it left the screen?
-   return (pos.GetX() > OpenGL::GetInstance().GetWidth()
-           || pos.GetY() > OpenGL::GetInstance().GetHeight()
-           || pos.GetX() + starImage->GetWidth() < 0
-           || pos.GetY() + starImage->GetWidth() < 0);
+   return (x > OpenGL::GetInstance().GetWidth()
+           || y > OpenGL::GetInstance().GetHeight()
+           || x + starImage->GetWidth() < 0
+           || y + starImage->GetWidth() < 0);
 }
 
 MenuOption::MenuOption(const char *imgFile, int off, int order)

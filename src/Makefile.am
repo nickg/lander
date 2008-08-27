@@ -12,7 +12,7 @@ lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Ship.hpp Ship.cpp Viewport.hpp Viewport.cpp LandingPad.hpp \
 	LandingPad.cpp Surface.hpp Surface.cpp Mine.hpp Mine.cpp \
 	ElectricGate.hpp ElectricGate.cpp Key.hpp Key.cpp \
-	Mechanics.hpp Mechanics.cpp Geometry.hpp Image.hpp \
+	Geometry.hpp Image.hpp \
 	Image.cpp AnimatedImage.hpp AnimatedImage.cpp \
 	Texture.hpp Texture.cpp Options.hpp Options.cpp \
 	ConfigFile.hpp ConfigFile.cpp SoundEffect.hpp \
