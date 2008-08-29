@@ -24,11 +24,10 @@ Texture *Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 Asteroid::Asteroid()
 {
    LOAD_ONCE {
-      surfTexture[0] = new Texture("images/grass_surface2.png");
-      surfTexture[1] = new Texture("images/dirt_surface2.png");
-      surfTexture[2] = new Texture("images/snow_surface2.png");
-      surfTexture[3] = new Texture("images/red_rock_surface2.png");
-      surfTexture[4] = new Texture("images/rock_surface2.png");
+      surfTexture[0] = new Texture("images/dirt_surface2.png");
+      surfTexture[1] = new Texture("images/snow_surface2.png");
+      surfTexture[2] = new Texture("images/red_rock_surface2.png");
+      surfTexture[3] = new Texture("images/rock_surface2.png");
    }
 
    display_list = glGenLists(1);

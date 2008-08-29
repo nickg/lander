@@ -29,11 +29,10 @@ Surface::Surface(Viewport *v)
    :  viewport(v), surface(NULL)
 {
    LOAD_ONCE {
-      surfTexture[0] = new Texture("images/grass_surface.png");
-      surfTexture[1] = new Texture("images/dirt_surface.png");
-      surfTexture[2] = new Texture("images/snow_surface.png");
-      surfTexture[3] = new Texture("images/red_rock_surface.png");
-      surfTexture[4] = new Texture("images/rock_surface.png");
+      surfTexture[0] = new Texture("images/dirt_surface.png");
+      surfTexture[1] = new Texture("images/snow_surface.png");
+      surfTexture[2] = new Texture("images/red_rock_surface.png");
+      surfTexture[3] = new Texture("images/rock_surface.png");
    }
 }
 
