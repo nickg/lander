@@ -139,9 +139,14 @@ void ElectricGate::Draw()
 void Lightning::Build(int length, bool vertical)
 {
    line.SwapXandY(vertical);
+
+   const int POINT_STEP = 20;
+   int npoints = (length / POINT_STEP) + 1;
+   double delta = (double)length / (double)(npoints - 1);
    
-   line.AddPoint(0, 0);
-   line.AddPoint(length, 0);
+   for (int i = 0; i < npoints; i++) {
+      line.AddPoint(i*delta, 0);
+   }
 }
 
 void Lightning::Draw() const
