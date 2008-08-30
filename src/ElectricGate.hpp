@@ -33,7 +33,11 @@ public:
    void AddPoint(double x, double y);
    void Draw() const;
    void SwapXandY(int b) { swapXandY = b; }
+   void Clear() { points.clear(); }
 private:
+   void DrawWithOffset(double off, double r, double g, double b,
+                       double a) const;
+   
    typedef pair<double, double> Point_t;
    list<Point_t> points;
    bool swapXandY;
@@ -43,7 +47,7 @@ class Lightning {
 public:
    void Build(int length, bool vertical);
    void Draw() const;
-private:
+private:   
    LightLineStrip line;
 };
    

@@ -86,50 +86,10 @@ void ElectricGate::Draw()
       glLoadIdentity();
       glTranslated(x, y, 0.0);
       lightning.Draw();
-      
-      /*glDisable(GL_TEXTURE_2D);
-      
-      for (int j = 0; j < 10; j++) {
-         deviation = 0;
-         for (int k = 0; k < length; k++) {
-            glLoadIdentity();
-            glBegin(GL_LINE_STRIP);
-            float r = 0.0f + (float)(rand()%5)/10.0f;
-            float g = 0.0f + (float)(rand()%5)/10.0f;
-            float b = 1.0f - (float)(rand()%5)/10.0f;
-            float a = 1.0f - (float)(rand()%5)/10.0f;
+
+      if (timer % 5 == 0)
+         lightning.Build(length * OBJ_GRID_SIZE, vertical);
             
-            glColor4f(r, g, b, a);
-            if (vertical) {
-               x = xpos*OBJ_GRID_SIZE + 16 + deviation - viewport->GetXAdjust();
-               y = (ypos+k)*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();
-               glVertex2i(x, y);
-               if (k == length-1)
-                  deviation = 0;
-               else
-                  deviation += rand()%20 - 10;
-               x = xpos*OBJ_GRID_SIZE + 16 + deviation - viewport->GetXAdjust();
-               y += OBJ_GRID_SIZE;
-               glVertex2i(x, y);
-            }
-            else {
-               x = (xpos+k)*OBJ_GRID_SIZE + 16 - viewport->GetXAdjust();
-               y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 + deviation
-                  - viewport->GetYAdjust();
-               glVertex2i(x, y);
-               if (k == length-1)
-                  deviation = 0;
-               else
-                  deviation += rand()%20 - 10;
-               y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 + deviation
-                  - viewport->GetYAdjust();
-               x += OBJ_GRID_SIZE;
-               glVertex2i(x, y);
-            }
-            glEnd();
-         }
-         }*/
-      
       // Reset timer 
       if (timer < 0)
          timer = 100;
@@ -139,24 +99,40 @@ void ElectricGate::Draw()
 void Lightning::Build(int length, bool vertical)
 {
    line.SwapXandY(vertical);
+   line.Clear();
 
    const int POINT_STEP = 20;
    int npoints = (length / POINT_STEP) + 1;
    double delta = (double)length / (double)(npoints - 1);
-   
+
+   const double SWING_SIZE = 5;
+   const double MAX_OUT = 25;
+   double y = 0;
    for (int i = 0; i < npoints; i++) {
-      line.AddPoint(i*delta, 0);
+      if (i == npoints - 1)
+         y = 0;
+      
+      line.AddPoint(i*delta, y);
+
+      double swing = rand() % 2 == 0 ? -1 : 1;
+      y += swing * SWING_SIZE * (double)(rand() % 4);
+      if (y > MAX_OUT)
+         y = MAX_OUT - swing * SWING_SIZE;
+      else if (y < -MAX_OUT)
+         y = -MAX_OUT + swing * SWING_SIZE;
    }
 }
 
 void Lightning::Draw() const
 {
    glDisable(GL_TEXTURE_2D);
+   glEnable(GL_BLEND);
+   
    line.Draw();
 }
 
 void LightLineStrip::AddPoint(double x, double y)
-{
+{   
    if (swapXandY)
       points.push_back(Point_t(y, x));
    else
@@ -165,11 +141,34 @@ void LightLineStrip::AddPoint(double x, double y)
 
 void LightLineStrip::Draw() const
 {
-   glBegin(GL_LINE_STRIP);
+   DrawWithOffset(0, 1, 1, 1, 1);
 
+   DrawWithOffset(1, 0.8, 0.8, 1, 0.8);
+   DrawWithOffset(-1, 0.8, 0.8, 1, 0.8);
+   
+   DrawWithOffset(2, 0.6, 0.6, 1, 0.6);
+   DrawWithOffset(-2, 0.6, 0.6, 1, 0.6);
+   
+   DrawWithOffset(3, 0.4, 0.4, 1, 0.4);
+   DrawWithOffset(-3, 0.4, 0.4, 1, 0.4);
+   
+   DrawWithOffset(4, 0.2, 0.2, 1, 0.2);
+   DrawWithOffset(-4, 0.2, 0.2, 1, 0.2);
+}
+
+void LightLineStrip::DrawWithOffset(double off, double r, double g, double b,
+                                    double a) const
+{
+   double y_off = swapXandY ? 0 : off;
+   double x_off = swapXandY ? off : 0;
+
+   glColor4d(r, g, b, a);
+   glBegin(GL_LINE_STRIP);
+   
    list<Point_t>::const_iterator it;
    for (it = points.begin(); it != points.end(); ++it)
-      glVertex2d((*it).first, (*it).second);
-
+      glVertex2d((*it).first + x_off, (*it).second + y_off);
+   
    glEnd();
 }
+
