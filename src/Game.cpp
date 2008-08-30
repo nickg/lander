@@ -447,7 +447,7 @@ void Game::StartLevel(int level)
    }
    
    // Create gateways
-   int gatewaycount = level/3 + rand()%level - 2;
+   int gatewaycount = 10 /* DEBUG */ + level/3 + rand()%level - 2;
    gateways.clear();
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;

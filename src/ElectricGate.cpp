@@ -26,6 +26,8 @@ ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
    LOAD_ONCE {
       gateImage = new Image("images/gateway.png");
    }
+
+   lightning.Build(length * OBJ_GRID_SIZE, vertical);
    
    timer = rand() % 70 + 10;
 }
@@ -78,9 +80,14 @@ void ElectricGate::Draw()
 
    // Draw the electricity stuff
    if (--timer < GATEWAY_ACTIVE) { 
-      int x, y, deviation;
+      double x = xpos*OBJ_GRID_SIZE + 16 - viewport->GetXAdjust();
+      double y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();
+
+      glLoadIdentity();
+      glTranslated(x, y, 0.0);
+      lightning.Draw();
       
-      glDisable(GL_TEXTURE_2D);
+      /*glDisable(GL_TEXTURE_2D);
       
       for (int j = 0; j < 10; j++) {
          deviation = 0;
@@ -121,7 +128,7 @@ void ElectricGate::Draw()
             }
             glEnd();
          }
-      }
+         }*/
       
       // Reset timer 
       if (timer < 0)
@@ -129,4 +136,35 @@ void ElectricGate::Draw()
    }
 }
 
+void Lightning::Build(int length, bool vertical)
+{
+   line.SwapXandY(vertical);
+   
+   line.AddPoint(0, 0);
+   line.AddPoint(length, 0);
+}
 
+void Lightning::Draw() const
+{
+   glDisable(GL_TEXTURE_2D);
+   line.Draw();
+}
+
+void LightLineStrip::AddPoint(double x, double y)
+{
+   if (swapXandY)
+      points.push_back(Point_t(y, x));
+   else
+      points.push_back(Point_t(x, y));
+}
+
+void LightLineStrip::Draw() const
+{
+   glBegin(GL_LINE_STRIP);
+
+   list<Point_t>::const_iterator it;
+   for (it = points.begin(); it != points.end(); ++it)
+      glVertex2d((*it).first, (*it).second);
+
+   glEnd();
+}

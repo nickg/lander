@@ -23,6 +23,31 @@
 #include "Viewport.hpp"
 #include "Image.hpp"
 
+/*
+ * A line strip used for rendering lightning. 
+ */
+class LightLineStrip {
+public:
+   LightLineStrip() : swapXandY(false) {}
+   
+   void AddPoint(double x, double y);
+   void Draw() const;
+   void SwapXandY(int b) { swapXandY = b; }
+private:
+   typedef pair<double, double> Point_t;
+   list<Point_t> points;
+   bool swapXandY;
+};
+
+class Lightning {
+public:
+   void Build(int length, bool vertical);
+   void Draw() const;
+private:
+   LightLineStrip line;
+};
+   
+
 class ElectricGate : public StaticObject {
 public:
    ElectricGate(Viewport *v, int length, bool vertical, int x, int y);
@@ -36,6 +61,7 @@ private:
    int length, timer;
    bool vertical;
    Viewport *viewport;
+   Lightning lightning;
 
    static Image *gateImage;
 };

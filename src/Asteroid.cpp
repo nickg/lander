@@ -24,7 +24,6 @@ Texture *Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 Asteroid::Asteroid()
 {
    LOAD_ONCE {
-      cout << "Loading asteroids..." << endl;
       surfTexture[0] = new Texture("images/dirt_surface2.png");
       surfTexture[1] = new Texture("images/snow_surface2.png");
       surfTexture[2] = new Texture("images/red_rock_surface2.png");
