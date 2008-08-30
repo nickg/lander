@@ -18,8 +18,22 @@
 #ifndef INC_LOADONCE_HPP
 #define INC_LOADONCE_HPP
 
+/*
+ * The global variable _forceReload can be used to force all images
+ * to reload. This works around an SDL bug (?) on Windows where all
+ * texture information is lost after the resolution is changed.
+ *
+ * This is really a bit of a hack, but quite cool, eh? The variable
+ * _forceReload gets incremented each time we have to reload the
+ * images, and the static variable _hasLoaded in each constructor
+ * stores the value of _forceReload the last time the images were
+ * loaded -- we reload if the values differ.
+ */
+
+extern int _forceReload;
+
 #define LOAD_ONCE \
-   static bool _hasLoaded = false; \
-   if (!_hasLoaded && (_hasLoaded = true))
+   static int _hasLoaded = 0; \
+   if ((_forceReload > _hasLoaded) && (_hasLoaded = _forceReload))
 
 #endif

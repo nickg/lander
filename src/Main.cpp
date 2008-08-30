@@ -44,6 +44,9 @@ static void DestroyScreens()
       delete options;
 }
 
+// See LoadOnce.hpp
+int _forceReload = 1;
+
 /*
  * Recreate all the screens. After a resolution switch for
  * example.
@@ -51,7 +54,8 @@ static void DestroyScreens()
 void RecreateScreens()
 {
    DestroyScreens();
-   
+
+   _forceReload++;
    menu = new MainMenu();
    game = new Game();
    scores = new HighScores();
