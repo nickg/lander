@@ -87,6 +87,12 @@ int main(int argc, char **argv)
    const int DEFAULT_FSCREEN = false;
    const int DEFAULT_SOUND = true;
 
+   cout << "Lunar Lander " << VERSION << endl << endl
+        << "Copyright (C) 2008  Nick Gasson" << endl
+        << "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and" << endl
+        << "you are welcome to redistribute it under certain conditions. See the GNU" << endl
+        << "General Public Licence for details." << endl << endl;
+
    {
       ConfigFile cfile;   
       width = cfile.get_int("hres", DEFAULT_HRES);
