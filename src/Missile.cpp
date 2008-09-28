@@ -35,6 +35,8 @@ Missile::Missile(ObjectGrid *o, Viewport *v, Side s)
    do {
       y = rand() % o->GetHeight();
    } while (o->IsFilled(x, y));
+
+   angle = (s == SIDE_LEFT) ? 90 : 270;
 }
 
 void Missile::Draw() const
@@ -43,7 +45,6 @@ void Missile::Draw() const
       int dx, dy;
       ObjectGrid::Offset(x, y, &dx, &dy);
       
-      image->Draw(dx - viewport->GetXAdjust(),
-                  dy - viewport->GetYAdjust());
+      image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
    }
 }
