@@ -126,6 +126,14 @@ bool ObjectGrid::IsFilled(int x, int y) const
    return grid[x + (width * y)];
 }
 
+void ObjectGrid::Offset(int ox, int oy, int *x, int *y)
+{
+   // Find the absolute coordinates of object grid point
+   // (ox, oy) and store them in (x, y)
+   *x = ox*OBJ_GRID_SIZE;
+   *y = OBJ_GRID_TOP + oy*OBJ_GRID_SIZE;
+}
+
 bool StaticObject::ObjectInScreen(Viewport *viewport)
 {
    return viewport->ObjectInScreen(xpos, ypos, width, height);

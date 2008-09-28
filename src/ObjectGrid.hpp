@@ -36,6 +36,8 @@ public:
    int GetWidth() const { return width; }
    int GetHeight() const { return height; }
 
+   static void Offset(int ox, int oy, int *x, int *y);
+
    static const int OBJ_GRID_SIZE = 32;
    static const int OBJ_GRID_TOP = 100;
    

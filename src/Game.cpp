@@ -445,6 +445,12 @@ void Game::StartLevel(int level)
       // Generate the asteroid
       asteroids[i].ConstructAsteroid(x, y, width, surftex);			
    }
+
+   // Create missiles
+   missiles.clear();
+   for (int i = 0; i < 1; i++) {
+      missiles.push_back(Missile(&objgrid, &viewport, Missile::SIDE_LEFT));
+   }
    
    // Create gateways
    int gatewaycount = level/3 + rand()%level - 2;
@@ -545,6 +551,10 @@ void Game::Display()
    
    // Draw mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
+      (*it).Draw();
+
+   // Draw missiles
+   for (MissileListIt it = missiles.begin(); it != missiles.end(); ++it)
       (*it).Draw();
 
    if (bDebugMode) {

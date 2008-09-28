@@ -7,7 +7,7 @@ EXTRA_DIST = images/ship.png images/star.png images/start_option.png \
 	images/mine.png images/levelcomp.png images/shipsmall.png \
 	images/gateway.png images/hscore.png images/red_rock_surface.png \
 	images/rock_surface.png images/snow_surface.png \
-	images/dirt_surface.png  \
+	images/dirt_surface.png  images/missile.png \
 	images/red_rock_surface2.png images/rock_surface2.png \
 	images/snow_surface2.png images/dirt_surface2.png \
 	images/fuelmeter.png \

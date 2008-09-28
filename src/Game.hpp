@@ -36,6 +36,7 @@
 #include "LandingPad.hpp"
 #include "Surface.hpp"
 #include "Mine.hpp"
+#include "Missile.hpp"
 #include "ElectricGate.hpp"
 #include "Key.hpp"
 
@@ -166,6 +167,11 @@ private:
    typedef vector<Mine> MineList;
    typedef MineList::iterator MineListIt;
    MineList mines;
+
+   // Missiles
+   typedef vector<Missile> MissileList;
+   typedef MissileList::iterator MissileListIt;
+   MissileList missiles;
 };
 
 #endif
