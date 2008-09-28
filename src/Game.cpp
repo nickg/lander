@@ -190,6 +190,10 @@ void Game::Process()
    // Move mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       (*it).Move();
+
+   // Move or fire missiles
+   for (MissileListIt it = missiles.begin(); it != missiles.end(); ++it)
+      (*it).Move(ship);
    
    // Calculate view adjusts
    ship.CentreInViewport();

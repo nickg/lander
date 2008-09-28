@@ -20,8 +20,10 @@
 
 Image *Missile::image = NULL;
 
+const double Missile::ACCEL(0.1);
+
 Missile::Missile(ObjectGrid *o, Viewport *v, Side s)
-   : viewport(v), objgrid(o)
+   : viewport(v), objgrid(o), speed(0.0), state(FIXED)
 {
    // This constructor builds a missile attached to the side of the screen
    
@@ -35,16 +37,49 @@ Missile::Missile(ObjectGrid *o, Viewport *v, Side s)
    do {
       y = rand() % o->GetHeight();
    } while (o->IsFilled(x, y));
+   
+   ObjectGrid::Offset(x, y, &dx, &dy);
 
    angle = (s == SIDE_LEFT) ? 90 : 270;
 }
 
 void Missile::Draw() const
 {
-   if (viewport->ObjectInScreen(x, y, 1, 1)) {
-      int dx, dy;
-      ObjectGrid::Offset(x, y, &dx, &dy);
-      
+   if (viewport->PointInScreen(dx, dy, ObjectGrid::OBJ_GRID_SIZE,
+                               ObjectGrid::OBJ_GRID_SIZE))
       image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
+}
+
+void Missile::Move(const Ship &ship)
+{
+   switch (state) {
+   case FIXED: MoveFixed(ship); break;
+   case FLYING: MoveFlying(); break;
+   case DESTROYED: MoveDestroyed(); break;
    }
 }
+
+void Missile::MoveFixed(const Ship &ship)
+{
+   // Hmm... add some fancy logic here to decided when to fire
+   if (ship.GetY() > dy)
+      state = FLYING;
+}
+
+void Missile::MoveFlying()
+{
+   dx += speed * sin(angle * M_PI/180);
+   dy += speed * cos(angle * M_PI/180);
+   
+   speed += ACCEL;
+
+   if (dx > viewport->GetLevelWidth() || dy > viewport->GetLevelHeight()
+       || dx < 0 || dy < 0)
+      state = DESTROYED;
+}
+
+void Missile::MoveDestroyed()
+{
+   
+}
+

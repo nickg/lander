@@ -21,6 +21,7 @@
 #include "ObjectGrid.hpp"
 #include "Viewport.hpp"
 #include "Image.hpp"
+#include "Ship.hpp"
 
 class Missile {
 public:
@@ -29,13 +30,22 @@ public:
    Missile(ObjectGrid *o, Viewport *v, Side s);
 
    void Draw() const;
+   void Move(const Ship &ship);
 private:
+   void MoveFixed(const Ship &ship);
+   void MoveFlying();
+   void MoveDestroyed();
+   
    Viewport *viewport;
    ObjectGrid *objgrid;
-   int x, y;
-   double angle;
+   int x, y, dx, dy;
+   double angle, speed;
+
+   enum State { FIXED, FLYING, DESTROYED };
+   State state;
 
    static Image *image;
+   static const double ACCEL;
 };
 
 #endif
