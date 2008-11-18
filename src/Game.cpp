@@ -270,6 +270,19 @@ void Game::Process()
       }
    }
 
+   // Check for collisons with missiles
+   for (MissileListIt it = missiles.begin(); it != missiles.end(); ++it) {
+      if ((*it).CheckCollison(ship)) {
+         if (state == gsInGame) {
+            // Destroy the ship 
+            ExplodeShip();
+            ship.Bounce();
+         }
+         else if (state == gsExplode)
+            EnterDeathWait();
+      }
+   }
+
    // See if the player collected a key
    for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
       if((*it).CheckCollision(ship)) {
@@ -452,7 +465,7 @@ void Game::StartLevel(int level)
 
    // Create missiles
    missiles.clear();
-   for (int i = 0; i < 1; i++) {
+   for (int i = 0; i < 10; i++) {
       missiles.push_back(Missile(&objgrid, &viewport, Missile::SIDE_LEFT));
    }
    

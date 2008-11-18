@@ -44,9 +44,9 @@ public:
    void ApplyGravity(double gravity);
    void CentreInViewport();
    
-   bool CheckCollision(LineSegment &l, double dx=0, double dy=0);
-   bool HotSpotCollision(LineSegment &l, double dx=0, double dy=0);
-   bool BoxCollision(int x, int y, int w, int h);
+   bool CheckCollision(LineSegment &l, double dx=0, double dy=0) const;
+   bool HotSpotCollision(LineSegment &l, double dx=0, double dy=0) const;
+   bool BoxCollision(int x, int y, int w, int h) const;
 
    double GetX() const { return xpos; }
    double GetY() const { return ypos; }

@@ -31,6 +31,7 @@ public:
 
    void Draw() const;
    void Move(const Ship &ship);
+   bool CheckCollison(const Ship &ship);
 private:
    void MoveFixed(const Ship &ship);
    void MoveFlying();

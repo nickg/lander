@@ -50,6 +50,13 @@ void Missile::Draw() const
       image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
 }
 
+bool Missile::CheckCollison(const Ship &ship)
+{
+   // A bounding box collision isn't exactly accurate but should
+   // work OK
+  return ship.BoxCollision(dx, dy, image->GetWidth(), image->GetHeight());
+}
+
 void Missile::Move(const Ship &ship)
 {
    switch (state) {

@@ -179,7 +179,7 @@ void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
 /*
  * Check for collision between the ship and a polygon.
  */
-bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy)
+bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy) const
 {
    for (int i = 0; i < NUM_HOTSPOTS; i++) {
       if (CheckCollision(l, dx + points[i].x, dy + points[i].y))
@@ -192,7 +192,7 @@ bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy)
 /*
  * Checks for collision between the ship and a box.
  */
-bool Ship::BoxCollision(int x, int y, int w, int h)
+bool Ship::BoxCollision(int x, int y, int w, int h) const
 {
    if (!viewport->PointInScreen(x, y, w, h))
       return false;
@@ -209,7 +209,7 @@ bool Ship::BoxCollision(int x, int y, int w, int h)
 /*
  * Checks for collision between the ship and a line segment.
  */
-bool Ship::CheckCollision(LineSegment &l, double dx, double dy)
+bool Ship::CheckCollision(LineSegment &l, double dx, double dy) const
 {
    double xpos = this->xpos + dx;
    double ypos = this->ypos + dy;
