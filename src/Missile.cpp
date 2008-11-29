@@ -54,7 +54,10 @@ bool Missile::CheckCollison(const Ship &ship)
 {
    // A bounding box collision isn't exactly accurate but should
    // work OK
-  return ship.BoxCollision(dx, dy, image->GetWidth(), image->GetHeight());
+   bool collided = ship.BoxCollision(dx, dy, image->GetWidth(), image->GetHeight());
+   if (collided)
+      state = DESTROYED;
+   return collided;
 }
 
 void Missile::Move(const Ship &ship)
