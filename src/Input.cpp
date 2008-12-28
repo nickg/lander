@@ -31,10 +31,15 @@ Input::Input()
       throw runtime_error("Unable to initialise SDL: " + string(SDL_GetError()));
    }
 
+   cout << "Found " << SDL_NumJoysticks() << " joysticks" << endl;
+
+   for (int i = 0; i < SDL_NumJoysticks(); i++)
+      cout << i << ": " << SDL_JoystickName(i) << endl;
+   
    // Only use the first joystick
    if (SDL_NumJoysticks() > 0)	{
-      SDL_JoystickEventState(SDL_DISABLE);	// TODO: enable when I have a joystick to test!
-      //joystick = SDL_JoystickOpen(0);
+      SDL_JoystickEventState(SDL_ENABLE);
+      joystick = SDL_JoystickOpen(0);
    }
 
    for (int i = 0; i < NUM_KEYS; i++)
