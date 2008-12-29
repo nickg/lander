@@ -85,31 +85,31 @@ void Options::ProcessMain()
 {
    Input &input = Input::GetInstance();
    
-   if (input.GetKeyState(SDLK_RETURN)) {
+   if (input.QueryAction(Input::FIRE)) {
       state = optFadeOut;
    }
-   else if (input.GetKeyState(SDLK_UP)) {
+   else if (input.QueryAction(Input::UP)) {
       if (selected > 0)
          selected--;
-      input.ResetKey(SDLK_UP);
+      input.ResetAction(Input::UP);
    }
-   else if (input.GetKeyState(SDLK_DOWN)) {
+   else if (input.QueryAction(Input::DOWN)) {
       if (selected + 1 < items.size())
          selected++;
-      input.ResetKey(SDLK_DOWN);
+      input.ResetAction(Input::DOWN);
    }
-   else if (input.GetKeyState(SDLK_LEFT)) {
+   else if (input.QueryAction(Input::LEFT)) {
       Item &item = items[selected];
       if (item.active == 0)
          item.active = item.values.size() - 1;
       else
          item.active = (item.active - 1) % item.values.size();
-      input.ResetKey(SDLK_LEFT);
+      input.ResetAction(Input::LEFT);
    }
-   else if (input.GetKeyState(SDLK_RIGHT)) {
+   else if (input.QueryAction(Input::RIGHT)) {
       Item &item = items[selected];
       item.active = (item.active + 1) % item.values.size();
-      input.ResetKey(SDLK_RIGHT);
+      input.ResetAction(Input::RIGHT);
    }
 }
 

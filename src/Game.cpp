@@ -21,6 +21,7 @@
 #include "Menu.hpp"
 #include "HighScores.hpp"
 #include "LoadOnce.hpp"
+#include "Input.hpp"
 
 /*
  * Constants affecting level generation.
@@ -121,25 +122,25 @@ void Game::Process()
    OpenGL &opengl = OpenGL::GetInstance();
    
    // Check keys
-   if (input.GetKeyState(SDLK_p)) {
+   if (input.QueryAction(Input::PAUSE)) {
       if (state == gsPaused) {
          // Unpause the game
          state = gsInGame;
-         input.ResetKey(SDLK_p);
       }
       else if (state == gsInGame) {
          // Pause the game
          state = gsPaused;
-         input.ResetKey(SDLK_p);
          ship.ThrustOff();
       }
+      
+      input.ResetAction(Input::PAUSE);
    }
 
-   // Check for paused state
+   // Do no more game processing in the paused state
    if (state == gsPaused)
       return;
 
-   if ((input.GetKeyState(SDLK_UP) || input.QueryJoystickButton(1))
+   if (input.QueryAction(Input::THRUST)
        && !fuelmeter.OutOfFuel() && state == gsInGame) {
       // Thrusting
       ship.ThrustOn();
@@ -149,32 +150,30 @@ void Game::Process()
    else
       ship.ThrustOff();
    
-   if ((input.GetKeyState(SDLK_RIGHT) || input.QueryJoystickAxis(0) > 0)
-       && state == gsInGame) {
+   if (input.QueryAction(Input::RIGHT) && state == gsInGame) {
       // Turn clockwise
       ship.Turn(TURN_ANGLE);
    }
-   else if ((input.GetKeyState(SDLK_LEFT) || input.QueryJoystickAxis(0) < 0)
-            && state == gsInGame) {
+   else if (input.QueryAction(Input::LEFT) && state == gsInGame) {
       // Turn anti-clockwise
       ship.Turn(-TURN_ANGLE);
    }
    
-   if (input.GetKeyState(SDLK_SPACE) && state == gsExplode) {
-      // Skip explosion
+   if (input.QueryAction(Input::SKIP) && state == gsExplode) {
+      // The player got bored watching the explosion
       EnterDeathWait(lives == 0 ? DEATH_TIMEOUT : 1);
    }
 
-   if (input.GetKeyState(SDLK_ESCAPE) && state == gsInGame) {
+   if (input.QueryAction(Input::ABORT) && state == gsInGame) {
       // Quit to main menu
       ExplodeShip();
       lives = 0;
    }
 
-   if (input.GetKeyState(SDLK_d)) {
-      // Toggle mode
+   if (input.QueryAction(Input::DEBUG)) {
+      // Toggle debug mode
       bDebugMode = !bDebugMode;
-      input.ResetKey(SDLK_d);
+      input.ResetAction(Input::DEBUG);
    }
 
    // Move only if not in game over

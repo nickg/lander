@@ -24,7 +24,8 @@
  * Create a new input manager. Never call this directly: use GetInstance.
  */
 Input::Input()
-  : joystick(NULL), textinput(false)
+   : joystick(NULL), textinput(false), joyLeft(false), joyRight(false),
+     joyUp(false), joyDown(false), joyButton0(false), joyButton1(false)
 {
    // Start SDL joystick handling subsystem
    if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
@@ -42,11 +43,8 @@ Input::Input()
       joystick = SDL_JoystickOpen(0);
    }
 
-   for (int i = 0; i < NUM_KEYS; i++)
-      ignore[i] = 0;
-	
-   for (int i = 0; i < NUM_BUTTONS; i++)
-      jignore[i] = 0;
+   for (int i = 0; i < NUM_ACTIONS; i++)
+      actionIgnore[i] = 0;
 }
 
 
@@ -77,7 +75,6 @@ Input &Input::GetInstance()
 void Input::Update()
 {
    SDL_Event e;
-   int i;
 
    while (SDL_PollEvent(&e))	{
       switch (e.type)	{
@@ -113,72 +110,108 @@ void Input::Update()
 
 			case SDL_JOYAXISMOTION:
          // Joystick was moved
-         if ((e.jaxis.value < -3200) || (e.jaxis.value > 3200)) {
+         if ((e.jaxis.value < -3500) || (e.jaxis.value > 3500)) {
             if (e.jaxis.axis == 0) {
                // Left-right movement code goes here
+               if (e.jaxis.value < 0)
+                  joyLeft = true;
+               else
+                  joyRight = true;
             }
 				
             if (e.jaxis.axis == 1) {
                // Up-Down movement code goes here
+               if (e.jaxis.value < 0)
+                  joyUp = true;
+               else
+                  joyDown = true;
             }
+         }
+         else {
+            joyLeft = false;
+            joyRight = false;
+            joyUp = false;
+            joyDown = false;
          }
          break;
 
 			case SDL_JOYBUTTONDOWN:
          // Joystick button was pressed
          // Button is e.jbutton.button
+         switch (e.jbutton.button) {
+         case 0:
+            joyButton0 = true;
+            break;
+         case 1:
+            joyButton1 = true;
+            break;
+         }
          break;
 
 			case SDL_JOYBUTTONUP:
          // Joystick button was released
+         switch (e.jbutton.button) {
+         case 0:
+            joyButton0 = false;
+            break;
+         case 1:
+            joyButton1 = false;
+            break;
+         }
          break;
       }
    }
 
-   for (i = 0; i < NUM_KEYS; i++) {
-      if (ignore[i] > 0)
-         ignore[i]--;
+   for (int i = 0; i < NUM_ACTIONS; i++) {
+      if (actionIgnore[i] > 0)
+         actionIgnore[i]--;
    }
 }
 
-
-/*
- * Returns the state of one key. Result true if currently pressed.
- */
-bool Input::GetKeyState(int key)
+// Returns true if the action a is being perfomed.
+// Either on the keyboard on the first joystick.
+bool Input::QueryAction(Action a) const
 {
    int numkeys;
    Uint8 *keystate;
 
-   if (ignore[key])
+   if (actionIgnore[a] > 0)
       return false;
-
+   
    keystate = SDL_GetKeyState(&numkeys);
-   assert(key < numkeys);
-
-   return keystate[key] != 0;
+   
+   switch (a) {
+   case UP:
+      return (keystate[SDLK_UP] != 0) || joyUp;
+   case DOWN:
+      return (keystate[SDLK_DOWN] != 0) || joyDown;
+   case LEFT:
+      return (keystate[SDLK_LEFT] != 0) || joyLeft;
+   case RIGHT:
+      return (keystate[SDLK_RIGHT] != 0) || joyRight;
+   case FIRE:
+      return (keystate[SDLK_RETURN] != 0) || joyButton0 || joyButton1;
+   case SKIP:
+      return (keystate[SDLK_SPACE] != 0) || joyButton0;
+   case ABORT:
+      return keystate[SDLK_ESCAPE] != 0;
+   case DEBUG:
+      return keystate[SDLK_d] != 0;
+   case PAUSE:
+      return keystate[SDLK_p] != 0;
+   case THRUST:
+      return (keystate[SDLK_UP] != 0) || joyButton1;
+   default:
+      assert(false);
+   }
 }
 
-
-/* 
- * Waits RESET_TIMEOUT frames before registering a particular keypress again.
- */
-void Input::ResetKey(int key)
+// Waits RESET_TIMEOUT frames before registering action a again.
+void Input::ResetAction(Action a)
 {
-   assert(key < NUM_KEYS);
+   assert(a < NUM_ACTIONS);
 
-   ignore[key] = RESET_TIMEOUT;
-}
-
-
-/*
- * Waits RESET_TIMEOUT frames before registering a particular button press again.
- */
-void Input::ResetJoystickButton(int button)
-{
-   assert(button < NUM_BUTTONS);
-	
-   jignore[button] = RESET_TIMEOUT;
+   actionIgnore[a] = RESET_TIMEOUT;
 }
 
 
@@ -213,25 +246,5 @@ void Input::CloseCharBuffer()
 const char *Input::GetInput() const
 {
    return text.c_str();
-}
-
-
-/*
- * Returns the current value of a joystick axis.
- *	axis -> 0 = horizontal, 1 = vertical.
- */
-int Input::QueryJoystickAxis(int axis)
-{
-   return 0;
-}
-
-
-/*
- * Returns the current state of a joystick button.
- *	button -> Numbered from zero.
- */
-bool Input::QueryJoystickButton(int button)
-{
-   return false;
 }
 

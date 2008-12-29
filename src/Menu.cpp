@@ -72,7 +72,7 @@ void MainMenu::Process()
    // Stop user doing something when they're not supposed to
    if (state == msInMenu) {
       // Look at keys
-      if (input.GetKeyState(SDLK_DOWN) || input.QueryJoystickAxis(1) > 0) {
+      if (input.QueryAction(Input::DOWN)) {
          // Move the selection down
          switch (selOption) {
          case optStart:
@@ -87,11 +87,10 @@ void MainMenu::Process()
          default:
             break;
          }
-         
-         input.ResetKey(SDLK_DOWN);
-         //opengl.di.ResetProp(DIJ_YAXIS);
+
+         input.ResetAction(Input::DOWN);
       }
-      else if (input.GetKeyState(SDLK_UP) /*|| opengl.di.QueryJoystick(DIJ_YAXIS) < 0*/) {
+      else if (input.QueryAction(Input::UP)) {
          // Move the selection up
          switch (selOption) {
          case optScore:
@@ -106,12 +105,10 @@ void MainMenu::Process()
          default:
             break;
          }
-         
-         input.ResetKey(SDLK_UP);
-         //opengl.di.ResetProp(DIJ_YAXIS);
+
+         input.ResetAction(Input::UP);
       }
-      else if (input.GetKeyState(SDLK_RETURN)
-               /*|| opengl.di.QueryJoystick(DIJ_BUTTON0) || opengl.di.QueryJoystick(DIJ_BUTTON1)*/ ) {
+      else if (input.QueryAction(Input::FIRE)) {
          // Select this option
          switch (selOption) {
          case optStart:
@@ -127,10 +124,8 @@ void MainMenu::Process()
             state = msFadeToExit;
             break;
          }
-         
-         input.ResetKey(SDLK_RETURN);
-         /*opengl.di.ResetProp(DIJ_BUTTON0);
-           opengl.di.ResetProp(DIJ_BUTTON1);*/
+
+         input.ResetAction(Input::FIRE);
       }
    }
    
