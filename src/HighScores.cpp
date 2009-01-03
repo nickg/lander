@@ -51,11 +51,9 @@ void HighScores::Process()
 
    // Check for input
    if (state == hssDisplay) {
-      if (input.GetKeyState(SDLK_SPACE) 
-          || input.QueryJoystickButton(0)
-          || input.QueryJoystickButton(0) 
-          || input.GetKeyState(SDLK_RETURN) 
-          || input.GetKeyState(SDLK_ESCAPE)) {
+      if (input.QueryAction(Input::SKIP)
+          || input.QueryAction(Input::ABORT)
+          || input.QueryAction(Input::FIRE)) {
        
          // Go back to main menu
          fade = HS_FADE_OUT_SPEED;
@@ -67,14 +65,13 @@ void HighScores::Process()
             fw[i].em->life = 0.5f;
          }
          
-         input.ResetKey(SDLK_RETURN);
-         input.ResetKey(SDLK_SPACE);
+         input.ResetAction(Input::SKIP);
+         input.ResetAction(Input::FIRE);
+         input.ResetAction(Input::ABORT);
       }
    }
    else if (state == hssEnterName)	{
-      if ((input.GetKeyState(SDLK_RETURN) 
-           || input.QueryJoystickButton(0) 
-           || input.QueryJoystickButton(1))
+      if (input.QueryAction(Input::FIRE)
           && strlen(input.GetInput()) > 0) {
        
          // Enter name into high score chart
@@ -84,10 +81,8 @@ void HighScores::Process()
          state = hssDisplay;
          flAlpha = 0.0f;
          fade = HS_FADE_IN_SPEED;
-			
-         input.ResetKey(SDLK_RETURN);
-         input.ResetJoystickButton(0);
-         input.ResetJoystickButton(1);
+
+         input.ResetAction(Input::FIRE);
       }
    }
 

@@ -24,7 +24,6 @@
 #include "OpenGL.hpp" 
 #include "Emitter.hpp"
 #include "ScreenManager.hpp"
-#include "Input.hpp"
 #include "Font.hpp"
 #include "SoundEffect.hpp"
 #include "Fade.hpp"

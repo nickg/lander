@@ -27,14 +27,17 @@
  */
 class Input {
 public:
+   // Possible inputs
+   enum Action {
+      UP, DOWN, LEFT, RIGHT, FIRE,
+      SKIP, ABORT, DEBUG, PAUSE, THRUST
+   };
+   
    static Input &GetInstance();
 
+   bool QueryAction(Action a) const;
+   void ResetAction(Action a);
    void Update();
-   bool GetKeyState(int key);
-   void ResetKey(int key);
-   int QueryJoystickAxis(int axis);
-   bool QueryJoystickButton(int button);
-   void ResetJoystickButton(int button);
 
    void OpenCharBuffer(int max=256);
    void CloseCharBuffer();
@@ -44,20 +47,20 @@ private:
    Input();
    ~Input();
    
-   static const int NUM_KEYS = 512;		// Maximum number of input keys
-   static const int RESET_TIMEOUT = 5;		// Frames between key presses
-   static const int NUM_BUTTONS = 16;		// Maximum number of joystick buttons
+   static const int NUM_ACTIONS = 10;
+   static const int RESET_TIMEOUT = 10;		// Frames between key presses
 
    SDL_Joystick *joystick;
 
-   int ignore[NUM_KEYS];		// Timeout for keys being ignored
-   int jignore[NUM_BUTTONS];	// Timeout for buttons being ignored
+   int actionIgnore[NUM_ACTIONS];   // Timeout for actions being ignored
 
    bool shift;
    bool textinput;			// Is a character buffer open?
    string text;				// Text read so far
    int maxchar;				// Maximum number of characters to read
 
+   // Record joystick state
+   bool joyLeft, joyRight, joyUp, joyDown, joyButton0, joyButton1;
 };
 
 #endif
