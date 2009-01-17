@@ -18,11 +18,9 @@
 #ifndef INC_SURFACE_HPP
 #define INC_SURFACE_HPP
 
-#include "Texture.hpp"
-#include "Viewport.hpp"
+#include "GraphicsFwd.hpp"
+#include "GameObjFwd.hpp"
 #include "LandingPad.hpp"
-#include "OpenGL.hpp"
-#include "Ship.hpp"
 
 class Surface {
 public:

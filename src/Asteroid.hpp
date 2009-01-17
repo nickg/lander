@@ -1,3 +1,4 @@
+//
 //  Asteroid.hpp -- Randomly generated asteroid.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -18,12 +19,10 @@
 #ifndef INC_ASTEROID_HPP
 #define INC_ASTEROID_HPP
 
-#include "Platform.hpp"
-#include "ObjectGrid.hpp"
-#include "OpenGL.hpp"
-#include "Texture.hpp"
-#include "Ship.hpp"
+#include "GameObjFwd.hpp"
+#include "GraphicsFwd.hpp"
 #include "Surface.hpp"
+#include "ObjectGrid.hpp"
 
 class Asteroid : public StaticObject {
 public:

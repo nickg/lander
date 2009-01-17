@@ -1,3 +1,4 @@
+//
 //  Viewport.cpp -- The area of the screen the player can see.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -15,6 +16,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Platform.hpp"
 #include "Viewport.hpp"
 #include "OpenGL.hpp"
 #include "ObjectGrid.hpp"

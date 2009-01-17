@@ -1,3 +1,4 @@
+//
 //  Asteroid.cpp -- Randomly generated asteroid.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -18,6 +19,7 @@
 #include "Asteroid.hpp"
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
+#include "Ship.hpp"
 
 Texture* Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 

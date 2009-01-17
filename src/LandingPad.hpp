@@ -1,3 +1,4 @@
+//
 //  LandingPad.hpp -- Where the player can land.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -18,8 +19,9 @@
 #ifndef INC_LANDINGPAD_HPP
 #define INC_LANDINGPAD_HPP
 
-#include "Viewport.hpp"
-#include "Texture.hpp"
+#include "GameObjFwd.hpp"
+#include "GraphicsFwd.hpp"
+
 #include "OpenGL.hpp"
 
 class LandingPad

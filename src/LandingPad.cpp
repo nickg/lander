@@ -18,6 +18,9 @@
 #include "LandingPad.hpp"
 #include "Surface.hpp"
 #include "LoadOnce.hpp"
+#include "OpenGL.hpp"
+#include "Texture.hpp"
+#include "Viewport.hpp"
 
 Texture* LandingPad::landTexture = NULL;
 Texture* LandingPad::noLandTexture = NULL;

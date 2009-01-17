@@ -51,7 +51,8 @@ Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
 void Missile::Draw() const
 {
    if (viewport->PointInScreen(dx, dy, ObjectGrid::OBJ_GRID_SIZE,
-                               ObjectGrid::OBJ_GRID_SIZE))
+                               ObjectGrid::OBJ_GRID_SIZE)
+       && state != DESTROYED)
       image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
 }
 
@@ -76,7 +77,6 @@ void Missile::Move(const Ship& ship)
 
 void Missile::MoveFixed(const Ship& ship)
 {
-   // Hmm... add some fancy logic here to decided when to fire
    if (ship.GetY() > dy)
       state = FLYING;
 }

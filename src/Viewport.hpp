@@ -1,3 +1,4 @@
+//
 //  Viewport.hpp -- The area of the screen the player can see.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -17,8 +18,6 @@
 
 #ifndef INC_VIEWPORT_HPP
 #define INC_VIEWPORT_HPP
-
-#include "Platform.hpp"
 
 class Viewport {
 public:

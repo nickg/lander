@@ -17,6 +17,7 @@
 
 #include "Surface.hpp"
 #include "LoadOnce.hpp"
+#include "Ship.hpp"
 
 const int Surface::VARIANCE(65);     // Bumpyness of landscape
 const int Surface::MAX_SURFACE_HEIGHT(300);
