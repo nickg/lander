@@ -26,6 +26,8 @@
 Image* Missile::image = NULL;
 
 const double Missile::ACCEL(0.1);
+const int Missile::HORIZ_FIRE_RANGE(600);
+const int Missile::VERT_FIRE_RANGE(50); 
 
 Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
    : viewport(v), objgrid(o), speed(0.0), state(FIXED)
@@ -77,7 +79,14 @@ void Missile::Move(const Ship& ship)
 
 void Missile::MoveFixed(const Ship& ship)
 {
-   if (ship.GetY() > dy)
+   // Decide whether to fire or not
+   int missileMidX = dx + image->GetWidth()/2;
+   int missileMidY = dy + image->GetHeight()/2;
+
+   int xDistance = abs(static_cast<int>(ship.GetX()) - missileMidX);
+   int yDistance = abs(static_cast<int>(ship.GetY()) - missileMidY);
+   
+   if (xDistance <= HORIZ_FIRE_RANGE && yDistance <= VERT_FIRE_RANGE)
       state = FLYING;
 }
 

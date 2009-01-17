@@ -46,6 +46,7 @@ private:
 
    static Image* image;
    static const double ACCEL;
+   static const int HORIZ_FIRE_RANGE, VERT_FIRE_RANGE;
 };
 
 #endif
