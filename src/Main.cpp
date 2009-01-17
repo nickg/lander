@@ -1,21 +1,21 @@
-/*
- * Main.cpp - Program entry point.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// Main.cpp - Program entry point.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #include "Game.hpp"
 #include "Menu.hpp"
@@ -47,10 +47,10 @@ static void DestroyScreens()
 // See LoadOnce.hpp
 int _forceReload = 1;
 
-/*
- * Recreate all the screens. After a resolution switch for
- * example.
- */
+//
+// Recreate all the screens. After a resolution switch for
+// example.
+//
 void RecreateScreens()
 {
    DestroyScreens();
@@ -68,9 +68,9 @@ void RecreateScreens()
    sm.AddScreen("OPTIONS", options);
 }
 
-/* 
- * Entry point.
- */
+// 
+// Entry point.
+//
 int main(int argc, char **argv)
 {
    int width, height, depth;
@@ -135,9 +135,9 @@ int main(int argc, char **argv)
    return 0;
 }
 
-/*
- * Find a filename in the installation tree.
- */
+//
+// Find a filename in the installation tree.
+//
 const char *LocateResource(const char *file)
 {
 #ifdef MACOSX

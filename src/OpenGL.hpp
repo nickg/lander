@@ -1,21 +1,21 @@
-/*
- * OpenGL.hpp - Definition of OpenGL wrapper class.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// OpenGL.hpp - Definition of OpenGL wrapper class.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #ifndef INC_OPENGL_HPP
 #define INC_OPENGL_HPP
@@ -50,9 +50,9 @@ public:
    
 };
 
-/* 
- * A polygon with four points and a texture.
- */
+// 
+// A polygon with four points and a texture.
+//
 class TextureQuad : public Renderable {
 public:
    TextureQuad(int qx=0, int qy=0, int width=0, int height=0, GLuint tex=0,
@@ -63,9 +63,9 @@ public:
 };
 
 
-/*
- * A generic polygon.
- */
+//
+// A generic polygon.
+//
 struct Poly {
    Poly() 
       : pointcount(0), xpos(0), ypos(0), uTexture(0), texX(0), texwidth(1.0f)
@@ -78,9 +78,9 @@ struct Poly {
    float texX, texwidth;
 };
 
-/* 
- * A wrapper around common 2D OpenGL functions.
- */
+// 
+// A wrapper around common 2D OpenGL functions.
+//
 class OpenGL {
 public:
    static OpenGL &GetInstance();

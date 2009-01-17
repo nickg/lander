@@ -1,21 +1,21 @@
-/*
- * Game.cpp -- Implementation of core game logic.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// Game.cpp -- Implementation of core game logic.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #include "Game.hpp"
 #include "Menu.hpp"
@@ -23,18 +23,18 @@
 #include "LoadOnce.hpp"
 #include "Input.hpp"
 
-/*
- * Constants affecting level generation.
- */
+//
+// Constants affecting level generation.
+//
 #define MAX_SURFACE_HEIGHT  300
 #define SHIP_SPEED		      0.15f
 #define MAX_PAD_SIZE		    2 
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
 
-/*
- * Constants affecting state transitions.
- */
+//
+// Constants affecting state transitions.
+//
 const int Game::DEATH_TIMEOUT(50);		// Frames to wait for ending level
 #define GAME_FADE_IN_SPEED	0.1f	// Rate of alpha change at level start
 #define GAME_FADE_OUT_SPEED	0.1f	// Rate of alpha change at level end
@@ -522,9 +522,9 @@ void Game::StartLevel(int level)
    life_alpha = LIFE_ALPHA_BASE + 1.0f;
 }
 
-/* 
- * Destroys the ship after a collision.
- */
+// 
+// Destroys the ship after a collision.
+//
 void Game::ExplodeShip()
 {
    // Set the game state

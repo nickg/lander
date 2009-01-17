@@ -1,21 +1,21 @@
-/*
- * HighScores.cpp - Implementation of high scores screen.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// HighScores.cpp - Implementation of high scores screen.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #include "HighScores.hpp"
 #include "Input.hpp"
@@ -29,10 +29,10 @@ HighScores::HighScores()
 
 }
 
-/*
- * Called just before the screen is to be displayed. Resets variables
- * and loads data.
- */
+//
+// Called just before the screen is to be displayed. Resets variables
+// and loads data.
+//
 void HighScores::Load()
 {
    // Set state
@@ -40,9 +40,9 @@ void HighScores::Load()
 }
 
 
-/* 
- * Processes user input. Called at the start of each frame.
- */
+// 
+// Processes user input. Called at the start of each frame.
+//
 void HighScores::Process()
 {
    Input &input = Input::GetInstance();
@@ -147,9 +147,9 @@ void HighScores::Process()
 }
 
 
-/* 
- * Renders the next frame.
- */
+// 
+// Renders the next frame.
+//
 void HighScores::Display()
 {
    OpenGL &opengl = OpenGL::GetInstance();
@@ -205,25 +205,25 @@ void HighScores::Display()
    }
 }
 
-/* 
- * Loads the highsores from disk.
- */
+// 
+// Loads the highsores from disk.
+//
 void HighScores::LoadHighScores()
 {
    scoreFile.Load();
 }
 
-/*
- * Writes high scores to disk.
- */
+//
+// Writes high scores to disk.
+//
 void HighScores::WriteHighScores()
 {
    scoreFile.Save();
 }
 
-/* 
- * Displays the highest scores screen to the user.
- */
+// 
+// Displays the highest scores screen to the user.
+//
 void HighScores::DisplayScores()
 {
    LoadHighScores();
@@ -240,9 +240,9 @@ void HighScores::DisplayScores()
    fade = HS_FADE_IN_SPEED;
 }
 
-/* 
- * Check to see if the player has a high score.
- */
+// 
+// Check to see if the player has a high score.
+//
 void HighScores::CheckScore(int score)
 {
    LoadHighScores();

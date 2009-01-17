@@ -1,21 +1,21 @@
-/*
- * OpenGL.cpp - Implementation of OpenGL wrapper class.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// OpenGL.cpp - Implementation of OpenGL wrapper class.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #include "OpenGL.hpp"
 #include "Input.hpp"
@@ -31,9 +31,9 @@ OpenGL::OpenGL()
    srand((unsigned)time(NULL));
 }
 
-/*
- * Returns the singleton instance of OpenGL.
- */
+//
+// Returns the singleton instance of OpenGL.
+//
 OpenGL &OpenGL::GetInstance()
 {
    static OpenGL opengl;
@@ -41,10 +41,10 @@ OpenGL &OpenGL::GetInstance()
    return opengl;
 }
 
-/* 
- * Called before the game is started. Creates a new window and performs ay 
- * necessary initialisation.
- */
+// 
+// Called before the game is started. Creates a new window and performs ay 
+// necessary initialisation.
+//
 void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 {   
    // Start SDL
@@ -89,9 +89,9 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
    return resized;
 }
 
-/*
- * Return the last SDL error as a C++ string.
- */
+//
+// Return the last SDL error as a C++ string.
+//
 string OpenGL::SDLErrorString()
 {
    return string(SDL_GetError());
@@ -328,10 +328,10 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 }
 
 
-/*
- * Displays a message to the user. On Windows this will appear as a message
- * box. On other platforms the message will be printed to stdout.
- */
+//
+// Displays a message to the user. On Windows this will appear as a message
+// box. On other platforms the message will be printed to stdout.
+//
 void OpenGL::MsgBox(const char *text, const char *title)
 {
 #ifdef WIN32
@@ -342,11 +342,11 @@ void OpenGL::MsgBox(const char *text, const char *title)
 }
 
 
-/*
- * Displays an error message to the user. On Windows this will appear
- * as a popup error message. On other platforms the message will be
- * printed to stderr.
- */
+//
+// Displays an error message to the user. On Windows this will appear
+// as a popup error message. On other platforms the message will be
+// printed to stderr.
+//
 void OpenGL::ErrorMsg(const char *text, const char *title)
 {
 #ifdef WIN32
@@ -361,17 +361,17 @@ int OpenGL::GetFPS()
    return fps_rate;
 }
 
-/*
- * Stops processing after the current frame.
- */
+//
+// Stops processing after the current frame.
+//
 void OpenGL::Stop()
 {
    running = false;
 }
 
-/*
- * Generate, but do not display the next frame. 
- */
+//
+// Generate, but do not display the next frame. 
+//
 void OpenGL::SkipDisplay()
 {
    dodisplay = false;

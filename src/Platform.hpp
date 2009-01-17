@@ -1,21 +1,21 @@
-/*
- * Platform.hpp - Platform specific includes.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// Platform.hpp - Platform specific includes.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #ifndef INC_PLATFORM_HPP
 #define INC_PLATFORM_HPP
@@ -51,7 +51,7 @@ using namespace std;
 #define DATADIR "."
 #endif
 
-/* Windows specific constants and includes */
+// Windows specific constants and includes */
 #ifdef WIN32
 
 #define WIN32_LEAN_AND_MEAN
@@ -68,7 +68,7 @@ using namespace std;
 
 #define PATH_MAX  256
 
-/* Don't have these on Windows for some reason */
+// Don't have these on Windows for some reason */
 #ifndef GL_BGRA
 #define GL_BGRA 0
 #endif
@@ -76,7 +76,7 @@ using namespace std;
 #define GL_BGR 0
 #endif
 
-/* Define safe snprintf, etc. for MSCV8 */
+// Define safe snprintf, etc. for MSCV8 */
 #if (_MSC_VER >= 1400)
 
 #define USE_FOPEN_S
@@ -111,7 +111,7 @@ using namespace std;
 
 #endif /* #ifdef WIN32 */
 
-/* Mac OS X specifics */
+// Mac OS X specifics */
 #ifdef MACOSX
 
 #include <GL/gl.h>
@@ -123,7 +123,7 @@ using namespace std;
 
 #endif /* #ifdef MACOSX */
 
-/* Linux specifics */
+// Linux specifics */
 #ifdef LINUX
 
 #include <GL/gl.h>
@@ -141,9 +141,9 @@ using namespace std;
 
 #ifdef LANDER_BIG_ENDIAN
 
-/*
- * All data files are currently stored in little endian format.
- */
+//
+// All data files are currently stored in little endian format.
+//
 
 #define	Flip16(n)  (((n >> 8) & 0x00ff) |	\
 					((n << 8) & 0xff00))

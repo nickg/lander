@@ -1,19 +1,19 @@
-/*  ObjectGrid.cpp -- Grid where static objects may be placed.
- *  Copyright (C) 2008  Nick Gasson
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+//  ObjectGrid.cpp -- Grid where static objects may be placed.
+//  Copyright (C) 2008  Nick Gasson
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 #include "ObjectGrid.hpp"
 
@@ -30,11 +30,11 @@ ObjectGrid::~ObjectGrid()
       delete[] grid;
 }
 
-/* 
- * Allocates a free space in the object grid.
- *	x, y -> Output x, y, co-ordinates.
- * Returns falce if area could not be allocated.
- */
+// 
+// Allocates a free space in the object grid.
+//	x, y -> Output x, y, co-ordinates.
+// Returns falce if area could not be allocated.
+//
 bool ObjectGrid::AllocFreeSpace(int &x, int &y)
 {
    int timeout = 10000;
@@ -53,12 +53,12 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y)
    return true;
 }
 
-/* 
- * Allocates a free space in the object grid.
- *	x, y -> Output x, y co-ordinates.
- *	width, height -> Size of desired space.
- * Returns false if area could not be allocated.
- */
+// 
+// Allocates a free space in the object grid.
+//	x, y -> Output x, y co-ordinates.
+//	width, height -> Size of desired space.
+// Returns false if area could not be allocated.
+//
 bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
 {
    bool isOk;
@@ -91,17 +91,17 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
    return true;
 }
 
-/*
- * Marks the square at (x, y) as no longer in use.
- */
+//
+// Marks the square at (x, y) as no longer in use.
+//
 void ObjectGrid::UnlockSpace(int x, int y)
 {
    grid[x + (y * width)] = false;
 }
 
-/*
- * Creates a new blank object grid.
- */
+//
+// Creates a new blank object grid.
+//
 void ObjectGrid::Reset(int width, int height)
 {
    assert(width > 0);
@@ -118,9 +118,9 @@ void ObjectGrid::Reset(int width, int height)
    memset(grid, 0, width * height * sizeof(bool));
 }
 
-/*
- * Returns true if there is an object at the specified co-ordinates.
- */
+//
+// Returns true if there is an object at the specified co-ordinates.
+//
 bool ObjectGrid::IsFilled(int x, int y) const
 {
    return grid[x + (width * y)];

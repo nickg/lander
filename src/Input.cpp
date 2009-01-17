@@ -1,28 +1,28 @@
-/*
- * Input.cpp - Implementation of SDL input wrapper.
- * Copyright (C) 2006  Nick Gasson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+//
+// Input.cpp - Implementation of SDL input wrapper.
+// Copyright (C) 2006  Nick Gasson
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
 
 #include "Input.hpp"
 #include "OpenGL.hpp"
 
-/* 
- * Create a new input manager. Never call this directly: use GetInstance.
- */
+// 
+// Create a new input manager. Never call this directly: use GetInstance.
+//
 Input::Input()
    : joystick(NULL), textinput(false), joyLeft(false), joyRight(false),
      joyUp(false), joyDown(false), joyButton0(false), joyButton1(false)
@@ -48,9 +48,9 @@ Input::Input()
 }
 
 
-/* 
- * Destroys an input manager.
- */
+// 
+// Destroys an input manager.
+//
 Input::~Input()
 {
    if (joystick != NULL)
@@ -58,9 +58,9 @@ Input::~Input()
 }
 
 
-/*
- * Returns the only instance of Input.
- */
+//
+// Returns the only instance of Input.
+//
 Input &Input::GetInstance()
 {
    static Input g_input;
@@ -69,9 +69,9 @@ Input &Input::GetInstance()
 }
 
 
-/* 
- * Updates the current input state. Note that this also processes SDL_QUIT messages.
- */
+// 
+// Updates the current input state. Note that this also processes SDL_QUIT messages.
+//
 void Input::Update()
 {
    SDL_Event e;
@@ -215,10 +215,10 @@ void Input::ResetAction(Action a)
 }
 
 
-/*
- * Starts reading keyboard data into a buffer.
- *	max -> Maximum number of characters to read.
- */
+//
+// Starts reading keyboard data into a buffer.
+//	max -> Maximum number of characters to read.
+//
 void Input::OpenCharBuffer(int max)
 {
    assert(!textinput);
@@ -229,9 +229,9 @@ void Input::OpenCharBuffer(int max)
    textinput = true;
 }
 
-/*
- * Closes the character buffer and returns to normal key mode.
- */
+//
+// Closes the character buffer and returns to normal key mode.
+//
 void Input::CloseCharBuffer()
 {
    assert(textinput);
@@ -240,9 +240,9 @@ void Input::CloseCharBuffer()
 }
 
 
-/*
- * Returns a pointer to the data read in text input mode.
- */
+//
+// Returns a pointer to the data read in text input mode.
+//
 const char *Input::GetInput() const
 {
    return text.c_str();

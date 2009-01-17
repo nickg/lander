@@ -1,26 +1,26 @@
-/*  Ship.cpp -- The player's ship.
- *  Copyright (C) 2008  Nick Gasson
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+//  Ship.cpp -- The player's ship.
+//  Copyright (C) 2008  Nick Gasson
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 #include "Ship.hpp"
 #include "OpenGL.hpp"
 
-/*
- * Defines a simplified polygon representing the ship.
- */
+//
+// Defines a simplified polygon representing the ship.
+//
 const Point Ship::hotspots[] = {
    {2, 31}, {2, 26}, {4, 14}, {16, 0}, 
    {29, 14}, {31, 26}, {31, 31}, {17, 31} };
@@ -146,9 +146,9 @@ void Ship::CentreInViewport()
    viewport->SetYAdjust(centrey - (opengl.GetHeight()/2));
 }
 
-/*
- * Reset at the start of a new level.
- */
+//
+// Reset at the start of a new level.
+//
 void Ship::Reset()
 {
    exhaust.Reset();
@@ -176,9 +176,9 @@ void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
    }
 }
 
-/*
- * Check for collision between the ship and a polygon.
- */
+//
+// Check for collision between the ship and a polygon.
+//
 bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy) const
 {
    for (int i = 0; i < NUM_HOTSPOTS; i++) {
@@ -189,9 +189,9 @@ bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy) const
    return false;
 }
 
-/*
- * Checks for collision between the ship and a box.
- */
+//
+// Checks for collision between the ship and a box.
+//
 bool Ship::BoxCollision(int x, int y, int w, int h) const
 {
    if (!viewport->PointInScreen(x, y, w, h))
@@ -206,9 +206,9 @@ bool Ship::BoxCollision(int x, int y, int w, int h) const
       || HotSpotCollision(l3) || HotSpotCollision(l4);
 }
 
-/*
- * Checks for collision between the ship and a line segment.
- */
+//
+// Checks for collision between the ship and a line segment.
+//
 bool Ship::CheckCollision(LineSegment &l, double dx, double dy) const
 {
    double xpos = this->xpos + dx;
