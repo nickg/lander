@@ -22,7 +22,7 @@
 
 class AnimatedImage : public Image {
 public:
-   AnimatedImage(const char *file, int frameWidth, int frameHeight, int frameCount=0);
+   AnimatedImage(const char* file, int frameWidth, int frameHeight, int frameCount=0);
    
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;

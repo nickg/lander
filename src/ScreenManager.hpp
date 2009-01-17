@@ -39,14 +39,14 @@ public:
 //
 class ScreenManager {
 public:
-   static ScreenManager &GetInstance();
+   static ScreenManager& GetInstance();
 
-   void AddScreen(const char *id, Screen *ptr);
+   void AddScreen(const char* id, Screen* ptr);
    void SelectScreen(const string id);
    void Process();
    void Display();
    void RemoveAllScreens();
-   Screen *GetScreenById(const char *id) const;
+   Screen* GetScreenById(const char* id) const;
 	
 private:
    ScreenManager();
@@ -55,7 +55,7 @@ private:
    // Holds data about the state of an individual screen
    struct ScreenData {
       bool loaded;
-      Screen *ptr;
+      Screen* ptr;
    };
 
    typedef map<string, ScreenData> ScreenMap;

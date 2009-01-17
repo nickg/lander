@@ -26,11 +26,11 @@
 
 class Surface {
 public:
-   Surface(Viewport *v);
+   Surface(Viewport* v);
    ~Surface();
 
-   void Generate(int surftex, LandingPadList &pads);
-   bool CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex);
+   void Generate(int surftex, LandingPadList& pads);
+   bool CheckCollisions(Ship& ship, LandingPadList& pads, int* padIndex);
    void Display();
 
    static const int NUM_SURF_TEX = 4;   // Number of available surface textures
@@ -40,16 +40,16 @@ public:
    static const int VARIANCE;
    
 private:
-   static Texture *surfTexture[NUM_SURF_TEX];
+   static Texture* surfTexture[NUM_SURF_TEX];
    
    int texidx;
-   Viewport *viewport;
+   Viewport* viewport;
 
    struct SurfaceSection {
       double texX, texwidth;
       Point points[4];
    };   
-   SurfaceSection *surface;
+   SurfaceSection* surface;
 };
 
 #endif

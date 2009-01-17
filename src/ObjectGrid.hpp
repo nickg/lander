@@ -28,21 +28,21 @@ public:
    ~ObjectGrid();
     
    void Reset(int width, int height);
-   bool AllocFreeSpace(int &x, int &y);
-   bool AllocFreeSpace(int &x, int &y, int width, int height);
+   bool AllocFreeSpace(int& x, int& y);
+   bool AllocFreeSpace(int& x, int& y, int width, int height);
    void UnlockSpace(int x, int y);
 	
    bool IsFilled(int x, int y) const;
    int GetWidth() const { return width; }
    int GetHeight() const { return height; }
 
-   static void Offset(int ox, int oy, int *x, int *y);
+   static void Offset(int ox, int oy, int* x, int* y);
 
    static const int OBJ_GRID_SIZE = 32;
    static const int OBJ_GRID_TOP = 100;
    
 private:   
-   bool *grid;
+   bool* grid;
    int width, height;
 };
 
@@ -53,7 +53,7 @@ public:
       : xpos(xpos), ypos(ypos), width(width), height(height) {}
    StaticObject() { StaticObject(0, 0, 1, 1); }
 
-   bool ObjectInScreen(Viewport *viewport);
+   bool ObjectInScreen(Viewport* viewport);
    
    int GetX() const { return xpos; }
    int GetY() const { return ypos; }

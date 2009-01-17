@@ -81,7 +81,7 @@ int Font::NextPowerOf2(int a)
 }
 
 void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
-                           GLuint *texBase, unsigned short *widths)
+                           GLuint* texBase, unsigned short* widths)
 {
    int i, j;
 
@@ -164,18 +164,18 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    glEndList();
 }
 
-void Font::SplitIntoLines(vector<string> &lines, const char *fmt, va_list ap)
+void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
 {
    if (fmt == NULL)
       *buf = 0;
    else
       vsnprintf(buf, MAX_TXT_BUF, fmt, ap);
    
-   const char *start_line = buf, *c;
+   const char* start_line = buf, *c;
    for (c = buf; *c; c++)	{
       if (*c == '\n')	{
          string line;
-         for (const char *n = start_line; n < c; n++) 
+         for (const char* n = start_line; n < c; n++) 
             line.append(1, *n);
          lines.push_back(line);
          start_line = c+1;
@@ -184,13 +184,13 @@ void Font::SplitIntoLines(vector<string> &lines, const char *fmt, va_list ap)
 
    if (start_line)	{
       string line;
-      for (const char *n = start_line; n < c; n++) 
+      for (const char* n = start_line; n < c; n++) 
          line.append(1, *n);
       lines.push_back(line);
    }
 }
 
-void Font::Print(int x, int y, const char *fmt, ...)
+void Font::Print(int x, int y, const char* fmt, ...)
 {
    // Store the current matrix
    glPushMatrix();
@@ -226,7 +226,7 @@ void Font::Print(int x, int y, const char *fmt, ...)
    glPopMatrix();
 }
 
-int Font::GetStringWidth(const char *fmt, ...)
+int Font::GetStringWidth(const char* fmt, ...)
 {
    va_list ap;
    vector<string> lines;

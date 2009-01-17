@@ -118,8 +118,8 @@ void Game::EnterDeathWait(int timeout)
 
 void Game::Process()
 {
-   Input &input = Input::GetInstance();
-   OpenGL &opengl = OpenGL::GetInstance();
+   Input& input = Input::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
    
    // Check keys
    if (input.QueryAction(Input::PAUSE)) {
@@ -332,8 +332,8 @@ void Game::Process()
    else if (state == gsFadeToDeath) {
       if (fade.Process()) {
          // Return to main menu
-         ScreenManager &sm = ScreenManager::GetInstance();
-         HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
+         ScreenManager& sm = ScreenManager::GetInstance();
+         HighScores* hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
          hs->CheckScore(score);
       }
    }
@@ -538,7 +538,7 @@ void Game::ExplodeShip()
 
 void Game::Display()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
    
    // Draw the stars
    for (int i = 0; i < nStarCount; i++) {
@@ -618,7 +618,7 @@ void Game::Display()
    if (state == gsExplode) {
       ship.DrawExplosion();
       glColor3f(0.0f, 1.0f, 0.0f);
-      const char *sdeath = i18n("Press SPACE to continue");
+      const char* sdeath = i18n("Press SPACE to continue");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
       int y = opengl.GetHeight() - 40;
       normalFont.Print(x, y, sdeath);
@@ -676,13 +676,13 @@ void Game::Display()
          i += 32;
       }
       glColor3f(0.0f, 1.0f, 0.0f);
-      const char *sland = i18n("Land  now");
+      const char* sland = i18n("Land  now");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sland)) / 2;
       normalFont.Print(x, 30, sland);
    }
 
    // Draw level complete messages
-   const char *scoretxt = i18n("Score:  %d");
+   const char* scoretxt = i18n("Score:  %d");
    if (state == gsLevelComplete) {
       int lc_x = (opengl.GetWidth() - levelComp.GetWidth()) / 2;
       int lc_y = (opengl.GetHeight() - levelComp.GetHeight()) / 2 - 50;
@@ -698,7 +698,7 @@ void Game::Display()
    // Draw level number text
    if (leveltext_timeout) {
       glColor3f(0.9f, 0.9f, 0.0f);
-      const char *lvltxt = i18n("Level  %d");
+      const char* lvltxt = i18n("Level  %d");
       int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt, level)) / 2;
       int y = (opengl.GetHeight() - 30) / 2;
       bigFont.Print(x, y, lvltxt, level);
@@ -717,7 +717,7 @@ void Game::Display()
 
    // Draw paused message
    if (state == gsPaused) {
-      const char *txtpaused = i18n("Paused");
+      const char* txtpaused = i18n("Paused");
       glColor3f(0.0f, 0.5f, 1.0f);
       int x = (opengl.GetWidth() - bigFont.GetStringWidth(txtpaused) - 20) / 2;
       int y = (opengl.GetHeight() - 150) / 2;
@@ -725,8 +725,8 @@ void Game::Display()
    }
 }
 
-Image *FuelMeter::fuelMeterImage = NULL;
-Texture *FuelMeter::fuelBarTexture = NULL;
+Image* FuelMeter::fuelMeterImage = NULL;
+Texture* FuelMeter::fuelBarTexture = NULL;
 
 FuelMeter::FuelMeter()
    : fuel(0), maxfuel(1)
@@ -739,7 +739,7 @@ FuelMeter::FuelMeter()
 
 void FuelMeter::Display()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
    
    int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
    float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
@@ -781,9 +781,9 @@ bool FuelMeter::OutOfFuel() const
    return fuel <= 0;
 }
 
-Image *SpeedMeter::speedMeterImage = NULL;
+Image* SpeedMeter::speedMeterImage = NULL;
 
-SpeedMeter::SpeedMeter(Ship *ship)
+SpeedMeter::SpeedMeter(Ship* ship)
    : ship(ship)
 {
    LOAD_ONCE {

@@ -164,8 +164,8 @@ using namespace std;
 #endif /* #ifdef LANDER_BIG_ENDIAN */
 
 void RecreateScreens();
-const char *LocateResource(const char *file);
-bool FileExists(const string &file);
+const char* LocateResource(const char* file);
+bool FileExists(const string& file);
 string GetConfigDir();
 
 #endif /* #ifdef INC_PLATFORM_HPP */

@@ -29,10 +29,10 @@ class Key : public StaticObject {
 public:
    Key(bool active, int xpos, int ypos, ArrowColour acol);
    
-   void DrawKey(Viewport *viewport);
-   void DrawArrow(Viewport *viewport);
+   void DrawKey(Viewport* viewport);
+   void DrawArrow(Viewport* viewport);
    void DrawIcon(int offset, float minAlpha);
-   bool CheckCollision(Ship &ship) const;
+   bool CheckCollision(Ship& ship) const;
 
    void Collected() { active = false; }
    
@@ -44,12 +44,12 @@ private:
    int rotcount;
    float alpha;
    bool active;
-   AnimatedImage *image;
-   Image *arrow;
+   AnimatedImage* image;
+   Image* arrow;
 
-   static AnimatedImage *blueImage, *redImage, *yellowImage,
+   static AnimatedImage* blueImage, *redImage, *yellowImage,
       *pinkImage, *greenImage;
-   static Image *blueArrow, *redArrow, *yellowArrow,
+   static Image* blueArrow, *redArrow, *yellowArrow,
       *pinkArrow, *greenArrow;
 };
 

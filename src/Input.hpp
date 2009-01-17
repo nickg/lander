@@ -33,7 +33,7 @@ public:
       SKIP, ABORT, DEBUG, PAUSE, THRUST
    };
    
-   static Input &GetInstance();
+   static Input& GetInstance();
 
    bool QueryAction(Action a) const;
    void ResetAction(Action a);
@@ -41,7 +41,7 @@ public:
 
    void OpenCharBuffer(int max=256);
    void CloseCharBuffer();
-   const char *GetInput() const;
+   const char* GetInput() const;
 
 private:
    Input();
@@ -50,7 +50,7 @@ private:
    static const int NUM_ACTIONS = 10;
    static const int RESET_TIMEOUT = 10;		// Frames between key presses
 
-   SDL_Joystick *joystick;
+   SDL_Joystick* joystick;
 
    int actionIgnore[NUM_ACTIONS];   // Timeout for actions being ignored
 

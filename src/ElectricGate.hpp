@@ -54,9 +54,9 @@ private:
 
 class ElectricGate : public StaticObject {
 public:
-   ElectricGate(Viewport *v, int length, bool vertical, int x, int y);
+   ElectricGate(Viewport* v, int length, bool vertical, int x, int y);
 
-   bool CheckCollision(Ship &ship);
+   bool CheckCollision(Ship& ship);
    void Draw();
    
 private:
@@ -64,10 +64,10 @@ private:
    
    int length, timer;
    bool vertical;
-   Viewport *viewport;
+   Viewport* viewport;
    Lightning lightning;
 
-   static Image *gateImage;
+   static Image* gateImage;
 };
 
 #endif

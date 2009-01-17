@@ -40,7 +40,7 @@ private:
    void DisplayItems();
 
    string MakeResolutionString(int hres, int vres) const;
-   void ParseResolutionString(const string &str, int *hres, int *vres) const;
+   void ParseResolutionString(const string& str, int* hres, int* vres) const;
 
    void Apply();
 

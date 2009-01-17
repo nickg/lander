@@ -23,11 +23,11 @@
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
 
-Image *Missile::image = NULL;
+Image* Missile::image = NULL;
 
 const double Missile::ACCEL(0.1);
 
-Missile::Missile(ObjectGrid *o, Viewport *v, Side s)
+Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
    : viewport(v), objgrid(o), speed(0.0), state(FIXED)
 {
    // This constructor builds a missile attached to the side of the screen
@@ -55,7 +55,7 @@ void Missile::Draw() const
       image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
 }
 
-bool Missile::CheckCollison(const Ship &ship)
+bool Missile::CheckCollison(const Ship& ship)
 {
    // A bounding box collision isn't exactly accurate but should
    // work OK
@@ -65,7 +65,7 @@ bool Missile::CheckCollison(const Ship &ship)
    return collided;
 }
 
-void Missile::Move(const Ship &ship)
+void Missile::Move(const Ship& ship)
 {
    switch (state) {
    case FIXED: MoveFixed(ship); break;
@@ -74,7 +74,7 @@ void Missile::Move(const Ship &ship)
    }
 }
 
-void Missile::MoveFixed(const Ship &ship)
+void Missile::MoveFixed(const Ship& ship)
 {
    // Hmm... add some fancy logic here to decided when to fire
    if (ship.GetY() > dy)

@@ -23,9 +23,9 @@ const int Surface::MAX_SURFACE_HEIGHT(300);
 const int Surface::MIN_SURFACE_HEIGHT(10);
 const int Surface::SURFACE_SIZE(20);
 
-Texture *Surface::surfTexture[Surface::NUM_SURF_TEX];
+Texture* Surface::surfTexture[Surface::NUM_SURF_TEX];
 
-Surface::Surface(Viewport *v)
+Surface::Surface(Viewport* v)
    :  viewport(v), surface(NULL)
 {
    LOAD_ONCE {
@@ -42,7 +42,7 @@ Surface::~Surface()
       delete[] surface;
 }
 
-void Surface::Generate(int surftex, LandingPadList &pads)
+void Surface::Generate(int surftex, LandingPadList& pads)
 {
    if (surface)
       delete[] surface;
@@ -63,7 +63,7 @@ void Surface::Generate(int surftex, LandingPadList &pads)
       surface[i].points[0].y = MAX_SURFACE_HEIGHT;
 		
       // See if we want to place a landing pad here
-      LandingPad *padHere = NULL;
+      LandingPad* padHere = NULL;
       for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
          for (int k = 0; k < (*it).GetLength(); k++) {
             if ((*it).GetIndex() + k == i) {
@@ -149,7 +149,7 @@ void Surface::Display()
 // Returns true if ship has collided with surface. Sets padIndex to the index
 // of pad if the player hit it, -1 otherwise.
 //
-bool Surface::CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex)
+bool Surface::CheckCollisions(Ship& ship, LandingPadList& pads, int* padIndex)
 {
    LineSegment l;
    int lookmin = (int)(ship.GetX()/SURFACE_SIZE) - 2;
@@ -176,7 +176,7 @@ bool Surface::CheckCollisions(Ship &ship, LandingPadList &pads, int *padIndex)
          for (LandingPadListIt it = pads.begin();
               it != pads.end();
               ++it, ++j) {
-            LandingPad &pad = *it;
+            LandingPad& pad = *it;
             for (int m = 0; m < pad.GetLength(); m++) {
                if (pad.GetIndex() + m == i) {
                   // Hit a landing pad

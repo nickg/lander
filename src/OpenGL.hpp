@@ -83,11 +83,11 @@ struct Poly {
 //
 class OpenGL {
 public:
-   static OpenGL &GetInstance();
+   static OpenGL& GetInstance();
 
    void Init(int width, int height, int depth, bool fullscreen);
-   void MsgBox(const char *text, const char *title="Message");
-   void ErrorMsg(const char *text, const char *title="Error");
+   void MsgBox(const char* text, const char* title="Message");
+   void ErrorMsg(const char* text, const char* title="Error");
    void Stop();
    void Run();
    void SkipDisplay();
@@ -96,15 +96,15 @@ public:
    void Viewport(int x, int y, int width, int height);
 
    // Renderer functions
-   void Draw(Renderable *r);
-   void Draw(Poly *cp);
-   void DrawRotate(Renderable *r, float angle);
-   void DrawBlend(Renderable *r, float alpha);
-   void DrawRotateBlend(Renderable *r, float angle, float alpha);
-   void DrawScale(Renderable *r, float factor);
-   void DrawRotateScale(Renderable *r, float angle, float factor);
-   void DrawBlendScale(Renderable *r, float alpha, float factor);
-   void DrawRotateBlendScale(Renderable *r, float angle, float alpha, float factor);
+   void Draw(Renderable* r);
+   void Draw(Poly* cp);
+   void DrawRotate(Renderable* r, float angle);
+   void DrawBlend(Renderable* r, float alpha);
+   void DrawRotateBlend(Renderable* r, float angle, float alpha);
+   void DrawScale(Renderable* r, float factor);
+   void DrawRotateScale(Renderable* r, float angle, float factor);
+   void DrawBlendScale(Renderable* r, float alpha, float factor);
+   void DrawRotateBlendScale(Renderable* r, float angle, float alpha, float factor);
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
@@ -121,8 +121,8 @@ private:
    ~OpenGL();
    
    GLvoid ResizeGLScene(GLsizei width, GLsizei height);
-   GLuint BindTexture(unsigned char *data, int width, int height, int fmt);
-   GLubyte *BuildAlphaChannel(const unsigned char *pixels, int width, int height);
+   GLuint BindTexture(unsigned char* data, int width, int height, int fmt);
+   GLubyte* BuildAlphaChannel(const unsigned char* pixels, int width, int height);
    bool InitGL();
    void DrawGLScene();
    string SDLErrorString();

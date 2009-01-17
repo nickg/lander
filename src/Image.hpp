@@ -23,7 +23,7 @@
 
 class Image : public Texture {
 public:
-   Image(const char *file);
+   Image(const char* file);
    virtual ~Image();
 
    virtual void Draw(int x, int y, double rotate=0.0, double scale=1.0,

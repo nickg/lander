@@ -27,7 +27,7 @@
 
 class Ship {
 public:
-   Ship(Viewport *v);
+   Ship(Viewport* v);
 
    void Reset();
 
@@ -44,8 +44,8 @@ public:
    void ApplyGravity(double gravity);
    void CentreInViewport();
    
-   bool CheckCollision(LineSegment &l, double dx=0, double dy=0) const;
-   bool HotSpotCollision(LineSegment &l, double dx=0, double dy=0) const;
+   bool CheckCollision(LineSegment& l, double dx=0, double dy=0) const;
+   bool HotSpotCollision(LineSegment& l, double dx=0, double dy=0) const;
    bool BoxCollision(int x, int y, int w, int h) const;
 
    double GetX() const { return xpos; }
@@ -57,7 +57,7 @@ public:
    static const int SHIP_START_Y = 100;
 
 private:
-   void RotatePoints(const Point *pPoints, Point *pDest, int nCount,
+   void RotatePoints(const Point* pPoints, Point* pDest, int nCount,
                      double angle, int adjustx=0, int adjusty=0);
 
    Image shipImage;
@@ -65,7 +65,7 @@ private:
    double xpos, ypos;
    double speedX, speedY, angle;
 
-   Viewport *viewport;
+   Viewport* viewport;
    Explosion explosion;
    SmokeTrail exhaust;
    bool thrusting;

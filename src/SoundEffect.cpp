@@ -25,7 +25,7 @@ int SoundEffect::audioBuffers(4096);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
-SoundEffect::SoundEffect(const char *filename)
+SoundEffect::SoundEffect(const char* filename)
    : sound(NULL), channel(-1)
 {
    if (++loadCount == 1) {

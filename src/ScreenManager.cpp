@@ -32,14 +32,14 @@ ScreenManager::~ScreenManager()
    
 }
 
-ScreenManager &ScreenManager::GetInstance()
+ScreenManager& ScreenManager::GetInstance()
 {
    static ScreenManager sm;
 
    return sm;
 }
 
-void ScreenManager::AddScreen(const char *id, Screen *ptr)
+void ScreenManager::AddScreen(const char* id, Screen* ptr)
 {
    if (screens.find(string(id)) != screens.end())
       throw runtime_error("Screen already registered: " + string(id));
@@ -68,7 +68,7 @@ void ScreenManager::SelectScreen(const string id)
    OpenGL::GetInstance().SkipDisplay();
 }
 
-Screen *ScreenManager::GetScreenById(const char *id) const
+Screen* ScreenManager::GetScreenById(const char* id) const
 {
    ScreenMap::const_iterator it;
 

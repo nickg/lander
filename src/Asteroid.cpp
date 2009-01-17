@@ -19,7 +19,7 @@
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
 
-Texture *Asteroid::surfTexture[Surface::NUM_SURF_TEX];
+Texture* Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 
 Asteroid::Asteroid()
 {
@@ -192,7 +192,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
    glCallList(display_list);
 } 
 
-bool Asteroid::CheckCollision(Ship &ship)
+bool Asteroid::CheckCollision(Ship& ship)
 {
    // Look at polys
    for (int k = 0; k < GetWidth(); k++) {

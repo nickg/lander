@@ -24,14 +24,14 @@
 
 class SoundEffect {
 public:
-   SoundEffect(const char *filename);
+   SoundEffect(const char* filename);
    ~SoundEffect();
 
    static void SetEnabled(bool state) { enabled = state; }
 
    void Play();
 private:
-   Mix_Chunk *sound;
+   Mix_Chunk* sound;
    int channel;
    
    static int loadCount;

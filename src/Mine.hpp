@@ -25,11 +25,11 @@
 
 class Mine : public StaticObject {
 public:
-   Mine(ObjectGrid *o, Viewport *v, int x, int y);
+   Mine(ObjectGrid* o, Viewport* v, int x, int y);
 
    void Move();
    void Draw() const;
-   bool CheckCollision(Ship &ship);
+   bool CheckCollision(Ship& ship);
 
    static const int MINE_FRAME_COUNT = 18;
  
@@ -39,13 +39,13 @@ private:
    
    enum Direction { dirUp, dirRight, dirDown, dirLeft, dirNone };
 
-   ObjectGrid *objgrid;
-   Viewport *viewport;
+   ObjectGrid* objgrid;
+   Viewport* viewport;
    Direction dir;
    int current, rotcount, movetimeout;
    int displace_x, displace_y, movedelay;
 
-   static AnimatedImage *image;
+   static AnimatedImage* image;
 };
 
 #endif

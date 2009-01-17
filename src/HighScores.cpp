@@ -45,8 +45,8 @@ void HighScores::Load()
 //
 void HighScores::Process()
 {
-   Input &input = Input::GetInstance();
-   OpenGL &opengl = OpenGL::GetInstance();
+   Input& input = Input::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
    int i;
 
    // Check for input
@@ -152,7 +152,7 @@ void HighScores::Process()
 //
 void HighScores::Display()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
 
    // Draw the fireworks
    for (int i = 0; i < MAX_FIREWORKS; i++)
@@ -171,7 +171,7 @@ void HighScores::Display()
    }
 
    // Draw other stuff
-   const char *hsnext = i18n("Press SPACE or FIRE to return");
+   const char* hsnext = i18n("Press SPACE or FIRE to return");
    if (state == hssDisplay) {
       int title_x = (opengl.GetWidth() - hscoreImage.GetWidth()) / 2;
       int title_y = 50;
@@ -184,20 +184,20 @@ void HighScores::Display()
       largeFont.Print(x, y, hsnext);
    }
    else if (state == hssEnterName)	{
-      Input &input = Input::GetInstance();
+      Input& input = Input::GetInstance();
       
-      const char *hsscore = i18n("Well done - You got a high score");
+      const char* hsscore = i18n("Well done - You got a high score");
       int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsscore)) / 2;
       glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
       largeFont.Print(x, 100, hsscore);
 
-      const char *hscont = i18n("Press ENTER or FIRE to continue");
+      const char* hscont = i18n("Press ENTER or FIRE to continue");
       x = (opengl.GetWidth() - largeFont.GetStringWidth(hscont)) / 2;
       int y = opengl.GetHeight() - 60;
       largeFont.Print(x, y, hscont);
 
-      const char *name = input.GetInput();
-      const char *hsname = i18n("Name?  %s");
+      const char* name = input.GetInput();
+      const char* hsname = i18n("Name?  %s");
       x = (opengl.GetWidth() - largeFont.GetStringWidth(hsname, name)) / 2;
       y = (opengl.GetHeight() - 50) / 2;
       glColor4f(0.8f, 0.0f, 1.0f, flAlpha);
@@ -284,7 +284,7 @@ string ScoreFile::GetHighScoreFile()
    return GetConfigDir() + ".lander.scores";
 }
 
-bool operator<(const ScoreFile::ScoreEntry &a, const ScoreFile::ScoreEntry &b)
+bool operator<(const ScoreFile::ScoreEntry& a, const ScoreFile::ScoreEntry& b)
 {
    return a.GetScore() > b.GetScore();
 }
@@ -322,26 +322,26 @@ void ScoreFile::Save()
       (*it).WriteOnStream(fout);
 }
 
-void ScoreFile::Insert(const char *name, int score)
+void ScoreFile::Insert(const char* name, int score)
 {
    scores[9] = ScoreEntry(name, score);
    Sort();
    needsWrite = true;
 }
 
-ScoreFile::ScoreEntry::ScoreEntry(const char *name, int score)
+ScoreFile::ScoreEntry::ScoreEntry(const char* name, int score)
    : score(score)
 {
    strncpy(this->name, name, MAX_NAME);
 }
 
-void ScoreFile::ScoreEntry::WriteOnStream(ostream &os)
+void ScoreFile::ScoreEntry::WriteOnStream(ostream& os)
 {
    os.write((const char*)&score, sizeof(int));
    os.write(name, MAX_NAME);
 }
 
-void ScoreFile::ScoreEntry::ReadFromStream(istream &is)
+void ScoreFile::ScoreEntry::ReadFromStream(istream& is)
 {
    is.read((char*)&score, sizeof(int));
    is.read(name, MAX_NAME);

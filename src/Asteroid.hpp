@@ -32,7 +32,7 @@ public:
 	
    void ConstructAsteroid(int x, int y, int width, int surftex);
    void Draw(int viewadjust_x, int viewadjust_y) const;
-   bool CheckCollision(Ship &ship);
+   bool CheckCollision(Ship& ship);
    LineSegment GetUpBoundary(int poly);
    LineSegment GetDownBoundary(int poly);
 
@@ -43,7 +43,7 @@ private:
 
    void GenerateDisplayList(int texidx);
 
-   static Texture *surfTexture[Surface::NUM_SURF_TEX];
+   static Texture* surfTexture[Surface::NUM_SURF_TEX];
    GLuint display_list;
    
    struct AsteroidSection {

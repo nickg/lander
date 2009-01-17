@@ -26,25 +26,25 @@ class Missile {
 public:
    enum Side { SIDE_LEFT, SIDE_RIGHT };
    
-   Missile(ObjectGrid *o, Viewport *v, Side s);
+   Missile(ObjectGrid* o, Viewport* v, Side s);
 
    void Draw() const;
-   void Move(const Ship &ship);
-   bool CheckCollison(const Ship &ship);
+   void Move(const Ship& ship);
+   bool CheckCollison(const Ship& ship);
 private:
-   void MoveFixed(const Ship &ship);
+   void MoveFixed(const Ship& ship);
    void MoveFlying();
    void MoveDestroyed();
    
-   Viewport *viewport;
-   ObjectGrid *objgrid;
+   Viewport* viewport;
+   ObjectGrid* objgrid;
    int x, y, dx, dy;
    double angle, speed;
 
    enum State { FIXED, FLYING, DESTROYED };
    State state;
 
-   static Image *image;
+   static Image* image;
    static const double ACCEL;
 };
 

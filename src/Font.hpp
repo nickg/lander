@@ -27,19 +27,19 @@ public:
    Font(string filename, unsigned int h);
    ~Font();
 
-   void Print(int x, int y, const char *fmt, ...);
-   int GetStringWidth(const char *fmt, ...);
+   void Print(int x, int y, const char* fmt, ...);
+   int GetStringWidth(const char* fmt, ...);
 private:   
    int NextPowerOf2(int a);
    void MakeDisplayList(FT_Face face, char ch, GLuint listBase,
-                        GLuint *texBase, unsigned short *widths);
-   void SplitIntoLines(vector<string> &lines, const char *fmt, va_list ap);
+                        GLuint* texBase, unsigned short* widths);
+   void SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap);
    
-   GLuint *textures;
+   GLuint* textures;
    GLuint listBase;
    float height;
-   unsigned short *widths;
-   char *buf;
+   unsigned short* widths;
+   char* buf;
 
    static const int MAX_TXT_BUF = 1024;
    

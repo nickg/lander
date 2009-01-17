@@ -61,7 +61,7 @@ Input::~Input()
 //
 // Returns the only instance of Input.
 //
-Input &Input::GetInstance()
+Input& Input::GetInstance()
 {
    static Input g_input;
 
@@ -173,7 +173,7 @@ void Input::Update()
 bool Input::QueryAction(Action a) const
 {
    int numkeys;
-   Uint8 *keystate;
+   Uint8* keystate;
 
    if (actionIgnore[a] > 0)
       return false;
@@ -243,7 +243,7 @@ void Input::CloseCharBuffer()
 //
 // Returns a pointer to the data read in text input mode.
 //
-const char *Input::GetInput() const
+const char* Input::GetInput() const
 {
    return text.c_str();
 }

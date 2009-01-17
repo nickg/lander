@@ -25,7 +25,7 @@
 class LandingPad
 {
 public:
-   LandingPad(Viewport *v, int index, int length);
+   LandingPad(Viewport* v, int index, int length);
 
    void Draw(bool locked);
    void SetYPos(int ypos) { this->ypos = ypos; }
@@ -36,9 +36,9 @@ public:
 private:
    TextureQuad quad;
    int index, length, ypos;
-   Viewport *viewport;
+   Viewport* viewport;
    
-   static Texture *landTexture, *noLandTexture;
+   static Texture* landTexture, *noLandTexture;
 };
 
 typedef vector<LandingPad> LandingPadList;

@@ -18,9 +18,9 @@
 #include "ElectricGate.hpp"
 #include "LoadOnce.hpp"
 
-Image *ElectricGate::gateImage = NULL;
+Image* ElectricGate::gateImage = NULL;
 
-ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
+ElectricGate::ElectricGate(Viewport* v, int length, bool vertical, int x, int y)
    : StaticObject(x, y), length(length), vertical(vertical), viewport(v)
 {
    LOAD_ONCE {
@@ -32,7 +32,7 @@ ElectricGate::ElectricGate(Viewport *v, int length, bool vertical, int x, int y)
    timer = rand() % 70 + 10;
 }
 
-bool ElectricGate::CheckCollision(Ship &ship)
+bool ElectricGate::CheckCollision(Ship& ship)
 {
    int dx = vertical ? 0 : length;
    int dy = vertical ? length : 0;

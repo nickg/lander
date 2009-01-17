@@ -34,7 +34,7 @@ OpenGL::OpenGL()
 //
 // Returns the singleton instance of OpenGL.
 //
-OpenGL &OpenGL::GetInstance()
+OpenGL& OpenGL::GetInstance()
 {
    static OpenGL opengl;
 
@@ -174,7 +174,7 @@ void OpenGL::Viewport(int x, int y, int width, int height)
    glViewport(x, y, width, height);
 }
 
-void OpenGL::Draw(Renderable *r)
+void OpenGL::Draw(Renderable* r)
 {
    glDisable(GL_BLEND);
    glLoadIdentity();
@@ -183,7 +183,7 @@ void OpenGL::Draw(Renderable *r)
    r->Render();
 }
 
-void OpenGL::Draw(Poly *cp)
+void OpenGL::Draw(Poly* cp)
 {
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
@@ -203,7 +203,7 @@ void OpenGL::Draw(Poly *cp)
    glEnd();
 }
 
-void OpenGL::DrawRotate(Renderable *r, float angle)
+void OpenGL::DrawRotate(Renderable* r, float angle)
 {
    glDisable(GL_BLEND);
    glDisable(GL_TEXTURE_2D);
@@ -214,7 +214,7 @@ void OpenGL::DrawRotate(Renderable *r, float angle)
    r->Render();
 }
 
-void OpenGL::DrawBlend(Renderable *r, float alpha)
+void OpenGL::DrawBlend(Renderable* r, float alpha)
 {
    glDisable(GL_DEPTH_TEST);
    glEnable(GL_BLEND);
@@ -224,7 +224,7 @@ void OpenGL::DrawBlend(Renderable *r, float alpha)
    r->Render();
 }
 
-void OpenGL::DrawRotateBlend(Renderable *r, float angle, float alpha)
+void OpenGL::DrawRotateBlend(Renderable* r, float angle, float alpha)
 {
    glDisable(GL_DEPTH_TEST);
    glEnable(GL_BLEND);
@@ -235,7 +235,7 @@ void OpenGL::DrawRotateBlend(Renderable *r, float angle, float alpha)
    r->Render();
 }
 
-void OpenGL::DrawScale(Renderable *r, float factor)
+void OpenGL::DrawScale(Renderable* r, float factor)
 {
    glDisable(GL_BLEND);
    glLoadIdentity();
@@ -245,7 +245,7 @@ void OpenGL::DrawScale(Renderable *r, float factor)
    r->Render();
 }
 
-void OpenGL::DrawRotateScale(Renderable *r, float angle, float factor)
+void OpenGL::DrawRotateScale(Renderable* r, float angle, float factor)
 {
    glDisable(GL_BLEND);
    glLoadIdentity();
@@ -256,7 +256,7 @@ void OpenGL::DrawRotateScale(Renderable *r, float angle, float factor)
    r->Render();
 }
 
-void OpenGL::DrawBlendScale(Renderable *r, float alpha, float factor)
+void OpenGL::DrawBlendScale(Renderable* r, float alpha, float factor)
 {
    glDisable(GL_DEPTH_TEST);
    glEnable(GL_BLEND);
@@ -267,7 +267,7 @@ void OpenGL::DrawBlendScale(Renderable *r, float alpha, float factor)
    r->Render();
 }
 
-void OpenGL::DrawRotateBlendScale(Renderable *r, float angle, float alpha, float factor)
+void OpenGL::DrawRotateBlendScale(Renderable* r, float angle, float alpha, float factor)
 {
    glDisable(GL_DEPTH_TEST);
    glEnable(GL_BLEND);
@@ -332,7 +332,7 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 // Displays a message to the user. On Windows this will appear as a message
 // box. On other platforms the message will be printed to stdout.
 //
-void OpenGL::MsgBox(const char *text, const char *title)
+void OpenGL::MsgBox(const char* text, const char* title)
 {
 #ifdef WIN32
    MessageBox(NULL, text, title, MB_OK | MB_ICONINFORMATION);
@@ -347,7 +347,7 @@ void OpenGL::MsgBox(const char *text, const char *title)
 // as a popup error message. On other platforms the message will be
 // printed to stderr.
 //
-void OpenGL::ErrorMsg(const char *text, const char *title)
+void OpenGL::ErrorMsg(const char* text, const char* title)
 {
 #ifdef WIN32
    MessageBox(NULL, text, title, MB_OK | MB_ICONEXCLAMATION);

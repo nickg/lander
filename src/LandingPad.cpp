@@ -19,10 +19,10 @@
 #include "Surface.hpp"
 #include "LoadOnce.hpp"
 
-Texture *LandingPad::landTexture = NULL;
-Texture *LandingPad::noLandTexture = NULL;
+Texture* LandingPad::landTexture = NULL;
+Texture* LandingPad::noLandTexture = NULL;
 
-LandingPad::LandingPad(Viewport *v, int index, int length)
+LandingPad::LandingPad(Viewport* v, int index, int length)
    : index(index), length(length), viewport(v)
 {
    LOAD_ONCE {

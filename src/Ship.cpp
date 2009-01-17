@@ -26,7 +26,7 @@ const Point Ship::hotspots[] = {
    {29, 14}, {31, 26}, {31, 31}, {17, 31} };
 
 
-Ship::Ship(Viewport *v)
+Ship::Ship(Viewport* v)
    : shipImage("images/ship.png"),
      xpos(0), ypos(0), speedX(0), speedY(0), angle(0), viewport(v),
      thrusting(false),
@@ -141,7 +141,7 @@ void Ship::CentreInViewport()
 {
    int centrex = (int)xpos + (shipImage.GetWidth()/2);
    int centrey = (int)ypos + (shipImage.GetHeight()/2);
-   OpenGL &opengl = OpenGL::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
    viewport->SetXAdjust(centrex - (opengl.GetWidth()/2));
    viewport->SetYAdjust(centrey - (opengl.GetHeight()/2));
 }
@@ -162,7 +162,7 @@ void Ship::Reset()
    speedY = 0.0f;
 }
 
-void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
+void Ship::RotatePoints(const Point* pPoints, Point* pDest, int nCount,
                         double angle, int adjustx, int adjusty)
 {
    for (int i = 0; i < nCount; i++) {
@@ -179,7 +179,7 @@ void Ship::RotatePoints(const Point *pPoints, Point *pDest, int nCount,
 //
 // Check for collision between the ship and a polygon.
 //
-bool Ship::HotSpotCollision(LineSegment &l, double dx, double dy) const
+bool Ship::HotSpotCollision(LineSegment& l, double dx, double dy) const
 {
    for (int i = 0; i < NUM_HOTSPOTS; i++) {
       if (CheckCollision(l, dx + points[i].x, dy + points[i].y))
@@ -209,7 +209,7 @@ bool Ship::BoxCollision(int x, int y, int w, int h) const
 //
 // Checks for collision between the ship and a line segment.
 //
-bool Ship::CheckCollision(LineSegment &l, double dx, double dy) const
+bool Ship::CheckCollision(LineSegment& l, double dx, double dy) const
 {
    double xpos = this->xpos + dx;
    double ypos = this->ypos + dy;

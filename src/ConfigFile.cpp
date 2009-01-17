@@ -52,12 +52,12 @@ ConfigFile::~ConfigFile()
    }
 }
 
-bool ConfigFile::has(const string &key) const
+bool ConfigFile::has(const string& key) const
 {
    return settings.find(key) != settings.end();
 }
 
-const string &ConfigFile::get(const string &key)
+const string& ConfigFile::get(const string& key)
 {
    if (!has(key))
       throw runtime_error(key + " not in config file");
@@ -65,7 +65,7 @@ const string &ConfigFile::get(const string &key)
       return settings[key];
 }
 
-const string &ConfigFile::get_string(const string &key, const string &def)
+const string& ConfigFile::get_string(const string& key, const string& def)
 {
    if (has(key))
       return get(key);
@@ -75,7 +75,7 @@ const string &ConfigFile::get_string(const string &key, const string &def)
    }
 }
 
-int ConfigFile::get_int(const string &key, int def)
+int ConfigFile::get_int(const string& key, int def)
 {
    if (has(key)) {
       istringstream is(get(key));
@@ -91,10 +91,10 @@ int ConfigFile::get_int(const string &key, int def)
    }     
 }
 
-bool ConfigFile::get_bool(const string &key, bool def)
+bool ConfigFile::get_bool(const string& key, bool def)
 {
    if (has(key)) {
-      const string &value = get(key);
+      const string& value = get(key);
       if (value == "true")
          return true;
       else if (value == "false")

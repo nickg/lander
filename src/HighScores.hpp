@@ -37,20 +37,20 @@ public:
 
    void Load();
    void Save();
-   void Insert(const char *name, int score);
+   void Insert(const char* name, int score);
 
    // An entry in the highscores chart
    class ScoreEntry {
    public:
-      ScoreEntry(const char *name, int score);
+      ScoreEntry(const char* name, int score);
 
       static const int MAX_NAME = 16;
 
-      const char *GetName() const { return name; }
+      const char* GetName() const { return name; }
       int GetScore() const { return score; }
       
-      void WriteOnStream(ostream &os);
-      void ReadFromStream(istream &is);
+      void WriteOnStream(ostream& os);
+      void ReadFromStream(istream& is);
 
    private:
       char name[MAX_NAME];
@@ -59,7 +59,7 @@ public:
    
    static const int NUM_SCORES = 10;
    
-   const ScoreEntry &operator[](int n) const { return scores[n]; }
+   const ScoreEntry& operator[](int n) const { return scores[n]; }
       
 private:
    void Sort();
@@ -111,7 +111,7 @@ private:
          delete em; 
       }
 		
-      Emitter *em;
+      Emitter* em;
       int x, y, speed, life, timeout;
       bool active;
    } fw[MAX_FIREWORKS];

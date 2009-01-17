@@ -83,7 +83,7 @@ void Options::ProcessFadeIn()
 
 void Options::ProcessMain()
 {
-   Input &input = Input::GetInstance();
+   Input& input = Input::GetInstance();
    
    if (input.QueryAction(Input::FIRE)) {
       state = optFadeOut;
@@ -99,7 +99,7 @@ void Options::ProcessMain()
       input.ResetAction(Input::DOWN);
    }
    else if (input.QueryAction(Input::LEFT)) {
-      Item &item = items[selected];
+      Item& item = items[selected];
       if (item.active == 0)
          item.active = item.values.size() - 1;
       else
@@ -107,7 +107,7 @@ void Options::ProcessMain()
       input.ResetAction(Input::LEFT);
    }
    else if (input.QueryAction(Input::RIGHT)) {
-      Item &item = items[selected];
+      Item& item = items[selected];
       item.active = (item.active + 1) % item.values.size();
       input.ResetAction(Input::RIGHT);
    }
@@ -141,7 +141,7 @@ void Options::Apply()
    assert(hres > 0 && vres > 0);
 
    if (OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres)) {
-      // This *must* be the very last thing that is done!
+      // This* must* be the very last thing that is done!
       RecreateScreens();
    }
 }
@@ -223,17 +223,17 @@ void Options::DisplayHelpText()
    
    glColor4d(0.0, 1.0, 0.0, fadeAlpha);
 
-   const char *help1 = i18n("Use UP and DOWN to select options");
+   const char* help1 = i18n("Use UP and DOWN to select options");
    x = (screen_w - helpFont.GetStringWidth(help1)) / 2;
    y = screen_h - 100;
    helpFont.Print(x, y, help1);
       
-   const char *help2 = i18n("Use LEFT and RIGHT to change values");
+   const char* help2 = i18n("Use LEFT and RIGHT to change values");
    x = (screen_w - helpFont.GetStringWidth(help2)) / 2;
    y += 25;
    helpFont.Print(x, y, help2);
 
-   const char *help3 = i18n("Press FIRE or RETURN to exit");
+   const char* help3 = i18n("Press FIRE or RETURN to exit");
    x = (screen_w - helpFont.GetStringWidth(help3)) / 2;
    y += 25;
    helpFont.Print(x, y, help3);   
@@ -257,7 +257,7 @@ string Options::MakeResolutionString(int hres, int vres) const
    return ss.str();
 }
 
-void Options::ParseResolutionString(const string &str, int *hres, int *vres) const
+void Options::ParseResolutionString(const string& str, int* hres, int* vres) const
 {
    char x;
    istringstream ss(str);

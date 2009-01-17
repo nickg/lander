@@ -58,8 +58,8 @@ public:
    int GetFuel() const { return fuel; }
    
 private:
-   static Image *fuelMeterImage;
-   static Texture *fuelBarTexture;
+   static Image* fuelMeterImage;
+   static Texture* fuelBarTexture;
 
    static const int FUELBAR_Y;
    
@@ -69,18 +69,18 @@ private:
 
 class SpeedMeter {
 public:
-   SpeedMeter(Ship *ship);
+   SpeedMeter(Ship* ship);
 
    bool SafeLandingSpeed() const;
    void Display();
 
 private:
-   static Image *speedMeterImage;
+   static Image* speedMeterImage;
 
    static const float LAND_SPEED;
    
    ColourQuad speedbar;
-   Ship *ship;
+   Ship* ship;
 };
 
 class Game : public Screen {

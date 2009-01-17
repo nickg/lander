@@ -40,12 +40,12 @@ private:
    double x, y, angle;
 
    static double starRotate;
-   static Image *starImage;
+   static Image* starImage;
 };
 
 class MenuOption {
 public:
-   MenuOption(const char *imgFile, int off, int order);
+   MenuOption(const char* imgFile, int off, int order);
 
    void Display(bool selected, double bigness, double fade) const;
    

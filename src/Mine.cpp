@@ -19,9 +19,9 @@
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
 
-AnimatedImage *Mine::image = NULL;
+AnimatedImage* Mine::image = NULL;
 
-Mine::Mine(ObjectGrid *o, Viewport *v, int x, int y)
+Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
    : objgrid(o), viewport(v)
 {
    LOAD_ONCE {
@@ -138,7 +138,7 @@ void Mine::Move()
    }
 }
 
-bool Mine::CheckCollision(Ship &ship)
+bool Mine::CheckCollision(Ship& ship)
 {
    return ship.BoxCollision
       (xpos*OBJ_GRID_SIZE + 3 + displace_x,

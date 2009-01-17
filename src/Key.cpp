@@ -19,16 +19,16 @@
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
 
-AnimatedImage *Key::blueImage = NULL;
-AnimatedImage *Key::redImage = NULL;
-AnimatedImage *Key::greenImage = NULL;
-AnimatedImage *Key::yellowImage = NULL;
-AnimatedImage *Key::pinkImage = NULL;
-Image *Key::blueArrow = NULL;
-Image *Key::redArrow = NULL;
-Image *Key::greenArrow = NULL;
-Image *Key::yellowArrow = NULL;
-Image *Key::pinkArrow = NULL;
+AnimatedImage* Key::blueImage = NULL;
+AnimatedImage* Key::redImage = NULL;
+AnimatedImage* Key::greenImage = NULL;
+AnimatedImage* Key::yellowImage = NULL;
+AnimatedImage* Key::pinkImage = NULL;
+Image* Key::blueArrow = NULL;
+Image* Key::redArrow = NULL;
+Image* Key::greenArrow = NULL;
+Image* Key::yellowArrow = NULL;
+Image* Key::pinkArrow = NULL;
 
 Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
    : StaticObject(xpos, ypos, 1, 1),
@@ -78,7 +78,7 @@ Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
    }
 }
 
-void Key::DrawKey(Viewport *viewport)
+void Key::DrawKey(Viewport* viewport)
 {
    int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;
@@ -92,7 +92,7 @@ void Key::DrawKey(Viewport *viewport)
       alpha -= 0.02f;
 }
 
-void Key::DrawArrow(Viewport *viewport)
+void Key::DrawArrow(Viewport* viewport)
 {
    if (active && !ObjectInScreen(viewport))	{
       int ax = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
@@ -134,7 +134,7 @@ void Key::DrawIcon(int offset, float minAlpha)
    image->SetFrame(prevFrame);   
 }
 
-bool Key::CheckCollision(Ship &ship) const
+bool Key::CheckCollision(Ship& ship) const
 {
    bool collide = ship.BoxCollision
       (xpos*OBJ_GRID_SIZE + 3,

@@ -36,7 +36,7 @@ const unsigned MainMenu::MAX_STARS(80);
 const double MenuOption::SEL_ENLARGE(1.2);
 const double MenuOption::UNSEL_DIM(0.5);
 
-Image *MenuStar::starImage = NULL;
+Image* MenuStar::starImage = NULL;
 
 MainMenu::MainMenu()
    : startOpt("images/start_option.png", OPTIONS_OFFSET, 0),
@@ -65,9 +65,9 @@ void MainMenu::Load()
 
 void MainMenu::Process()
 {
-   Input &input = Input::GetInstance();
-   OpenGL &opengl = OpenGL::GetInstance();
-   ScreenManager &sm = ScreenManager::GetInstance();
+   Input& input = Input::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
+   ScreenManager& sm = ScreenManager::GetInstance();
 
    // Stop user doing something when they're not supposed to
    if (state == msInMenu) {
@@ -145,7 +145,7 @@ void MainMenu::Process()
       if (fade <= 0.0) {
          // Move to the game screen
          sm.SelectScreen("GAME");
-         Game *g = static_cast<Game*>(sm.GetScreenById("GAME"));
+         Game* g = static_cast<Game*>(sm.GetScreenById("GAME"));
          g->NewGame();
       }
       else {
@@ -157,7 +157,7 @@ void MainMenu::Process()
       // Apply fade
       if (fade <= 0.0f) {
          // Move to the high score screen
-         HighScores *hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
+         HighScores* hs = static_cast<HighScores*>(sm.GetScreenById("HIGH SCORES"));
          hs->DisplayScores();
       }
       else {
@@ -219,7 +219,7 @@ void MainMenu::DisplayStars()
 
 void MainMenu::Display()
 {
-   OpenGL &opengl = OpenGL::GetInstance();
+   OpenGL& opengl = OpenGL::GetInstance();
 
    DisplayStars();
    
@@ -235,7 +235,7 @@ void MainMenu::Display()
    
    // Draw some hint texts
    const int numhints = 7;
-   const char *hints[] = {
+   const char* hints[] = {
       i18n("Use the arrow keys to rotate the ship"),
       i18n("Press the up arrow to fire the thruster"),
       i18n("Smaller landing pads give you more points"),
@@ -304,7 +304,7 @@ bool MenuStar::Move()
            || y + starImage->GetWidth() < 0);
 }
 
-MenuOption::MenuOption(const char *imgFile, int off, int order)
+MenuOption::MenuOption(const char* imgFile, int off, int order)
    : image(imgFile)
 {
    y = (OpenGL::GetInstance().GetHeight() - off) / 2 + (order*image.GetHeight());

@@ -21,7 +21,7 @@
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
 
-Texture *Emitter::texture = NULL;
+Texture* Emitter::texture = NULL;
 
 //
 // Creates a new particle emitter.

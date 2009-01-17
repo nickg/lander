@@ -17,7 +17,7 @@
 
 #include "AnimatedImage.hpp"
 
-AnimatedImage::AnimatedImage(const char *file, int frameWidth, int frameHeight,
+AnimatedImage::AnimatedImage(const char* file, int frameWidth, int frameHeight,
                              int frameCount)
    : Image(file), frameWidth(frameWidth), frameHeight(frameHeight),
      frameCount(frameCount)

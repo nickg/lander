@@ -22,7 +22,7 @@
 
 class Texture {
 public:
-   Texture(const char *file);
+   Texture(const char* file);
    virtual ~Texture();
 
    GLuint GetGLTexture() const { return texture; }

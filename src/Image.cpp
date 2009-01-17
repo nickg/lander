@@ -18,7 +18,7 @@
 #include "Image.hpp"
 #include "OpenGL.hpp"
 
-Image::Image(const char *file)
+Image::Image(const char* file)
    : Texture(file)
 {
    

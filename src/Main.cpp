@@ -26,10 +26,10 @@
 
 #include <SDL_main.h>
 
-static MainMenu *menu = NULL;
-static Game *game = NULL;
-static HighScores *scores = NULL;
-static Options *options = NULL;
+static MainMenu* menu = NULL;
+static Game* game = NULL;
+static HighScores* scores = NULL;
+static Options* options = NULL;
 
 static void DestroyScreens()
 {
@@ -61,7 +61,7 @@ void RecreateScreens()
    scores = new HighScores();
    options = new Options();
    
-   ScreenManager &sm = ScreenManager::GetInstance();
+   ScreenManager& sm = ScreenManager::GetInstance();
    sm.AddScreen("MAIN MENU", menu);
    sm.AddScreen("GAME", game);
    sm.AddScreen("HIGH SCORES", scores);
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
    try {
       // Create the game window
-      OpenGL &opengl = OpenGL::GetInstance();
+      OpenGL& opengl = OpenGL::GetInstance();
       opengl.Init(width, height, depth, fullscreen);
 
       RecreateScreens();
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
 //
 // Find a filename in the installation tree.
 //
-const char *LocateResource(const char *file)
+const char* LocateResource(const char* file)
 {
 #ifdef MACOSX
    static char path[MAX_RES_PATH];
@@ -173,13 +173,13 @@ const char *LocateResource(const char *file)
 #endif
 }
 
-bool FileExists(const string &file)
+bool FileExists(const string& file)
 {
 #ifdef UNIX
    struct stat buf;
    return stat(file.c_str(), &buf) == 0;
 #else
-   FILE *f = fopen(file.c_str(), "r");
+   FILE* f = fopen(file.c_str(), "r");
    if (NULL == f)
       return false;
    else {

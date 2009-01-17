@@ -25,12 +25,12 @@ public:
    ConfigFile(string filename = ".lander.config");
    ~ConfigFile();
 
-   bool has(const string &key) const;
+   bool has(const string& key) const;
 
-   const string &get(const string &key);
-   const string &get_string(const string &key, const string &def = "");
-   int get_int(const string &key, int def = 0);
-   bool get_bool(const string &key, bool def = false);
+   const string& get(const string& key);
+   const string& get_string(const string& key, const string& def = "");
+   int get_int(const string& key, int def = 0);
+   bool get_bool(const string& key, bool def = false);
    
    void put(string key, string value);
    void put(string key, int value);

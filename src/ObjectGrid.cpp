@@ -35,7 +35,7 @@ ObjectGrid::~ObjectGrid()
 //	x, y -> Output x, y, co-ordinates.
 // Returns falce if area could not be allocated.
 //
-bool ObjectGrid::AllocFreeSpace(int &x, int &y)
+bool ObjectGrid::AllocFreeSpace(int& x, int& y)
 {
    int timeout = 10000;
 	
@@ -59,7 +59,7 @@ bool ObjectGrid::AllocFreeSpace(int &x, int &y)
 //	width, height -> Size of desired space.
 // Returns false if area could not be allocated.
 //
-bool ObjectGrid::AllocFreeSpace(int &x, int &y, int width, int height)
+bool ObjectGrid::AllocFreeSpace(int& x, int& y, int width, int height)
 {
    bool isOk;
    int counter_x, counter_y;
@@ -126,7 +126,7 @@ bool ObjectGrid::IsFilled(int x, int y) const
    return grid[x + (width * y)];
 }
 
-void ObjectGrid::Offset(int ox, int oy, int *x, int *y)
+void ObjectGrid::Offset(int ox, int oy, int* x, int* y)
 {
    // Find the absolute coordinates of object grid point
    // (ox, oy) and store them in (x, y)
@@ -134,7 +134,7 @@ void ObjectGrid::Offset(int ox, int oy, int *x, int *y)
    *y = OBJ_GRID_TOP + oy*OBJ_GRID_SIZE;
 }
 
-bool StaticObject::ObjectInScreen(Viewport *viewport)
+bool StaticObject::ObjectInScreen(Viewport* viewport)
 {
    return viewport->ObjectInScreen(xpos, ypos, width, height);
 }
