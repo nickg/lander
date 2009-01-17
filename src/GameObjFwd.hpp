@@ -1,5 +1,5 @@
 //
-//  Missile.hpp -- Missiles on asteroids, etc. 
+//  GameObjFwd.hpp -- Forward declaration for most game objects.
 //  Copyright (C) 2008  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef INC_MISSILE_HPP
-#define INC_MISSILE_HPP
+#ifndef INC_GAMEOBJFWD_HPP
+#define INC_GAMEOBJFWD_HPP
 
-#include "GameObjFwd.hpp"
-#include "GraphicsFwd.hpp"
-
-class Missile {
-public:
-   enum Side { SIDE_LEFT, SIDE_RIGHT };
-   
-   Missile(ObjectGrid *o, Viewport *v, Side s);
-
-   void Draw() const;
-   void Move(const Ship &ship);
-   bool CheckCollison(const Ship &ship);
-private:
-   void MoveFixed(const Ship &ship);
-   void MoveFlying();
-   void MoveDestroyed();
-   
-   Viewport *viewport;
-   ObjectGrid *objgrid;
-   int x, y, dx, dy;
-   double angle, speed;
-
-   enum State { FIXED, FLYING, DESTROYED };
-   State state;
-
-   static Image *image;
-   static const double ACCEL;
-};
+class Ship;
+class ObjectGrid;
+class Viewport;
 
 #endif

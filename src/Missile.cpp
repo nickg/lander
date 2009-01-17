@@ -16,8 +16,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "Platform.hpp"
 #include "Missile.hpp"
 #include "LoadOnce.hpp"
+#include "Image.hpp"
+#include "ObjectGrid.hpp"
+#include "Ship.hpp"
 
 Image *Missile::image = NULL;
 
