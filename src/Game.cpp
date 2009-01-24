@@ -377,12 +377,32 @@ void Game::Process()
       ship.Turn(DEATH_SPIN_RATE);
 }
 
+// Increase n until it is a multiple of x and y
+void Game::MakeMultipleOf(int& n, int x, int y)
+{
+   cout << n << " --> ";
+
+   while (n % x > 0 || n % y > 0)
+      ++n;
+
+   cout << n << endl;
+}
+
 void Game::StartLevel(int level)
 {
+   cout << endl << "Start level " << level << ":" << endl;
+   
    // Set level size
-   viewport.SetLevelWidth(2000 + 2*Surface::SURFACE_SIZE*level);
-   viewport.SetLevelHeight(1500 + 2*Surface::SURFACE_SIZE*level);
+   int levelWidth = 2000 + 2*Surface::SURFACE_SIZE*level;
+   MakeMultipleOf(levelWidth, Surface::SURFACE_SIZE, ObjectGrid::OBJ_GRID_SIZE);
+
+   int levelHeight = 1500 + 2*Surface::SURFACE_SIZE*level;
+   
+   viewport.SetLevelWidth(levelWidth);
+   viewport.SetLevelHeight(levelHeight);
    flGravity = GRAVITY;
+
+   cout << "  Dimensions: " << levelWidth << "x" << levelHeight << endl;
 
    // Create the object grid
    int grid_w = viewport.GetLevelWidth() / ObjectGrid::OBJ_GRID_SIZE;
@@ -465,7 +485,7 @@ void Game::StartLevel(int level)
    // Create missiles
    missiles.clear();
    for (int i = 0; i < 10; i++) {
-      missiles.push_back(Missile(&objgrid, &viewport, Missile::SIDE_LEFT));
+      missiles.push_back(Missile(&objgrid, &viewport, Missile::SIDE_RIGHT));
    }
    
    // Create gateways

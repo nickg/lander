@@ -26,6 +26,7 @@
 Image* Missile::image = NULL;
 
 const double Missile::ACCEL(0.1);
+const double Missile::MAX_SPEED(5.0);
 const int Missile::HORIZ_FIRE_RANGE(600);
 const int Missile::VERT_FIRE_RANGE(50); 
 
@@ -101,14 +102,17 @@ void Missile::MoveFlying()
    dx += speed * sin(angle * M_PI/180);
    dy += speed * cos(angle * M_PI/180);
 
-   exhaust.xpos = dx;
-   exhaust.ypos = dy + image->GetHeight()/2;
+   exhaust.xpos = dx + image->GetWidth()/2
+      - (image->GetWidth()/2)*sin(angle*(M_PI/180));
+   exhaust.ypos = dy + image->GetHeight()/2
+      + (image->GetHeight()/2)*cos(angle*(M_PI/180));
    exhaust.Process(true);
-   
-   speed += ACCEL;
+
+   if (speed < MAX_SPEED)
+      speed += ACCEL;
 
    if (dx > viewport->GetLevelWidth() || dy > viewport->GetLevelHeight()
-       || dx < 0 || dy < 0)
+       || dx + image->GetWidth() < 0 || dy < 0)
       state = DESTROYED;
 }
 

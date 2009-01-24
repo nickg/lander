@@ -103,6 +103,8 @@ private:
    void ExplodeShip();
    void EnterDeathWait(int timeout = DEATH_TIMEOUT);
    void CalculateScore(int padIndex);
+   
+   static void MakeMultipleOf(int& n, int x, int y);
 
    Viewport viewport;
    Ship ship;

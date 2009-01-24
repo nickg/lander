@@ -96,6 +96,8 @@ bool ObjectGrid::AllocFreeSpace(int& x, int& y, int width, int height)
 //
 void ObjectGrid::UnlockSpace(int x, int y)
 {
+   assert(x < width);
+   assert(y < height);
    grid[x + (y * width)] = false;
 }
 
@@ -123,6 +125,8 @@ void ObjectGrid::Reset(int width, int height)
 //
 bool ObjectGrid::IsFilled(int x, int y) const
 {
+   assert(x < width);
+   assert(y < height);
    return grid[x + (width * y)];
 }
 
