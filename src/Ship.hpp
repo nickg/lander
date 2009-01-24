@@ -67,7 +67,7 @@ private:
 
    Viewport* viewport;
    Explosion explosion;
-   SmokeTrail exhaust;
+   BlueSmokeTrail exhaust;
    bool thrusting;
 
    SoundEffect boingSound;

@@ -68,13 +68,24 @@ protected:
 //
 class SmokeTrail : public Emitter {
 public:
-   SmokeTrail();
+   SmokeTrail(float r, float g, float b,
+              float dr, float dg, float db);
    virtual ~SmokeTrail() { }
    
    void ProcessEffect(int particle);
 private:
+   float dr, dg, db;
 };
 
+class BlueSmokeTrail : public SmokeTrail {
+public:
+   BlueSmokeTrail();
+};
+
+class OrangeSmokeTrail : public SmokeTrail {
+public:
+   OrangeSmokeTrail();
+};
 
 // 
 // An explosion.

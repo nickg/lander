@@ -54,8 +54,12 @@ void Missile::Draw() const
 {
    if (viewport->PointInScreen(dx, dy, ObjectGrid::OBJ_GRID_SIZE,
                                ObjectGrid::OBJ_GRID_SIZE)
-       && state != DESTROYED)
+       && state != DESTROYED) {
       image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
+   }
+
+   exhaust.Draw((double)viewport->GetXAdjust(),
+                (double)viewport->GetYAdjust());
 }
 
 bool Missile::CheckCollison(const Ship& ship)
@@ -88,12 +92,18 @@ void Missile::MoveFixed(const Ship& ship)
    
    if (xDistance <= HORIZ_FIRE_RANGE && yDistance <= VERT_FIRE_RANGE)
       state = FLYING;
+
+   exhaust.Process(false);
 }
 
 void Missile::MoveFlying()
 {
    dx += speed * sin(angle * M_PI/180);
    dy += speed * cos(angle * M_PI/180);
+
+   exhaust.xpos = dx;
+   exhaust.ypos = dy + image->GetHeight()/2;
+   exhaust.Process(true);
    
    speed += ACCEL;
 
@@ -104,6 +114,6 @@ void Missile::MoveFlying()
 
 void Missile::MoveDestroyed()
 {
-   
+   exhaust.Process(false);
 }
 

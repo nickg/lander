@@ -1,6 +1,6 @@
 //
 //  Missile.hpp -- Missiles on asteroids, etc. 
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include "GameObjFwd.hpp"
 #include "GraphicsFwd.hpp"
+#include "Emitter.hpp"
 
 class Missile {
 public:
@@ -43,6 +44,8 @@ private:
 
    enum State { FIXED, FLYING, DESTROYED };
    State state;
+
+   OrangeSmokeTrail exhaust;
 
    static Image* image;
    static const double ACCEL;

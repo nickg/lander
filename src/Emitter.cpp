@@ -204,15 +204,28 @@ void Emitter::NewParticle(int index)
 // 
 // Smoke trail constructor. Sets special Emitter constants.
 //
-SmokeTrail::SmokeTrail()
-  : Emitter(0, 0, 0.6f, 0.6f, 0.9f,
+SmokeTrail::SmokeTrail(float r, float g, float b,
+                       float dr, float dg, float db)
+  : Emitter(0, 0, r, g, b,
             false, 0.2f,
             0.0f, 0.0f,
-            0.3f, 0.0f, 4.0f, 0.001f)
+            0.3f, 0.0f, 4.0f, 0.001f),
+    dr(dr), dg(dg), db(db)
 {
    createrate = 64.0f;
 }
 
+BlueSmokeTrail::BlueSmokeTrail()
+   : SmokeTrail(0.6f, 0.6f, 0.9f, 0.03f, 0.03f, 0.02f)
+{
+
+}
+
+OrangeSmokeTrail::OrangeSmokeTrail()
+   : SmokeTrail(0.9f, 0.6f, 0.6f, 0.02f, 0.03f, 0.03f)
+{
+
+}
 
 // 
 // Processes the smoke trail effect for particle p.
@@ -224,11 +237,11 @@ void SmokeTrail::ProcessEffect(int p)
    else
       {
          if (particle[p].r > 0.1f)
-            particle[p].r -= 0.03f;
+            particle[p].r -= dr;
          if (particle[p].b > 0.1f)
-            particle[p].b -= 0.02f;
+            particle[p].b -= db;
          if (particle[p].g > 0.1f)
-            particle[p].g -= 0.03f;
+            particle[p].g -= dg;
       }
 }
 

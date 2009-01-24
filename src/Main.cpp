@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 
       DestroyScreens();
    }
-   catch (std::runtime_error e) {
+   catch (std::runtime_error& e) {
 #ifdef WIN32
       MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
 #else /* #ifdef WIN32 */
