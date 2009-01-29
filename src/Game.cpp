@@ -1,6 +1,6 @@
 //
 // Game.cpp -- Implementation of core game logic.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #define MAX_PAD_SIZE		    2 
 #define FUELBAR_OFFSET		  68
 #define GRAVITY             0.035f
+const int Game::MAX_MISSILES(20);
 
 //
 // Constants affecting state transitions.
@@ -98,7 +99,7 @@ void Game::NewGame()
    // Start the game
    level = 1;
    nextnewlife = 1000;
-   StartLevel(level);
+   StartLevel();
 }
 
 void Game::CalculateScore(int padIndex)
@@ -325,7 +326,7 @@ void Game::Process()
       // Fade out
       if (fade.Process()) {
          // Restart the level
-         StartLevel(level);
+         StartLevel();
          opengl.SkipDisplay();
       }
    }
@@ -380,15 +381,146 @@ void Game::Process()
 // Increase n until it is a multiple of x and y
 void Game::MakeMultipleOf(int& n, int x, int y)
 {
-   cout << n << " --> ";
-
    while (n % x > 0 || n % y > 0)
       ++n;
-
-   cout << n << endl;
 }
 
-void Game::StartLevel(int level)
+// There are between 1 and MAX_PADS landing pads in a level
+void Game::MakeLandingPads()
+{
+   pads.clear();
+   int nLandingPads = rand()%MAX_PADS + 1;
+
+   cout << "  Landing pads: " << nLandingPads << endl;
+   
+   for (int i = 0; i < nLandingPads; i++) {
+      int index, length;
+      bool overlap;
+      do {
+         index = rand() % (viewport.GetLevelWidth() / Surface::SURFACE_SIZE);
+         length = rand() % MAX_PAD_SIZE + 3;
+         
+         // Check for overlap
+         overlap = false;
+         if (index + length > (viewport.GetLevelWidth() / Surface::SURFACE_SIZE))
+            overlap = true;
+         for (int j = 0; j < i; j++) {
+            if (pads[j].GetIndex() == index) 
+               overlap = true;
+            else if (pads[j].GetIndex() < index
+                     && pads[j].GetIndex() + pads[j].GetLength() >= index)
+               overlap = true;
+            else if (index < pads[j].GetIndex()
+                     && index + length >= pads[j].GetIndex())
+               overlap = true;
+         }
+      } while (overlap);
+      
+      pads.push_back(LandingPad(&viewport, index, length));
+   }   
+}
+
+// There are (level / 2) + (level % 2) keys per level
+void Game::MakeKeys()
+{
+   nKeys = (level / 2) + (level % 2);
+   if (nKeys > MAX_KEYS)
+      nKeys = MAX_KEYS;
+   nKeysRemaining = nKeys;
+   const ArrowColour acols[MAX_KEYS] =
+      { acBlue, acRed, acYellow, acPink, acGreen };
+   keys.clear();
+   for (int i = 0; i < MAX_KEYS; i++) {
+      int xpos, ypos;
+      objgrid.AllocFreeSpace(xpos, ypos, 1, 1);
+      keys.push_back(Key(i < nKeysRemaining, xpos, ypos, acols[i]));
+   }
+}
+
+void Game::MakeAsteroids(int surftex)
+{
+   asteroidcount = 2 + level*2 + rand()%(level+3);
+   if (asteroidcount > MAX_ASTEROIDS)
+      asteroidcount = MAX_ASTEROIDS;
+   cout << "  Asteroids: " << asteroidcount << endl;
+   
+   for (int i = 0; i < asteroidcount; i++) {
+      // Allocate space, check for timeout
+      int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
+      if (!objgrid.AllocFreeSpace(x, y, width, 4)) {
+         // Failed to allocate space so don't make any more asteroids
+         break;
+      }
+      
+      // Generate the asteroid
+      asteroids[i].ConstructAsteroid(x, y, width, surftex);			
+   }
+}
+
+void Game::MakeMissiles()
+{
+   int missileCount = max(level - 1 + rand()%level, 0);
+   if (missileCount > MAX_MISSILES)
+      missileCount = MAX_MISSILES;
+   cout << "  Missiles: " << missileCount << endl;
+   
+   missiles.clear();
+   for (int i = 0; i < missileCount; i++) {
+      Missile::Side side =
+         rand()%2 == 1 ? Missile::SIDE_LEFT : Missile::SIDE_RIGHT;
+      missiles.push_back(Missile(&objgrid, &viewport, side));
+   }
+}
+
+void Game::MakeGateways()
+{
+   int gatewaycount = max(level/3 + rand()%level - 2, 0);
+   gateways.clear();
+   if (gatewaycount > MAX_GATEWAYS)
+      gatewaycount = MAX_GATEWAYS;
+   cout << "  Gateways: " << gatewaycount << endl;
+   
+   for (int i = 0; i < gatewaycount; i++) {
+      // Allocate space for gateway
+      int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
+      bool vertical = rand() % 2 == 0;
+		
+      bool result;
+      int xpos, ypos;
+      if (vertical)
+         result = objgrid.AllocFreeSpace(xpos, ypos, 1, length+1);
+      else
+         result = objgrid.AllocFreeSpace(xpos, ypos, length+1, 1);
+      if (!result) {
+         // Failed to allocate space so don't make any more gateways
+         break;
+      }
+
+      gateways.push_back(ElectricGate(&viewport, length, vertical, xpos, ypos));
+   }
+}
+
+void Game::MakeMines()
+{
+   int minecount = max(level/2 + rand()%level - 1, 0);
+   cout << "  Mines: " << minecount << endl;
+   
+   mines.clear();
+   if (minecount > MAX_MINES)
+      minecount = MAX_MINES;
+   for (int i = 0; i < minecount; i++) {
+      // Allocate space for mine
+      int xpos, ypos;
+      if (!objgrid.AllocFreeSpace(xpos, ypos, 2, 2)) {
+         // Failed to allocate space
+         minecount = i + 1;
+         break;
+      }
+      mines.push_back(Mine(&objgrid, &viewport, xpos, ypos));
+   }
+}
+
+void Game::StartLevel()
 {
    cout << endl << "Start level " << level << ":" << endl;
    
@@ -420,114 +552,20 @@ void Game::StartLevel(int level)
       stars[i].scale = (double)rand()/(double)RAND_MAX/8.0;
    }
    
-   // Generate landing pads
-   pads.clear();
-   int nLandingPads = rand()%MAX_PADS + 1;
-   for (int i = 0; i < nLandingPads; i++) {
-      int index, length;
-      bool overlap;
-      do {
-         index = rand() % (viewport.GetLevelWidth() / Surface::SURFACE_SIZE);
-         length = rand() % MAX_PAD_SIZE + 3;
-         
-         // Check for overlap
-         overlap = false;
-         if (index + length > (viewport.GetLevelWidth() / Surface::SURFACE_SIZE))
-            overlap = true;
-         for (int j = 0; j < i; j++) {
-            if (pads[j].GetIndex() == index) 
-               overlap = true;
-            else if (pads[j].GetIndex() < index
-                     && pads[j].GetIndex() + pads[j].GetLength() >= index)
-               overlap = true;
-            else if (index < pads[j].GetIndex()
-                     && index + length >= pads[j].GetIndex())
-               overlap = true;
-         }
-      } while (overlap);
-      
-      pads.push_back(LandingPad(&viewport, index, length));
-   }   
+   MakeLandingPads();
 
+   // Generate the surface
    int surftex = rand() % Surface::NUM_SURF_TEX;
    surface.Generate(surftex, pads);
+
+   MakeKeys();
+   MakeAsteroids(surftex);
+   MakeMissiles();
+   MakeGateways();
    
-   // Create the keys
-   nKeys = (level / 2) + (level % 2);
-   if (nKeys > MAX_KEYS)
-      nKeys = MAX_KEYS;
-   nKeysRemaining = nKeys;
-   const ArrowColour acols[MAX_KEYS] =
-      { acBlue, acRed, acYellow, acPink, acGreen };
-   keys.clear();
-   for (int i = 0; i < MAX_KEYS; i++) {
-      int xpos, ypos;
-      objgrid.AllocFreeSpace(xpos, ypos, 1, 1);
-      keys.push_back(Key(i < nKeysRemaining, xpos, ypos, acols[i]));
-   }
-
-   // Create the asteroids
-   asteroidcount = level*2 + rand()%(level+3);
-   if (asteroidcount > MAX_ASTEROIDS)
-      asteroidcount = MAX_ASTEROIDS;
-   for (int i = 0; i < asteroidcount; i++) {
-      // Allocate space, check for timeout
-      int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
-      if (!objgrid.AllocFreeSpace(x, y, width, 4)) {
-         // Failed to allocate space so don't make any more asteroids
-         break;
-      }
-      
-      // Generate the asteroid
-      asteroids[i].ConstructAsteroid(x, y, width, surftex);			
-   }
-
-   // Create missiles
-   missiles.clear();
-   for (int i = 0; i < 10; i++) {
-      missiles.push_back(Missile(&objgrid, &viewport, Missile::SIDE_RIGHT));
-   }
-   
-   // Create gateways
-   int gatewaycount = level/3 + rand()%level - 2;
-   gateways.clear();
-   if (gatewaycount > MAX_GATEWAYS)
-      gatewaycount = MAX_GATEWAYS;
-   for (int i = 0; i < gatewaycount; i++) {
-      // Allocate space for gateway
-      int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
-      bool vertical = rand() % 2 == 0;
-		
-      bool result;
-      int xpos, ypos;
-      if (vertical)
-         result = objgrid.AllocFreeSpace(xpos, ypos, 1, length+1);
-      else
-         result = objgrid.AllocFreeSpace(xpos, ypos, length+1, 1);
-      if (!result) {
-         // Failed to allocate space so don't make any more gateways
-         break;
-      }
-
-      gateways.push_back(ElectricGate(&viewport, length, vertical, xpos, ypos));
-   }
-
    // Create mines (MUST BE CREATED LAST)
-   int minecount = level/2 + rand()%level - 2;
-   mines.clear();
-   if (minecount > MAX_MINES)
-      minecount = MAX_MINES;
-   for (int i = 0; i < minecount; i++) {
-      // Allocate space for mine
-      int xpos, ypos;
-      if (!objgrid.AllocFreeSpace(xpos, ypos, 2, 2)) {
-         // Failed to allocate space
-         minecount = i + 1;
-         break;
-      }
-      mines.push_back(Mine(&objgrid, &viewport, xpos, ypos));
-   }
-
+   MakeMines();
+   
    // Set ship starting position
    ship.Reset();
 

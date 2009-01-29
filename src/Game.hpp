@@ -1,6 +1,6 @@
 //
 // Game.hpp -- Definition of core game classes.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,9 +41,6 @@
 
 // Different fonts to be loaded
 enum FontType { ftNormal, ftBig, ftScore, ftScoreName, ftLarge };
-
-#define MIN(a, b) (a < b ? a : b)
-#define MAX(a, b) (a > b ? a : b)
 
 class FuelMeter {
 public:
@@ -92,13 +89,20 @@ public:
    void Process();
    void Display();
    void NewGame();
-   void StartLevel(int nLevel);
+   void StartLevel();
 
 private:
    static const float TURN_ANGLE, DEATH_SPIN_RATE;
    static const int FUEL_BASE, FUEL_PER_LEVEL;
    static const int SCORE_PAD_SIZE, SCORE_LEVEL, SCORE_FUEL_DIV;
    static const int SCORE_Y, DEATH_TIMEOUT;
+
+   void MakeLandingPads();
+   void MakeKeys();
+   void MakeAsteroids(int surftex);
+   void MakeMissiles();
+   void MakeGateways();
+   void MakeMines();
    
    void ExplodeShip();
    void EnterDeathWait(int timeout = DEATH_TIMEOUT);
@@ -170,6 +174,7 @@ private:
    MineList mines;
 
    // Missiles
+   static const int MAX_MISSILES;
    typedef vector<Missile> MissileList;
    typedef MissileList::iterator MissileListIt;
    MissileList missiles;

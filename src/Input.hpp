@@ -48,7 +48,7 @@ private:
    ~Input();
    
    static const int NUM_ACTIONS = 10;
-   static const int RESET_TIMEOUT = 10;		// Frames between key presses
+   static const int RESET_TIMEOUT = 7;		// Frames between key presses
 
    SDL_Joystick* joystick;
 
