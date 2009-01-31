@@ -30,12 +30,14 @@ public:
    // Possible inputs
    enum Action {
       UP, DOWN, LEFT, RIGHT, FIRE,
-      SKIP, ABORT, DEBUG, PAUSE, THRUST
+      SKIP, ABORT, DEBUG, PAUSE, THRUST,
+      SCREENSHOT
    };
    
    static Input& GetInstance();
 
    bool QueryAction(Action a) const;
+   bool QueryResetAction(Action a);
    void ResetAction(Action a);
    void Update();
 
@@ -47,7 +49,7 @@ private:
    Input();
    ~Input();
    
-   static const int NUM_ACTIONS = 10;
+   static const int NUM_ACTIONS = 11;
    static const int RESET_TIMEOUT = 7;		// Frames between key presses
 
    SDL_Joystick* joystick;

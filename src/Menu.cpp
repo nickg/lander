@@ -127,6 +127,8 @@ void MainMenu::Process()
 
          input.ResetAction(Input::FIRE);
       }
+      else if (input.QueryResetAction(Input::SCREENSHOT))
+         OpenGL::GetInstance().DeferScreenShot();
    }
    
    // See what menu state we're in

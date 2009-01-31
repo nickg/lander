@@ -103,7 +103,7 @@ void Input::Update()
 
       case SDL_KEYUP:
          if (e.key.keysym.sym == SDLK_LSHIFT
-                     || e.key.keysym.sym == SDLK_RSHIFT) {
+             || e.key.keysym.sym == SDLK_RSHIFT) {
             shift = false;
          }
          break;
@@ -168,6 +168,15 @@ void Input::Update()
    }
 }
 
+// Query an action and reset if fired.
+bool Input::QueryResetAction(Action a)
+{
+   bool on = QueryAction(a);
+   if (on)
+      ResetAction(a);
+   return on;
+}
+
 // Returns true if the action a is being perfomed.
 // Either on the keyboard on the first joystick.
 bool Input::QueryAction(Action a) const
@@ -201,6 +210,8 @@ bool Input::QueryAction(Action a) const
       return keystate[SDLK_p] != 0;
    case THRUST:
       return (keystate[SDLK_UP] != 0) || joyButton1;
+   case SCREENSHOT:
+      return keystate[SDLK_PRINT] != 0;
    default:
       assert(false);
    }
@@ -247,4 +258,3 @@ const char* Input::GetInput() const
 {
    return text.c_str();
 }
-

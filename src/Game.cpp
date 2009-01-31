@@ -137,6 +137,9 @@ void Game::Process()
       input.ResetAction(Input::PAUSE);
    }
 
+   if (input.QueryResetAction(Input::SCREENSHOT))
+      opengl.DeferScreenShot();
+
    // Do no more game processing in the paused state
    if (state == gsPaused)
       return;

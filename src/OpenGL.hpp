@@ -109,6 +109,8 @@ public:
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
 
+   void DeferScreenShot();
+
    bool SetVideoMode(bool fullscreen, int width, int height);
   
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
@@ -126,7 +128,8 @@ private:
    bool InitGL();
    void DrawGLScene();
    string SDLErrorString();
-   void RuntimeError(string mess);
+   void RuntimeError(const string& mess);
+   void TakeScreenShot() const;
 
    // Window related variables
    int screen_width, screen_height;
@@ -136,6 +139,8 @@ private:
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;
+
+   bool deferredScreenShot;
 };
 
 #endif

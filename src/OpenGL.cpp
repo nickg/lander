@@ -1,6 +1,6 @@
 //
 // OpenGL.cpp - Implementation of OpenGL wrapper class.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,7 +25,8 @@ OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
      dodisplay(true),
-     fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0)
+     fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0),
+     deferredScreenShot(false)
 {
    // Start random number generator
    srand((unsigned)time(NULL));
@@ -63,7 +64,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
       RuntimeError("Initialisation failed.");
 }
 
-void OpenGL::RuntimeError(string mess)
+void OpenGL::RuntimeError(const string& mess)
 {
    throw runtime_error(mess);
 }
@@ -135,6 +136,42 @@ void OpenGL::Run()
    } while (running);
 }
 
+// Take a screenshot at the end of this frame
+void OpenGL::DeferScreenShot()
+{
+   deferredScreenShot = true;
+}
+
+void OpenGL::TakeScreenShot() const
+{
+   const string fileName("Lander.bmp");
+
+   SDL_Surface* temp = SDL_CreateRGBSurface
+      (SDL_SWSURFACE, screen_width, screen_height, 24,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+       0x000000FF, 0x0000FF00, 0x00FF0000, 0
+#else
+       0x00FF0000, 0x0000FF00, 0x000000FF, 0
+#endif
+       );
+   assert(temp);
+
+   const int w = screen_width;
+   const int h = screen_height;
+   unsigned char* pixels = new unsigned char[3 * w * h];
+
+   glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+   for (int i = 0; i < h; i++)
+      memcpy(((char*)temp->pixels) + temp->pitch * i, pixels + 3*w * (h-i-1), w*3);
+   delete[] pixels;
+
+   SDL_SaveBMP(temp, fileName.c_str());
+   SDL_FreeSurface(temp);
+
+   cout << "Wrote screen shot to " << fileName << endl;
+}
+
 void OpenGL::DrawGLScene()
 {
    // Render the scene
@@ -145,6 +182,11 @@ void OpenGL::DrawGLScene()
       
       ScreenManager::GetInstance().Display();
       SDL_GL_SwapBuffers();
+      
+      if (deferredScreenShot) {
+         TakeScreenShot();
+         deferredScreenShot = false;
+      }
 
       fps_framesdrawn++;
    }
