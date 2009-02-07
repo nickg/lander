@@ -1,6 +1,6 @@
 //
-// Platform.hpp - Platform specific includes.
-// Copyright (C) 2006  Nick Gasson
+// Platform.hpp -- Platform specific includes.
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,15 +20,7 @@
 #ifndef INC_PLATFORM_HPP
 #define INC_PLATFORM_HPP
 
-#include <stdio.h>
-#include <memory.h>
-#include <string.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
-#include <assert.h>
-#include <stddef.h>
-
+#include <cassert>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -38,10 +30,7 @@
 #include <fstream>
 #include <map>
 #include <algorithm>
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
+#include <cmath>
 
 using namespace std;
 

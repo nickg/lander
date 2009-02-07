@@ -22,4 +22,4 @@ localedir = $(datadir)/locale
 
 # Add -DSHOW_FPS here to show FPS in title bar
 DEFS = -DLOCALEDIR=\"$(localedir)\" -DLINUX -DUNIX \
-	-DDATADIR=\"$(pkgdatadir)\" -DSHOW_FPS @DEFS@
+	-DDATADIR=\"$(pkgdatadir)\" @DEFS@

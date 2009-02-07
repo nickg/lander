@@ -22,6 +22,10 @@
 
 #include "Platform.hpp"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+
 class Font {
 public:
    Font(string filename, unsigned int h);
