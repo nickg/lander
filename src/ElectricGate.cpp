@@ -1,3 +1,4 @@
+//
 //  ElectricGate.cpp -- Electric gateway thingys.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -16,6 +17,7 @@
 //
 
 #include "ElectricGate.hpp"
+#include "Ship.hpp"
 #include "LoadOnce.hpp"
 
 Image* ElectricGate::gateImage = NULL;

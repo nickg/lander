@@ -1,3 +1,4 @@
+//
 //  SoundEffect.hpp -- SDL Mixer wrapper.
 //  Copyright (C) 2008  Nick Gasson
 //

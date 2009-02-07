@@ -1,3 +1,4 @@
+//
 //  ElectricGate.hpp -- Electric gateway thingys.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -19,9 +20,9 @@
 #define INC_ELECTRICGATE_HPP
 
 #include "ObjectGrid.hpp"
-#include "Ship.hpp"
 #include "Viewport.hpp"
 #include "Image.hpp"
+#include "GameObjFwd.hpp"
 
 //
 // A line strip used for rendering lightning. 

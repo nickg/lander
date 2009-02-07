@@ -1,3 +1,4 @@
+//
 //  Ship.hpp -- The player's ship.
 //  Copyright (C) 2008  Nick Gasson
 //

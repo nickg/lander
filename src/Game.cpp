@@ -22,6 +22,7 @@
 #include "HighScores.hpp"
 #include "LoadOnce.hpp"
 #include "Input.hpp"
+#include "ConfigFile.hpp"
 
 //
 // Constants affecting level generation.
@@ -97,7 +98,10 @@ void Game::NewGame()
    lives = 3;
 
    // Start the game
-   level = 1;
+   {
+      ConfigFile cfile;
+      level = cfile.get_int("level", 1);
+   }
    nextnewlife = 1000;
    StartLevel();
 }

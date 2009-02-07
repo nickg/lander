@@ -1,6 +1,6 @@
 //
 // HighScores.cpp - Implementation of high scores screen.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 #include "HighScores.hpp"
 #include "Input.hpp"
+#include "InterfaceSounds.hpp"
 
 HighScores::HighScores()
    : hscoreImage("images/hscore.png"),
@@ -68,6 +69,7 @@ void HighScores::Process()
          input.ResetAction(Input::SKIP);
          input.ResetAction(Input::FIRE);
          input.ResetAction(Input::ABORT);
+         InterfaceSounds::PlaySelect();
       }
    }
    else if (state == hssEnterName)	{
@@ -83,6 +85,7 @@ void HighScores::Process()
          fade = HS_FADE_IN_SPEED;
 
          input.ResetAction(Input::FIRE);
+         InterfaceSounds::PlaySelect();
       }
    }
 

@@ -20,6 +20,8 @@
 #include "Input.hpp"
 #include "OpenGL.hpp"
 
+const int Input::RESET_TIMEOUT(7);
+
 // 
 // Create a new input manager. Never call this directly: use GetInstance.
 //

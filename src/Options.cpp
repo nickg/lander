@@ -1,5 +1,6 @@
+//
 //  Options.cpp -- The options screen.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,6 +21,7 @@
 #include "OpenGL.hpp"
 #include "Input.hpp"
 #include "SoundEffect.hpp"
+#include "InterfaceSounds.hpp"
 
 const double Options::FADE_SPEED = 0.1;
 
@@ -59,9 +61,18 @@ Options::Options()
    sound.values.push_back("Off");
    sound.active = (cfile.get_bool("sound") ? 0 : 1);
 
+   Item startLevel = { "Start Level" };
+   for (int i = 1; i <= 20; i++) {
+      ostringstream ss;
+      ss << i;
+      startLevel.values.push_back(ss.str());
+   }
+   startLevel.active = cfile.get_int("level", 1) - 1;
+
    items.push_back(fullscreen);
    items.push_back(resolution);
    items.push_back(sound);
+   items.push_back(startLevel);
 }
 
 void Options::Load()
@@ -87,16 +98,19 @@ void Options::ProcessMain()
    
    if (input.QueryAction(Input::FIRE)) {
       state = optFadeOut;
+      InterfaceSounds::PlaySelect();
    }
    else if (input.QueryAction(Input::UP)) {
       if (selected > 0)
          selected--;
       input.ResetAction(Input::UP);
+      InterfaceSounds::PlayBleep();
    }
    else if (input.QueryAction(Input::DOWN)) {
       if (selected + 1 < items.size())
          selected++;
       input.ResetAction(Input::DOWN);
+      InterfaceSounds::PlayBleep();
    }
    else if (input.QueryAction(Input::LEFT)) {
       Item& item = items[selected];
@@ -105,11 +119,13 @@ void Options::ProcessMain()
       else
          item.active = (item.active - 1) % item.values.size();
       input.ResetAction(Input::LEFT);
+      InterfaceSounds::PlayBleep();
    }
    else if (input.QueryAction(Input::RIGHT)) {
       Item& item = items[selected];
       item.active = (item.active + 1) % item.values.size();
       input.ResetAction(Input::RIGHT);
+      InterfaceSounds::PlayBleep();
    }
 }
 
@@ -136,12 +152,21 @@ void Options::Apply()
          
          cfile.put("sound", sound);
       }
+      else if ((*it).name == "Start Level") {
+         istringstream ss((*it).values[(*it).active]);
+         int level;
+         ss >> level;
+
+         cfile.put("level", level);
+      }
    }
+
+   cfile.Flush();
 
    assert(hres > 0 && vres > 0);
 
    if (OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres)) {
-      // This* must* be the very last thing that is done!
+      // This *must* be the very last thing that is done!
       RecreateScreens();
    }
 }

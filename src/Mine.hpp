@@ -19,9 +19,9 @@
 #define INC_MINE_HPP
 
 #include "ObjectGrid.hpp"
-#include "Ship.hpp"
 #include "Viewport.hpp"
 #include "AnimatedImage.hpp"
+#include "GameObjFwd.hpp"
 
 class Mine : public StaticObject {
 public:

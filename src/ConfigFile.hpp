@@ -1,5 +1,6 @@
+//
 //  ConfigFile.hpp -- Settings persistence.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -25,6 +26,8 @@ public:
    ConfigFile(string filename = ".lander.config");
    ~ConfigFile();
 
+   void Flush();
+   
    bool has(const string& key) const;
 
    const string& get(const string& key);

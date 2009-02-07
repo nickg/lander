@@ -1,6 +1,6 @@
 //
 // Menu.cpp -- Implementation of main menu screen.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include "OpenGL.hpp"
 #include "Game.hpp"
 #include "HighScores.hpp"
+#include "InterfaceSounds.hpp"
 
 const double MenuStar::ROTATE_SPEED(0.005);
 const double MenuStar::ENLARGE_RATE(0.001);
@@ -88,6 +89,7 @@ void MainMenu::Process()
             break;
          }
 
+         InterfaceSounds::PlayBleep();
          input.ResetAction(Input::DOWN);
       }
       else if (input.QueryAction(Input::UP)) {
@@ -106,6 +108,7 @@ void MainMenu::Process()
             break;
          }
 
+         InterfaceSounds::PlayBleep();
          input.ResetAction(Input::UP);
       }
       else if (input.QueryAction(Input::FIRE)) {
@@ -125,6 +128,7 @@ void MainMenu::Process()
             break;
          }
 
+         InterfaceSounds::PlaySelect();
          input.ResetAction(Input::FIRE);
       }
       else if (input.QueryResetAction(Input::SCREENSHOT))

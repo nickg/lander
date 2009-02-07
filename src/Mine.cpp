@@ -1,3 +1,4 @@
+//
 //  Mine.cpp -- Floating space mine things.
 //  Copyright (C) 2008  Nick Gasson
 //
@@ -18,6 +19,7 @@
 #include "Mine.hpp"
 #include "OpenGL.hpp"
 #include "LoadOnce.hpp"
+#include "Ship.hpp"
 
 AnimatedImage* Mine::image = NULL;
 
@@ -107,13 +109,12 @@ void Mine::Move()
          }
             
          // Check if this is ok
-         ok = nextx >= objgrid->GetWidth() || nextx < 0 
-            || nexty > objgrid->GetHeight() || nexty < 0 
-            || objgrid->IsFilled(nextx, nexty)
-            || objgrid->IsFilled(nextx + 1, nexty)
-            || objgrid->IsFilled(nextx + 1, nexty + 1)
-            || objgrid->IsFilled(nextx, nexty + 1);
-         ok = !ok;
+         ok = !(nextx + 1 >= objgrid->GetWidth() || nextx < 0 
+                || nexty + 1 >= objgrid->GetHeight() || nexty < 0 
+                || objgrid->IsFilled(nextx, nexty)
+                || objgrid->IsFilled(nextx + 1, nexty)
+                || objgrid->IsFilled(nextx + 1, nexty + 1)
+                || objgrid->IsFilled(nextx, nexty + 1));
          timeout--;
       } while (!ok && timeout > 0);
          

@@ -1,6 +1,6 @@
 //
 // Menu.hpp -- Defintition of main menu screen.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include "ScreenManager.hpp"
 #include "Image.hpp"
 #include "Font.hpp"
-
+#include "SoundEffect.hpp"
 
 class MenuStar {
 public:

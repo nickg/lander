@@ -38,6 +38,11 @@ ConfigFile::ConfigFile(string filename)
 
 ConfigFile::~ConfigFile()
 {
+   Flush();
+}
+
+void ConfigFile::Flush()
+{
    if (dirty) {
       ofstream of((GetConfigDir() + filename).c_str());
 
@@ -49,6 +54,8 @@ ConfigFile::~ConfigFile()
          of << (*it).second;
          of << endl;
       }
+
+      dirty = false;
    }
 }
 

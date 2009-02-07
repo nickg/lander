@@ -31,7 +31,8 @@ public:
    enum Action {
       UP, DOWN, LEFT, RIGHT, FIRE,
       SKIP, ABORT, DEBUG, PAUSE, THRUST,
-      SCREENSHOT
+      SCREENSHOT,
+      NUM_ACTIONS // Must be last
    };
    
    static Input& GetInstance();
@@ -49,8 +50,7 @@ private:
    Input();
    ~Input();
    
-   static const int NUM_ACTIONS = 11;
-   static const int RESET_TIMEOUT = 7;		// Frames between key presses
+   static const int RESET_TIMEOUT;		// Frames between key presses
 
    SDL_Joystick* joystick;
 
