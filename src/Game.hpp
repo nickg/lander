@@ -134,7 +134,7 @@ private:
 
    Font normalFont, scoreFont, bigFont;
 
-   SoundEffect impactSound;
+   SoundEffect impactSound, collectSound;
     
    // Stars
    static const int MAX_GAME_STARS = 2048;

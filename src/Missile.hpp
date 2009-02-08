@@ -22,6 +22,7 @@
 #include "GameObjFwd.hpp"
 #include "GraphicsFwd.hpp"
 #include "Emitter.hpp"
+#include "SoundEffect.hpp"
 
 class Missile {
 public:
@@ -46,8 +47,10 @@ private:
    State state;
 
    OrangeSmokeTrail exhaust;
-
+   
+   static SoundEffect* fireSound;
    static Image* image;
+   
    static const double ACCEL;
    static const double MAX_SPEED;
    static const int HORIZ_FIRE_RANGE, VERT_FIRE_RANGE;

@@ -23,7 +23,8 @@
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
 
-Image* Missile::image = NULL;
+Image* Missile::image(NULL);
+SoundEffect* Missile::fireSound(NULL);
 
 const double Missile::ACCEL(0.1);
 const double Missile::MAX_SPEED(5.0);
@@ -38,6 +39,9 @@ Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
    LOAD_ONCE {
       image = new Image("images/missile.png");
    }
+
+   if (NULL == fireSound)
+      fireSound = new SoundEffect(LocateResource("sounds/missile.wav"));
 
    x = (s == SIDE_LEFT) ? 0 : o->GetWidth() - 1;
 
@@ -91,8 +95,10 @@ void Missile::MoveFixed(const Ship& ship)
    int xDistance = abs(static_cast<int>(ship.GetX()) - missileMidX);
    int yDistance = abs(static_cast<int>(ship.GetY()) - missileMidY);
    
-   if (xDistance <= HORIZ_FIRE_RANGE && yDistance <= VERT_FIRE_RANGE)
+   if (xDistance <= HORIZ_FIRE_RANGE && yDistance <= VERT_FIRE_RANGE) {
       state = FLYING;
+      fireSound->Play();
+   }
 
    exhaust.Process(false);
 }

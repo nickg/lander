@@ -72,7 +72,8 @@ Game::Game()
      normalFont(LocateResource("Default_Font.ttf"), 11),
      scoreFont(LocateResource("Default_Font.ttf"), 16),
      bigFont(LocateResource("Default_Font.ttf"), 20),
-     impactSound(LocateResource("sounds/bomb_explosion.wav"))
+     impactSound(LocateResource("sounds/bomb_explosion.wav")),
+     collectSound(LocateResource("sounds/collect.wav"))
 {
 
 }
@@ -296,6 +297,8 @@ void Game::Process()
          nKeysRemaining--;
          (*it).Collected();
          objgrid.UnlockSpace((*it).GetX(), (*it).GetY());
+
+         collectSound.Play();
       }
    }
 
