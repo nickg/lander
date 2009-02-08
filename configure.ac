@@ -4,6 +4,7 @@ AC_INIT([Lunar Lander], [0.5-devel],
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_PROG_CC
 AC_PROG_CXX
+AC_PROG_LN_S
 
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION
@@ -22,6 +23,7 @@ AC_TYPE_UINT32_T
 
 # Checks for library functions.
 AC_FUNC_MALLOC
+AC_FUNC_STAT
 AC_CHECK_FUNCS([atexit memset pow setlocale sqrt])
 
 dnl Check for SDL
