@@ -25,7 +25,7 @@
 
 class SoundEffect {
 public:
-   SoundEffect(const char* filename);
+   SoundEffect(const char* filename, Uint8 volume = MIX_MAX_VOLUME);
    ~SoundEffect();
 
    static void SetEnabled(bool state) { enabled = state; }
