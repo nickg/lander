@@ -42,7 +42,7 @@ Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
 
    if (NULL == fireSound)
       fireSound = new SoundEffect(LocateResource("sounds/missile.wav"),
-                                  10);
+                                  60); // Volume
 
    x = (s == SIDE_LEFT) ? 0 : o->GetWidth() - 1;
 
