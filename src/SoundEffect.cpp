@@ -25,7 +25,7 @@ int SoundEffect::audioBuffers(4096);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
-SoundEffect::SoundEffect(const char* filename)
+SoundEffect::SoundEffect(const char* filename, Uint8 volume)
    : sound(NULL), channel(-1)
 {
    if (++loadCount == 1) {
@@ -48,6 +48,8 @@ SoundEffect::SoundEffect(const char* filename)
       ss << Mix_GetError();
       throw runtime_error(ss.str());
    }
+
+   sound->volume = volume;
 }
 
 SoundEffect::~SoundEffect()
