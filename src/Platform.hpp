@@ -108,6 +108,8 @@ using namespace std;
 
 #define msleep(n) usleep((n)*1000)
 
+#define i18n(x) x
+
 #include "SDL.h"
 
 #endif /* #ifdef MACOSX */

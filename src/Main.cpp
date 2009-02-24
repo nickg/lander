@@ -24,6 +24,12 @@
 #include "ConfigFile.hpp"
 #include "SoundEffect.hpp"
 
+#ifdef MACOSX
+namespace CF {
+#include "CoreFoundation/CoreFoundation.h"
+}
+#endif
+
 #include <SDL_main.h>
 
 static MainMenu* menu = NULL;
@@ -76,7 +82,7 @@ int main(int argc, char **argv)
    int width, height, depth;
    bool fullscreen;
 
-#ifndef WIN32
+#ifdef LOCALEDIR
    setlocale(LC_ALL, "");
    bindtextdomain(PACKAGE, LOCALEDIR);
    textdomain(PACKAGE);
@@ -140,32 +146,41 @@ int main(int argc, char **argv)
 //
 const char* LocateResource(const char* file)
 {
+	static char path[PATH_MAX];
 #ifdef MACOSX
-   static char path[MAX_RES_PATH];
+	using namespace CF;
    
    CFURLRef resURL;
    CFBundleRef mainBundle;
    CFStringRef cfBase, cfExt, cfPath;
+   
+   const char* ext = "";
+   char* copy = strdup(file);
+   if (char* p = strrchr(copy, '.')) {
+		*p = '\0';
+		ext = ++p;
+   }
     
-   cfBase = CFStringCreateWithCString(NULL, base, kCFStringEncodingASCII);
+   cfBase = CFStringCreateWithCString(NULL, copy, kCFStringEncodingASCII);
    cfExt = CFStringCreateWithCString(NULL, ext, kCFStringEncodingASCII);
-    
+   
+	free(copy); 
+	
    mainBundle = CFBundleGetMainBundle();
     
    resURL = CFBundleCopyResourceURL(mainBundle, cfBase, cfExt, NULL);
     
    if (resURL == NULL)
-      throw runtime_error("Failed to locate " + string(base) + "." + string(ext));
+      throw runtime_error("Failed to locate " + string(file));
 	
    cfPath = CFURLCopyPath(resURL);
     
-   CFStringGetCString(cfPath, path, MAX_RES_PATH, kCFStringEncodingASCII);
+   CFStringGetCString(cfPath, path, PATH_MAX, kCFStringEncodingASCII);
 
-   return patch;
+   return path;
 #endif
    
 #ifdef DATADIR
-   static char path[PATH_MAX];
    snprintf(path, PATH_MAX, "%s/%s", DATADIR, file);
    return path;   
 #else

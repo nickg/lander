@@ -18,7 +18,7 @@
 #ifndef INC_GEOMETRY_H
 #define INC_GEOMETRY_H
 
-struct Point 
+struct Point	
 {
     int x, y;	
 };
