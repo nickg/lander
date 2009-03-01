@@ -1,5 +1,5 @@
 //  SoundEffect.cpp -- SDL Mixer wrapper.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 #include "ConfigFile.hpp"
 
 int SoundEffect::loadCount(0);
-int SoundEffect::audioRate(22050);
+int SoundEffect::audioRate(44100);
 int SoundEffect::audioChannels(2);
-int SoundEffect::audioBuffers(4096);
+int SoundEffect::audioBuffers(1024);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
