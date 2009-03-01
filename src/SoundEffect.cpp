@@ -1,5 +1,5 @@
 //  SoundEffect.cpp -- SDL Mixer wrapper.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 #include "ConfigFile.hpp"
 
 int SoundEffect::loadCount(0);
-int SoundEffect::audioRate(22050);
+int SoundEffect::audioRate(44100);
 int SoundEffect::audioChannels(2);
-int SoundEffect::audioBuffers(4096);
+int SoundEffect::audioBuffers(1024);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
@@ -42,7 +42,9 @@ SoundEffect::SoundEffect(const char* filename, Uint8 volume)
       Mix_QuerySpec(&audioRate, &audioFormat, &audioChannels);
    }
 
-   if (enabled && !(sound = Mix_LoadWAV(filename))) {
+   if (!enabled) return;
+
+   if (!(sound = Mix_LoadWAV(filename))) {
       ostringstream ss;
       ss << "Error loading " << filename << ": ";
       ss << Mix_GetError();
@@ -57,7 +59,9 @@ SoundEffect::~SoundEffect()
    if (channel != -1)
       Mix_HaltChannel(channel);
 
-   Mix_FreeChunk(sound);
+   if (enabled)
+      Mix_FreeChunk(sound);
+   
    
    if (--loadCount == 0)
       Mix_CloseAudio();

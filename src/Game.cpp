@@ -54,7 +54,6 @@ const int Game::SCORE_FUEL_DIV(10);
 
 const int Game::SCORE_Y(30);
 
-
 const float SpeedMeter::LAND_SPEED(2.0f);
 
 const int FuelMeter::FUELBAR_Y(15);

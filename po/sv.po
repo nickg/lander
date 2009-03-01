@@ -1,112 +1,102 @@
-# English translations for Lunar Lander package.
-# Copyright (C) 2008 Nick Gasson
-# This file is distributed under the same license as the Lunar Lander package.
-# Nick Gasson <nick@cakesniffer.co.uk>, 2008.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Nick Gasson
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: lander 0.9\n"
+"Project-Id-Version: lander 0.5.1\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
 "POT-Creation-Date: 2009-03-01 22:39+0000\n"
-"PO-Revision-Date: 2008-04-19 01:09+0100\n"
-"Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
-"Language-Team: English (British)\n"
+"PO-Revision-Date: 2009-02-23 15:11+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
 
 #: src/Main.cpp:131
 #, c-format
 msgid "Runtime Error: %s\n"
-msgstr "Runtime Error: %s\n"
+msgstr "Koerfel: %s\n"
 
 #: src/Game.cpp:115 src/Game.cpp:752
 #, c-format
 msgid "Score:  %d"
-msgstr "Score:  %d"
+msgstr "Poaeng: %d"
 
 #: src/Game.cpp:688
-#, fuzzy
 msgid "Press SPACE to continue"
-msgstr "Press  SPACE  to  continue"
+msgstr "Tryck MELLANSLAG foer att fortsaetta"
 
 #: src/Game.cpp:746
 msgid "Land  now"
-msgstr "Land  now"
+msgstr "Landa  nu"
 
 #: src/Game.cpp:768
 #, c-format
 msgid "Level  %d"
-msgstr "Level  %d"
+msgstr "Bana %d"
 
 #: src/Game.cpp:787
 msgid "Paused"
-msgstr "Paused"
+msgstr "Pausat"
 
 #: src/HighScores.cpp:177
-#, fuzzy
 msgid "Press SPACE or FIRE to return"
-msgstr "Press  SPACE  or  FIRE  to  return"
+msgstr "Tryck MELLANSLAG eller SKJUT foer att aatergaa"
 
 #: src/HighScores.cpp:192
-#, fuzzy
 msgid "Well done - You got a high score"
-msgstr "Well  done  -  You  got  a  high  score"
+msgstr "Bra jobbat - du slog rekord"
 
 #: src/HighScores.cpp:197
-#, fuzzy
 msgid "Press ENTER or FIRE to continue"
-msgstr "Press  ENTER  or  FIRE  to  continue"
+msgstr "Tryck RETUR eller SKJUT foer att fortsaetta"
 
 #: src/HighScores.cpp:203
 #, c-format
 msgid "Name?  %s"
-msgstr "Name?  %s"
+msgstr "Namn? %s"
 
 #: src/Options.cpp:251
 msgid "Use UP and DOWN to select options"
-msgstr ""
+msgstr "Anvaend UPP och NED foer att vaelja alternativ"
 
 #: src/Options.cpp:256
 msgid "Use LEFT and RIGHT to change values"
-msgstr ""
+msgstr "Anvaend VAENSTER och HOEGER foer att aendra vaerden"
 
 #: src/Options.cpp:261
-#, fuzzy
 msgid "Press FIRE or RETURN to exit"
-msgstr "Press  SPACE  or  FIRE  to  return"
+msgstr "Tryck SKJUT eller RETUR foer att avsluta"
 
 #: src/Menu.cpp:245
 msgid "Use the arrow keys to rotate the ship"
-msgstr ""
+msgstr "Anvaend piltangenterna foer att rotera skeppet"
 
 #: src/Menu.cpp:246
 msgid "Press the up arrow to fire the thruster"
-msgstr ""
+msgstr "Tryck upp-piltagenten foer att anvaenda raketmotorn"
 
 #: src/Menu.cpp:247
 msgid "Smaller landing pads give you more points"
-msgstr ""
+msgstr "Mindre landningsplattor ger dig fler poaeng"
 
 #: src/Menu.cpp:248
 msgid "Press P to pause the game"
-msgstr ""
+msgstr "Tryck P för att pausa spelet"
 
 #: src/Menu.cpp:249
 msgid "Press escape to self destruct"
-msgstr ""
+msgstr "Tryck escape för att tillintetgoera dig sjaelv"
 
 #: src/Menu.cpp:250
 msgid "You can only land safely when then speed bar is green"
-msgstr ""
+msgstr "Du kan bara landa saekert naer hastighetsmaetaren aer groen"
 
 #: src/Menu.cpp:251
 msgid "Collect the spinning rings to unlock the landing pads"
-msgstr ""
-
-#~ msgid "LUNAR  LANDER"
-#~ msgstr "LUNAR  LANDER"
-
-#~ msgid "Game Over"
-#~ msgstr "Game Over"
+msgstr "Samla de snurrande ringarna för att laasa upp landningsplattorna"

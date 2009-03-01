@@ -43,4 +43,5 @@ On Windows after changing the resolution or toggling full-screen mode all images
 appear as white boxes. The workaround is to restart the program.
 
 On Ubuntu there is a problem with SDL Mixer that will cause high audio latency.
-Apparently this is a problem with Pulse Audio.
+Apparently this is a problem with Pulse Audio.  ** UPDATE ** In version 0.5.1 this
+should be largely mitigated. Please let me know if you have further problems.
