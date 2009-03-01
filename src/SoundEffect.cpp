@@ -42,7 +42,9 @@ SoundEffect::SoundEffect(const char* filename, Uint8 volume)
       Mix_QuerySpec(&audioRate, &audioFormat, &audioChannels);
    }
 
-   if (enabled && !(sound = Mix_LoadWAV(filename))) {
+   if (!enabled) return;
+
+   if (!(sound = Mix_LoadWAV(filename))) {
       ostringstream ss;
       ss << "Error loading " << filename << ": ";
       ss << Mix_GetError();
@@ -57,7 +59,9 @@ SoundEffect::~SoundEffect()
    if (channel != -1)
       Mix_HaltChannel(channel);
 
-   Mix_FreeChunk(sound);
+   if (enabled)
+      Mix_FreeChunk(sound);
+   
    
    if (--loadCount == 0)
       Mix_CloseAudio();
