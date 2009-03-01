@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.9\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2009-02-13 22:49+0000\n"
+"POT-Creation-Date: 2009-03-01 22:09+0000\n"
 "PO-Revision-Date: 2008-04-19 01:09+0100\n"
 "Last-Translator: Nick Gasson <nick@cakesniffer.co.uk>\n"
 "Language-Team: English (British)\n"
@@ -21,26 +21,26 @@ msgstr ""
 msgid "Runtime Error: %s\n"
 msgstr "Runtime Error: %s\n"
 
-#: src/Game.cpp:116 src/Game.cpp:753
+#: src/Game.cpp:115 src/Game.cpp:752
 #, c-format
 msgid "Score:  %d"
 msgstr "Score:  %d"
 
-#: src/Game.cpp:689
+#: src/Game.cpp:688
 #, fuzzy
 msgid "Press SPACE to continue"
 msgstr "Press  SPACE  to  continue"
 
-#: src/Game.cpp:747
+#: src/Game.cpp:746
 msgid "Land  now"
 msgstr "Land  now"
 
-#: src/Game.cpp:769
+#: src/Game.cpp:768
 #, c-format
 msgid "Level  %d"
 msgstr "Level  %d"
 
-#: src/Game.cpp:788
+#: src/Game.cpp:787
 msgid "Paused"
 msgstr "Paused"
 

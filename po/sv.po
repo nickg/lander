@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.5.1\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2009-02-13 22:49+0000\n"
+"POT-Creation-Date: 2009-03-01 22:09+0000\n"
 "PO-Revision-Date: 2009-02-23 15:11+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -22,26 +22,25 @@ msgstr ""
 msgid "Runtime Error: %s\n"
 msgstr "Koerfel: %s\n"
 
-#: src/Game.cpp:116
-#: src/Game.cpp:753
+#: src/Game.cpp:115 src/Game.cpp:752
 #, c-format
 msgid "Score:  %d"
 msgstr "Poaeng: %d"
 
-#: src/Game.cpp:689
+#: src/Game.cpp:688
 msgid "Press SPACE to continue"
 msgstr "Tryck MELLANSLAG foer att fortsaetta"
 
-#: src/Game.cpp:747
+#: src/Game.cpp:746
 msgid "Land  now"
 msgstr "Landa  nu"
 
-#: src/Game.cpp:769
+#: src/Game.cpp:768
 #, c-format
 msgid "Level  %d"
 msgstr "Bana %d"
 
-#: src/Game.cpp:788
+#: src/Game.cpp:787
 msgid "Paused"
 msgstr "Pausat"
 
@@ -101,4 +100,3 @@ msgstr "Du kan bara landa saekert naer hastighetsmaetaren aer groen"
 #: src/Menu.cpp:251
 msgid "Collect the spinning rings to unlock the landing pads"
 msgstr "Samla de snurrande ringarna för att laasa upp landningsplattorna"
-
