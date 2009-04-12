@@ -86,8 +86,6 @@ public:
    static OpenGL& GetInstance();
 
    void Init(int width, int height, int depth, bool fullscreen);
-   void MsgBox(const char* text, const char* title="Message");
-   void ErrorMsg(const char* text, const char* title="Error");
    void Stop();
    void Run();
    void SkipDisplay();

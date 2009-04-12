@@ -21,6 +21,8 @@
 #include "Input.hpp"
 #include "ScreenManager.hpp"
 
+#include <time.h>
+
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -367,35 +369,6 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    glPushMatrix();
-}
-
-
-//
-// Displays a message to the user. On Windows this will appear as a message
-// box. On other platforms the message will be printed to stdout.
-//
-void OpenGL::MsgBox(const char* text, const char* title)
-{
-#ifdef WIN32
-   MessageBox(NULL, text, title, MB_OK | MB_ICONINFORMATION);
-#else
-   printf("%s\n", text);
-#endif
-}
-
-
-//
-// Displays an error message to the user. On Windows this will appear
-// as a popup error message. On other platforms the message will be
-// printed to stderr.
-//
-void OpenGL::ErrorMsg(const char* text, const char* title)
-{
-#ifdef WIN32
-   MessageBox(NULL, text, title, MB_OK | MB_ICONEXCLAMATION);
-#else
-   fprintf(stderr, "%s\n", text);
-#endif	
 }
 
 int OpenGL::GetFPS()

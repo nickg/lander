@@ -165,10 +165,14 @@ void Options::Apply()
 
    assert(hres > 0 && vres > 0);
 
+// Changing the video mode on Windows invalidiates all the OpenGL textures
+// A temporary workaround is to require the user to restart the program
+#ifndef WIN32
    if (OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres)) {
       // This *must* be the very last thing that is done!
       RecreateScreens();
    }
+#endif
 }
 
 void Options::ProcessFadeOut()
@@ -248,9 +252,16 @@ void Options::DisplayHelpText()
    
    glColor4d(0.0, 1.0, 0.0, fadeAlpha);
 
+   // TODO: Remove this once texture loading bug is fixed
+#ifdef WIN32
+   const int vertOffset = 125;
+#else
+   const int vertOffset = 100;
+#endif
+
    const char* help1 = i18n("Use UP and DOWN to select options");
    x = (screen_w - helpFont.GetStringWidth(help1)) / 2;
-   y = screen_h - 100;
+   y = screen_h - vertOffset;
    helpFont.Print(x, y, help1);
       
    const char* help2 = i18n("Use LEFT and RIGHT to change values");
@@ -262,6 +273,14 @@ void Options::DisplayHelpText()
    x = (screen_w - helpFont.GetStringWidth(help3)) / 2;
    y += 25;
    helpFont.Print(x, y, help3);   
+
+   // Temporary work around for texture reloading problem on Windows
+#ifdef WIN32
+   const char* help4 = i18n("Please restart the game to change the resolution");
+   x = (screen_w - helpFont.GetStringWidth(help4)) / 2;
+   y += 25;
+   helpFont.Print(x, y, help4);   
+#endif
 }
 
 void Options::Display()

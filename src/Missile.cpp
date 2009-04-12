@@ -23,6 +23,8 @@
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
 
+#include <cmath>
+
 Image* Missile::image(NULL);
 SoundEffect* Missile::fireSound(NULL);
 

@@ -33,7 +33,7 @@ public:
    
    void AddPoint(double x, double y);
    void Draw() const;
-   void SwapXandY(int b) { swapXandY = b; }
+   void SwapXandY(bool b) { swapXandY = b; }
    void Clear() { points.clear(); }
 private:
    void DrawWithOffset(double off, double r, double g, double b,

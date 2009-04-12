@@ -45,14 +45,14 @@ void Ship::Display() const
 
 void Ship::DrawExhaust()
 {   
-   exhaust.Draw((double)viewport->GetXAdjust(),
-                (double)viewport->GetYAdjust());
+   exhaust.Draw((float)viewport->GetXAdjust(),
+                (float)viewport->GetYAdjust());
 }
 
 void Ship::DrawExplosion()
 {
-   explosion.Draw((double)viewport->GetXAdjust(),
-                  (double)viewport->GetYAdjust());
+   explosion.Draw((float)viewport->GetXAdjust(),
+                  (float)viewport->GetYAdjust());
 }
 
 void Ship::Move()
@@ -85,13 +85,13 @@ void Ship::Move()
     }
     
     exhaust.xpos = xpos + shipImage.GetWidth()/2
-       - (shipImage.GetWidth()/2)*(double)sin(angle*(PI/180));
+       - (shipImage.GetWidth()/2)*sin(angle*(PI/180));
     exhaust.ypos = ypos + shipImage.GetHeight()/2
-       + (shipImage.GetHeight()/2)*(double)cos(angle*(PI/180));
+       + (shipImage.GetHeight()/2)*cos(angle*(PI/180));
 
     const float SCALE = 1.0f;
-    exhaust.yi_bias = SCALE * cos(angle*PI/180) + speedY;
-    exhaust.xi_bias = SCALE * -sin(angle*PI/180) + speedX;
+    exhaust.yi_bias = SCALE * cosf(angle*PI/180) + speedY;
+    exhaust.xi_bias = SCALE * -sinf(angle*PI/180) + speedX;
     
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
@@ -115,8 +115,8 @@ void Ship::ThrustOff()
 
 void Ship::Thrust(double speed)
 {
-   speedX += speed * sinf(angle*(PI/180));
-   speedY -= speed * cosf(angle*(PI/180));
+   speedX += speed * sin(angle*(PI/180));
+   speedY -= speed * cos(angle*(PI/180));
 }
 
 void Ship::Turn(double delta)

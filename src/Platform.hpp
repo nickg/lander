@@ -51,6 +51,10 @@ using namespace std;
 #include <GL\gl.h>							
 #include <GL\glu.h>	
 
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433832795
+#endif
+
 #define msleep(n) Sleep(n)
 
 #define i18n(x) x
