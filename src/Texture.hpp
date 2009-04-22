@@ -29,6 +29,8 @@ public:
    
    int GetWidth() const { return width; }
    int GetHeight() const { return height; }
+
+   friend Texture* loadTexture(const string& fileName);
    
 private:
    GLuint texture;
@@ -36,5 +38,7 @@ private:
    
    static bool IsPowerOfTwo(int n);
 };
+
+Texture* LoadTexture(const string& fileName);
 
 #endif

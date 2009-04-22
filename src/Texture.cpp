@@ -20,6 +20,31 @@
 
 #include <SDL_image.h>
 
+#include <map>
+
+using namespace std;
+
+// Cache of loaded textures
+namespace {
+   typedef map<string, Texture*> TextureCache;
+   TextureCache theCache;
+}
+
+Texture* LoadTexture(const string& fileName)
+{
+   TextureCache::iterator it = theCache.find(fileName);
+   if (it != theCache.end()) {
+      cout << "Reading from cache: " << fileName << endl;
+      return (*it).second;
+   }
+   else {
+      cout << "Loading from file: " << fileName << endl;
+      Texture* tex = new Texture(fileName.c_str());
+      theCache[fileName] = tex;
+      return tex;
+   }
+}
+
 Texture::Texture(const char* file)
 {
    SDL_Surface* surface = IMG_Load(LocateResource(file));

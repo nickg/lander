@@ -25,7 +25,6 @@
 
 #include <cmath>
 
-Image* Missile::image(NULL);
 SoundEffect* Missile::fireSound(NULL);
 
 const double Missile::ACCEL(0.1);
@@ -34,14 +33,11 @@ const int Missile::HORIZ_FIRE_RANGE(600);
 const int Missile::VERT_FIRE_RANGE(50); 
 
 Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
-   : viewport(v), objgrid(o), speed(0.0), state(FIXED)
+   : viewport(v), objgrid(o), speed(0.0), state(FIXED),
+     image("images/missile.png")
 {
    // This constructor builds a missile attached to the side of the screen
    
-   LOAD_ONCE {
-      image = new Image("images/missile.png");
-   }
-
    if (NULL == fireSound)
       fireSound = new SoundEffect(LocateResource("sounds/missile.wav"),
                                   60); // Volume
@@ -63,7 +59,7 @@ void Missile::Draw() const
    if (viewport->PointInScreen(dx, dy, ObjectGrid::OBJ_GRID_SIZE,
                                ObjectGrid::OBJ_GRID_SIZE)
        && state != DESTROYED) {
-      image->Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
+      image.Draw(dx - viewport->GetXAdjust(), dy - viewport->GetYAdjust(), angle);
    }
 
    exhaust.Draw((double)viewport->GetXAdjust(),
@@ -74,7 +70,7 @@ bool Missile::CheckCollison(const Ship& ship)
 {
    // A bounding box collision isn't exactly accurate but should
    // work OK
-   bool collided = ship.BoxCollision(dx, dy, image->GetWidth(), image->GetHeight());
+   bool collided = ship.BoxCollision(dx, dy, image.GetWidth(), image.GetHeight());
    if (collided)
       state = DESTROYED;
    return collided;
@@ -92,8 +88,8 @@ void Missile::Move(const Ship& ship)
 void Missile::MoveFixed(const Ship& ship)
 {
    // Decide whether to fire or not
-   int missileMidX = dx + image->GetWidth()/2;
-   int missileMidY = dy + image->GetHeight()/2;
+   int missileMidX = dx + image.GetWidth()/2;
+   int missileMidY = dy + image.GetHeight()/2;
 
    int xDistance = abs(static_cast<int>(ship.GetX()) - missileMidX);
    int yDistance = abs(static_cast<int>(ship.GetY()) - missileMidY);
@@ -111,17 +107,17 @@ void Missile::MoveFlying()
    dx += speed * sin(angle * M_PI/180);
    dy += speed * cos(angle * M_PI/180);
 
-   exhaust.xpos = dx + image->GetWidth()/2
-      - (image->GetWidth()/2)*sin(angle*(M_PI/180));
-   exhaust.ypos = dy + image->GetHeight()/2
-      + (image->GetHeight()/2)*cos(angle*(M_PI/180));
+   exhaust.xpos = dx + image.GetWidth()/2
+      - (image.GetWidth()/2)*sin(angle*(M_PI/180));
+   exhaust.ypos = dy + image.GetHeight()/2
+      + (image.GetHeight()/2)*cos(angle*(M_PI/180));
    exhaust.Process(true);
 
    if (speed < MAX_SPEED)
       speed += ACCEL;
 
    if (dx > viewport->GetLevelWidth() || dy > viewport->GetLevelHeight()
-       || dx + image->GetWidth() < 0 || dy < 0)
+       || dx + image.GetWidth() < 0 || dy < 0)
       state = DESTROYED;
 }
 

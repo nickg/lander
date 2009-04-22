@@ -23,6 +23,7 @@
 #include "GraphicsFwd.hpp"
 #include "Emitter.hpp"
 #include "SoundEffect.hpp"
+#include "Image.hpp"
 
 class Missile {
 public:
@@ -49,7 +50,7 @@ private:
    OrangeSmokeTrail exhaust;
    
    static SoundEffect* fireSound;
-   static Image* image;
+   Image image;
    
    static const double ACCEL;
    static const double MAX_SPEED;

@@ -38,7 +38,7 @@ public:
    static const int VARIANCE;
    
 private:
-   static Texture* surfTexture[NUM_SURF_TEX];
+   Texture* surfTexture[NUM_SURF_TEX];
    
    int texidx;
    Viewport* viewport;

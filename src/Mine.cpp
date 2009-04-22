@@ -18,18 +18,12 @@
 
 #include "Mine.hpp"
 #include "OpenGL.hpp"
-#include "LoadOnce.hpp"
 #include "Ship.hpp"
 
-AnimatedImage* Mine::image = NULL;
-
 Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
-   : objgrid(o), viewport(v)
-{
-   LOAD_ONCE {
-      image = new AnimatedImage("images/mine.png", 64, 64, MINE_FRAME_COUNT);
-   }
-   
+   : objgrid(o), viewport(v),
+     image("images/mine.png", 64, 64, MINE_FRAME_COUNT)
+{   
    current = 0;
    rotcount = MINE_ROTATION_SPEED;
    displace_x = 0;
@@ -137,6 +131,8 @@ void Mine::Move()
       current = (current + 1) % MINE_FRAME_COUNT;
       rotcount = MINE_ROTATION_SPEED;
    }
+   
+   image.SetFrame(current);
 }
 
 bool Mine::CheckCollision(Ship& ship)
@@ -154,6 +150,5 @@ void Mine::Draw() const
       - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE + displace_y
       - viewport->GetYAdjust() + OBJ_GRID_TOP;
-   image->SetFrame(current);
-   image->Draw(draw_x, draw_y);
+   image.Draw(draw_x, draw_y);
 }

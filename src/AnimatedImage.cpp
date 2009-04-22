@@ -23,11 +23,11 @@ AnimatedImage::AnimatedImage(const char* file, int frameWidth, int frameHeight,
      frameCount(frameCount)
 {
    if (frameCount == 0) {
-      if (Texture::GetWidth() % frameWidth != 0) {
+      if (Image::GetWidth() % frameWidth != 0) {
          cerr << "Warning: " << file << " with frame width " << frameWidth
               << " does not have whole number of frames" << endl;
       }
-      if (Texture::GetHeight() % frameHeight != 0) {
+      if (Image::GetHeight() % frameHeight != 0) {
          cerr << "Warning: " << file << " with frame height " << frameHeight
               << " does not have whole number of frames" << endl;
       }
@@ -40,12 +40,12 @@ AnimatedImage::AnimatedImage(const char* file, int frameWidth, int frameHeight,
 void AnimatedImage::Draw(int x, int y, double rotate, double scale,
                          double alpha, double white) const
 {
-   int width = Texture::GetWidth();
-   int height = Texture::GetHeight();
+   int width = Image::GetWidth();
+   int height = Image::GetHeight();
 
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, GetTexture()->GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + frameWidth/2), (double)(y + frameHeight/2), 0.0);
    glScaled(scale, scale, 0);
@@ -68,12 +68,12 @@ void AnimatedImage::Draw(int x, int y, double rotate, double scale,
 
 int AnimatedImage::FramesPerRow() const
 {
-   return Texture::GetWidth() / frameWidth;
+   return Image::GetWidth() / frameWidth;
 }
 
 int AnimatedImage::FramesPerCol() const
 {
-   return Texture::GetHeight() / frameHeight;
+   return Image::GetHeight() / frameHeight;
 }
 
 void AnimatedImage::NextFrame()

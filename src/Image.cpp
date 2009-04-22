@@ -1,5 +1,5 @@
 //  Image.cpp -- Wrapper for loading and displaying images
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 
 #include "Image.hpp"
 #include "OpenGL.hpp"
+#include "Texture.hpp"
 
-Image::Image(const char* file)
-   : Texture(file)
+Image::Image(const string& fileName)
 {
-   
+   texture = LoadTexture(fileName);
 }
 
 Image::~Image()
@@ -37,7 +37,7 @@ void Image::Draw(int x, int y, double rotate, double scale,
    
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, texture->GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + width/2), (double)(y + height/2), 0.0);
    glScaled(scale, scale, 0);

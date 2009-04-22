@@ -45,7 +45,7 @@ private:
    int current, rotcount, movetimeout;
    int displace_x, displace_y, movedelay;
 
-   static AnimatedImage* image;
+   AnimatedImage image;
 };
 
 #endif

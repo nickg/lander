@@ -16,7 +16,6 @@
 //
 
 #include "Surface.hpp"
-#include "LoadOnce.hpp"
 #include "Ship.hpp"
 
 const int Surface::VARIANCE(65);     // Bumpyness of landscape
@@ -24,17 +23,13 @@ const int Surface::MAX_SURFACE_HEIGHT(300);
 const int Surface::MIN_SURFACE_HEIGHT(10);
 const int Surface::SURFACE_SIZE(20);
 
-Texture* Surface::surfTexture[Surface::NUM_SURF_TEX];
-
 Surface::Surface(Viewport* v)
    :  viewport(v), surface(NULL)
 {
-   LOAD_ONCE {
-      surfTexture[0] = new Texture("images/dirt_surface.png");
-      surfTexture[1] = new Texture("images/snow_surface.png");
-      surfTexture[2] = new Texture("images/red_rock_surface.png");
-      surfTexture[3] = new Texture("images/rock_surface.png");
-   }
+   surfTexture[0] = LoadTexture("images/dirt_surface.png");
+   surfTexture[1] = LoadTexture("images/snow_surface.png");
+   surfTexture[2] = LoadTexture("images/red_rock_surface.png");
+   surfTexture[3] = LoadTexture("images/rock_surface.png");
 }
 
 Surface::~Surface()
