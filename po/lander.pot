@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lander 0.5.2\n"
+"Project-Id-Version: lander 0.5.3\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2009-03-01 22:39+0000\n"
+"POT-Creation-Date: 2009-04-22 21:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Main.cpp:131
+#: src/Main.cpp:137
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr ""
@@ -60,16 +60,20 @@ msgstr ""
 msgid "Name?  %s"
 msgstr ""
 
-#: src/Options.cpp:251
+#: src/Options.cpp:262
 msgid "Use UP and DOWN to select options"
 msgstr ""
 
-#: src/Options.cpp:256
+#: src/Options.cpp:267
 msgid "Use LEFT and RIGHT to change values"
 msgstr ""
 
-#: src/Options.cpp:261
+#: src/Options.cpp:272
 msgid "Press FIRE or RETURN to exit"
+msgstr ""
+
+#: src/Options.cpp:279
+msgid "Please restart the game to change the resolution"
 msgstr ""
 
 #: src/Menu.cpp:245

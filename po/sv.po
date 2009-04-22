@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lander 0.5.1\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2009-03-01 22:39+0000\n"
+"POT-Creation-Date: 2009-04-22 21:21+0100\n"
 "PO-Revision-Date: 2009-02-23 15:11+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Language: Swedish\n"
 "X-Poedit-Country: SWEDEN\n"
 
-#: src/Main.cpp:131
+#: src/Main.cpp:137
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr "Koerfel: %s\n"
@@ -61,17 +61,21 @@ msgstr "Tryck RETUR eller SKJUT foer att fortsaetta"
 msgid "Name?  %s"
 msgstr "Namn? %s"
 
-#: src/Options.cpp:251
+#: src/Options.cpp:262
 msgid "Use UP and DOWN to select options"
 msgstr "Anvaend UPP och NED foer att vaelja alternativ"
 
-#: src/Options.cpp:256
+#: src/Options.cpp:267
 msgid "Use LEFT and RIGHT to change values"
 msgstr "Anvaend VAENSTER och HOEGER foer att aendra vaerden"
 
-#: src/Options.cpp:261
+#: src/Options.cpp:272
 msgid "Press FIRE or RETURN to exit"
 msgstr "Tryck SKJUT eller RETUR foer att avsluta"
+
+#: src/Options.cpp:279
+msgid "Please restart the game to change the resolution"
+msgstr ""
 
 #: src/Menu.cpp:245
 msgid "Use the arrow keys to rotate the ship"
