@@ -25,7 +25,7 @@ int SoundEffect::audioBuffers(1024);
 Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
-SoundEffect::SoundEffect(const char* filename, Uint8 volume)
+SoundEffect::SoundEffect(const string& filename, Uint8 volume)
    : sound(NULL), channel(-1)
 {
    if (++loadCount == 1) {
@@ -44,7 +44,7 @@ SoundEffect::SoundEffect(const char* filename, Uint8 volume)
 
    if (!enabled) return;
 
-   if (!(sound = Mix_LoadWAV(filename))) {
+   if (!(sound = Mix_LoadWAV(filename.c_str()))) {
       ostringstream ss;
       ss << "Error loading " << filename << ": ";
       ss << Mix_GetError();

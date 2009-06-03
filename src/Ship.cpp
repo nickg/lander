@@ -57,7 +57,7 @@ void Ship::DrawExplosion()
 
 void Ship::Move()
 {
-    RotatePoints(hotspots, points, NUM_HOTSPOTS, angle*PI/180, -16, 16);
+   RotatePoints(hotspots, points, NUM_HOTSPOTS, angle*M_PI/180, -16, 16);
 
     xpos += speedX;
     ypos += speedY;
@@ -85,13 +85,13 @@ void Ship::Move()
     }
     
     exhaust.xpos = xpos + shipImage.GetWidth()/2
-       - (shipImage.GetWidth()/2)*sin(angle*(PI/180));
+       - (shipImage.GetWidth()/2)*sin(angle*(M_PI/180));
     exhaust.ypos = ypos + shipImage.GetHeight()/2
-       + (shipImage.GetHeight()/2)*cos(angle*(PI/180));
+       + (shipImage.GetHeight()/2)*cos(angle*(M_PI/180));
 
     const float SCALE = 1.0f;
-    exhaust.yi_bias = SCALE * cosf(angle*PI/180) + speedY;
-    exhaust.xi_bias = SCALE * -sinf(angle*PI/180) + speedX;
+    exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
+    exhaust.xi_bias = SCALE * -sinf(angle*M_PI/180) + speedX;
     
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
@@ -115,8 +115,8 @@ void Ship::ThrustOff()
 
 void Ship::Thrust(double speed)
 {
-   speedX += speed * sin(angle*(PI/180));
-   speedY -= speed * cos(angle*(PI/180));
+   speedX += speed * sin(angle*(M_PI/180));
+   speedY -= speed * cos(angle*(M_PI/180));
 }
 
 void Ship::Turn(double delta)

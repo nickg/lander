@@ -20,9 +20,9 @@
 
 #include <SDL_image.h>
 
-Texture::Texture(const char* file)
+Texture::Texture(const string& file)
 {
-   SDL_Surface* surface = IMG_Load(LocateResource(file));
+   SDL_Surface* surface = IMG_Load(LocateResource(file).c_str());
    if (NULL == surface) {
       ostringstream os;
       os << "Failed to load image: " << IMG_GetError();

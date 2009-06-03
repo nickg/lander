@@ -25,10 +25,8 @@
 
 #define WINDOW_TITLE "Lunar Lander"
 #define FRAME_RATE 35
-#define PI 3.1415926535f
 
-class Renderable {
-public:
+struct Renderable {
    Renderable(int x, int y, int width, int height,
               float r, float g, float b);
    virtual ~Renderable() {}
@@ -42,8 +40,7 @@ public:
    float red, green, blue;
 };
 
-class ColourQuad : public Renderable {
-public:
+struct ColourQuad : Renderable {
    ColourQuad(int x=0, int y=0, int width=0, int height=0,
               float r=1, float g=1, float b=1);
    void Render();
@@ -53,8 +50,7 @@ public:
 // 
 // A polygon with four points and a texture.
 //
-class TextureQuad : public Renderable {
-public:
+struct TextureQuad : Renderable {
    TextureQuad(int qx=0, int qy=0, int width=0, int height=0, GLuint tex=0,
                float r=1, float g=1, float b=1);
    void Render();

@@ -21,6 +21,11 @@
 #include "Input.hpp"
 #include "InterfaceSounds.hpp"
 
+#include <boost/filesystem.hpp>
+
+const float HighScores::FADE_IN_SPEED(0.2f);
+const float HighScores::FADE_OUT_SPEED(-0.02f);
+
 HighScores::HighScores()
    : hscoreImage("images/hscore.png"),
      largeFont(LocateResource("Default_Font.ttf"), 15),
@@ -57,7 +62,7 @@ void HighScores::Process()
           || input.QueryAction(Input::FIRE)) {
        
          // Go back to main menu
-         fade = HS_FADE_OUT_SPEED;
+         fade = FADE_OUT_SPEED;
          for (i = 0; i < MAX_FIREWORKS; i++) {
             fw[i].em->maxspeed = 200;
             fw[i].speed = 0;
@@ -82,7 +87,7 @@ void HighScores::Process()
          scoreFile.Save();
          state = hssDisplay;
          flAlpha = 0.0f;
-         fade = HS_FADE_IN_SPEED;
+         fade = FADE_IN_SPEED;
 
          input.ResetAction(Input::FIRE);
          InterfaceSounds::PlaySelect();
@@ -240,7 +245,7 @@ void HighScores::DisplayScores()
 
    // Fade in
    flAlpha = 0.0f;
-   fade = HS_FADE_IN_SPEED;
+   fade = FADE_IN_SPEED;
 }
 
 // 
@@ -267,7 +272,7 @@ void HighScores::CheckScore(int score)
 
    // Fade in
    flAlpha = 0.0f;
-   fade = HS_FADE_IN_SPEED;
+   fade = FADE_IN_SPEED;
 }
 
 ScoreFile::ScoreFile()
@@ -301,7 +306,7 @@ void ScoreFile::Load()
 {
    // Check for file's existence
    string hsname(GetHighScoreFile());
-   if (!FileExists(hsname)) {
+   if (!boost::filesystem::exists(hsname)) {
       // Write a dummy score file
       Save();
    }

@@ -52,6 +52,7 @@ public:
    StaticObject(int xpos, int ypos, int width=1, int height=1)
       : xpos(xpos), ypos(ypos), width(width), height(height) {}
    StaticObject() { StaticObject(0, 0, 1, 1); }
+   virtual ~StaticObject() {}
 
    bool ObjectInScreen(Viewport* viewport);
    
