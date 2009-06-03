@@ -223,7 +223,6 @@ void Font::Print(int x, int y, const char* fmt, ...)
 
    // Restore previous matrix
    glPopMatrix();
-   glPopMatrix();
 }
 
 int Font::GetStringWidth(const char* fmt, ...)

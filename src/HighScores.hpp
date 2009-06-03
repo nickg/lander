@@ -27,9 +27,6 @@
 #include "Font.hpp"
 #include "SoundEffect.hpp"
 
-#define HS_FADE_IN_SPEED	0.2f
-#define HS_FADE_OUT_SPEED	-0.02f
-
 class ScoreFile {
 public:
    ScoreFile();
@@ -37,7 +34,7 @@ public:
 
    void Load();
    void Save();
-   void Insert(const char* name, int score);
+   void Insert(const string& name, int score);
 
    // An entry in the highscores chart
    class ScoreEntry {
@@ -96,7 +93,9 @@ private:
    ScoreFile scoreFile;
    Font largeFont, scoreNameFont;
    SoundEffect fwBang;
-   	
+
+   static const float FADE_IN_SPEED, FADE_OUT_SPEED;
+   
    // Fireworks
    static const int MAX_FIREWORKS = 7;
    class Firework {

@@ -133,34 +133,8 @@ using namespace std;
 
 #endif /* #ifdef LINUX */
 
-
-#ifdef LANDER_BIG_ENDIAN
-
-//
-// All data files are currently stored in little endian format.
-//
-
-#define	Flip16(n)  (((n >> 8) & 0x00ff) |	\
-					((n << 8) & 0xff00))
-
-#define	Flip32(n)  (((n >>24) & 0x000000ff) |   \
-					((n >> 8) & 0x0000ff00) |	\
-					((n << 8) & 0x00ff0000) |	\
-					((n <<24) & 0xff000000))
-
-#define LittleEndian32(l) l = Flip32(l)
-#define LittleEndian16(s) s = Flip16(s)
-
-#else
-
-#define LittleEndian32(l)
-#define LittleEndian16(s)
-
-#endif /* #ifdef LANDER_BIG_ENDIAN */
-
 void RecreateScreens();
-const char* LocateResource(const char* file);
-bool FileExists(const string& file);
+string LocateResource(const string& file);
 string GetConfigDir();
 
 #endif /* #ifdef INC_PLATFORM_HPP */

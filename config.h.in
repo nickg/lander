@@ -7,6 +7,12 @@
 /* Define to 1 if you have the `atexit' function. */
 #undef HAVE_ATEXIT
 
+/* define if the Boost library is available */
+#undef HAVE_BOOST
+
+/* define if the Boost::Filesystem library is available */
+#undef HAVE_BOOST_FILESYSTEM
+
 /* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
    CoreFoundation framework. */
 #undef HAVE_CFLOCALECOPYCURRENT

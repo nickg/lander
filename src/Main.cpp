@@ -32,22 +32,27 @@ namespace CF {
 
 #include <SDL_main.h>
 
-static MainMenu* menu = NULL;
-static Game* game = NULL;
-static HighScores* scores = NULL;
-static Options* options = NULL;
+#include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
-static void DestroyScreens()
-{
-   ScreenManager::GetInstance().RemoveAllScreens();
-   if (menu)
-      delete menu;
-   if (game)
-      delete game;
-   if (scores)
-      delete scores;
-   if (options)
-      delete options;
+namespace {
+   MainMenu* menu = NULL;
+   Game* game = NULL;
+   HighScores* scores = NULL;
+   Options* options = NULL;
+
+   void DestroyScreens()
+   {
+      ScreenManager::GetInstance().RemoveAllScreens();
+      if (menu)
+         delete menu;
+      if (game)
+         delete game;
+      if (scores)
+         delete scores;
+      if (options)
+         delete options;
+   }
 }
 
 // See LoadOnce.hpp
@@ -130,7 +135,7 @@ int main(int argc, char **argv)
 
       DestroyScreens();
    }
-   catch (std::runtime_error& e) {
+   catch (const std::runtime_error& e) {
 #ifdef WIN32
       MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
 #else /* #ifdef WIN32 */
@@ -144,18 +149,19 @@ int main(int argc, char **argv)
 //
 // Find a filename in the installation tree.
 //
-const char* LocateResource(const char* file)
+string LocateResource(const string& file)
 {
-	static char path[PATH_MAX];
 #ifdef MACOSX
-	using namespace CF;
+   using namespace CF;
+   
+   static char path[PATH_MAX];
    
    CFURLRef resURL;
    CFBundleRef mainBundle;
    CFStringRef cfBase, cfExt, cfPath;
    
    const char* ext = "";
-   char* copy = strdup(file);
+   char* copy = strdup(file.c_str());
    if (char* p = strrchr(copy, '.')) {
 		*p = '\0';
 		ext = ++p;
@@ -181,27 +187,10 @@ const char* LocateResource(const char* file)
 #endif
    
 #ifdef DATADIR
-   snprintf(path, PATH_MAX, "%s/%s", DATADIR, file);
-   return path;   
+   return boost::lexical_cast<string>(DATADIR) + "/" + file;   
 #else
    return file;
 #endif
-}
-
-bool FileExists(const string& file)
-{
-#ifdef UNIX
-   struct stat buf;
-   return stat(file.c_str(), &buf) == 0;
-#else
-   FILE* f = fopen(file.c_str(), "r");
-   if (NULL == f)
-      return false;
-   else {
-      fclose(f);
-      return true;
-   }
-#endif   
 }
 
 string GetConfigDir()

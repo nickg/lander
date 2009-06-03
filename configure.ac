@@ -26,6 +26,10 @@ AC_FUNC_MALLOC
 AC_FUNC_STAT
 AC_CHECK_FUNCS([atexit memset pow setlocale sqrt])
 
+dnl Check for Boost
+AX_BOOST_BASE(1.33)
+AX_BOOST_FILESYSTEM
+
 dnl Check for SDL
 SDL_VERSION=1.2.5
 AM_PATH_SDL($SDL_VERSION,
