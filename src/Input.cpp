@@ -20,6 +20,8 @@
 #include "Input.hpp"
 #include "OpenGL.hpp"
 
+#include <boost/lexical_cast.hpp>
+
 const int Input::RESET_TIMEOUT(7);
 
 // 
@@ -91,14 +93,17 @@ void Input::Update()
             if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
                 || (e.key.keysym.sym == SDLK_SPACE)) {
                char ch = (char)e.key.keysym.sym;
-               text += shift ? toupper(ch) : ch;
+               ch = shift ? toupper(ch) : ch;
+               text.write(&ch, 1);
             }
             else if (e.key.keysym.sym == SDLK_LSHIFT
                      || e.key.keysym.sym == SDLK_RSHIFT) {
                shift = true;
             }
-            else if (e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 0)	{
-               text.erase(text.length() - 1, 1);
+            else if (e.key.keysym.sym == SDLK_BACKSPACE && text.tellp() > 0)	{
+               long pos = text.tellp();
+               if (pos > 0)
+                  text.seekp(pos - 1);
             }
          }
          break;
@@ -238,7 +243,7 @@ void Input::OpenCharBuffer(int max)
 
    shift = false;
    maxchar = max;
-   text = "";
+   text.str("");
    textinput = true;
 }
 
@@ -256,7 +261,7 @@ void Input::CloseCharBuffer()
 //
 // Returns a pointer to the data read in text input mode.
 //
-const char* Input::GetInput() const
+string Input::GetInput() const
 {
-   return text.c_str();
+   return text.str();
 }

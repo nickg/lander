@@ -22,6 +22,8 @@
 
 #include "Platform.hpp"
 
+#include <sstream>
+
 // 
 // A singleton class to manage SDL input.
 //
@@ -44,7 +46,7 @@ public:
 
    void OpenCharBuffer(int max=256);
    void CloseCharBuffer();
-   const char* GetInput() const;
+   string GetInput() const;
 
 private:
    Input();
@@ -58,8 +60,8 @@ private:
 
    bool shift;
    bool textinput;			// Is a character buffer open?
-   string text;				// Text read so far
-   int maxchar;				// Maximum number of characters to read
+   ostringstream text;	// Text read so far
+   int maxchar;			  	// Maximum number of characters to read
 
    // Record joystick state
    bool joyLeft, joyRight, joyUp, joyDown, joyButton0, joyButton1;

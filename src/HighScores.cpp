@@ -79,7 +79,7 @@ void HighScores::Process()
    }
    else if (state == hssEnterName)	{
       if (input.QueryAction(Input::FIRE)
-          && strlen(input.GetInput()) > 0) {
+          && input.GetInput().size() > 0) {
        
          // Enter name into high score chart
          scoreFile.Insert(input.GetInput(), newscore);
@@ -204,12 +204,12 @@ void HighScores::Display()
       int y = opengl.GetHeight() - 60;
       largeFont.Print(x, y, hscont);
 
-      const char* name = input.GetInput();
+      const string name(input.GetInput());
       const char* hsname = i18n("Name?  %s");
-      x = (opengl.GetWidth() - largeFont.GetStringWidth(hsname, name)) / 2;
+      x = (opengl.GetWidth() - largeFont.GetStringWidth(hsname, name.c_str())) / 2;
       y = (opengl.GetHeight() - 50) / 2;
       glColor4f(0.8f, 0.0f, 1.0f, flAlpha);
-      largeFont.Print(x, y, hsname, name);
+      largeFont.Print(x, y, hsname, name.c_str());
    }
 }
 
@@ -330,9 +330,9 @@ void ScoreFile::Save()
       (*it).WriteOnStream(fout);
 }
 
-void ScoreFile::Insert(const char* name, int score)
+void ScoreFile::Insert(const string& name, int score)
 {
-   scores[9] = ScoreEntry(name, score);
+   scores[9] = ScoreEntry(name.c_str(), score);
    Sort();
    needsWrite = true;
 }
@@ -345,12 +345,12 @@ ScoreFile::ScoreEntry::ScoreEntry(const char* name, int score)
 
 void ScoreFile::ScoreEntry::WriteOnStream(ostream& os)
 {
-   os.write((const char*)&score, sizeof(int));
+   os.write(reinterpret_cast<const char*>(&score), sizeof(int));
    os.write(name, MAX_NAME);
 }
 
 void ScoreFile::ScoreEntry::ReadFromStream(istream& is)
 {
-   is.read((char*)&score, sizeof(int));
+   is.read(reinterpret_cast<char*>(&score), sizeof(int));
    is.read(name, MAX_NAME);
 }

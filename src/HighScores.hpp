@@ -34,7 +34,7 @@ public:
 
    void Load();
    void Save();
-   void Insert(const char* name, int score);
+   void Insert(const string& name, int score);
 
    // An entry in the highscores chart
    class ScoreEntry {
