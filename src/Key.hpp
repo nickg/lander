@@ -29,8 +29,8 @@ public:
    Key(bool active, int xpos, int ypos, ArrowColour acol);
    
    void DrawKey(Viewport* viewport);
-   void DrawArrow(Viewport* viewport);
-   void DrawIcon(int offset, float minAlpha);
+   void DrawArrow(Viewport* viewport) const;
+   void DrawIcon(int offset, float minAlpha) const;
    bool CheckCollision(Ship& ship) const;
 
    void Collected() { active = false; }

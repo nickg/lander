@@ -27,6 +27,8 @@ public:
    
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;
+   void DrawFrame(int frame, int x, int y, double rotate=0.0, double scale=1.0,
+                  double alpha=1.0, double white=1.0) const;
    void NextFrame();
    void SetFrame(int f);
 
@@ -38,7 +40,7 @@ private:
    int FramesPerCol() const;
    
    int frameWidth, frameHeight, frameCount;
-   int currFrameX, currFrameY;
+   int currFrame;
 };
 
 #endif

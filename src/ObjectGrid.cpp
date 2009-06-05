@@ -138,7 +138,7 @@ void ObjectGrid::Offset(int ox, int oy, int* x, int* y)
    *y = OBJ_GRID_TOP + oy*OBJ_GRID_SIZE;
 }
 
-bool StaticObject::ObjectInScreen(Viewport* viewport)
+bool StaticObject::ObjectInScreen(Viewport* viewport) const
 {
    return viewport->ObjectInScreen(xpos, ypos, width, height);
 }

@@ -46,7 +46,7 @@ void Key::DrawKey(Viewport* viewport)
       alpha -= 0.02f;
 }
 
-void Key::DrawArrow(Viewport* viewport)
+void Key::DrawArrow(Viewport* viewport) const
 {
    if (active && !ObjectInScreen(viewport))	{
       int ax = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
@@ -77,15 +77,10 @@ void Key::DrawArrow(Viewport* viewport)
    }
 }
 
-void Key::DrawIcon(int offset, float minAlpha)
+void Key::DrawIcon(int offset, float minAlpha) const
 {
-   const int prevFrame = image.GetFrame();
-   image.SetFrame(5);
-   
    double drawAlpha = alpha > minAlpha ? alpha : minAlpha;
-   image.Draw(offset, 10, 0.0, 1.0, drawAlpha);
-
-   image.SetFrame(prevFrame);   
+   image.DrawFrame(5, offset, 10, 0.0, 1.0, drawAlpha);
 }
 
 bool Key::CheckCollision(Ship& ship) const

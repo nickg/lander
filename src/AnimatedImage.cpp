@@ -20,7 +20,7 @@
 AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
                              int frameHeight, int frameCount)
    : Image(fileName), frameWidth(frameWidth), frameHeight(frameHeight),
-     frameCount(frameCount)
+     frameCount(frameCount), currFrame(0)
 {
    if (frameCount == 0) {
       if (Image::GetWidth() % frameWidth != 0) {
@@ -33,13 +33,17 @@ AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
       }
       this->frameCount = FramesPerRow() * FramesPerCol();
    }
-   currFrameX = 0;
-   currFrameY = 0;
 }
 
-void AnimatedImage::Draw(int x, int y, double rotate, double scale,
-                         double alpha, double white) const
+// Draw a particular frame
+void AnimatedImage::DrawFrame(int frame, int x, int y, double rotate, double scale,
+                              double alpha, double white) const
 {
+   assert(frame >= 0 && frame < frameCount);
+
+   int frameX = frame % FramesPerRow();
+   int frameY = frame / FramesPerRow();
+   
    int width = Image::GetWidth();
    int height = Image::GetHeight();
 
@@ -52,10 +56,10 @@ void AnimatedImage::Draw(int x, int y, double rotate, double scale,
    glRotated(rotate, 0.0, 0.0, 1.0);
    glColor4d(white, white, white, alpha);
 
-   double tex_l = ((double)(currFrameX * frameWidth))/(double)width;
+   double tex_l = ((double)(frameX * frameWidth))/(double)width;
    double tex_r = tex_l + (double)frameWidth/(double)width;
 
-   double tex_t = ((double)(currFrameY * frameHeight))/(double)height;
+   double tex_t = ((double)(frameY * frameHeight))/(double)height;
    double tex_b = tex_t + (double)frameHeight/(double)height;
    
    glBegin(GL_QUADS);
@@ -64,6 +68,13 @@ void AnimatedImage::Draw(int x, int y, double rotate, double scale,
    glTexCoord2d(tex_r, tex_b); glVertex2i(frameWidth/2, frameHeight/2);
    glTexCoord2d(tex_r, tex_t); glVertex2i(frameWidth/2, -(frameHeight/2));
    glEnd();
+}
+
+// Draw the current frame
+void AnimatedImage::Draw(int x, int y, double rotate, double scale,
+                         double alpha, double white) const
+{
+   DrawFrame(currFrame, x, y, rotate, scale, alpha, white);
 }
 
 int AnimatedImage::FramesPerRow() const
@@ -78,27 +89,19 @@ int AnimatedImage::FramesPerCol() const
 
 void AnimatedImage::NextFrame()
 {
-   currFrameX = (currFrameX + 1) % FramesPerRow();
-   if (currFrameX == 0)
-      currFrameY = (currFrameY + 1) % FramesPerCol();
-   if (GetFrame() >= frameCount) {
-      currFrameX = 0;
-      currFrameY = 0;
-   }
+   currFrame = (currFrame + 1) % frameCount;
 }
 
 void AnimatedImage::SetFrame(int f)
 {   
-   if (f >= frameCount)
+   if (f < 0 || f >= frameCount)
       throw runtime_error("SetFrame frame out of range");
-   else {
-      currFrameX = f % FramesPerRow();
-      currFrameY = f / FramesPerRow();
-   }
+   else
+      currFrame = f;
 }
 
 int AnimatedImage::GetFrame() const
 {
-   return (currFrameY * FramesPerRow()) + currFrameX;
+   return currFrame; 
 }
 

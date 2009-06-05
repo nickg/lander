@@ -54,7 +54,7 @@ public:
    StaticObject() { StaticObject(0, 0, 1, 1); }
    virtual ~StaticObject() {}
 
-   bool ObjectInScreen(Viewport* viewport);
+   bool ObjectInScreen(Viewport* viewport) const;
    
    int GetX() const { return xpos; }
    int GetY() const { return ypos; }
