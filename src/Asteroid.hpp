@@ -47,8 +47,8 @@ private:
    void GenerateDisplayList(int texidx);
    static string SurfaceFileName(int textureId);
 
-   Texture* surfaceTexture_;
-   shared_ptr<GLuint> displayList_;
+   Texture* surfaceTexture;
+   shared_ptr<GLuint> displayList;
    
    struct AsteroidSection {
       double texX, texwidth;

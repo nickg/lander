@@ -32,10 +32,10 @@ namespace {
 
 Asteroid::Asteroid(int x, int y, int width, int surftex)
    : StaticObject(x, y, width, 4),
-     surfaceTexture_(LoadTexture(SurfaceFileName(surftex))),
-     displayList_(new GLuint, displayListDeleter)
+     surfaceTexture(LoadTexture(SurfaceFileName(surftex))),
+     displayList(new GLuint, displayListDeleter)
 {
-   *displayList_ = glGenLists(1);
+   *displayList = glGenLists(1);
    
    int change, texloop=0;
 
@@ -115,7 +115,7 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
 
 Asteroid::Asteroid(const Asteroid& other)
    : StaticObject(other),
-     displayList_(other.displayList_)
+     displayList(other.displayList)
 {
    copy(other.uppolys, other.uppolys + MAX_ASTEROID_WIDTH, uppolys);
    copy(other.downpolys, other.downpolys + MAX_ASTEROID_WIDTH, downpolys);
@@ -143,11 +143,11 @@ string Asteroid::SurfaceFileName(int textureId)
 
 void Asteroid::GenerateDisplayList(int texidx)
 {
-   glNewList(*displayList_, GL_COMPILE);
+   glNewList(*displayList, GL_COMPILE);
    
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, surfaceTexture_->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, surfaceTexture->GetGLTexture());
    glColor4d(1.0, 1.0, 1.0, 1.0);
    
    for (int i = 0; i < width; i++) {   
@@ -209,7 +209,7 @@ LineSegment Asteroid::GetDownBoundary(int poly) const
 
 void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 {
-   if (!displayList_) {
+   if (!displayList) {
       // This asteroid has been copied and lost its display
       // list reference
       throw runtime_error("Asteroid::Draw called on invalid asteroid copy");
@@ -220,7 +220,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 
    glLoadIdentity();
    glTranslated(ix, iy, 0.0);
-   glCallList(*displayList_);
+   glCallList(*displayList);
 } 
 
 bool Asteroid::CheckCollision(const Ship& ship) const
