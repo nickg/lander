@@ -18,10 +18,7 @@
 
 #include "Asteroid.hpp"
 #include "OpenGL.hpp"
-#include "LoadOnce.hpp"
 #include "Ship.hpp"
-
-Texture* Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 
 namespace {
    // Called by shared_ptr when no more references to a display
@@ -35,15 +32,9 @@ namespace {
 
 Asteroid::Asteroid(int x, int y, int width, int surftex)
    : StaticObject(x, y, width, 4),
+     surfaceTexture_(LoadTexture(SurfaceFileName(surftex))),
      displayList_(new GLuint, displayListDeleter)
 {
-   LOAD_ONCE {
-      surfTexture[0] = new Texture("images/dirt_surface2.png");
-      surfTexture[1] = new Texture("images/snow_surface2.png");
-      surfTexture[2] = new Texture("images/red_rock_surface2.png");
-      surfTexture[3] = new Texture("images/rock_surface2.png");
-   }
-
    *displayList_ = glGenLists(1);
    
    int change, texloop=0;
@@ -135,13 +126,28 @@ Asteroid::~Asteroid()
    
 }
 
+// Return the file name for the corresponding surface texture
+string Asteroid::SurfaceFileName(int textureId)
+{
+   assert(textureId >= 0 && textureId < Surface::NUM_SURF_TEX);
+
+   static const char* fileNames[] = {
+      "images/dirt_surface2.png",
+      "images/snow_surface2.png",
+      "images/red_rock_surface2.png",
+      "images/rock_surface2.png"
+   };
+
+   return fileNames[textureId];
+}
+
 void Asteroid::GenerateDisplayList(int texidx)
 {
    glNewList(*displayList_, GL_COMPILE);
    
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx]->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, surfaceTexture_->GetGLTexture());
    glColor4d(1.0, 1.0, 1.0, 1.0);
    
    for (int i = 0; i < width; i++) {   

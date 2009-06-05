@@ -45,8 +45,9 @@ private:
    static const int AS_VARIANCE = 64;
 
    void GenerateDisplayList(int texidx);
+   static string SurfaceFileName(int textureId);
 
-   static Texture* surfTexture[Surface::NUM_SURF_TEX];
+   Texture* surfaceTexture_;
    shared_ptr<GLuint> displayList_;
    
    struct AsteroidSection {
