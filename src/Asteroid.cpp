@@ -23,8 +23,19 @@
 
 Texture* Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 
+namespace {
+   // Called by shared_ptr when no more references to a display
+   // list are held
+   void displayListDeleter(GLuint* u)
+   {
+      glDeleteLists(*u, 1);
+      delete u;
+   }
+}
+
 Asteroid::Asteroid(int x, int y, int width, int surftex)
-   : StaticObject(x, y, width, 4)
+   : StaticObject(x, y, width, 4),
+     displayList_(new GLuint, displayListDeleter)
 {
    LOAD_ONCE {
       surfTexture[0] = new Texture("images/dirt_surface2.png");
@@ -33,7 +44,7 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
       surfTexture[3] = new Texture("images/rock_surface2.png");
    }
 
-   display_list = glGenLists(1);
+   *displayList_ = glGenLists(1);
    
    int change, texloop=0;
 
@@ -111,14 +122,22 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
    GenerateDisplayList(surftex);
 }
 
+Asteroid::Asteroid(const Asteroid& other)
+   : StaticObject(other),
+     displayList_(other.displayList_)
+{
+   copy(other.uppolys, other.uppolys + MAX_ASTEROID_WIDTH, uppolys);
+   copy(other.downpolys, other.downpolys + MAX_ASTEROID_WIDTH, downpolys);
+}
+
 Asteroid::~Asteroid()
 {
-   //glDeleteLists(display_list, 1);
+   
 }
 
 void Asteroid::GenerateDisplayList(int texidx)
 {
-   glNewList(display_list, GL_COMPILE);
+   glNewList(*displayList_, GL_COMPILE);
    
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
@@ -184,12 +203,18 @@ LineSegment Asteroid::GetDownBoundary(int poly) const
 
 void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 {
+   if (!displayList_) {
+      // This asteroid has been copied and lost its display
+      // list reference
+      throw runtime_error("Asteroid::Draw called on invalid asteroid copy");
+   }
+   
    double ix = xpos*OBJ_GRID_SIZE - viewadjust_x;
    double iy = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
 
    glLoadIdentity();
    glTranslated(ix, iy, 0.0);
-   glCallList(display_list);
+   glCallList(*displayList_);
 } 
 
 bool Asteroid::CheckCollision(const Ship& ship) const

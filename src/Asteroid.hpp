@@ -24,9 +24,14 @@
 #include "Surface.hpp"
 #include "ObjectGrid.hpp"
 
+#include <tr1/memory>
+
+using namespace std::tr1;
+
 class Asteroid : public StaticObject {
 public:
    Asteroid(int x, int y, int width, int surftex);
+   Asteroid(const Asteroid& other);
    ~Asteroid();
 	
    void Draw(int viewadjust_x, int viewadjust_y) const;
@@ -42,7 +47,7 @@ private:
    void GenerateDisplayList(int texidx);
 
    static Texture* surfTexture[Surface::NUM_SURF_TEX];
-   GLuint display_list;
+   shared_ptr<GLuint> displayList_;
    
    struct AsteroidSection {
       double texX, texwidth;
