@@ -31,9 +31,9 @@ public:
 	
    void ConstructAsteroid(int x, int y, int width, int surftex);
    void Draw(int viewadjust_x, int viewadjust_y) const;
-   bool CheckCollision(Ship& ship);
-   LineSegment GetUpBoundary(int poly);
-   LineSegment GetDownBoundary(int poly);
+   bool CheckCollision(const Ship& ship) const;
+   LineSegment GetUpBoundary(int poly) const;
+   LineSegment GetDownBoundary(int poly) const;
 
    static const int MAX_ASTEROID_WIDTH = 15;
 	

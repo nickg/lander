@@ -157,8 +157,9 @@ private:
 
    // Asteroids
    static const int MAX_ASTEROIDS = 50;
-   Asteroid asteroids[MAX_ASTEROIDS];
-   int asteroidcount;
+   typedef vector<Asteroid> AsteroidList;
+   typedef AsteroidList::iterator AsteroidListIt;
+   AsteroidList asteroids_;
 
    // Electric gate things
    static const int MAX_GATEWAYS = 4;

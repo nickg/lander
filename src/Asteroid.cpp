@@ -163,7 +163,7 @@ void Asteroid::GenerateDisplayList(int texidx)
 //
 // Returns the line segment which defines the top of the given Poly.
 //
-LineSegment Asteroid::GetUpBoundary(int poly)
+LineSegment Asteroid::GetUpBoundary(int poly) const
 {
    return LineSegment
       (xpos*OBJ_GRID_SIZE + uppolys[poly].points[1].x,
@@ -175,7 +175,7 @@ LineSegment Asteroid::GetUpBoundary(int poly)
 //
 // Returns the line segment which defines the bottom of the given Poly.
 //
-LineSegment Asteroid::GetDownBoundary(int poly)
+LineSegment Asteroid::GetDownBoundary(int poly) const
 {
    return LineSegment
       (xpos*OBJ_GRID_SIZE + downpolys[poly].points[1].x,
@@ -194,7 +194,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
    glCallList(display_list);
 } 
 
-bool Asteroid::CheckCollision(Ship& ship)
+bool Asteroid::CheckCollision(const Ship& ship) const
 {
    // Look at polys
    for (int k = 0; k < GetWidth(); k++) {

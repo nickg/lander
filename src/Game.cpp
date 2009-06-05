@@ -234,9 +234,12 @@ void Game::Process()
    
    // Check for collisions with asteroids
    LineSegment l1, l2;
-   for (int i = 0; i < asteroidcount; i++) {
-      if (asteroids[i].ObjectInScreen(&viewport)) {
-         if (asteroids[i].CheckCollision(ship)) {
+   for (AsteroidListIt it = asteroids_.begin();
+        it != asteroids_.end(); ++it) {
+      const Asteroid& a = *it;
+      
+      if (a.ObjectInScreen(&viewport)) {
+         if (a.CheckCollision(ship)) {
             // Crashed
             if (state == gsInGame) {
                // Destroy the ship
@@ -448,12 +451,14 @@ void Game::MakeKeys()
 
 void Game::MakeAsteroids(int surftex)
 {
-   asteroidcount = 2 + level*2 + rand()%(level+3);
-   if (asteroidcount > MAX_ASTEROIDS)
-      asteroidcount = MAX_ASTEROIDS;
-   cout << "  Asteroids: " << asteroidcount << endl;
+   int asteroidCount = 2 + level*2 + rand()%(level+3);
+   if (asteroidCount > MAX_ASTEROIDS)
+      asteroidCount = MAX_ASTEROIDS;
+   cout << "  Asteroids: " << asteroidCount << endl;
+
+   asteroids_.clear();
    
-   for (int i = 0; i < asteroidcount; i++) {
+   for (int i = 0; i < asteroidCount; i++) {
       // Allocate space, check for timeout
       int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
       if (!objgrid.AllocFreeSpace(x, y, width, 4)) {
@@ -462,7 +467,9 @@ void Game::MakeAsteroids(int surftex)
       }
       
       // Generate the asteroid
-      asteroids[i].ConstructAsteroid(x, y, width, surftex);			
+      Asteroid a;
+      a.ConstructAsteroid(x, y, width, surftex);
+      asteroids_.push_back(a);
    }
 }
 
@@ -619,9 +626,10 @@ void Game::Display()
    surface.Display();
 
    // Draw the asteroids
-   for (int i = 0; i < asteroidcount; i++) {
-      if (asteroids[i].ObjectInScreen(&viewport))
-         asteroids[i].Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
+   for (AsteroidListIt it = asteroids_.begin();
+        it != asteroids_.end(); ++it) {
+      if ((*it).ObjectInScreen(&viewport))
+         (*it).Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
    }
 
    // Draw the keys
