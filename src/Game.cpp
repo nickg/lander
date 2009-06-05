@@ -20,7 +20,6 @@
 #include "Game.hpp"
 #include "Menu.hpp"
 #include "HighScores.hpp"
-#include "LoadOnce.hpp"
 #include "Input.hpp"
 #include "ConfigFile.hpp"
 
@@ -798,16 +797,12 @@ void Game::Display()
    }
 }
 
-Image* FuelMeter::fuelMeterImage = NULL;
-Texture* FuelMeter::fuelBarTexture = NULL;
-
 FuelMeter::FuelMeter()
-   : fuel(0), maxfuel(1)
+   : fuelMeterImage_("images/fuelmeter.png"),
+     fuelBarTexture_(LoadTexture("images/fuelbar.png")),
+     fuel(0), maxfuel(1)
 {
-   LOAD_ONCE {
-      fuelMeterImage = new Image("images/fuelmeter.png");
-      fuelBarTexture = new Texture("images/fuelbar.png");
-   }
+   
 }
 
 void FuelMeter::Display()
@@ -819,7 +814,7 @@ void FuelMeter::Display()
    glEnable(GL_BLEND);
    glDisable(GL_DEPTH_TEST);
    glColor3f(1.0f, 1.0f, 1.0f);
-   glBindTexture(GL_TEXTURE_2D, fuelBarTexture->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, fuelBarTexture_->GetGLTexture());
    glLoadIdentity();
    glBegin(GL_QUADS);
      glTexCoord2f(1.0f-texsize, 1.0f);
@@ -832,9 +827,9 @@ void FuelMeter::Display()
      glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y + 32);
    glEnd();
 
-   int draw_x = opengl.GetWidth() - fuelMeterImage->GetWidth() - 10;
+   int draw_x = opengl.GetWidth() - fuelMeterImage_.GetWidth() - 10;
    int draw_y = FUELBAR_Y;
-   fuelMeterImage->Draw(draw_x, draw_y);
+   fuelMeterImage_.Draw(draw_x, draw_y);
 }
 
 void FuelMeter::Refuel(int howmuch)
@@ -854,15 +849,10 @@ bool FuelMeter::OutOfFuel() const
    return fuel <= 0;
 }
 
-Image* SpeedMeter::speedMeterImage = NULL;
-
 SpeedMeter::SpeedMeter(Ship* ship)
-   : ship(ship)
+   : speedMeterImage_("images/speedmeter.png"),
+     ship(ship)
 {
-   LOAD_ONCE {
-      speedMeterImage = new Image("images/speedmeter.png");
-   }
-
    speedbar.x = 12;
    speedbar.y = 40;
    speedbar.width = 124;
@@ -888,7 +878,7 @@ void SpeedMeter::Display()
 
    OpenGL::GetInstance().Draw(&speedbar);
 
-   speedMeterImage->Draw(10, 40);
+   speedMeterImage_.Draw(10, 40);
 }
 
 bool SpeedMeter::SafeLandingSpeed() const
