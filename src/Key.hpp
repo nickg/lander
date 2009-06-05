@@ -18,10 +18,9 @@
 #ifndef INC_KEY_HPP
 #define INC_KEY_HPP
 
-#include "ObjectGrid.hpp"
-#include "Viewport.hpp"
-#include "Ship.hpp"
+#include "GameObjFwd.hpp"
 #include "AnimatedImage.hpp"
+#include "ObjectGrid.hpp"
 
 enum ArrowColour { acBlue, acRed, acYellow, acPink, acGreen };
 
@@ -44,13 +43,11 @@ private:
    int rotcount;
    float alpha;
    bool active;
-   AnimatedImage* image;
-   Image* arrow;
+   AnimatedImage image;
+   Image arrow;
 
-   static AnimatedImage* blueImage, *redImage, *yellowImage,
-      *pinkImage, *greenImage;
-   static Image* blueArrow, *redArrow, *yellowArrow,
-      *pinkArrow, *greenArrow;
+   static string KeyFileName(ArrowColour col);
+   static string ArrowFileName(ArrowColour col);
 };
 
 #endif

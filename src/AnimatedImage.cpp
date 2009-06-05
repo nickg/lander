@@ -17,18 +17,18 @@
 
 #include "AnimatedImage.hpp"
 
-AnimatedImage::AnimatedImage(const char* file, int frameWidth, int frameHeight,
-                             int frameCount)
-   : Image(file), frameWidth(frameWidth), frameHeight(frameHeight),
+AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
+                             int frameHeight, int frameCount)
+   : Image(fileName), frameWidth(frameWidth), frameHeight(frameHeight),
      frameCount(frameCount)
 {
    if (frameCount == 0) {
       if (Image::GetWidth() % frameWidth != 0) {
-         cerr << "Warning: " << file << " with frame width " << frameWidth
+         cerr << "Warning: " << fileName << " with frame width " << frameWidth
               << " does not have whole number of frames" << endl;
       }
       if (Image::GetHeight() % frameHeight != 0) {
-         cerr << "Warning: " << file << " with frame height " << frameHeight
+         cerr << "Warning: " << fileName << " with frame height " << frameHeight
               << " does not have whole number of frames" << endl;
       }
       this->frameCount = FramesPerRow() * FramesPerCol();

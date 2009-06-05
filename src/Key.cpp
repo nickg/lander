@@ -17,74 +17,28 @@
 
 #include "Key.hpp"
 #include "OpenGL.hpp"
-#include "LoadOnce.hpp"
-
-AnimatedImage* Key::blueImage = NULL;
-AnimatedImage* Key::redImage = NULL;
-AnimatedImage* Key::greenImage = NULL;
-AnimatedImage* Key::yellowImage = NULL;
-AnimatedImage* Key::pinkImage = NULL;
-Image* Key::blueArrow = NULL;
-Image* Key::redArrow = NULL;
-Image* Key::greenArrow = NULL;
-Image* Key::yellowArrow = NULL;
-Image* Key::pinkArrow = NULL;
+#include "Viewport.hpp"
+#include "ObjectGrid.hpp"
+#include "Ship.hpp"
 
 Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
    : StaticObject(xpos, ypos, 1, 1),
-     active(active)
-{
-   // Static initialisation
-   LOAD_ONCE {
-      blueImage = new AnimatedImage("images/keyblue.png", 32, 32, KEY_FRAMES);
-      redImage = new AnimatedImage("images/keyred.png", 32, 32, KEY_FRAMES);
-      greenImage = new AnimatedImage("images/keygreen.png", 32, 32, KEY_FRAMES);
-      yellowImage = new AnimatedImage("images/keyyellow.png", 32, 32, KEY_FRAMES);
-      pinkImage = new AnimatedImage("images/keypink.png", 32, 32, KEY_FRAMES);
-
-      blueArrow = new Image("images/arrowblue.png");
-      redArrow = new Image("images/arrowred.png");
-      greenArrow = new Image("images/arrowgreen.png");
-      yellowArrow = new Image("images/arrowyellow.png");
-      pinkArrow = new Image("images/arrowpink.png");
-   }
-   
+     active(active),
+     image(KeyFileName(acol), 32, 32, KEY_FRAMES),
+     arrow(ArrowFileName(acol))
+{  
    alpha = active ? 1.0 : 0.0;
 
    rotcount = KEY_ROTATION_SPEED;
-
-   // Allocate arrow images
-   switch (acol) {
-   case acBlue:
-      arrow = blueArrow;
-      image = blueImage;
-      break;
-   case acRed:
-      arrow = redArrow;
-      image = redImage;
-      break;
-   case acYellow:
-      arrow = yellowArrow;
-      image = yellowImage;
-      break;
-   case acPink:
-      arrow = pinkArrow;
-      image = pinkImage;
-      break;
-   case acGreen:
-      arrow = greenArrow;
-      image = greenImage;
-      break;
-   }
 }
 
 void Key::DrawKey(Viewport* viewport)
 {
    int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;
-   image->Draw(draw_x, draw_y, 0.0, 1.0, alpha);
+   image.Draw(draw_x, draw_y, 0.0, 1.0, alpha);
    if (--rotcount == 0) {
-      image->NextFrame();
+      image.NextFrame();
       rotcount = KEY_ROTATION_SPEED;
    }
 
@@ -119,19 +73,19 @@ void Key::DrawArrow(Viewport* viewport)
          angle = 0;
       }
 
-      arrow->Draw(ax, ay, angle);
+      arrow.Draw(ax, ay, angle);
    }
 }
 
 void Key::DrawIcon(int offset, float minAlpha)
 {
-   int prevFrame = image->GetFrame();
-   image->SetFrame(5);
+   const int prevFrame = image.GetFrame();
+   image.SetFrame(5);
    
    double drawAlpha = alpha > minAlpha ? alpha : minAlpha;
-   image->Draw(offset, 10, 0.0, 1.0, drawAlpha);
+   image.Draw(offset, 10, 0.0, 1.0, drawAlpha);
 
-   image->SetFrame(prevFrame);   
+   image.SetFrame(prevFrame);   
 }
 
 bool Key::CheckCollision(Ship& ship) const
@@ -142,4 +96,40 @@ bool Key::CheckCollision(Ship& ship) const
        OBJ_GRID_SIZE - 6,
        OBJ_GRID_SIZE - 6);
    return active && collide;
+}
+
+string Key::KeyFileName(ArrowColour col)
+{
+   switch (col) {
+   case acBlue:
+      return "images/keyblue.png";
+   case acRed:
+      return "images/keyred.png";
+   case acYellow:
+      return "images/keyyellow.png";
+   case acPink:
+      return "images/keypink.png";
+   case acGreen:
+      return "images/keygreen.png";
+   default:
+      assert(false);
+   }
+}
+
+string Key::ArrowFileName(ArrowColour col)
+{
+   switch (col) {
+   case acBlue:
+      return "images/arrowblue.png";
+   case acRed:
+      return "images/arrowred.png";
+   case acYellow:
+      return "images/arrowyellow.png";
+   case acPink:
+      return "images/arrowpink.png";
+   case acGreen:
+      return "images/arrowgreen.png";
+   default:
+      assert(false);
+   }
 }
