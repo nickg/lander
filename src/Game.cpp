@@ -798,8 +798,8 @@ void Game::Display()
 }
 
 FuelMeter::FuelMeter()
-   : fuelMeterImage_("images/fuelmeter.png"),
-     fuelBarTexture_(LoadTexture("images/fuelbar.png")),
+   : fuelMeterImage("images/fuelmeter.png"),
+     fuelBarTexture(LoadTexture("images/fuelbar.png")),
      fuel(0), maxfuel(1)
 {
    
@@ -814,7 +814,7 @@ void FuelMeter::Display()
    glEnable(GL_BLEND);
    glDisable(GL_DEPTH_TEST);
    glColor3f(1.0f, 1.0f, 1.0f);
-   glBindTexture(GL_TEXTURE_2D, fuelBarTexture_->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, fuelBarTexture->GetGLTexture());
    glLoadIdentity();
    glBegin(GL_QUADS);
      glTexCoord2f(1.0f-texsize, 1.0f);
@@ -827,9 +827,9 @@ void FuelMeter::Display()
      glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y + 32);
    glEnd();
 
-   int draw_x = opengl.GetWidth() - fuelMeterImage_.GetWidth() - 10;
+   int draw_x = opengl.GetWidth() - fuelMeterImage.GetWidth() - 10;
    int draw_y = FUELBAR_Y;
-   fuelMeterImage_.Draw(draw_x, draw_y);
+   fuelMeterImage.Draw(draw_x, draw_y);
 }
 
 void FuelMeter::Refuel(int howmuch)
@@ -850,7 +850,7 @@ bool FuelMeter::OutOfFuel() const
 }
 
 SpeedMeter::SpeedMeter(Ship* ship)
-   : speedMeterImage_("images/speedmeter.png"),
+   : speedMeterImage("images/speedmeter.png"),
      ship(ship)
 {
    speedbar.x = 12;
@@ -878,7 +878,7 @@ void SpeedMeter::Display()
 
    OpenGL::GetInstance().Draw(&speedbar);
 
-   speedMeterImage_.Draw(10, 40);
+   speedMeterImage.Draw(10, 40);
 }
 
 bool SpeedMeter::SafeLandingSpeed() const

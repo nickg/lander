@@ -55,8 +55,8 @@ public:
    int GetFuel() const { return fuel; }
    
 private:
-   Image fuelMeterImage_;
-   Texture* fuelBarTexture_;
+   Image fuelMeterImage;
+   Texture* fuelBarTexture;
 
    static const int FUELBAR_Y;
    
@@ -72,7 +72,7 @@ public:
    void Display();
 
 private:
-   Image speedMeterImage_;
+   Image speedMeterImage;
 
    static const float LAND_SPEED;
    
