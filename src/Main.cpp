@@ -55,9 +55,6 @@ namespace {
    }
 }
 
-// See LoadOnce.hpp
-int _forceReload = 1;
-
 //
 // Recreate all the screens. After a resolution switch for
 // example.
@@ -66,7 +63,6 @@ void RecreateScreens()
 {
    DestroyScreens();
 
-   _forceReload++;
    menu = new MainMenu();
    game = new Game();
    scores = new HighScores();

@@ -18,7 +18,6 @@
 
 #include "Platform.hpp"
 #include "Missile.hpp"
-#include "LoadOnce.hpp"
 #include "Image.hpp"
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"

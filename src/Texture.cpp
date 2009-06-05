@@ -33,12 +33,9 @@ namespace {
 Texture* LoadTexture(const string& fileName)
 {
    TextureCache::iterator it = theCache.find(fileName);
-   if (it != theCache.end()) {
-      cout << "Reading from cache: " << fileName << endl;
+   if (it != theCache.end())
       return (*it).second;
-   }
    else {
-      cout << "Loading from file: " << fileName << endl;
       Texture* tex = new Texture(fileName.c_str());
       theCache[fileName] = tex;
       return tex;
@@ -103,7 +100,6 @@ Texture::~Texture()
 {
    glDeleteTextures(1, &texture);
 }
-
 
 bool Texture::IsPowerOfTwo(int n)
 {
