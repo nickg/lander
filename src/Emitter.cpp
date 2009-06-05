@@ -19,9 +19,6 @@
 
 #include "Emitter.hpp"
 #include "OpenGL.hpp"
-#include "LoadOnce.hpp"
-
-Texture* Emitter::texture = NULL;
 
 //
 // Creates a new particle emitter.
@@ -40,12 +37,9 @@ Emitter::Emitter(int x, int y, float r, float g, float b, bool createnew,
                  float max_speed, float size, float slowdown)
   : partsize(size), r(r), g(g), b(b), deviation(deviation), xg(xg), yg(yg),
     life(life), maxspeed(max_speed), xpos((float)x), ypos((float)y),
-    slowdown(slowdown), createrate(128.0f), xi_bias(0.0f), yi_bias(0.0f)
-{
-   LOAD_ONCE {
-      texture = new Texture("images/particle.png");
-   }
-   
+    slowdown(slowdown), createrate(128.0f), xi_bias(0.0f), yi_bias(0.0f),
+    texture_(LoadTexture("images/particle.png"))
+{   
    // Set up the particles
    for (int i = 0; i < MAX_PARTICLES; i++) {
       if (createnew)
@@ -106,7 +100,7 @@ void Emitter::Draw(float adjust_x, float adjust_y) const
    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
    glLoadIdentity();
   
-   glBindTexture(GL_TEXTURE_2D, texture->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, texture_->GetGLTexture());
 			
    for (int i = 0; i < MAX_PARTICLES; i++)	{
       if (particle[i].active)	{

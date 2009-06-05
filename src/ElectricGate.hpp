@@ -67,8 +67,7 @@ private:
    bool vertical;
    Viewport* viewport;
    Lightning lightning;
-
-   static Image* gateImage;
+   Image gateImage;
 };
 
 #endif

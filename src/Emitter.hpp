@@ -31,8 +31,10 @@
 //
 class Emitter {
 public:
-   Emitter(int x, int y, float r, float g, float b, bool createnew=true, float deviation=0.0f, float xg=0.0f, float yg=0.0f,
-           float life=1.0f, float max_speed=10.0f, float size=2.0f, float slowdown=2.0f);
+   Emitter(int x, int y, float r, float g, float b, bool createnew=true,
+           float deviation=0.0f, float xg=0.0f, float yg=0.0f,
+           float life=1.0f, float max_speed=10.0f, float size=2.0f,
+           float slowdown=2.0f);
    virtual ~Emitter() { }
 
    void Draw(float adjust_x=0.0f, float adjust_y=0.0f) const;
@@ -59,7 +61,7 @@ protected:
       float xg, yg;
    } particle[MAX_PARTICLES];
    
-   static Texture* texture;
+   Texture* texture_;
 };
 
 

@@ -40,7 +40,8 @@ private:
    int index, length, ypos;
    Viewport* viewport;
    
-   static Texture* landTexture, *noLandTexture;
+   Texture* landTexture_;
+   Texture* noLandTexture_;
 };
 
 typedef vector<LandingPad> LandingPadList;

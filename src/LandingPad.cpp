@@ -17,26 +17,19 @@
 
 #include "LandingPad.hpp"
 #include "Surface.hpp"
-#include "LoadOnce.hpp"
 #include "OpenGL.hpp"
 #include "Texture.hpp"
 #include "Viewport.hpp"
 
-Texture* LandingPad::landTexture = NULL;
-Texture* LandingPad::noLandTexture = NULL;
-
 LandingPad::LandingPad(Viewport* v, int index, int length)
-   : index(index), length(length), viewport(v)
-{
-   LOAD_ONCE {
-      landTexture = new Texture("images/landingpad.png");
-      noLandTexture = new Texture("images/landingpadred.png");
-   }
-   
+   : index(index), length(length), viewport(v),
+     landTexture_(LoadTexture("images/landingpad.png")),
+     noLandTexture_(LoadTexture("images/landingpadred.png"))
+{   
    quad.x = index * Surface::SURFACE_SIZE;
    quad.width = length * Surface::SURFACE_SIZE;
    quad.height = 16;
-   quad.uTexture = landTexture->GetGLTexture();
+   quad.uTexture = landTexture_->GetGLTexture();
 }
 
 //
@@ -45,7 +38,7 @@ LandingPad::LandingPad(Viewport* v, int index, int length)
 //
 void LandingPad::Draw(bool locked)
 {
-   quad.uTexture = (locked ? noLandTexture : landTexture)->GetGLTexture();
+   quad.uTexture = (locked ? noLandTexture_ : landTexture_)->GetGLTexture();
    quad.x = index * Surface::SURFACE_SIZE - viewport->GetXAdjust();
    quad.y = viewport->GetLevelHeight() - viewport->GetYAdjust()
       - Surface::MAX_SURFACE_HEIGHT + ypos;

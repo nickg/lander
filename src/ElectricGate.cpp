@@ -18,17 +18,11 @@
 
 #include "ElectricGate.hpp"
 #include "Ship.hpp"
-#include "LoadOnce.hpp"
-
-Image* ElectricGate::gateImage = NULL;
 
 ElectricGate::ElectricGate(Viewport* v, int length, bool vertical, int x, int y)
-   : StaticObject(x, y), length(length), vertical(vertical), viewport(v)
+   : StaticObject(x, y), length(length), vertical(vertical), viewport(v),
+     gateImage("images/gateway.png")
 {
-   LOAD_ONCE {
-      gateImage = new Image("images/gateway.png");
-   }
-
    lightning.Build(length * OBJ_GRID_SIZE, vertical);
    
    timer = rand() % 70 + 10;
@@ -67,7 +61,7 @@ void ElectricGate::Draw()
    // Draw first sphere
    int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
-   gateImage->Draw(draw_x, draw_y);
+   gateImage.Draw(draw_x, draw_y);
 
    // Draw second sphere
    if (vertical) {
@@ -78,7 +72,7 @@ void ElectricGate::Draw()
       draw_x = (xpos+length)*OBJ_GRID_SIZE - viewport->GetXAdjust();
       draw_y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP - viewport->GetYAdjust();
    }
-   gateImage->Draw(draw_x, draw_y);
+   gateImage.Draw(draw_x, draw_y);
 
    // Draw the electricity stuff
    if (--timer < GATEWAY_ACTIVE) { 
