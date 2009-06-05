@@ -23,7 +23,8 @@
 
 Texture* Asteroid::surfTexture[Surface::NUM_SURF_TEX];
 
-Asteroid::Asteroid()
+Asteroid::Asteroid(int x, int y, int width, int surftex)
+   : StaticObject(x, y, width, 4)
 {
    LOAD_ONCE {
       surfTexture[0] = new Texture("images/dirt_surface2.png");
@@ -33,14 +34,6 @@ Asteroid::Asteroid()
    }
 
    display_list = glGenLists(1);
-}
-
-void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
-{
-   xpos = x;
-   ypos = y;
-   this->width = width;
-   height = 4;
    
    int change, texloop=0;
 
@@ -116,6 +109,11 @@ void Asteroid::ConstructAsteroid(int x, int y, int width, int surftex)
    downpolys[0].points[1].y = 0;
 
    GenerateDisplayList(surftex);
+}
+
+Asteroid::~Asteroid()
+{
+   //glDeleteLists(display_list, 1);
 }
 
 void Asteroid::GenerateDisplayList(int texidx)

@@ -23,6 +23,8 @@
 
 #include <time.h>
 
+#include <boost/lexical_cast.hpp>
+
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -183,6 +185,14 @@ void OpenGL::DrawGLScene()
       glLoadIdentity();
       
       ScreenManager::GetInstance().Display();
+
+      // Check for OpenGL errors
+      GLenum error = glGetError();
+      if (error != GL_NO_ERROR) {   
+         throw runtime_error
+            ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
+      }
+      
       SDL_GL_SwapBuffers();
       
       if (deferredScreenShot) {

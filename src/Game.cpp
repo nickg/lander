@@ -467,9 +467,7 @@ void Game::MakeAsteroids(int surftex)
       }
       
       // Generate the asteroid
-      Asteroid a;
-      a.ConstructAsteroid(x, y, width, surftex);
-      asteroids_.push_back(a);
+      asteroids_.push_back(Asteroid(x, y, width, surftex));
    }
 }
 

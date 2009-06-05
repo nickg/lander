@@ -26,10 +26,9 @@
 
 class Asteroid : public StaticObject {
 public:
-   Asteroid();
-   ~Asteroid() {}
+   Asteroid(int x, int y, int width, int surftex);
+   ~Asteroid();
 	
-   void ConstructAsteroid(int x, int y, int width, int surftex);
    void Draw(int viewadjust_x, int viewadjust_y) const;
    bool CheckCollision(const Ship& ship) const;
    LineSegment GetUpBoundary(int poly) const;
