@@ -32,8 +32,6 @@
 #include <algorithm>
 #include <cmath>
 
-using namespace std;
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #else
@@ -56,7 +54,6 @@ using namespace std;
 #endif
 
 #include <boost/tr1/memory.hpp>
-using namespace std::tr1;
 
 #define msleep(n) Sleep(n)
 
@@ -135,6 +132,9 @@ using namespace std::tr1;
 #include "SDL.h"
 
 #endif /* #ifdef LINUX */
+
+using namespace std;
+using namespace std::tr1;
 
 void RecreateScreens();
 string LocateResource(const string& file);

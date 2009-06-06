@@ -17,6 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
+#include "Platform.hpp"
 #include "Game.hpp"
 #include "Menu.hpp"
 #include "HighScores.hpp"
@@ -195,7 +196,13 @@ string GetConfigDir()
    return string(getenv("HOME")) + "/";
 #else
 #ifdef WIN32
-   return string(getenv("UserProfile")) + "\\";
+   using namespace boost::filesystem;
+
+   path appdata(getenv("APPDATA"));
+   appdata /= "doof.me.uk";
+   appdata /= "Lander";
+   create_directories(appdata);
+   return appdata.file_string() + "\\";
 #else
 #error "Need to port GetConfigDir to this platform"
 #endif

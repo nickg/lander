@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Nick\My Documents\SDL-1.2.13\include&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_image-1.2.7\include&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_mixer-1.2.8\include&quot;;&quot;C:\Program Files\GnuWin32\include\freetype2&quot;;&quot;C:\Program Files\GnuWin32\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VERSION=\&quot;0.5.3\&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;VERSION=\&quot;0.5.3\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib glu32.lib SDL.lib freetype.lib SDL_mixer.lib SDL_image.lib SDLmain.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib SDL.lib freetype.lib SDL_mixer.lib SDL_image.lib SDLmain.lib libboost_filesystem-vc90-mt-gd-1_37.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\Nick\My Documents\SDL-1.2.13\lib&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_image-1.2.7\lib&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_mixer-1.2.8\lib&quot;;&quot;C:\Program Files\GnuWin32\lib&quot;"
 				GenerateDebugInformation="true"
@@ -119,7 +119,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\Nick\My Documents\SDL-1.2.13\include&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_image-1.2.7\include&quot;;&quot;C:\Documents and Settings\Nick\My Documents\SDL_mixer-1.2.8\include&quot;;&quot;C:\Program Files\GnuWin32\include\freetype2&quot;;&quot;C:\Program Files\GnuWin32\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;VERSION=\&quot;0.5.3\&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;VERSION=\&quot;0.5.3\&quot;"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
