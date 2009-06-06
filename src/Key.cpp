@@ -21,6 +21,9 @@
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
 
+#include <string>
+#include <cassert>
+
 Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
    : StaticObject(xpos, ypos, 1, 1),
      active(active),

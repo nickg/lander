@@ -20,18 +20,6 @@
 #ifndef INC_PLATFORM_HPP
 #define INC_PLATFORM_HPP
 
-#include <cassert>
-#include <stdexcept>
-#include <string>
-#include <vector>
-#include <list>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <map>
-#include <algorithm>
-#include <cmath>
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #else
@@ -101,6 +89,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+// Probably using GCC
+#include <tr1/memory>
 
 #endif /* #ifdef WIN32 */
 

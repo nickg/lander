@@ -21,6 +21,8 @@
 #include "Input.hpp"
 #include "InterfaceSounds.hpp"
 
+#include <fstream>
+
 #include <boost/filesystem.hpp>
 
 const float HighScores::FADE_IN_SPEED(0.2f);

@@ -22,6 +22,8 @@
 
 #include "Platform.hpp"
 
+#include <map>
+
 // 
 // A screen within the game that can be displayed.
 //

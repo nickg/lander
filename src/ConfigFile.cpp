@@ -17,6 +17,10 @@
 
 #include "ConfigFile.hpp"
 
+#include <stdexcept>
+#include <sstream>
+#include <fstream>
+
 ConfigFile::ConfigFile(string filename)
    : dirty(false), filename(filename)
 {

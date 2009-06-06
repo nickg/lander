@@ -20,6 +20,8 @@
 #include "OpenGL.hpp"
 #include "Ship.hpp"
 
+#include <string>
+
 Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
    : objgrid(o), viewport(v),
      image("images/mine.png", 64, 64, MINE_FRAME_COUNT)

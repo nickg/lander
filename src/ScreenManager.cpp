@@ -20,6 +20,9 @@
 #include "ScreenManager.hpp"
 #include "OpenGL.hpp"
 
+#include <string>
+#include <cassert>
+#include <stdexcept>
 
 ScreenManager::ScreenManager()
 {

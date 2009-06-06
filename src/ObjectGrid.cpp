@@ -17,6 +17,8 @@
 
 #include "ObjectGrid.hpp"
 
+#include <cassert>
+
 
 ObjectGrid::ObjectGrid()
   : grid(NULL), width(0), height(0)

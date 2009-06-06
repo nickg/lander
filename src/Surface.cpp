@@ -18,6 +18,8 @@
 #include "Surface.hpp"
 #include "Ship.hpp"
 
+#include <string>
+
 const int Surface::VARIANCE(65);     // Bumpyness of landscape
 const int Surface::MAX_SURFACE_HEIGHT(300);
 const int Surface::MIN_SURFACE_HEIGHT(10);

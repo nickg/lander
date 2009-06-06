@@ -25,6 +25,8 @@
 #include "ConfigFile.hpp"
 #include "SoundEffect.hpp"
 
+#include <iostream>
+
 #ifdef MACOSX
 namespace CF {
 #include "CoreFoundation/CoreFoundation.h"

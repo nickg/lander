@@ -24,6 +24,8 @@
 #include "Image.hpp"
 #include "GameObjFwd.hpp"
 
+#include <list>
+
 //
 // A line strip used for rendering lightning. 
 //

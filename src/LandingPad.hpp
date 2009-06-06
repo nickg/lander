@@ -21,11 +21,11 @@
 
 #include "GameObjFwd.hpp"
 #include "GraphicsFwd.hpp"
-
 #include "OpenGL.hpp"
 
-class LandingPad
-{
+#include <vector>
+
+class LandingPad {
 public:
    LandingPad(Viewport* v, int index, int length);
 

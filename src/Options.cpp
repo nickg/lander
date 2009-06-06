@@ -23,6 +23,8 @@
 #include "SoundEffect.hpp"
 #include "InterfaceSounds.hpp"
 
+#include <cassert>
+
 const double Options::FADE_SPEED = 0.1;
 
 Options::Options()

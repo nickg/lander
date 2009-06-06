@@ -18,6 +18,10 @@
 #include "SoundEffect.hpp"
 #include "ConfigFile.hpp"
 
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+
 int SoundEffect::loadCount(0);
 int SoundEffect::audioRate(44100);
 int SoundEffect::audioChannels(2);
@@ -61,7 +65,6 @@ SoundEffect::~SoundEffect()
 
    if (enabled)
       Mix_FreeChunk(sound);
-   
    
    if (--loadCount == 0)
       Mix_CloseAudio();

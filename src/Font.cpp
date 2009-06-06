@@ -19,6 +19,9 @@
 
 #include "Font.hpp"
 
+#include <string>
+#include <stdexcept>
+
 int Font::fontRefCount = 0;
 FT_Library Font::library;
 

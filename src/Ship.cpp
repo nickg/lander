@@ -18,6 +18,9 @@
 #include "Ship.hpp"
 #include "OpenGL.hpp"
 
+#include <string>
+#include <cmath>
+
 //
 // Defines a simplified polygon representing the ship.
 //

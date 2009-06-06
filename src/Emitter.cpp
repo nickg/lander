@@ -20,6 +20,9 @@
 #include "Emitter.hpp"
 #include "OpenGL.hpp"
 
+#include <cmath>
+#include <string>
+
 //
 // Creates a new particle emitter.
 //	x, y -> Starting position.

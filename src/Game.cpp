@@ -23,6 +23,9 @@
 #include "Input.hpp"
 #include "ConfigFile.hpp"
 
+#include <iostream>
+#include <cassert>
+
 //
 // Constants affecting level generation.
 //

@@ -17,6 +17,10 @@
 
 #include "AnimatedImage.hpp"
 
+#include <iostream>
+#include <cassert>
+#include <stdexcept>
+
 AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
                              int frameHeight, int frameCount)
    : Image(fileName), frameWidth(frameWidth), frameHeight(frameHeight),

@@ -24,6 +24,8 @@
 #include "HighScores.hpp"
 #include "InterfaceSounds.hpp"
 
+#include <cmath>
+
 const double MenuStar::ROTATE_SPEED(0.005);
 const double MenuStar::ENLARGE_RATE(0.001);
 const double MenuStar::INIT_SCALE(0.01);

@@ -18,6 +18,8 @@
 #include "Fade.hpp"
 #include "OpenGL.hpp"
 
+#include <cassert>
+
 const double Fade::DEFAULT_FADE_SPEED(0.05);
 
 Fade::Fade(double s)

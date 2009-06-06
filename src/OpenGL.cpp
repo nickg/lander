@@ -21,7 +21,10 @@
 #include "Input.hpp"
 #include "ScreenManager.hpp"
 
-#include <time.h>
+#include <stdexcept>
+#include <ctime>
+#include <iostream>
+#include <cassert>
 
 #include <boost/lexical_cast.hpp>
 

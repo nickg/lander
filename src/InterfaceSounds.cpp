@@ -20,6 +20,8 @@
 #include "InterfaceSounds.hpp"
 #include "SoundEffect.hpp"
 
+#include <string>
+
 void InterfaceSounds::PlayBleep()
 {
    static SoundEffect bleepSound(LocateResource("sounds/bleep.wav"));

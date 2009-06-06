@@ -21,6 +21,8 @@
 #include "Texture.hpp"
 #include "Viewport.hpp"
 
+#include <string>
+
 LandingPad::LandingPad(Viewport* v, int index, int length)
    : index(index), length(length), viewport(v),
      landTexture_(LoadTexture("images/landingpad.png")),

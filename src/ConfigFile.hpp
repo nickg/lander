@@ -21,6 +21,9 @@
 
 #include "Platform.hpp"
 
+#include <string>
+#include <map>
+
 class ConfigFile {
 public:
    ConfigFile(string filename = ".lander.config");

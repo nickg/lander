@@ -19,6 +19,10 @@
 #include "OpenGL.hpp"
 
 #include <map>
+#include <string>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
 
 #include <SDL_image.h>
 

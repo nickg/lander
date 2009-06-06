@@ -19,6 +19,8 @@
 #include "ElectricGate.hpp"
 #include "Ship.hpp"
 
+#include <string>
+
 ElectricGate::ElectricGate(Viewport* v, int length, bool vertical, int x, int y)
    : StaticObject(x, y), length(length), vertical(vertical), viewport(v),
      gateImage("images/gateway.png")

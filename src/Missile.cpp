@@ -23,6 +23,7 @@
 #include "Ship.hpp"
 
 #include <cmath>
+#include <string>
 
 SoundEffect* Missile::fireSound(NULL);
 

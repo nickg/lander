@@ -20,6 +20,10 @@
 #include "OpenGL.hpp"
 #include "Ship.hpp"
 
+#include <string>
+#include <cassert>
+#include <stdexcept>
+
 namespace {
    // Called by shared_ptr when no more references to a display
    // list are held
