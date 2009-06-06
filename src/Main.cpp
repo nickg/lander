@@ -166,7 +166,7 @@ string LocateResource(const string& file)
    cfBase = CFStringCreateWithCString(NULL, copy, kCFStringEncodingASCII);
    cfExt = CFStringCreateWithCString(NULL, ext, kCFStringEncodingASCII);
    
-	free(copy); 
+   free(copy); 
 	
    mainBundle = CFBundleGetMainBundle();
     
