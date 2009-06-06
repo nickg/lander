@@ -189,8 +189,8 @@ void OpenGL::DrawGLScene()
       // Check for OpenGL errors
       GLenum error = glGetError();
       if (error != GL_NO_ERROR) {   
-         throw runtime_error
-            ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
+         //throw runtime_error
+         //   ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
       }
       
       SDL_GL_SwapBuffers();
@@ -350,6 +350,9 @@ bool OpenGL::IsTextureSizeSupported(int width, int height, int ncols, GLenum for
 
 bool OpenGL::InitGL()
 {
+   // Clear any error bit (this seems to be required on Windows??)
+   glGetError();
+
    // Set options
    glShadeModel(GL_SMOOTH);			        // Enable smooth shading
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);		// Black background
