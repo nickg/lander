@@ -360,10 +360,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\LoadOnce.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\Menu.hpp"
 				>
 			</File>
