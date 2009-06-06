@@ -20,10 +20,10 @@
 
 #include <cassert>
 
-const double Fade::DEFAULT_FADE_SPEED(0.05);
+const float Fade::DEFAULT_FADE_SPEED(0.05f);
 
-Fade::Fade(double s)
-   : state(fNone), alpha(0.0), speed(s)
+Fade::Fade(float s)
+   : state(fNone), alpha(0.0f), speed(s)
 {
    
 }
@@ -33,7 +33,7 @@ void Fade::BeginFadeIn()
    assert(state == fNone);
 
    state = fIn;
-   alpha = 1.0;
+   alpha = 1.0f;
 }
 
 void Fade::BeginFadeOut()
@@ -41,7 +41,7 @@ void Fade::BeginFadeOut()
    assert(state == fNone);
 
    state = fOut;
-   alpha = 0.0;
+   alpha = 0.0f;
 }
 
 bool Fade::Process()
@@ -49,7 +49,7 @@ bool Fade::Process()
    switch (state) {
    case fOut:
       alpha += speed;
-      if (alpha >= 1.0) {
+      if (alpha >= 1.0f) {
          state = fNone;
          return true;
       }
@@ -57,7 +57,7 @@ bool Fade::Process()
          return false;
    case fIn:
       alpha -= speed;
-      if (alpha <= 0.0) {
+      if (alpha <= 0.0f) {
          state = fNone;
          return true;
       }
@@ -70,17 +70,17 @@ bool Fade::Process()
 
 void Fade::Display()
 {
-   double w = OpenGL::GetInstance().GetWidth();
-   double h = OpenGL::GetInstance().GetHeight();
+   const int w = OpenGL::GetInstance().GetWidth();
+   const int h = OpenGL::GetInstance().GetHeight();
 
    glEnable(GL_BLEND);
    glDisable(GL_TEXTURE_2D);
-   glColor4d(0.0, 0.0, 0.0, alpha);
+   glColor4f(0.0f, 0.0f, 0.0f, alpha);
    glLoadIdentity();
    glBegin(GL_QUADS);
-   glVertex3d(0.0, 0.0, 0.0);
-   glVertex3d(0.0, h, 0.0);
-   glVertex3d(w, h, 0.0);
-   glVertex3d(w, 0.0, 0.0);
+   glVertex3i(0, 0, 0);
+   glVertex3i(0, h, 0);
+   glVertex3i(w, h, 0);
+   glVertex3i(w, 0, 0);
    glEnd();
 }

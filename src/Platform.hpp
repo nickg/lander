@@ -1,5 +1,5 @@
 //
-// Platform.hpp -- Platform specific includes.
+// Platform.hpp -- Platform specific hacks.
 // Copyright (C) 2006-2009  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
 #define DATADIR "."
 #endif
 
-// Windows specific constants and includes */
+// Windows specific constants and includes
 #ifdef WIN32
 
 #define WIN32_LEAN_AND_MEAN
@@ -49,7 +49,7 @@
 
 #define PATH_MAX  256
 
-// Don't have these on Windows for some reason */
+// Don't have these on Windows for some reason 
 #ifndef GL_BGRA
 #define GL_BGRA 0
 #endif
@@ -57,7 +57,7 @@
 #define GL_BGR 0
 #endif
 
-// Define safe snprintf, etc. for MSCV8 */
+// Define safe snprintf, etc. for MSCV8 
 #if (_MSC_VER >= 1400)
 
 #define USE_FOPEN_S
@@ -123,6 +123,8 @@
 #include "SDL.h"
 
 #endif /* #ifdef LINUX */
+
+#include <string>
 
 using namespace std;
 using namespace std::tr1;

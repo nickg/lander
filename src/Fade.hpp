@@ -22,9 +22,9 @@
 
 class Fade {
 public:
-   static const double DEFAULT_FADE_SPEED;
+   static const float DEFAULT_FADE_SPEED;
    
-   Fade(double s = DEFAULT_FADE_SPEED);
+   Fade(float s = DEFAULT_FADE_SPEED);
 
    void BeginFadeIn();
    void BeginFadeOut();
@@ -34,7 +34,7 @@ private:
    enum State { fNone, fIn, fOut };
 
    State state;
-   double alpha, speed;
+   float alpha, speed;
 };
 
 #endif
