@@ -49,6 +49,8 @@ public:
       void WriteOnStream(ostream& os);
       void ReadFromStream(istream& is);
 
+      bool operator<(const ScoreFile::ScoreEntry& rhs) const;
+
    private:
       char name[MAX_NAME];
       int score;    

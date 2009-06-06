@@ -292,9 +292,9 @@ string ScoreFile::GetHighScoreFile()
    return GetConfigDir() + ".lander.scores";
 }
 
-bool operator<(const ScoreFile::ScoreEntry& a, const ScoreFile::ScoreEntry& b)
+bool ScoreFile::ScoreEntry::operator<(const ScoreFile::ScoreEntry& rhs) const
 {
-   return a.GetScore() > b.GetScore();
+   return this->GetScore() > rhs.GetScore();
 }
 
 void ScoreFile::Sort()

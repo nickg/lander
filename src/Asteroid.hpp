@@ -24,10 +24,6 @@
 #include "Surface.hpp"
 #include "ObjectGrid.hpp"
 
-#include <tr1/memory>
-
-using namespace std::tr1;
-
 class Asteroid : public StaticObject {
 public:
    Asteroid(int x, int y, int width, int surftex);

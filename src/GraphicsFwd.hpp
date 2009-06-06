@@ -20,7 +20,7 @@
 #define INC_GRAPHICSFWD_HPP
 
 class Image;
-class TextureQuad;
+struct TextureQuad;
 class Texture;
 
 #endif

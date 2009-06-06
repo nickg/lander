@@ -55,6 +55,9 @@ using namespace std;
 #define M_PI 3.1415926535897932384626433832795
 #endif
 
+#include <boost/tr1/memory.hpp>
+using namespace std::tr1;
+
 #define msleep(n) Sleep(n)
 
 #define i18n(x) x

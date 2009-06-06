@@ -189,8 +189,8 @@ void OpenGL::DrawGLScene()
       // Check for OpenGL errors
       GLenum error = glGetError();
       if (error != GL_NO_ERROR) {   
-         throw runtime_error
-            ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
+         //throw runtime_error
+         //   ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
       }
       
       SDL_GL_SwapBuffers();
