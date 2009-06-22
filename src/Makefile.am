@@ -5,7 +5,7 @@ AM_CXXFLAGS=$(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall
 AM_LDFLAGS=$(LANDER_LIBS) $(SDL_LIBS) $(BOOST_FILESYSTEM_LIB) -lGLU $(LTLIBINTL)
 lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Font.cpp Font.hpp HighScores.cpp HighScores.hpp Input.cpp \
-	Input.hpp Platform.hpp LoadOnce.hpp GraphicsFwd.hpp \
+	Input.hpp Platform.hpp GraphicsFwd.hpp \
 	OpenGL.cpp OpenGL.hpp Menu.cpp Menu.hpp Emitter.cpp \
 	Emitter.hpp ScreenManager.cpp ScreenManager.hpp \
 	ObjectGrid.hpp ObjectGrid.cpp Asteroid.hpp Asteroid.cpp \

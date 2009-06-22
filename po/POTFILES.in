@@ -27,7 +27,6 @@ src/Viewport.cpp
 src/Asteroid.hpp
 src/Viewport.hpp
 src/Font.cpp
-src/LoadOnce.hpp
 src/Platform.hpp
 src/Key.hpp
 src/ConfigFile.hpp

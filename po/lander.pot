@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lander 0.5.3\n"
+"Project-Id-Version: lander 0.6.0\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2009-04-22 21:21+0100\n"
+"POT-Creation-Date: 2009-06-22 21:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,90 +16,90 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Main.cpp:137
+#: src/Main.cpp:141
 #, c-format
 msgid "Runtime Error: %s\n"
 msgstr ""
 
-#: src/Game.cpp:115 src/Game.cpp:752
+#: src/Game.cpp:117 src/Game.cpp:760
 #, c-format
 msgid "Score:  %d"
 msgstr ""
 
-#: src/Game.cpp:688
+#: src/Game.cpp:696
 msgid "Press SPACE to continue"
 msgstr ""
 
-#: src/Game.cpp:746
+#: src/Game.cpp:754
 msgid "Land  now"
 msgstr ""
 
-#: src/Game.cpp:768
+#: src/Game.cpp:776
 #, c-format
 msgid "Level  %d"
 msgstr ""
 
-#: src/Game.cpp:787
+#: src/Game.cpp:795
 msgid "Paused"
 msgstr ""
 
-#: src/HighScores.cpp:177
+#: src/HighScores.cpp:184
 msgid "Press SPACE or FIRE to return"
 msgstr ""
 
-#: src/HighScores.cpp:192
+#: src/HighScores.cpp:199
 msgid "Well done - You got a high score"
 msgstr ""
 
-#: src/HighScores.cpp:197
+#: src/HighScores.cpp:204
 msgid "Press ENTER or FIRE to continue"
 msgstr ""
 
-#: src/HighScores.cpp:203
+#: src/HighScores.cpp:210
 #, c-format
 msgid "Name?  %s"
 msgstr ""
 
-#: src/Options.cpp:262
+#: src/Options.cpp:264
 msgid "Use UP and DOWN to select options"
 msgstr ""
 
-#: src/Options.cpp:267
+#: src/Options.cpp:269
 msgid "Use LEFT and RIGHT to change values"
 msgstr ""
 
-#: src/Options.cpp:272
+#: src/Options.cpp:274
 msgid "Press FIRE or RETURN to exit"
 msgstr ""
 
-#: src/Options.cpp:279
+#: src/Options.cpp:281
 msgid "Please restart the game to change the resolution"
 msgstr ""
 
-#: src/Menu.cpp:245
+#: src/Menu.cpp:247
 msgid "Use the arrow keys to rotate the ship"
 msgstr ""
 
-#: src/Menu.cpp:246
+#: src/Menu.cpp:248
 msgid "Press the up arrow to fire the thruster"
 msgstr ""
 
-#: src/Menu.cpp:247
+#: src/Menu.cpp:249
 msgid "Smaller landing pads give you more points"
 msgstr ""
 
-#: src/Menu.cpp:248
+#: src/Menu.cpp:250
 msgid "Press P to pause the game"
 msgstr ""
 
-#: src/Menu.cpp:249
+#: src/Menu.cpp:251
 msgid "Press escape to self destruct"
 msgstr ""
 
-#: src/Menu.cpp:250
+#: src/Menu.cpp:252
 msgid "You can only land safely when then speed bar is green"
 msgstr ""
 
-#: src/Menu.cpp:251
+#: src/Menu.cpp:253
 msgid "Collect the spinning rings to unlock the landing pads"
 msgstr ""
