@@ -51,8 +51,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1A07C8E0F3D04EF68E7F01C72695C90F"
-        "OwnerKey" = "8:_680ACE5E04564F879300338362ADCECC"
+        "MsmKey" = "8:_152F3159A539455A83FAB40658D55301"
+        "OwnerKey" = "8:_B913560B3B4D436D9140C23C2B8DB8BD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -89,12 +89,6 @@
         {
         "MsmKey" = "8:_2F9F2E1DB21F47579D5E216A05022BAC"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4087DD32A1B2418BB1A441FAE4B50A9A"
-        "OwnerKey" = "8:_1A07C8E0F3D04EF68E7F01C72695C90F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -273,6 +267,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B913560B3B4D436D9140C23C2B8DB8BD"
+        "OwnerKey" = "8:_680ACE5E04564F879300338362ADCECC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BBFF91ECBA424C969C61D0275B71F8E2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -415,6 +415,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -431,6 +439,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -1772,14 +1788,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lunar Lander"
-        "ProductCode" = "8:{43F5B507-E751-45D2-B2FC-78638EE0D93D}"
-        "PackageCode" = "8:{268A322D-D30B-4F85-B95F-99DACD7D872F}"
+        "ProductCode" = "8:{9BC64C6C-E48A-459B-A6B0-296497F09617}"
+        "PackageCode" = "8:{834EFF7F-D198-465B-A8BB-8E950814B069}"
         "UpgradeCode" = "8:{3DC812F5-F4D2-49A0-AB55-936BF77D1F97}"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:0.6.0"
         "Manufacturer" = "8:doof.me.uk"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2396,11 +2412,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_1A07C8E0F3D04EF68E7F01C72695C90F"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_152F3159A539455A83FAB40658D55301"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -2410,11 +2426,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4087DD32A1B2418BB1A441FAE4B50A9A"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_B913560B3B4D436D9140C23C2B8DB8BD"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }
