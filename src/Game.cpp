@@ -29,21 +29,21 @@
 //
 // Constants affecting level generation.
 //
-#define MAX_SURFACE_HEIGHT  300
-#define SHIP_SPEED		      0.15f
-#define MAX_PAD_SIZE		    2 
-#define FUELBAR_OFFSET		  68
-#define GRAVITY             0.035f
+const int Game::MAX_SURFACE_HEIGHT(300);
+const float Game::SHIP_SPEED(0.15f);
+const int Game::MAX_PAD_SIZE(2);
+const int FuelMeter::FUELBAR_OFFSET(68);
+const float Game::GRAVITY(0.035f);
 const int Game::MAX_MISSILES(20);
 
 //
 // Constants affecting state transitions.
 //
 const int Game::DEATH_TIMEOUT(50);		// Frames to wait for ending level
-#define GAME_FADE_IN_SPEED	0.1f	// Rate of alpha change at level start
-#define GAME_FADE_OUT_SPEED	0.1f	// Rate of alpha change at level end
-#define LIFE_ALPHA_BASE		  2.0f
-#define LEVEL_TEXT_TIMEOUT	75
+const float Game::GAME_FADE_IN_SPEED(0.1f);	// Rate of alpha change at level start
+const float Game::GAME_FADE_OUT_SPEED(0.1f);	// Rate of alpha change at level end
+const float Game::LIFE_ALPHA_BASE(2.0f);
+const int Game::LEVEL_TEXT_TIMEOUT(75);
 
 const float Game::TURN_ANGLE(3.0f);
 const float Game::DEATH_SPIN_RATE(5.0f);

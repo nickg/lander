@@ -58,7 +58,7 @@ private:
    Image fuelMeterImage;
    Texture* fuelBarTexture;
 
-   static const int FUELBAR_Y;
+   static const int FUELBAR_Y, FUELBAR_OFFSET;
    
    int fuel, maxfuel;
    TextureQuad border;
@@ -95,7 +95,10 @@ private:
    static const float TURN_ANGLE, DEATH_SPIN_RATE;
    static const int FUEL_BASE, FUEL_PER_LEVEL;
    static const int SCORE_PAD_SIZE, SCORE_LEVEL, SCORE_FUEL_DIV;
-   static const int SCORE_Y, DEATH_TIMEOUT;
+   static const int SCORE_Y, DEATH_TIMEOUT, LEVEL_TEXT_TIMEOUT;
+   static const int MAX_SURFACE_HEIGHT, MAX_PAD_SIZE, FUEL_OFFSET;
+   static const float SHIP_SPEED, GRAVITY, GAME_FADE_IN_SPEED,
+      GAME_FADE_OUT_SPEED, LIFE_ALPHA_BASE;
 
    void MakeLandingPads();
    void MakeKeys();
