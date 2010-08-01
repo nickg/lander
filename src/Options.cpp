@@ -1,6 +1,6 @@
 //
 //  Options.cpp -- The options screen.
-//  Copyright (C) 2008-2009  Nick Gasson
+//  Copyright (C) 2008-2010  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -39,12 +39,27 @@ Options::Options()
    fullscreen.values.push_back("No");
    fullscreen.active = (cfile.get_bool("fullscreen") ? 0 : 1);
 
-   // TODO: It would be better to query SDL for these values
-   Item resolution = { "Resolution", 0 };
-   resolution.values.push_back("800x600");
-   resolution.values.push_back("1024x768");
-   resolution.values.push_back("1280x1024");
+   vector<OpenGL::Resolution> available;
+   OpenGL::GetInstance().EnumResolutions(available);
 
+   const int min_width = 640;
+   const int min_height = 480;
+   
+   Item resolution = { "Resolution", 0 };
+   for (vector<OpenGL::Resolution>::reverse_iterator it = available.rbegin();
+        it != available.rend();
+        ++it) {
+
+      const OpenGL::Resolution& r = *it;
+      
+      if (r.width >= min_width && r.height >= min_height) {
+         ostringstream ss;
+         ss << r.width << "x" << r.height;
+      
+         resolution.values.push_back(ss.str());
+      }
+   }
+   
    int hres = cfile.get_int("hres");
    int vres = cfile.get_int("vres");
    string currentRes = MakeResolutionString(hres, vres);

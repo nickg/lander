@@ -23,6 +23,8 @@
 #include "Platform.hpp"
 #include "Geometry.hpp"
 
+#include <vector>
+
 #define WINDOW_TITLE "Lunar Lander"
 #define FRAME_RATE 35
 
@@ -106,6 +108,13 @@ public:
    void DeferScreenShot();
 
    bool SetVideoMode(bool fullscreen, int width, int height);
+
+   struct Resolution {
+      Resolution(int w, int h) : width(w), height(h) {}
+      
+      int width, height;
+   };
+   void EnumResolutions(vector<Resolution>& out) const;
   
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);

@@ -408,6 +408,20 @@ void OpenGL::SkipDisplay()
    dodisplay = false;
 }
 
+void OpenGL::EnumResolutions(vector<Resolution>& out) const
+{   
+   Uint32 sdl_flags = SDL_OPENGL | SDL_FULLSCREEN;
+
+   SDL_Rect** modes = SDL_ListModes(NULL, sdl_flags);
+   if (modes == NULL)
+      throw runtime_error("no video modes available");
+
+   if (modes == (SDL_Rect**)-1)
+      return;  // Pick some useful default modes?
+   
+   for (int i = 0; modes[i] != NULL; i++)
+      out.push_back(Resolution(modes[i]->w, modes[i]->h));
+}
 
 Renderable::Renderable(int x, int y, int width, int height,
                        float r, float g, float b)
