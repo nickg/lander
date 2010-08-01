@@ -12,3 +12,5 @@ depcomp
 install-sh
 missing
 po/*.gmo
+autoscan.log
+configure.scan
