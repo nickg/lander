@@ -36,6 +36,11 @@ AC_CHECK_HEADERS([libintl.h unistd.h])
 dnl Check for Boost
 AX_BOOST_BASE(1.33)
 AX_BOOST_FILESYSTEM
+AX_BOOST_SYSTEM
+
+dnl Check for OpenGL
+AX_CHECK_GL
+AX_CHECK_GLU
 
 dnl Check for SDL
 SDL_VERSION=1.2.5
