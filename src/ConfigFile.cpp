@@ -1,5 +1,5 @@
 //  ConfigFile.cpp -- Settings persistence.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008, 2011  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include <sstream>
 #include <fstream>
 
-ConfigFile::ConfigFile(string filename)
+ConfigFile::ConfigFile(const string& filename)
    : dirty(false), filename(filename)
 {
    ifstream ifs((GetConfigDir() + filename).c_str(), ifstream::in);

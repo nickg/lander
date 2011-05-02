@@ -291,7 +291,7 @@ ScoreFile::~ScoreFile()
 
 string ScoreFile::GetHighScoreFile()
 {
-   return GetConfigDir() + ".lander.scores";
+   return GetConfigDir() + "scores";
 }
 
 bool ScoreFile::ScoreEntry::operator<(const ScoreFile::ScoreEntry& rhs) const

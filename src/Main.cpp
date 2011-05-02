@@ -1,6 +1,6 @@
 //
 // Main.cpp - Program entry point.
-// Copyright (C) 2006-2010  Nick Gasson
+// Copyright (C) 2006-2011  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -78,6 +78,27 @@ void RecreateScreens()
    sm.AddScreen("OPTIONS", options);
 }
 
+static void MigrateConfigFiles()
+{
+   // Earlier versions of Lander stored config files directly in the
+   // user's home directory. Now use use the XDG-compliant .config/lander
+   // directory but we should move old configs and high scores there first
+   
+   using namespace boost::filesystem;
+
+   const path cfg = GetConfigDir();
+   const path home = getenv("HOME");
+
+   const path old_config = home / ".lander.config";
+   const path old_scores = home / ".lander.scores";
+   
+   if (exists(old_config))
+      rename(old_config, cfg / "config");
+
+   if (exists(old_scores))
+      rename(old_scores, cfg / "scores");   
+}
+
 // 
 // Entry point.
 //
@@ -98,11 +119,15 @@ int main(int argc, char **argv)
    const int DEFAULT_SOUND = true;
 
    cout << "Lunar Lander " << VERSION << endl << endl
-        << "Copyright (C) 2006-2010  Nick Gasson" << endl
+        << "Copyright (C) 2006-2011  Nick Gasson" << endl
         << "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and" << endl
         << "you are welcome to redistribute it under certain conditions. See the GNU" << endl
         << "General Public Licence for details." << endl << endl;
 
+#ifdef UNIX
+   MigrateConfigFiles();
+#endif
+   
    {
       ConfigFile cfile;   
       width = cfile.get_int("hres", DEFAULT_HRES);
@@ -194,12 +219,28 @@ string LocateResource(const string& file)
 
 string GetConfigDir()
 {
+   using namespace boost::filesystem;
+   
 #ifdef UNIX
-   return string(getenv("HOME")) + "/";
+   path p;
+   const char *config = getenv("XDG_CONFIG_HOME");
+   if (config == NULL || *config == '\0') {
+      const char *home = getenv("HOME");
+      if (home == NULL)
+         throw runtime_error("HOME not set");
+
+      p = home;
+      p /= ".config";
+   }
+   else
+      p = config;
+
+   p /= "lander";
+   create_directories(p);
+
+   return p.file_string() + "/";
 #else
 #ifdef WIN32
-   using namespace boost::filesystem;
-
    path appdata(getenv("APPDATA"));
    appdata /= "doof.me.uk";
    appdata /= "Lander";
