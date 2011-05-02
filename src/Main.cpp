@@ -39,23 +39,23 @@ namespace CF {
 #include <boost/lexical_cast.hpp>
 
 namespace {
-   MainMenu* menu = NULL;
-   Game* game = NULL;
+   MainMenu*   menu = NULL;
+   Game*       game = NULL;
    HighScores* scores = NULL;
-   Options* options = NULL;
+   Options*    options = NULL;
+}
 
-   void DestroyScreens()
-   {
-      ScreenManager::GetInstance().RemoveAllScreens();
-      if (menu)
-         delete menu;
-      if (game)
-         delete game;
-      if (scores)
-         delete scores;
-      if (options)
-         delete options;
-   }
+static void DestroyScreens()
+{
+   ScreenManager::GetInstance().RemoveAllScreens();
+   if (menu)
+      delete menu;
+   if (game)
+      delete game;
+   if (scores)
+      delete scores;
+   if (options)
+      delete options;
 }
 
 //
@@ -194,7 +194,7 @@ string LocateResource(const string& file)
    cfBase = CFStringCreateWithCString(NULL, copy, kCFStringEncodingASCII);
    cfExt = CFStringCreateWithCString(NULL, ext, kCFStringEncodingASCII);
    
-	free(copy); 
+   free(copy); 
 	
    mainBundle = CFBundleGetMainBundle();
     

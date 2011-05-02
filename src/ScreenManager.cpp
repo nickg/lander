@@ -1,6 +1,6 @@
 //
 // Screen.cpp - Implementation of the ScreenManager class.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006, 2011  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,19 +42,19 @@ ScreenManager& ScreenManager::GetInstance()
    return sm;
 }
 
-void ScreenManager::AddScreen(const char* id, Screen* ptr)
+void ScreenManager::AddScreen(const string& id, Screen* ptr)
 {
-   if (screens.find(string(id)) != screens.end())
-      throw runtime_error("Screen already registered: " + string(id));
+   if (screens.find(id) != screens.end())
+      throw runtime_error("Screen already registered: " + id);
 
    ScreenData sd;
    sd.loaded = false;
    sd.ptr = ptr;
 
-   screens[string(id)] = sd;
+   screens[id] = sd;
 }
 
-void ScreenManager::SelectScreen(const string id)
+void ScreenManager::SelectScreen(const string& id)
 {
    ScreenMapIt it = screens.find(id);
 
@@ -71,13 +71,13 @@ void ScreenManager::SelectScreen(const string id)
    OpenGL::GetInstance().SkipDisplay();
 }
 
-Screen* ScreenManager::GetScreenById(const char* id) const
+Screen* ScreenManager::GetScreenById(const string& id) const
 {
    ScreenMap::const_iterator it;
 
-   it = screens.find(string(id));
+   it = screens.find(id);
    if (it == screens.end())
-      throw runtime_error("Screen " + string(id) + " does not exist");
+      throw runtime_error("Screen " + id + " does not exist");
    else
       return (*it).second.ptr;
 }
@@ -92,7 +92,7 @@ void ScreenManager::Process()
 
 void ScreenManager::Display()
 {
-   if (active.ptr != NULL)	{
+   if (active.ptr != NULL) {
       assert(active.loaded);
       active.ptr->Display();
    }

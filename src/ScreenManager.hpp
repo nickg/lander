@@ -1,6 +1,6 @@
 //
 // Screens.hpp - Definition of abstract class to represent game screens.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006, 2011  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,12 +43,12 @@ class ScreenManager {
 public:
    static ScreenManager& GetInstance();
 
-   void AddScreen(const char* id, Screen* ptr);
-   void SelectScreen(const string id);
+   void AddScreen(const string& id, Screen* ptr);
+   void SelectScreen(const string& id);
    void Process();
    void Display();
    void RemoveAllScreens();
-   Screen* GetScreenById(const char* id) const;
+   Screen* GetScreenById(const string& id) const;
 	
 private:
    ScreenManager();
