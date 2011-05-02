@@ -23,7 +23,9 @@
 #include <string>
 
 Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
-   : objgrid(o), viewport(v),
+   : StaticObject(x, y),
+     objgrid(o),
+     viewport(v),
      image("images/mine.png", 64, 64, MINE_FRAME_COUNT)
 {   
    current = 0;
@@ -33,9 +35,6 @@ Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
    movedelay = MINE_MOVE_SPEED;
    dir = dirNone;
    movetimeout = 1;
-
-   xpos = x;
-   ypos = y;
 
    // Free space on object grid
    objgrid->UnlockSpace(xpos, ypos);

@@ -39,7 +39,7 @@ public:
    static void Offset(int ox, int oy, int* x, int* y);
 
    static const int OBJ_GRID_SIZE = 32;
-   static const int OBJ_GRID_TOP = 100;
+   static const int OBJ_GRID_TOP  = 100;
    
 private:   
    bool* grid;
@@ -51,7 +51,6 @@ class StaticObject {
 public:
    StaticObject(int xpos, int ypos, int width=1, int height=1)
       : xpos(xpos), ypos(ypos), width(width), height(height) {}
-   StaticObject() { StaticObject(0, 0, 1, 1); }
    virtual ~StaticObject() {}
 
    bool ObjectInScreen(Viewport* viewport) const;

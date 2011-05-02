@@ -187,7 +187,7 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
       }
    }
 
-   if (start_line)	{
+   if (start_line) {
       string line;
       for (const char* n = start_line; n < c; n++) 
          line.append(1, *n);
