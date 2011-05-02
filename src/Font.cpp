@@ -1,6 +1,6 @@
 //
 // Font.cpp -- A wrapper around FreeType.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006, 2011  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -165,6 +165,8 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
 
    // Finish display list
    glEndList();
+
+   FT_Done_Glyph(glyph);
 }
 
 void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)

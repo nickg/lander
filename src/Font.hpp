@@ -1,6 +1,6 @@
 //
 // FreeType.hpp -- A wrapper around FreeType.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006, 2011  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
