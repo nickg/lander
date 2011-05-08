@@ -1,4 +1,4 @@
-AC_INIT([Lunar Lander], [0.6.1],
+AC_INIT([Lunar Lander], [0.6.2],
         [Nick Gasson <nick@nickg.me.uk>],
         [lander])
 AM_INIT_AUTOMAKE([-Wall -Werror])
