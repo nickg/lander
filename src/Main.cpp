@@ -70,7 +70,7 @@ void RecreateScreens()
    game = new Game();
    scores = new HighScores();
    options = new Options();
-   
+
    ScreenManager& sm = ScreenManager::GetInstance();
    sm.AddScreen("MAIN MENU", menu);
    sm.AddScreen("GAME", game);
@@ -83,7 +83,7 @@ static void MigrateConfigFiles()
    // Earlier versions of Lander stored config files directly in the
    // user's home directory. Now use use the XDG-compliant .config/lander
    // directory but we should move old configs and high scores there first
-   
+
    using namespace boost::filesystem;
 
    const path cfg = GetConfigDir();
@@ -91,15 +91,15 @@ static void MigrateConfigFiles()
 
    const path old_config = home / ".lander.config";
    const path old_scores = home / ".lander.scores";
-   
+
    if (exists(old_config))
       rename(old_config, cfg / "config");
 
    if (exists(old_scores))
-      rename(old_scores, cfg / "scores");   
+      rename(old_scores, cfg / "scores");
 }
 
-// 
+//
 // Entry point.
 //
 int main(int argc, char **argv)
@@ -127,9 +127,9 @@ int main(int argc, char **argv)
 #ifdef UNIX
    MigrateConfigFiles();
 #endif
-   
+
    {
-      ConfigFile cfile;   
+      ConfigFile cfile;
       width = cfile.get_int("hres", DEFAULT_HRES);
       height = cfile.get_int("vres", DEFAULT_VRES);
       fullscreen = cfile.get_bool("fullscreen", DEFAULT_FSCREEN);
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
       opengl.Init(width, height, depth, fullscreen);
 
       RecreateScreens();
-      
+
       // Run the game
       ScreenManager::GetInstance().SelectScreen("MAIN MENU");
       opengl.Run();
@@ -177,41 +177,41 @@ string LocateResource(const string& file)
 {
 #ifdef MACOSX
    using namespace CF;
-   
+
    static char path[PATH_MAX];
-   
+
    CFURLRef resURL;
    CFBundleRef mainBundle;
    CFStringRef cfBase, cfExt, cfPath;
-   
+
    const char* ext = "";
    char* copy = strdup(file.c_str());
    if (char* p = strrchr(copy, '.')) {
 		*p = '\0';
 		ext = ++p;
    }
-    
+
    cfBase = CFStringCreateWithCString(NULL, copy, kCFStringEncodingASCII);
    cfExt = CFStringCreateWithCString(NULL, ext, kCFStringEncodingASCII);
-   
-   free(copy); 
-	
+
+   free(copy);
+
    mainBundle = CFBundleGetMainBundle();
-    
+
    resURL = CFBundleCopyResourceURL(mainBundle, cfBase, cfExt, NULL);
-    
+
    if (resURL == NULL)
       throw runtime_error("Failed to locate " + string(file));
-	
+
    cfPath = CFURLCopyPath(resURL);
-    
+
    CFStringGetCString(cfPath, path, PATH_MAX, kCFStringEncodingASCII);
 
    return path;
 #endif
-   
+
 #ifdef DATADIR
-   return boost::lexical_cast<string>(DATADIR) + "/" + file;   
+   return boost::lexical_cast<string>(DATADIR) + "/" + file;
 #else
    return file;
 #endif
@@ -220,7 +220,7 @@ string LocateResource(const string& file)
 string GetConfigDir()
 {
    using namespace boost::filesystem;
-   
+
 #ifdef UNIX
    path p;
    const char *config = getenv("XDG_CONFIG_HOME");
@@ -238,7 +238,7 @@ string GetConfigDir()
    p /= "lander";
    create_directories(p);
 
-   return p.file_string() + "/";
+   return p.string() + "/";
 #else
 #ifdef WIN32
    path appdata(getenv("APPDATA"));
