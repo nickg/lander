@@ -3,104 +3,103 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: lander 0.6.3\n"
+"Project-Id-Version: lander 0.6.2\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
 "POT-Creation-Date: 2012-12-16 13:53+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2012-12-14 13:53+0100\n"
+"Last-Translator: Frank van der Loo <f.vanderloo@gmail.com>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/Main.cpp:166
 #, c-format
 msgid "Runtime Error: %s\n"
-msgstr ""
+msgstr "Runtime Fout: %s\n"
 
 #: src/Game.cpp:117 src/Game.cpp:760
 #, c-format
 msgid "Score:  %d"
-msgstr ""
+msgstr "Score:  %d"
 
 #: src/Game.cpp:696
 msgid "Press SPACE to continue"
-msgstr ""
+msgstr "Druk op SPATIE om door te gaan"
 
 #: src/Game.cpp:754
 msgid "Land  now"
-msgstr ""
+msgstr "Land  nu"
 
 #: src/Game.cpp:776
 #, c-format
 msgid "Level  %d"
-msgstr ""
+msgstr "Level  %d"
 
 #: src/Game.cpp:795
 msgid "Paused"
-msgstr ""
+msgstr "Gepauzeerd"
 
 #: src/HighScores.cpp:184
 msgid "Press SPACE or FIRE to return"
-msgstr ""
+msgstr "Druk op SPATIE of VUUR om terug te gaan"
 
 #: src/HighScores.cpp:199
 msgid "Well done - You got a high score"
-msgstr ""
+msgstr "Goed gedaan - Een topscore"
 
 #: src/HighScores.cpp:204
 msgid "Press ENTER or FIRE to continue"
-msgstr ""
+msgstr "Druk op ENTER of VUUR om door te gaan"
 
 #: src/HighScores.cpp:210
 #, c-format
 msgid "Name?  %s"
-msgstr ""
+msgstr "Naam?  %s"
 
 #: src/Options.cpp:279
 msgid "Use UP and DOWN to select options"
-msgstr ""
+msgstr "Gebruik OMHOOG en OMLAAG om een optie te selecteren"
 
 #: src/Options.cpp:284
 msgid "Use LEFT and RIGHT to change values"
-msgstr ""
+msgstr "Gebruik LINKS en RECHTS om een waarde te veranderen"
 
 #: src/Options.cpp:289
 msgid "Press FIRE or RETURN to exit"
-msgstr ""
+msgstr "Druk op VUUR of RETURN om af te sluiten"
 
 #: src/Options.cpp:296
 msgid "Please restart the game to change the resolution"
-msgstr ""
+msgstr "Start het spel opnieuw a.u.b. om de resolutie te veranderen"
 
 #: src/Menu.cpp:247
 msgid "Use the arrow keys to rotate the ship"
-msgstr ""
+msgstr "Gebruik de pijltjestoetsen om het schip te draaien"
 
 #: src/Menu.cpp:248
 msgid "Press the up arrow to fire the thruster"
-msgstr ""
+msgstr "Druk op pijltje omhoog om de raketmotor te ontsteken"
 
 #: src/Menu.cpp:249
 msgid "Smaller landing pads give you more points"
-msgstr ""
+msgstr "Kleinere landingsplatforms leveren meer punten op"
 
 #: src/Menu.cpp:250
 msgid "Press P to pause the game"
-msgstr ""
+msgstr "Druk op P om te pauzeren"
 
 #: src/Menu.cpp:251
 msgid "Press escape to self destruct"
-msgstr ""
+msgstr "Druk op escape voor zelfvernietiging"
 
 #: src/Menu.cpp:252
 msgid "You can only land safely when then speed bar is green"
-msgstr ""
+msgstr "Het is alleen veilig om te landen als de snelheidsmeter groen is"
 
 #: src/Menu.cpp:253
 msgid "Collect the spinning rings to unlock the landing pads"
-msgstr ""
+msgstr "Verzamel de draaiende ringen om de landingsplatforms te openen"
