@@ -1,6 +1,6 @@
 //
 // Main.cpp - Program entry point.
-// Copyright (C) 2006-2011  Nick Gasson
+// Copyright (C) 2006-2012  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
    const int DEFAULT_SOUND = true;
 
    cout << "Lunar Lander " << VERSION << endl << endl
-        << "Copyright (C) 2006-2011  Nick Gasson" << endl
+        << "Copyright (C) 2006-2012  Nick Gasson" << endl
         << "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and" << endl
         << "you are welcome to redistribute it under certain conditions. See the GNU" << endl
         << "General Public Licence for details." << endl << endl;
