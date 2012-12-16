@@ -1,7 +1,8 @@
 bin_PROGRAMS = lander
 
 # Add -pg for profiling
-AM_CXXFLAGS = $(LANDER_CFLAGS) $(SDL_CFLAGS) -Wall -ffast-math
+AM_CXXFLAGS = $(FREETYPE_CFLAGS) $(LIBPNG_CFLAGS) $(SDL_CFLAGS) \
+	-Wall -ffast-math
 
 lander_LDADD = $(FREETYPE_LIBS) $(SDL_LIBS) $(BOOST_FILESYSTEM_LIB) \
 	$(BOOST_SYSTEM_LIB) $(GL_LIBS) $(GLU_LIBS) $(LTLIBINTL) \
