@@ -1,7 +1,10 @@
-AC_INIT([Lunar Lander], [0.6.2],
+AC_INIT([Lunar Lander], [0.6.3],
         [Nick Gasson <nick@nickg.me.uk>],
         [lander])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([1.11 -Wall -Werror])
+AM_SILENT_RULES([yes])
+
+AC_CONFIG_MACRO_DIR([m4])
 
 AC_PROG_CC
 AC_PROG_AWK
@@ -34,7 +37,7 @@ AC_CHECK_FUNCS([atexit memset pow setlocale strdup strrchr])
 AC_CHECK_HEADERS([libintl.h unistd.h])
 
 dnl Check for Boost
-AX_BOOST_BASE(1.33)
+AX_BOOST_BASE(1.44)
 AX_BOOST_FILESYSTEM
 AX_BOOST_SYSTEM
 
@@ -56,12 +59,11 @@ AC_CHECK_LIB(SDL_image, IMG_Load, [],
 dnl Check for SDL_Mixer
 AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [],
              AC_MSG_ERROR([*** SDL_mixer not found!]))
-         
+
 dnl Check for Freetype and libpng
-PKG_CHECK_MODULES(LANDER, freetype2 libpng)
-                                                      
+PKG_CHECK_MODULES(FREETYPE, freetype2)
+PKG_CHECK_MODULES(LIBPNG, libpng)
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile data/Makefile src/Makefile po/Makefile.in])
 AC_OUTPUT
-
