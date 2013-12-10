@@ -127,7 +127,9 @@
 #include <string>
 
 using namespace std;
+#ifndef _LIBCPP_VERSION
 using namespace std::tr1;
+#endif
 
 void RecreateScreens();
 string LocateResource(const string& file);
