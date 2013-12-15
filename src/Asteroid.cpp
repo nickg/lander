@@ -1,6 +1,6 @@
 //
 //  Asteroid.cpp -- Randomly generated asteroid.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2013  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -39,8 +39,10 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
      surfaceTexture(LoadTexture(SurfaceFileName(surftex))),
      displayList(new GLuint, displayListDeleter)
 {
+   assert(width > 0);
+
    *displayList = glGenLists(1);
-   
+
    int change, texloop=0;
 
    // Build up Polys
@@ -127,7 +129,7 @@ Asteroid::Asteroid(const Asteroid& other)
 
 Asteroid::~Asteroid()
 {
-   
+
 }
 
 // Return the file name for the corresponding surface texture
@@ -148,14 +150,14 @@ string Asteroid::SurfaceFileName(int textureId)
 void Asteroid::GenerateDisplayList(int texidx)
 {
    glNewList(*displayList, GL_COMPILE);
-   
+
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, surfaceTexture->GetGLTexture());
    glColor4d(1.0, 1.0, 1.0, 1.0);
-   
-   for (int i = 0; i < width; i++) {   
-      // Up   
+
+   for (int i = 0; i < width; i++) {
+      // Up
       glBegin(GL_QUADS);
         glTexCoord2d(uppolys[i].texX, 0.0);
         glVertex2i(uppolys[i].points[0].x, uppolys[i].points[0].y);
@@ -166,9 +168,9 @@ void Asteroid::GenerateDisplayList(int texidx)
         glTexCoord2d(uppolys[i].texX + uppolys[i].texwidth, 0.0);
         glVertex2i(uppolys[i].points[3].x, uppolys[i].points[3].y);
       glEnd();
-      
+
       glTranslated(0.0, 2.0*OBJ_GRID_SIZE, 0.0);
-      
+
       // Down
       glBegin(GL_QUADS);
         glTexCoord2d(downpolys[i].texX, 0.0);
@@ -180,7 +182,7 @@ void Asteroid::GenerateDisplayList(int texidx)
         glTexCoord2d(downpolys[i].texX + downpolys[i].texwidth, 0.0);
         glVertex2i(downpolys[i].points[3].x, downpolys[i].points[3].y);
       glEnd();
-      
+
       glTranslated(0.0, -2.0*OBJ_GRID_SIZE, 0.0);
    }
 
@@ -218,14 +220,14 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
       // list reference
       throw runtime_error("Asteroid::Draw called on invalid asteroid copy");
    }
-   
+
    double ix = xpos*OBJ_GRID_SIZE - viewadjust_x;
    double iy = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
 
    glLoadIdentity();
    glTranslated(ix, iy, 0.0);
    glCallList(*displayList);
-} 
+}
 
 bool Asteroid::CheckCollision(const Ship& ship) const
 {
@@ -233,9 +235,9 @@ bool Asteroid::CheckCollision(const Ship& ship) const
    for (int k = 0; k < GetWidth(); k++) {
       LineSegment l1 = GetUpBoundary(k);
       LineSegment l2 = GetDownBoundary(k);
-      
+
       if (ship.HotSpotCollision(l1) || ship.HotSpotCollision(l2))
          return true;
    }
-   return false;         
+   return false;
 }
