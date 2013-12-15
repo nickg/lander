@@ -16,6 +16,9 @@ autoscan.log
 configure.scan
 TAGS
 m4/*
-ABOUT_NLS
+ABOUT-NLS
 compile
 po/Makevars.template
+config.rpath
+po/Makefile.in.in
+po/Rules-quot
