@@ -15,3 +15,7 @@ po/*.gmo
 autoscan.log
 configure.scan
 TAGS
+m4/*
+ABOUT_NLS
+compile
+po/Makevars.template
