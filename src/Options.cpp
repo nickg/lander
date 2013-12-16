@@ -24,6 +24,7 @@
 #include "InterfaceSounds.hpp"
 
 #include <cassert>
+#include <sstream>
 
 const double Options::FADE_SPEED = 0.1;
 
