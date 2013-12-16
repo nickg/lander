@@ -94,7 +94,8 @@ void Input::Update()
 			case SDL_KEYDOWN:
          // Type a character in text input mode
          if (textinput) {
-            if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
+            if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z)
+                || (e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9)
                 || (e.key.keysym.sym == SDLK_SPACE)) {
                char ch = (char)e.key.keysym.sym;
                ch = shift ? toupper(ch) : ch;
