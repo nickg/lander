@@ -22,8 +22,6 @@
 
 #include "Platform.hpp"
 
-#include <sstream>
-
 // 
 // A singleton class to manage SDL input.
 //
@@ -60,7 +58,7 @@ private:
 
    bool shift;
    bool textinput;			// Is a character buffer open?
-   ostringstream text;	// Text read so far
+   string text;	// Text read so far
    int maxchar;			  	// Maximum number of characters to read
 
    // Record joystick state

@@ -94,20 +94,20 @@ void Input::Update()
 			case SDL_KEYDOWN:
          // Type a character in text input mode
          if (textinput) {
-            if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z) 
+            if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z)
+                || (e.key.keysym.sym >= SDLK_0 && e.key.keysym.sym <= SDLK_9)
                 || (e.key.keysym.sym == SDLK_SPACE)) {
                char ch = (char)e.key.keysym.sym;
                ch = shift ? toupper(ch) : ch;
-               text.write(&ch, 1);
+               text += ch;
             }
             else if (e.key.keysym.sym == SDLK_LSHIFT
                      || e.key.keysym.sym == SDLK_RSHIFT) {
                shift = true;
             }
-            else if (e.key.keysym.sym == SDLK_BACKSPACE && text.tellp() > 0)	{
-               long pos = text.tellp();
-               if (pos > 0)
-                  text.seekp(pos - 1);
+            else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+               if (!text.empty())
+                  text.erase(text.end() - 1);
             }
          }
          break;
@@ -247,7 +247,7 @@ void Input::OpenCharBuffer(int max)
 
    shift = false;
    maxchar = max;
-   text.str("");
+   text = "";
    textinput = true;
 }
 
@@ -267,5 +267,5 @@ void Input::CloseCharBuffer()
 //
 string Input::GetInput() const
 {
-   return text.str();
+   return text;
 }
