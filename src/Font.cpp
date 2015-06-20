@@ -67,7 +67,7 @@ Font::~Font()
    delete[] textures;
    delete[] widths;
    delete[] buf;
-   
+
    if (--fontRefCount == 0) {
       FT_Done_FreeType(library);
    }
@@ -77,7 +77,7 @@ int Font::NextPowerOf2(int a)
 {
    int rval = 1;
 
-   while (rval < a) 
+   while (rval < a)
       rval <<= 1;
 
    return rval;
@@ -86,8 +86,6 @@ int Font::NextPowerOf2(int a)
 void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
                            GLuint* texBase, unsigned short* widths)
 {
-   int i, j;
-
    // Load the character's glyph
    if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
       throw runtime_error("FT_Load_Glyph failed");
@@ -105,22 +103,22 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    FT_Bitmap& bitmap = bitmapGlyph->bitmap;
 
    // Make the width and height a power of 2
-   int width = NextPowerOf2(bitmap.width);
-   int height = NextPowerOf2(bitmap.rows);
-	
+   const unsigned width = NextPowerOf2(bitmap.width);
+   const unsigned height = NextPowerOf2(bitmap.rows);
+
    // Allocate memory for the texture data
    GLubyte* expandedData = new GLubyte[2 * width * height];
 
    // Fill in the bitmap's extended data
-   for (j = 0; j < height; j++) {
-      for (i = 0; i < width; i++) {
-         expandedData[2*(i+j*width)] = expandedData[2*(i+j*width)+1] = 
+   for (unsigned j = 0; j < height; j++) {
+      for (unsigned i = 0; i < width; i++) {
+         expandedData[2*(i+j*width)] = expandedData[2*(i+j*width)+1] =
             (i >= bitmap.width || j >= bitmap.rows)
             ? 0
             : bitmap.buffer[i + bitmap.width*j];
       }
    }
-	
+
    // Set texture parameters
    glBindTexture(GL_TEXTURE_2D, texBase[(int)ch]);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -175,12 +173,12 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
       *buf = 0;
    else
       vsnprintf(buf, MAX_TXT_BUF, fmt, ap);
-   
+
    const char* start_line = buf, *c;
    for (c = buf; *c; c++)	{
       if (*c == '\n')	{
          string line;
-         for (const char* n = start_line; n < c; n++) 
+         for (const char* n = start_line; n < c; n++)
             line.append(1, *n);
          lines.push_back(line);
          start_line = c+1;
@@ -189,7 +187,7 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
 
    if (start_line) {
       string line;
-      for (const char* n = start_line; n < c; n++) 
+      for (const char* n = start_line; n < c; n++)
          line.append(1, *n);
       lines.push_back(line);
    }
@@ -201,7 +199,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
    glPushMatrix();
 
    GLuint font = listBase;
-   float h = height / 0.63f;		// Add some space between lines  
+   float h = height / 0.63f;		// Add some space between lines
 
    vector<string> lines;
    va_list ap;
@@ -245,7 +243,7 @@ int Font::GetStringWidth(const char* fmt, ...)
       int len = 0;
       for (string::iterator ch = (*it).begin(); ch != (*it).end(); ++ch)
          len += widths[(int)*ch];
-      
+
       if (len > maxlen)
          maxlen = len;
    }
