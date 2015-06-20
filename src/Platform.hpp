@@ -34,14 +34,14 @@
 
 #include "SDL.h"
 
-#include <GL\gl.h>							
-#include <GL\glu.h>	
+#include <GL\gl.h>
+#include <GL\glu.h>
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
 #endif
 
-#include <boost/tr1/memory.hpp>
+#include <memory>
 
 #define msleep(n) Sleep(n)
 
@@ -49,7 +49,7 @@
 
 #define PATH_MAX  256
 
-// Don't have these on Windows for some reason 
+// Don't have these on Windows for some reason
 #ifndef GL_BGRA
 #define GL_BGRA 0
 #endif
@@ -57,7 +57,7 @@
 #define GL_BGR 0
 #endif
 
-// Define safe snprintf, etc. for MSCV8 
+// Define safe snprintf, etc. for MSCV8
 #if (_MSC_VER >= 1400)
 
 #define USE_FOPEN_S
@@ -90,8 +90,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-// Probably using GCC
-#include <tr1/memory>
+// Probably using GCC or Clang
+#include <memory>
 
 #endif /* #ifdef WIN32 */
 
@@ -127,9 +127,6 @@
 #include <string>
 
 using namespace std;
-#ifndef _LIBCPP_VERSION
-using namespace std::tr1;
-#endif
 
 void RecreateScreens();
 string LocateResource(const string& file);

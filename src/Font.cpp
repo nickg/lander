@@ -1,6 +1,6 @@
 //
 // Font.cpp -- A wrapper around FreeType.
-// Copyright (C) 2006, 2011  Nick Gasson
+// Copyright (C) 2006, 2011-2015  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -195,11 +195,10 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
 
 void Font::Print(int x, int y, const char* fmt, ...)
 {
-   // Store the current matrix
    glPushMatrix();
 
    GLuint font = listBase;
-   float h = height / 0.63f;		// Add some space between lines
+   float h = height / 0.63f;   // Add some space between lines
 
    vector<string> lines;
    va_list ap;
@@ -214,7 +213,8 @@ void Font::Print(int x, int y, const char* fmt, ...)
    glListBase(font);
 
    // Draw the text
-   for (unsigned int i = 0; i < lines.size(); i++)	{
+   const unsigned nlines = lines.size();
+   for (unsigned i = 0; i < nlines; i++) {
       glPushMatrix();
       glLoadIdentity();
       glTranslatef((float)x, (float)y - h*i, 0.0f);
@@ -224,7 +224,6 @@ void Font::Print(int x, int y, const char* fmt, ...)
       glPopMatrix();
    }
 
-   // Restore previous matrix
    glPopMatrix();
 }
 
@@ -239,10 +238,10 @@ int Font::GetStringWidth(const char* fmt, ...)
 
    int maxlen = 0;
    vector<string>::iterator it;
-   for (it = lines.begin(); it != lines.end(); ++it) {
+   for (const string& line : lines) {
       int len = 0;
-      for (string::iterator ch = (*it).begin(); ch != (*it).end(); ++ch)
-         len += widths[(int)*ch];
+      for (const char ch : line)
+         len += widths[static_cast<int>(ch)];
 
       if (len > maxlen)
          maxlen = len;
