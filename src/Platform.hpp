@@ -22,7 +22,9 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#else
+#endif
+
+#ifndef DATADIR
 #define DATADIR "."
 #endif
 
