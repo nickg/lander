@@ -49,19 +49,19 @@ OpenGL& OpenGL::GetInstance()
    return opengl;
 }
 
-// 
-// Called before the game is started. Creates a new window and performs ay 
+//
+// Called before the game is started. Creates a new window and performs ay
 // necessary initialisation.
 //
 void OpenGL::Init(int width, int height, int depth, bool fullscreen)
-{   
+{
    // Start SDL
    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
       RuntimeError("Unable to initialise SDL: " + SDLErrorString());
    atexit(SDL_Quit);
 
    SetVideoMode(fullscreen, width, height);
-    
+
    SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
    SDL_ShowCursor(SDL_DISABLE);
@@ -79,7 +79,7 @@ void OpenGL::RuntimeError(const string& mess)
 bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
 {
    bool resized = !(width == screen_width && height == screen_height);
-   
+
    screen_height = height;
    screen_width = width;
    this->fullscreen = fullscreen;
@@ -87,11 +87,11 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
    sdl_flags = SDL_OPENGL;
    if (fullscreen)
       sdl_flags |= SDL_FULLSCREEN;
-   
+
    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
    if (SDL_SetVideoMode(screen_width, screen_height, 0, sdl_flags) == NULL)
       RuntimeError("Unable to create OpenGL screen: " + SDLErrorString());;
-    
+
    ResizeGLScene(screen_width, screen_height);
 
    return resized;
@@ -186,18 +186,18 @@ void OpenGL::DrawGLScene()
       // Clear the screen
       glClear(GL_COLOR_BUFFER_BIT);
       glLoadIdentity();
-      
+
       ScreenManager::GetInstance().Display();
 
       // Check for OpenGL errors
       GLenum error = glGetError();
-      if (error != GL_NO_ERROR) {   
+      if (error != GL_NO_ERROR) {
          //throw runtime_error
          //   ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
       }
-      
+
       SDL_GL_SwapBuffers();
-      
+
       if (deferredScreenShot) {
          TakeScreenShot();
          deferredScreenShot = false;
@@ -213,11 +213,11 @@ void OpenGL::DrawGLScene()
       fps_lastcheck = SDL_GetTicks();
       fps_rate = fps_framesdrawn;
       fps_framesdrawn = 0;
-      
+
 #ifdef SHOW_FPS
       const int TITLE_BUF_LEN = 256;
       char buf[TITLE_BUF_LEN];
-      
+
       if (!fullscreen) {
          snprintf(buf, TITLE_BUF_LEN, "%s {%dfps}", WINDOW_TITLE, fps_rate);
          SDL_WM_SetCaption(buf, NULL);
@@ -374,14 +374,14 @@ bool OpenGL::InitGL()
 GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 {
    if (height == 0) height = 1;
-	
+
    // Reset viewport
    glViewport(0, 0, width, height);
 
    // Set it to 2D mode
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluOrtho2D(0.0f, (GLfloat)screen_width, (GLfloat)screen_height, 0.0f);
+   glOrtho(0.0, screen_width, screen_height, 0.0, -1.0, 1.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    glPushMatrix();
@@ -401,7 +401,7 @@ void OpenGL::Stop()
 }
 
 //
-// Generate, but do not display the next frame. 
+// Generate, but do not display the next frame.
 //
 void OpenGL::SkipDisplay()
 {
@@ -409,7 +409,7 @@ void OpenGL::SkipDisplay()
 }
 
 void OpenGL::EnumResolutions(vector<Resolution>& out) const
-{   
+{
    Uint32 sdl_flags = SDL_OPENGL | SDL_FULLSCREEN;
 
    SDL_Rect** modes = SDL_ListModes(NULL, sdl_flags);
@@ -418,14 +418,14 @@ void OpenGL::EnumResolutions(vector<Resolution>& out) const
 
    if (modes == (SDL_Rect**)-1)
       return;  // Pick some useful default modes?
-   
+
    for (int i = 0; modes[i] != NULL; i++)
       out.push_back(Resolution(modes[i]->w, modes[i]->h));
 }
 
 Renderable::Renderable(int x, int y, int width, int height,
                        float r, float g, float b)
-   : x(x), y(y), width(width), height(height), red(r), 
+   : x(x), y(y), width(width), height(height), red(r),
      green(g), blue(b)
 {
 
@@ -450,7 +450,7 @@ TextureQuad::TextureQuad(int qx, int qy, int width, int height, GLuint tex,
 
 void TextureQuad::Render()
 {
-   glEnable(GL_TEXTURE_2D); 
+   glEnable(GL_TEXTURE_2D);
    glBindTexture(GL_TEXTURE_2D, uTexture);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
@@ -469,7 +469,7 @@ ColourQuad::ColourQuad(int x, int y, int width, int height,
 
 void ColourQuad::Render()
 {
-   glDisable(GL_TEXTURE_2D); 
+   glDisable(GL_TEXTURE_2D);
    glBegin(GL_QUADS);
    glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
    glTexCoord2f(0.0f, 0.0f); glVertex2i(-(width/2), height/2);

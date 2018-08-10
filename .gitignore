@@ -1,5 +1,5 @@
 po/POTFILES
-build/
+build*/
 INSTALL
 *Makefile.in
 aclocal.m4

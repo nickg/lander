@@ -1,7 +1,7 @@
-AC_INIT([Lunar Lander], [0.6.6],
+AC_INIT([Lunar Lander], [0.7],
         [Nick Gasson <nick@nickg.me.uk>],
         [lander])
-AM_INIT_AUTOMAKE([1.11 -Wall -Werror])
+AM_INIT_AUTOMAKE([1.11 -Wall -Werror -Wno-extra-portability foreign])
 AM_SILENT_RULES([yes])
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -19,25 +19,6 @@ AX_CXX_COMPILE_STDCXX_11
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18.3])
 
-# Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([libintl.h memory.h stddef.h stdlib.h string.h unistd.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_CONST
-AC_C_INLINE
-AC_TYPE_SIZE_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-
-# Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_STAT
-AC_CHECK_FUNCS([atexit memset pow setlocale strdup strrchr])
-
-AC_CHECK_HEADERS([libintl.h unistd.h])
-
 dnl Check for Boost
 AX_BOOST_BASE(1.44)
 AX_BOOST_FILESYSTEM
@@ -45,7 +26,6 @@ AX_BOOST_SYSTEM
 
 dnl Check for OpenGL
 AX_CHECK_GL
-AX_CHECK_GLU
 
 dnl Check for SDL
 SDL_VERSION=1.2.5

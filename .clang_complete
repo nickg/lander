@@ -1,0 +1,10 @@
+-I./build/
+-I./src/
+-I/usr/include/freetype2
+-I/usr/include/libpng16
+-I/usr/include/SDL
+-DLINUX
+-DUNIX
+-D_GNU_SOURCE=1
+-D_REENTRANT
+-DHAVE_CONFIG_H

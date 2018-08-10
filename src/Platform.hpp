@@ -35,7 +35,6 @@
 #include "SDL.h"
 
 #include <GL\gl.h>
-#include <GL\glu.h>
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
@@ -99,7 +98,6 @@
 #ifdef MACOSX
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #define msleep(n) usleep((n)*1000)
 
@@ -113,7 +111,6 @@
 #ifdef LINUX
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <libintl.h>
 #define i18n(x) gettext(x)
