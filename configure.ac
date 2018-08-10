@@ -28,21 +28,10 @@ dnl Check for OpenGL
 AX_CHECK_GL
 
 dnl Check for SDL
-SDL_VERSION=1.2.5
-AM_PATH_SDL($SDL_VERSION,
-        :,
-        AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
-)
+PKG_CHECK_MODULES(SDL, sdl)
+PKG_CHECK_MODULES(SDL_IMAGE, SDL_image)
+PKG_CHECK_MODULES(SDL_MIXER, SDL_mixer)
 
-dnl Check for SDL_Image
-AC_CHECK_LIB(SDL_image, IMG_Load, [],
-             AC_MSG_ERROR([*** SDL_image not found!]))
-
-dnl Check for SDL_Mixer
-AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio, [],
-             AC_MSG_ERROR([*** SDL_mixer not found!]))
-
-dnl Check for Freetype and libpng
 PKG_CHECK_MODULES(FREETYPE, freetype2)
 PKG_CHECK_MODULES(LIBPNG, libpng)
 

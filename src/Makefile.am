@@ -5,8 +5,8 @@ AM_CXXFLAGS = $(FREETYPE_CFLAGS) $(LIBPNG_CFLAGS) $(SDL_CFLAGS) \
 	-Wall -ffast-math
 
 lander_LDADD = $(FREETYPE_LIBS) $(SDL_LIBS) $(BOOST_FILESYSTEM_LIB) \
-	$(BOOST_SYSTEM_LIB) $(GL_LIBS) $(GLU_LIBS) $(LTLIBINTL) \
-	$(LIBPNG_LIBS)
+	$(BOOST_SYSTEM_LIB) $(GL_LIBS) $(LTLIBINTL) $(SDL_MIXER_LIBS) \
+	$(SDL_IMAGE_LIBS) $(LIBPNG_LIBS)
 
 lander_SOURCES = Main.cpp Game.hpp Game.cpp \
 	Font.cpp Font.hpp HighScores.cpp HighScores.hpp Input.cpp \
