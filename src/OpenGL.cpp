@@ -32,6 +32,8 @@ OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
      dodisplay(true),
+     m_window(NULL),
+     m_glcontext(NULL),
      fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0),
      deferredScreenShot(false)
 {
@@ -62,8 +64,6 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 
    SetVideoMode(fullscreen, width, height);
 
-   SDL_WM_SetCaption(WINDOW_TITLE, NULL);
-
    SDL_ShowCursor(SDL_DISABLE);
 
    // Start OpenGL
@@ -84,13 +84,29 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
    screen_width = width;
    this->fullscreen = fullscreen;
 
-   sdl_flags = SDL_OPENGL;
+   sdl_flags = SDL_WINDOW_OPENGL;
    if (fullscreen)
-      sdl_flags |= SDL_FULLSCREEN;
+      sdl_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-   if (SDL_SetVideoMode(screen_width, screen_height, 0, sdl_flags) == NULL)
-      RuntimeError("Unable to create OpenGL screen: " + SDLErrorString());;
+   if (m_window == NULL) {
+      m_window = SDL_CreateWindow(WINDOW_TITLE,
+                                  SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED,
+                                  screen_width, screen_height,
+                                  sdl_flags);
+
+      if (m_window == NULL)
+         RuntimeError("Failed to create window: " + SDLErrorString());
+
+      SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+      if ((m_glcontext = SDL_GL_CreateContext(m_window)) == NULL)
+         RuntimeError("Failed to create GL context: " + SDLErrorString());
+   }
+   else {
+      SDL_SetWindowSize(m_window, screen_width, screen_height);
+      SDL_SetWindowFullscreen(m_window, sdl_flags);
+   }
 
    ResizeGLScene(screen_width, screen_height);
 
@@ -196,7 +212,7 @@ void OpenGL::DrawGLScene()
          //   ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
       }
 
-      SDL_GL_SwapBuffers();
+      SDL_GL_SwapWindow(m_window);
 
       if (deferredScreenShot) {
          TakeScreenShot();
@@ -338,7 +354,11 @@ void OpenGL::DrawRotateBlendScale(Renderable* r, float angle, float alpha, float
 
 OpenGL::~OpenGL()
 {
+   if (m_glcontext != NULL)
+      SDL_GL_DeleteContext(m_glcontext);
 
+   if (m_window != NULL)
+      SDL_DestroyWindow(m_window);
 }
 
 bool OpenGL::IsTextureSizeSupported(int width, int height, int ncols, GLenum format)
@@ -410,17 +430,14 @@ void OpenGL::SkipDisplay()
 
 void OpenGL::EnumResolutions(vector<Resolution>& out) const
 {
-   Uint32 sdl_flags = SDL_OPENGL | SDL_FULLSCREEN;
+   const int numDisplayModes = SDL_GetNumDisplayModes(0);
+   for (int i = 0; i < numDisplayModes; i++) {
+      SDL_DisplayMode mode;
+      if (SDL_GetDisplayMode(0, i, &mode) != 0)
+         RuntimeError("SDL_GetDisplayMode failed: " + SDLErrorString());
 
-   SDL_Rect** modes = SDL_ListModes(NULL, sdl_flags);
-   if (modes == NULL)
-      throw runtime_error("no video modes available");
-
-   if (modes == (SDL_Rect**)-1)
-      return;  // Pick some useful default modes?
-
-   for (int i = 0; modes[i] != NULL; i++)
-      out.push_back(Resolution(modes[i]->w, modes[i]->h));
+      out.push_back(Resolution(mode.w, mode.h));
+   }
 }
 
 Renderable::Renderable(int x, int y, int width, int height,

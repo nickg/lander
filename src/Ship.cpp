@@ -25,7 +25,7 @@
 // Defines a simplified polygon representing the ship.
 //
 const Point Ship::hotspots[] = {
-   {2, 31}, {2, 26}, {4, 14}, {16, 0}, 
+   {2, 31}, {2, 26}, {4, 14}, {16, 0},
    {29, 14}, {31, 26}, {31, 31}, {17, 31} };
 
 
@@ -35,7 +35,7 @@ Ship::Ship(Viewport* v)
      thrusting(false),
      boingSound(LocateResource("sounds/boing1.wav"))
 {
-   
+
 }
 
 void Ship::Display() const
@@ -47,7 +47,7 @@ void Ship::Display() const
 }
 
 void Ship::DrawExhaust()
-{   
+{
    exhaust.Draw((float)viewport->GetXAdjust(),
                 (float)viewport->GetYAdjust());
 }
@@ -86,7 +86,7 @@ void Ship::Move()
        speedY *= -0.5;
        boingSound.Play();
     }
-    
+
     exhaust.xpos = xpos + shipImage.GetWidth()/2
        - (shipImage.GetWidth()/2)*sin(angle*(M_PI/180));
     exhaust.ypos = ypos + shipImage.GetHeight()/2
@@ -95,7 +95,7 @@ void Ship::Move()
     const float SCALE = 1.0f;
     exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
     exhaust.xi_bias = SCALE * -sinf(angle*M_PI/180) + speedX;
-    
+
     explosion.xpos = xpos + shipImage.GetWidth()/2;
     explosion.ypos = ypos + shipImage.GetHeight()/2;
 }
@@ -199,7 +199,7 @@ bool Ship::BoxCollision(int x, int y, int w, int h) const
 {
    if (!viewport->PointInScreen(x, y, w, h))
       return false;
-   
+
    LineSegment l1(x, y, x + w, y);
    LineSegment l2(x + w, y, x + w, y + h);
    LineSegment l3(x + w, y + h, x, y + h);
@@ -245,6 +245,5 @@ bool Ship::CheckCollision(LineSegment& l, double dx, double dy) const
    double t = numT / denom;
 
    // Collision occured if (0 < t < 1) and (0 < u < 1)
-   return (t > 0.0f) && (t < 1.0f) && (u > 0.0f) && (u < 1.0f);
+   return (t > 0.0) && (t < 1.0) && (u > 0.0) && (u < 1.0);
 }
-

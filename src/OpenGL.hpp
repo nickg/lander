@@ -32,7 +32,7 @@ struct Renderable {
    Renderable(int x, int y, int width, int height,
               float r, float g, float b);
    virtual ~Renderable() {}
-   
+
    virtual void Render() = 0;
 
    void TranslateTo();
@@ -46,17 +46,17 @@ struct ColourQuad : Renderable {
    ColourQuad(int x=0, int y=0, int width=0, int height=0,
               float r=1, float g=1, float b=1);
    void Render();
-   
+
 };
 
-// 
+//
 // A polygon with four points and a texture.
 //
 struct TextureQuad : Renderable {
    TextureQuad(int qx=0, int qy=0, int width=0, int height=0, GLuint tex=0,
                float r=1, float g=1, float b=1);
    void Render();
-   
+
    GLuint uTexture;
 };
 
@@ -65,10 +65,10 @@ struct TextureQuad : Renderable {
 // A generic polygon.
 //
 struct Poly {
-   Poly() 
+   Poly()
       : pointcount(0), xpos(0), ypos(0), uTexture(0), texX(0), texwidth(1.0f)
    { }
-	
+
    static const int MAX_POINTS = 4;
    Point points[MAX_POINTS];	// MAX_PointS=4 at the moment (!)
    int pointcount, xpos, ypos;
@@ -76,7 +76,7 @@ struct Poly {
    float texX, texwidth;
 };
 
-// 
+//
 // A wrapper around common 2D OpenGL functions.
 //
 class OpenGL {
@@ -111,34 +111,37 @@ public:
 
    struct Resolution {
       Resolution(int w, int h) : width(w), height(h) {}
-      
+
       int width, height;
    };
    void EnumResolutions(vector<Resolution>& out) const;
-  
+
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);
-     	
+
    static const GLuint INVALID_TEXTURE = 0xFFFFFFFF;
 
 private:
    OpenGL();
    ~OpenGL();
-   
+
    GLvoid ResizeGLScene(GLsizei width, GLsizei height);
    GLuint BindTexture(unsigned char* data, int width, int height, int fmt);
    GLubyte* BuildAlphaChannel(const unsigned char* pixels, int width, int height);
    bool InitGL();
    void DrawGLScene();
-   string SDLErrorString();
-   void RuntimeError(const string& mess);
    void TakeScreenShot() const;
+
+   static void RuntimeError(const string& mess);
+   static string SDLErrorString();
 
    // Window related variables
    int screen_width, screen_height;
    bool fullscreen;
    bool running, active, dodisplay;
    int sdl_flags;
+   SDL_Window *m_window;
+   SDL_GLContext m_glcontext;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

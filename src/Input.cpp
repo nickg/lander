@@ -28,7 +28,7 @@
 
 const int Input::RESET_TIMEOUT(7);
 
-// 
+//
 // Create a new input manager. Never call this directly: use GetInstance.
 //
 Input::Input()
@@ -43,8 +43,8 @@ Input::Input()
    cout << "Found " << SDL_NumJoysticks() << " joysticks" << endl;
 
    for (int i = 0; i < SDL_NumJoysticks(); i++)
-      cout << i << ": " << SDL_JoystickName(i) << endl;
-   
+      cout << i << ": " << SDL_JoystickNameForIndex(i) << endl;
+
    // Only use the first joystick
    if (SDL_NumJoysticks() > 0)	{
       SDL_JoystickEventState(SDL_ENABLE);
@@ -56,7 +56,7 @@ Input::Input()
 }
 
 
-// 
+//
 // Destroys an input manager.
 //
 Input::~Input()
@@ -73,11 +73,11 @@ Input& Input::GetInstance()
 {
    static Input g_input;
 
-   return g_input;	
+   return g_input;
 }
 
 
-// 
+//
 // Updates the current input state. Note that this also processes SDL_QUIT messages.
 //
 void Input::Update()
@@ -129,7 +129,7 @@ void Input::Update()
                else
                   joyRight = true;
             }
-				
+
             if (e.jaxis.axis == 1) {
                // Up-Down movement code goes here
                if (e.jaxis.value < 0)
@@ -193,38 +193,38 @@ bool Input::QueryResetAction(Action a)
 bool Input::QueryAction(Action a) const
 {
    int numkeys;
-   Uint8* keystate;
+   const Uint8* keystate;
 
    if (actionIgnore[a] > 0)
       return false;
-   
-   keystate = SDL_GetKeyState(&numkeys);
-   
+
+   keystate = SDL_GetKeyboardState(&numkeys);
+
    switch (a) {
    case UP:
-      return (keystate[SDLK_UP] != 0) || joyUp;
+      return (keystate[SDL_SCANCODE_UP] != 0) || joyUp;
    case DOWN:
-      return (keystate[SDLK_DOWN] != 0) || joyDown;
+      return (keystate[SDL_SCANCODE_DOWN] != 0) || joyDown;
    case LEFT:
-      return (keystate[SDLK_LEFT] != 0) || joyLeft;
+      return (keystate[SDL_SCANCODE_LEFT] != 0) || joyLeft;
    case RIGHT:
-      return (keystate[SDLK_RIGHT] != 0) || joyRight;
+      return (keystate[SDL_SCANCODE_RIGHT] != 0) || joyRight;
    case FIRE:
-      return (keystate[SDLK_RETURN] != 0) || joyButton0 || joyButton1;
+      return (keystate[SDL_SCANCODE_RETURN] != 0) || joyButton0 || joyButton1;
    case SKIP:
-      return (keystate[SDLK_SPACE] != 0) || joyButton0;
+      return (keystate[SDL_SCANCODE_SPACE] != 0) || joyButton0;
    case ABORT:
-      return keystate[SDLK_ESCAPE] != 0;
+      return keystate[SDL_SCANCODE_ESCAPE] != 0;
    case DEBUG:
-      return keystate[SDLK_d] != 0;
+      return keystate[SDL_SCANCODE_D] != 0;
    case PAUSE:
-      return keystate[SDLK_p] != 0;
+      return keystate[SDL_SCANCODE_P] != 0;
    case THRUST:
-      return (keystate[SDLK_UP] != 0) || joyButton1;
+      return (keystate[SDL_SCANCODE_UP] != 0) || joyButton1;
    case SCREENSHOT:
-      return keystate[SDLK_PRINT] != 0;
+      return keystate[SDL_SCANCODE_PRINTSCREEN] != 0;
    default:
-      assert(false);
+      return false;
    }
 }
 
