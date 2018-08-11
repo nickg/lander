@@ -105,6 +105,10 @@ public:
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
 
+   typedef float TimeScale;
+
+   TimeScale GetTimeScale() const;
+
    void DeferScreenShot();
 
    bool SetVideoMode(bool fullscreen, int width, int height);
@@ -143,6 +147,7 @@ private:
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;
+   TimeScale m_timeScale;
 
    bool deferredScreenShot;
 };

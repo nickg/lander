@@ -43,10 +43,6 @@
 #define M_PI 3.1415926535897932384626433832795
 #endif
 
-#include <memory>
-
-#define msleep(n) Sleep(n)
-
 #define i18n(x) x
 
 #define PATH_MAX  256
@@ -92,8 +88,6 @@
 
 #include <GL/gl.h>
 
-#define msleep(n) usleep((n)*1000)
-
 #define i18n(x) x
 
 #include "SDL.h"
@@ -106,8 +100,6 @@
 
 #include <libintl.h>
 #define i18n(x) gettext(x)
-
-#define msleep(n) usleep((n)*1000)
 
 #include "SDL.h"
 

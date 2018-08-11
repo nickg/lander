@@ -24,19 +24,21 @@
 #include "Surface.hpp"
 #include "ObjectGrid.hpp"
 
+#include <memory>
+
 class Asteroid : public StaticObject {
 public:
    Asteroid(int x, int y, int width, int surftex);
    Asteroid(const Asteroid& other);
    ~Asteroid();
-	
+
    void Draw(int viewadjust_x, int viewadjust_y) const;
    bool CheckCollision(const Ship& ship) const;
    LineSegment GetUpBoundary(int poly) const;
    LineSegment GetDownBoundary(int poly) const;
 
    static const int MAX_ASTEROID_WIDTH = 15;
-	
+
 private:
    static const int AS_VARIANCE = 64;
 
@@ -45,7 +47,7 @@ private:
 
    Texture* surfaceTexture;
    shared_ptr<GLuint> displayList;
-   
+
    struct AsteroidSection {
       double texX, texwidth;
       Point points[4];

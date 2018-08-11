@@ -21,11 +21,12 @@
 #include "Input.hpp"
 #include "ScreenManager.hpp"
 
-#include <stdexcept>
 #include <ctime>
 #include <iostream>
 #include <cassert>
 #include <set>
+
+#include <unistd.h>  // XXX
 
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
@@ -34,6 +35,7 @@ OpenGL::OpenGL()
      m_window(NULL),
      m_glcontext(NULL),
      fps_lastcheck(0), fps_framesdrawn(0), fps_rate(0),
+     m_timeScale(0.0),
      deferredScreenShot(false)
 {
    // Start random number generator
@@ -113,6 +115,7 @@ void OpenGL::Run()
 
    running = true;
    active = true;
+   m_timeScale = 1.0;
 
    const unsigned window = 1000/FRAME_RATE;
 
@@ -138,11 +141,16 @@ void OpenGL::Run()
       }
       else {
          while (tick_now < tick_start + window)	{
-            msleep(tick_start + window - tick_now);
+            usleep((tick_start + window - tick_now) * 1000);
             tick_now = SDL_GetTicks();
          }
       }
    } while (running);
+}
+
+OpenGL::TimeScale OpenGL::GetTimeScale() const
+{
+   return m_timeScale;
 }
 
 // Take a screenshot at the end of this frame

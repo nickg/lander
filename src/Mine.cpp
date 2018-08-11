@@ -27,12 +27,7 @@ Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
      objgrid(o),
      viewport(v),
      image("images/mine.png", 64, 64, MINE_FRAME_COUNT)
-{   
-   current = 0;
-   rotcount = MINE_ROTATION_SPEED;
-   displace_x = 0;
-   displace_y = 0;
-   movedelay = MINE_MOVE_SPEED;
+{
    dir = dirNone;
    movetimeout = 1;
 
@@ -45,9 +40,10 @@ Mine::Mine(ObjectGrid* o, Viewport* v, int x, int y)
 
 void Mine::Move()
 {
-   if (displace_x % ObjectGrid::OBJ_GRID_SIZE == 0
-       && displace_y % ObjectGrid::OBJ_GRID_SIZE == 0) {
-      
+   if (fabs(m_displaceX) >= ObjectGrid::OBJ_GRID_SIZE
+       || fabs(m_displaceY) >= ObjectGrid::OBJ_GRID_SIZE
+       || dir == dirNone) {
+
       switch (dir) {
       case dirUp:
          ypos -= 1;
@@ -61,13 +57,13 @@ void Mine::Move()
       case dirRight:
          xpos += 1;
          break;
-      case dirNone: 
+      case dirNone:
          break;	// Do nothing
       }
-      displace_x = 0;
-      displace_y = 0;
-      movedelay = 1;
-         
+
+      m_displaceX = 0.0f;
+      m_displaceY = 0.0f;
+
       // Change direction
       bool ok = false;
       int nextx = 0, nexty = 0, timeout = 5;
@@ -79,77 +75,80 @@ void Mine::Move()
          else {
             movetimeout--;
          }
-            
+
          switch (dir) {
-         case dirUp: 
-            nexty = ypos - 1; 
+         case dirUp:
+            nexty = ypos - 1;
             nextx = xpos;
             break;
-         case dirDown: 
+         case dirDown:
             nexty = ypos + 1;
             nextx = xpos;
             break;
-         case dirLeft: 
+         case dirLeft:
             nexty = ypos;
             nextx = xpos - 1;
             break;
          case dirRight:
             nexty = ypos;
-            nextx = xpos + 1; 
+            nextx = xpos + 1;
             break;
          case dirNone:
          default:
             nextx = xpos;
             nexty = ypos;
          }
-            
+
          // Check if this is ok
-         ok = !(nextx + 1 >= objgrid->GetWidth() || nextx < 0 
-                || nexty + 1 >= objgrid->GetHeight() || nexty < 0 
+         ok = !(nextx + 1 >= objgrid->GetWidth() || nextx < 0
+                || nexty + 1 >= objgrid->GetHeight() || nexty < 0
                 || objgrid->IsFilled(nextx, nexty)
                 || objgrid->IsFilled(nextx + 1, nexty)
                 || objgrid->IsFilled(nextx + 1, nexty + 1)
                 || objgrid->IsFilled(nextx, nexty + 1));
          timeout--;
       } while (!ok && timeout > 0);
-         
+
       if (timeout == 0)
-         dir = dirNone;				
-   }
-      
-   if (--movedelay == 0) {
-      switch(dir) {
-      case dirUp: displace_y--; break;
-      case dirDown: displace_y++; break;
-      case dirLeft: displace_x--; break;
-      case dirRight: displace_x++; break;
-      default: break;
-      }
-      movedelay = MINE_MOVE_SPEED;
+         dir = dirNone;
    }
 
-   if (--rotcount == 0) {
-      current = (current + 1) % MINE_FRAME_COUNT;
-      rotcount = MINE_ROTATION_SPEED;
+   const float timeScale = OpenGL::GetInstance().GetTimeScale();
+   const float delta = MINE_MOVE_SPEED * timeScale;
+
+   switch(dir) {
+   case dirUp: m_displaceY -= delta; break;
+   case dirDown: m_displaceY += delta; break;
+   case dirLeft: m_displaceX -= delta; break;
+   case dirRight: m_displaceX += delta; break;
+   default: break;
    }
-   
-   image.SetFrame(current);
+
+   m_rotateAnim += MINE_ROTATION_SPEED * timeScale;
+
+   int currentFrame = static_cast<int>(m_rotateAnim);
+   if (currentFrame >= MINE_FRAME_COUNT) {
+      currentFrame = 0;
+      m_rotateAnim = 0.0f;
+   }
+
+   image.SetFrame(currentFrame);
 }
 
-bool Mine::CheckCollision(Ship& ship)
+bool Mine::CheckCollision(const Ship& ship) const
 {
    return ship.BoxCollision
-      (xpos*OBJ_GRID_SIZE + 3 + displace_x,
-       ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 6 + displace_y,
+      (xpos*OBJ_GRID_SIZE + 3 + static_cast<int>(m_displaceX),
+       ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 6 + static_cast<int>(m_displaceY),
        OBJ_GRID_SIZE*2 - 6,
-       OBJ_GRID_SIZE*2 - 12); 
+       OBJ_GRID_SIZE*2 - 12);
 }
 
 void Mine::Draw() const
 {
-   int draw_x = xpos*OBJ_GRID_SIZE + displace_x
+   int draw_x = xpos*OBJ_GRID_SIZE + static_cast<int>(m_displaceX)
       - viewport->GetXAdjust();
-   int draw_y = ypos*OBJ_GRID_SIZE + displace_y
+   int draw_y = ypos*OBJ_GRID_SIZE + static_cast<int>(m_displaceY)
       - viewport->GetYAdjust() + OBJ_GRID_TOP;
    image.Draw(draw_x, draw_y);
 }

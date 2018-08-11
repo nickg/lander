@@ -29,21 +29,22 @@ public:
 
    void Move();
    void Draw() const;
-   bool CheckCollision(Ship& ship);
+   bool CheckCollision(const Ship& ship) const;
 
    static const int MINE_FRAME_COUNT = 18;
- 
+
 private:
-   static const int MINE_ROTATION_SPEED = 5;
-   static const int MINE_MOVE_SPEED = 1;
-   
+   static constexpr float MINE_ROTATION_SPEED = 0.1f;
+   static constexpr float MINE_MOVE_SPEED = 0.5f;
+
    enum Direction { dirUp, dirRight, dirDown, dirLeft, dirNone };
 
    ObjectGrid* objgrid;
    Viewport* viewport;
    Direction dir;
-   int current, rotcount, movetimeout;
-   int displace_x, displace_y, movedelay;
+   int movetimeout;
+   float m_displaceX = 0.0f, m_displaceY = 0.0f;
+   float m_rotateAnim = 0.0f;
 
    AnimatedImage image;
 };
