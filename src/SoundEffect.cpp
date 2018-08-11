@@ -32,6 +32,7 @@ bool SoundEffect::enabled(true);
 SoundEffect::SoundEffect(const string& filename, Uint8 volume)
    : sound(NULL), channel(-1)
 {
+#ifndef EMSCRIPTEN
    if (++loadCount == 1) {
 
       if (Mix_OpenAudio(audioRate, audioFormat, audioChannels, audioBuffers)) {
@@ -52,10 +53,12 @@ SoundEffect::SoundEffect(const string& filename, Uint8 volume)
       Die("Error loading %s: %s", filename.c_str(), Mix_GetError());
 
    sound->volume = volume;
+#endif
 }
 
 SoundEffect::~SoundEffect()
 {
+#ifndef EMSCRIPTEN
    if (channel != -1)
       Mix_HaltChannel(channel);
 
@@ -64,10 +67,13 @@ SoundEffect::~SoundEffect()
 
    if (--loadCount == 0)
       Mix_CloseAudio();
+#endif
 }
 
 void SoundEffect::Play()
 {
+#ifndef EMSCRIPTEN
    if (enabled)
       channel = Mix_PlayChannel(-1, sound, 0);
+#endif
 }

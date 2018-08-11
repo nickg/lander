@@ -9,3 +9,4 @@
 -D_REENTRANT
 -std=c++11
 -fno-exceptions
+-fno-rtti

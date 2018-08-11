@@ -21,7 +21,11 @@
 
 #include "Platform.hpp"
 
+#ifndef EMSCRIPTEN
 #include <SDL_mixer.h>
+#else
+#define MIX_MAX_VOLUME 0
+#endif
 
 class SoundEffect {
 public:
@@ -32,9 +36,11 @@ public:
 
    void Play();
 private:
+#ifndef EMSCRIPTEN
    Mix_Chunk* sound;
+#endif
    int channel;
-   
+
    static int loadCount;
    static int audioChannels, audioBuffers, audioRate;
    static Uint16 audioFormat;

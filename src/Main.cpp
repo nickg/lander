@@ -208,9 +208,9 @@ string LocateResource(const string& file)
 
 string GetConfigDir()
 {
+#if defined UNIX
    using std::experimental::filesystem::path;
 
-#ifdef UNIX
    path p;
    const char *config = getenv("XDG_CONFIG_HOME");
    if (config == NULL || *config == '\0') {
@@ -228,16 +228,18 @@ string GetConfigDir()
    create_directories(p);
 
    return p.string() + "/";
-#else
-#ifdef WIN32
+#elif defined WIN32
+   using std::experimental::filesystem::path;
+
    path appdata(getenv("APPDATA"));
    appdata /= "doof.me.uk";
    appdata /= "Lander";
    create_directories(appdata);
    return appdata.file_string() + "\\";
+#elif defined EMSCRIPTEN
+   return "";
 #else
 #error "Need to port GetConfigDir to this platform"
-#endif
 #endif
 }
 

@@ -28,8 +28,9 @@
 #define DATADIR "."
 #endif
 
-// Windows specific constants and includes
-#ifdef WIN32
+////////////////////////////////////////////////////////////
+// Windows
+#if defined WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -85,19 +86,9 @@
 
 #endif /* #if (_MSC_VER >= 1400) */
 
-#else /* #ifdef WIN32 */
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-// Probably using GCC or Clang
-#include <memory>
-
-#endif /* #ifdef WIN32 */
-
-// Mac OS X specifics */
-#ifdef MACOSX
+////////////////////////////////////////////////////////////
+// Mac OS X
+#elif defined MACOSX
 
 #include <GL/gl.h>
 
@@ -107,10 +98,9 @@
 
 #include "SDL.h"
 
-#endif /* #ifdef MACOSX */
-
-// Linux specifics */
-#ifdef LINUX
+////////////////////////////////////////////////////////////
+// Linux
+#elif defined LINUX
 
 #include <GL/gl.h>
 
@@ -121,7 +111,17 @@
 
 #include "SDL.h"
 
-#endif /* #ifdef LINUX */
+////////////////////////////////////////////////////////////
+// Emscripten
+#elif defined EMSCRIPTEN
+
+#include <GL/gl.h>
+
+#include "SDL.h"
+
+#define i18n(x) x
+
+#endif
 
 #include <string>
 
