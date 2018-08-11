@@ -133,9 +133,6 @@ private:
    void DrawGLScene();
    void TakeScreenShot() const;
 
-   static void RuntimeError(const string& mess);
-   static string SDLErrorString();
-
    // Window related variables
    int screen_width, screen_height;
    bool fullscreen;

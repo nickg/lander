@@ -218,7 +218,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
    if (!displayList) {
       // This asteroid has been copied and lost its display
       // list reference
-      throw runtime_error("Asteroid::Draw called on invalid asteroid copy");
+      Die("Asteroid::Draw called on invalid asteroid copy");
    }
 
    double ix = xpos*OBJ_GRID_SIZE - viewadjust_x;

@@ -34,9 +34,8 @@ Input::Input()
      joyUp(false), joyDown(false), joyButton0(false), joyButton1(false)
 {
    // Start SDL joystick handling subsystem
-   if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
-      throw runtime_error("Unable to initialise SDL: " + string(SDL_GetError()));
-   }
+   if (SDL_Init(SDL_INIT_JOYSTICK) < 0)
+      Die("Unable to initialise SDL: %s", SDL_GetError());
 
    cout << "Found " << SDL_NumJoysticks() << " joysticks" << endl;
 

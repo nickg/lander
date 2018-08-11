@@ -29,7 +29,7 @@ Font::Font(string filename, unsigned int h)
 {
    if (++fontRefCount == 1) {
       if (FT_Init_FreeType(&library))
-         throw runtime_error("FT_Init_FreeType failed");
+         Die("FT_Init_FreeType failed");
    }
 
    unsigned char i;
@@ -44,7 +44,7 @@ Font::Font(string filename, unsigned int h)
    // Create the face
    FT_Face face;
    if (FT_New_Face(library, filename.c_str(), 0, &face))
-      throw runtime_error("FT_New_Face failed, file name: " + filename);
+      Die("FT_New_Face failed, file name: %s", filename.c_str());
 
    // FreeType measures font sizes in 1/64ths of a pixel...
    FT_Set_Char_Size(face, h<<6, h<<6, 96, 96);
@@ -88,12 +88,12 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
 {
    // Load the character's glyph
    if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
-      throw runtime_error("FT_Load_Glyph failed");
+      Die("FT_Load_Glyph failed");
 
    // Store the face's glyph in a glyph object
    FT_Glyph glyph;
    if (FT_Get_Glyph(face->glyph, &glyph))
-      throw runtime_error("FT_Get_Glyph failed");
+      Die("FT_Get_Glyph failed");
 
    // Convert the glyph to a bitmap
    FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);

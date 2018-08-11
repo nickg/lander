@@ -8,3 +8,4 @@
 -D_GNU_SOURCE=1
 -D_REENTRANT
 -std=c++11
+-fno-exceptions

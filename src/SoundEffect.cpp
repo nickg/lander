@@ -33,11 +33,11 @@ SoundEffect::SoundEffect(const string& filename, Uint8 volume)
    : sound(NULL), channel(-1)
 {
    if (++loadCount == 1) {
-      
+
       if (Mix_OpenAudio(audioRate, audioFormat, audioChannels, audioBuffers)) {
          cerr << "Failed to open audio: " << Mix_GetError() << endl;
          cerr << "(Disabling sound effects)" << endl;
-         
+
          SetEnabled(false);
          return;
       }
@@ -48,12 +48,8 @@ SoundEffect::SoundEffect(const string& filename, Uint8 volume)
 
    if (!enabled) return;
 
-   if (!(sound = Mix_LoadWAV(filename.c_str()))) {
-      ostringstream ss;
-      ss << "Error loading " << filename << ": ";
-      ss << Mix_GetError();
-      throw runtime_error(ss.str());
-   }
+   if (!(sound = Mix_LoadWAV(filename.c_str())))
+      Die("Error loading %s: %s", filename.c_str(), Mix_GetError());
 
    sound->volume = volume;
 }
@@ -65,7 +61,7 @@ SoundEffect::~SoundEffect()
 
    if (enabled)
       Mix_FreeChunk(sound);
-   
+
    if (--loadCount == 0)
       Mix_CloseAudio();
 }

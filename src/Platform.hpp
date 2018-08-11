@@ -130,4 +130,7 @@ using namespace std;
 string LocateResource(const string& file);
 string GetConfigDir();
 
+void Die(const char *fmt, ...)
+   __attribute__((noreturn, format(printf, 1, 2)));
+
 #endif /* #ifdef INC_PLATFORM_HPP */

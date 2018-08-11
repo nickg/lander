@@ -9,14 +9,14 @@ find_package (SDL2_mixer REQUIRED)
 find_package (SDL2_image REQUIRED)
 find_package (OpenGL REQUIRED)
 find_package (Freetype REQUIRED)
-find_package (Boost REQUIRED COMPONENTS filesystem)
 
 add_definitions (-DVERSION=0.7)
 
 if (NOT MSVC)
   add_compile_options(-Wall)
   add_compile_options(-fno-math-errno)
-  #add_compile_options(-fno-exceptions)
+  add_compile_options(-fno-exceptions)
+  add_compile_options(-fno-rtti)
   add_definitions (-DLINUX -DUNIX -DDATADIR=\"${CMAKE_INSTALL_PREFIX}/share/lander\")
 else (NOT MSVC)
   add_definitions (-D_CRT_SECURE_NO_WARNINGS)
@@ -48,14 +48,14 @@ file (GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 add_executable (lander WIN32 ${SRC_FILES})
 
 target_include_directories (lander PRIVATE src ${SDL2_INCLUDE_DIRS}
-  ${OPENGL_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}
+  ${OPENGL_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS}
   ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
 target_link_libraries (lander PRIVATE ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES}
-  ${FREETYPE_LIBRARIES} ${Boost_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
-  ${SDL2_IMAGE_LIBRARIES})
+  ${FREETYPE_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
+  ${SDL2_IMAGE_LIBRARIES} stdc++fs)
 
-set_target_properties (lander PROPERTIES CXX_STANDARD 11)
+set_target_properties (lander PROPERTIES CXX_STANDARD 14)
 
 file (GLOB IMAGES ${PROJECT_SOURCE_DIR}/data/images/*.png)
 file (GLOB SOUNDS ${PROJECT_SOURCE_DIR}/data/sounds/*.wav)

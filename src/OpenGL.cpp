@@ -58,7 +58,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 {
    // Start SDL
    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
-      RuntimeError("Unable to initialise SDL: " + SDLErrorString());
+      Die("Unable to initialise SDL: %s", SDL_GetError());
    atexit(SDL_Quit);
 
    SetVideoMode(fullscreen, width, height);
@@ -67,12 +67,7 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
 
    // Start OpenGL
    if (!InitGL())
-      RuntimeError("Initialisation failed.");
-}
-
-void OpenGL::RuntimeError(const string& mess)
-{
-   throw runtime_error(mess);
+      Die("Initialisation failed.");
 }
 
 bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
@@ -95,12 +90,12 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
                                   sdl_flags);
 
       if (m_window == NULL)
-         RuntimeError("Failed to create window: " + SDLErrorString());
+         Die("Failed to create window: %s", SDL_GetError());
 
       SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
       if ((m_glcontext = SDL_GL_CreateContext(m_window)) == NULL)
-         RuntimeError("Failed to create GL context: " + SDLErrorString());
+         Die("Failed to create GL context: %s", SDL_GetError());
    }
    else {
       SDL_SetWindowSize(m_window, screen_width, screen_height);
@@ -110,14 +105,6 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
    ResizeGLScene(screen_width, screen_height);
 
    return resized;
-}
-
-//
-// Return the last SDL error as a C++ string.
-//
-string OpenGL::SDLErrorString()
-{
-   return string(SDL_GetError());
 }
 
 void OpenGL::Run()
@@ -435,7 +422,7 @@ void OpenGL::EnumResolutions(std::vector<Resolution>& out) const
    for (int i = 0; i < numDisplayModes; i++) {
       SDL_DisplayMode mode;
       if (SDL_GetDisplayMode(0, i, &mode) != 0)
-         RuntimeError("SDL_GetDisplayMode failed: " + SDLErrorString());
+         Die("SDL_GetDisplayMode failed: %s", SDL_GetError());
 
       accum.insert(std::make_pair(mode.w, mode.h));
    }

@@ -22,8 +22,8 @@
 #include "InterfaceSounds.hpp"
 
 #include <fstream>
-
-#include <boost/filesystem.hpp>
+#include <algorithm>
+#include <experimental/filesystem>
 
 const float HighScores::FADE_IN_SPEED(0.2f);
 const float HighScores::FADE_OUT_SPEED(-0.02f);
@@ -48,7 +48,7 @@ void HighScores::Load()
 }
 
 
-// 
+//
 // Processes user input. Called at the start of each frame.
 //
 void HighScores::Process()
@@ -62,7 +62,7 @@ void HighScores::Process()
       if (input.QueryAction(Input::SKIP)
           || input.QueryAction(Input::ABORT)
           || input.QueryAction(Input::FIRE)) {
-       
+
          // Go back to main menu
          fade = FADE_OUT_SPEED;
          for (i = 0; i < MAX_FIREWORKS; i++) {
@@ -72,7 +72,7 @@ void HighScores::Process()
             fw[i].timeout = 5;
             fw[i].em->life = 0.5f;
          }
-         
+
          input.ResetAction(Input::SKIP);
          input.ResetAction(Input::FIRE);
          input.ResetAction(Input::ABORT);
@@ -82,7 +82,7 @@ void HighScores::Process()
    else if (state == hssEnterName)	{
       if (input.QueryAction(Input::FIRE)
           && input.GetInput().size() > 0) {
-       
+
          // Enter name into high score chart
          scoreFile.Insert(input.GetInput(), newscore);
          input.CloseCharBuffer();
@@ -102,7 +102,7 @@ void HighScores::Process()
          fw[i].y-=fw[i].speed;
          fw[i].em->xpos = (float)fw[i].x;
          fw[i].em->ypos = (float)fw[i].y;
-			
+
          if (fw[i].y < fw[i].life && fw[i].timeout < 0) {
             // Blow it up
             fw[i].em->maxspeed = 200;
@@ -157,7 +157,7 @@ void HighScores::Process()
 }
 
 
-// 
+//
 // Renders the next frame.
 //
 void HighScores::Display()
@@ -177,7 +177,7 @@ void HighScores::Display()
       for (int i = 0; i < 10; i++) {
          scoreNameFont.Print(x, y + 22*i, scoreFile[i].GetName());
          scoreNameFont.Print(x + 230, y + 22*i, "%d", scoreFile[i].GetScore());
-      }	
+      }
    }
 
    // Draw other stuff
@@ -189,13 +189,13 @@ void HighScores::Display()
 
       int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsnext)) / 2;
       int y = opengl.GetHeight() - 50;
-      
+
       glColor4f(0.0f, 0.5f, 1.0f, flAlpha);
       largeFont.Print(x, y, hsnext);
    }
    else if (state == hssEnterName)	{
       Input& input = Input::GetInstance();
-      
+
       const char* hsscore = i18n("Well done - You got a high score");
       int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsscore)) / 2;
       glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
@@ -215,7 +215,7 @@ void HighScores::Display()
    }
 }
 
-// 
+//
 // Loads the highsores from disk.
 //
 void HighScores::LoadHighScores()
@@ -231,7 +231,7 @@ void HighScores::WriteHighScores()
    scoreFile.Save();
 }
 
-// 
+//
 // Displays the highest scores screen to the user.
 //
 void HighScores::DisplayScores()
@@ -250,21 +250,21 @@ void HighScores::DisplayScores()
    fade = FADE_IN_SPEED;
 }
 
-// 
+//
 // Check to see if the player has a high score.
 //
 void HighScores::CheckScore(int score)
 {
    LoadHighScores();
    ScreenManager::GetInstance().SelectScreen("HIGH SCORES");
-	
+
    if (score > scoreFile[9].GetScore()) {
       // New high score
       state = hssEnterName;
       Input::GetInstance().OpenCharBuffer(ScoreFile::ScoreEntry::MAX_NAME);
       newscore = score;
    }
-   else 
+   else
       state = hssDisplay;
 
    for (int i = 0; i < MAX_FIREWORKS; i++)	{
@@ -301,14 +301,14 @@ bool ScoreFile::ScoreEntry::operator<(const ScoreFile::ScoreEntry& rhs) const
 
 void ScoreFile::Sort()
 {
-   sort(scores.begin(), scores.end());
+   std::sort(scores.begin(), scores.end());
 }
 
 void ScoreFile::Load()
 {
    // Check for file's existence
    string hsname(GetHighScoreFile());
-   if (!boost::filesystem::exists(hsname)) {
+   if (!std::experimental::filesystem::exists(hsname)) {
       // Write a dummy score file
       Save();
    }
@@ -317,7 +317,7 @@ void ScoreFile::Load()
       ifstream fin(hsname.c_str());
       for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
          (*it).ReadFromStream(fin);
-      
+
       Sort();
    }
 }

@@ -26,8 +26,7 @@
 #include "SoundEffect.hpp"
 
 #include <iostream>
-
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 
 #ifdef MACOSX
 namespace CF {
@@ -80,7 +79,7 @@ static void MigrateConfigFiles()
    // user's home directory. Now use use the XDG-compliant .config/lander
    // directory but we should move old configs and high scores there first
 
-   using boost::filesystem::path;
+   using std::experimental::filesystem::path;
 
    const path cfg = GetConfigDir();
    const path home = getenv("HOME");
@@ -145,26 +144,17 @@ int main(int argc, char **argv)
    depth = 0;
 #endif
 
-   try {
-      // Create the game window
-      OpenGL& opengl = OpenGL::GetInstance();
-      opengl.Init(width, height, depth, fullscreen);
+   // Create the game window
+   OpenGL& opengl = OpenGL::GetInstance();
+   opengl.Init(width, height, depth, fullscreen);
 
-      RecreateScreens();
+   RecreateScreens();
 
-      // Run the game
-      ScreenManager::GetInstance().SelectScreen("MAIN MENU");
-      opengl.Run();
+   // Run the game
+   ScreenManager::GetInstance().SelectScreen("MAIN MENU");
+   opengl.Run();
 
-      DestroyScreens();
-   }
-   catch (const std::runtime_error& e) {
-#ifdef WIN32
-      MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
-#else /* #ifdef WIN32 */
-      fprintf(stderr, i18n("Runtime Error: %s\n"), e.what());
-#endif /* #ifdef WIN32 */
-   }
+   DestroyScreens();
 
    return 0;
 }
@@ -186,8 +176,8 @@ string LocateResource(const string& file)
    const char* ext = "";
    char* copy = strdup(file.c_str());
    if (char* p = strrchr(copy, '.')) {
-		*p = '\0';
-		ext = ++p;
+      *p = '\0';
+      ext = ++p;
    }
 
    cfBase = CFStringCreateWithCString(NULL, copy, kCFStringEncodingASCII);
@@ -218,7 +208,7 @@ string LocateResource(const string& file)
 
 string GetConfigDir()
 {
-   using boost::filesystem::path;
+   using std::experimental::filesystem::path;
 
 #ifdef UNIX
    path p;
@@ -226,7 +216,7 @@ string GetConfigDir()
    if (config == NULL || *config == '\0') {
       const char *home = getenv("HOME");
       if (home == NULL)
-         throw runtime_error("HOME not set");
+         Die("HOME not set");
 
       p = home;
       p /= ".config";
@@ -249,4 +239,20 @@ string GetConfigDir()
 #error "Need to port GetConfigDir to this platform"
 #endif
 #endif
+}
+
+void Die(const char *fmt, ...)
+{
+   va_list ap;
+   va_start(ap, fmt);
+   vfprintf(stderr, fmt, ap);
+   fprintf(stderr, "\n");
+   fflush(stderr);
+   va_end(ap);
+
+#ifdef WIN32
+   MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
+#endif
+
+   exit(EXIT_FAILURE);
 }

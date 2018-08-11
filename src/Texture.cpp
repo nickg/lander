@@ -49,11 +49,8 @@ Texture* LoadTexture(const string& fileName)
 Texture::Texture(const string& file)
 {
    SDL_Surface* surface = IMG_Load(LocateResource(file).c_str());
-   if (NULL == surface) {
-      ostringstream os;
-      os << "Failed to load image: " << IMG_GetError();
-      throw runtime_error(os.str());
-   }
+   if (NULL == surface)
+      Die("Failed to load image: %s", IMG_GetError());
 
    if (!IsPowerOfTwo(surface->w))
       cerr << "Warning: " << file << " width not a power of 2" << endl;
@@ -78,15 +75,12 @@ Texture::Texture(const string& file)
       else
          texture_format = GL_BGR;
    }
-   else {
-      ostringstream os;
-      os << "Unsupported image colour format: " << file;
-      throw runtime_error(os.str());
-   }
+   else
+      Die("Unsupported image colour format: %s", file.c_str());
 
    width = surface->w;
    height = surface->h;
-   
+
    glGenTextures(1, &texture);
    glBindTexture(GL_TEXTURE_2D, texture);
 

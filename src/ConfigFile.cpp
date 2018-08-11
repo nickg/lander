@@ -25,7 +25,7 @@ ConfigFile::ConfigFile(const string& filename)
    : dirty(false), filename(filename)
 {
    ifstream ifs((GetConfigDir() + filename).c_str(), ifstream::in);
-   
+
    while (ifs.good()) {
       string key, value;
       ifs >> key;
@@ -33,7 +33,7 @@ ConfigFile::ConfigFile(const string& filename)
 
       if (key.size() == 0 || value.size() == 0)
          break;
-      
+
       settings[key] = value;
    }
 
@@ -71,7 +71,7 @@ bool ConfigFile::has(const string& key) const
 const string& ConfigFile::get(const string& key)
 {
    if (!has(key))
-      throw runtime_error(key + " not in config file");
+      Die("%s not in config file", key.c_str());
    else
       return settings[key];
 }
@@ -99,7 +99,7 @@ int ConfigFile::get_int(const string& key, int def)
       os << def;
       put(key, os.str());
       return def;
-   }     
+   }
 }
 
 bool ConfigFile::get_bool(const string& key, bool def)
@@ -111,12 +111,12 @@ bool ConfigFile::get_bool(const string& key, bool def)
       else if (value == "false")
          return false;
       else
-         throw runtime_error(value + " is not boolean");
+         Die("'%s' is not boolean", value.c_str());
    }
    else {
       put(key, def);
       return def;
-   }      
+   }
 }
 
 void ConfigFile::put(string key, string value)
@@ -136,4 +136,3 @@ void ConfigFile::put(string key, bool value)
 {
    put(key, string(value ? "true" : "false"));
 }
-

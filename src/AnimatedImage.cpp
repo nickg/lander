@@ -47,7 +47,7 @@ void AnimatedImage::DrawFrame(int frame, int x, int y, double rotate, double sca
 
    int frameX = frame % FramesPerRow();
    int frameY = frame / FramesPerRow();
-   
+
    int width = Image::GetWidth();
    int height = Image::GetHeight();
 
@@ -65,7 +65,7 @@ void AnimatedImage::DrawFrame(int frame, int x, int y, double rotate, double sca
 
    double tex_t = ((double)(frameY * frameHeight))/(double)height;
    double tex_b = tex_t + (double)frameHeight/(double)height;
-   
+
    glBegin(GL_QUADS);
    glTexCoord2d(tex_l, tex_t); glVertex2i(-(frameWidth/2), -(frameHeight/2));
    glTexCoord2d(tex_l, tex_b); glVertex2i(-(frameWidth/2), frameHeight/2);
@@ -97,15 +97,14 @@ void AnimatedImage::NextFrame()
 }
 
 void AnimatedImage::SetFrame(int f)
-{   
+{
    if (f < 0 || f >= frameCount)
-      throw runtime_error("SetFrame frame out of range");
+      Die("SetFrame frame out of range");
    else
       currFrame = f;
 }
 
 int AnimatedImage::GetFrame() const
 {
-   return currFrame; 
+   return currFrame;
 }
-
