@@ -24,7 +24,7 @@
 #ifndef EMSCRIPTEN
 #include <SDL_mixer.h>
 #else
-#define MIX_MAX_VOLUME 0
+#include <SDL/SDL_mixer.h>
 #endif
 
 class SoundEffect {
@@ -36,10 +36,8 @@ public:
 
    void Play();
 private:
-#ifndef EMSCRIPTEN
    Mix_Chunk* sound;
    int channel;
-#endif
 
    static int loadCount;
    static int audioChannels, audioBuffers, audioRate;

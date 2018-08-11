@@ -32,8 +32,6 @@ const double MenuStar::INIT_SCALE(0.01);
 const double MenuStar::SPEED(4.0);
 
 const int MainMenu::OPTIONS_OFFSET(128);
-const int MainMenu::HINT_DISPLAY_TIME(140);
-const double MainMenu::MENU_FADE_SPEED(0.1);
 const unsigned MainMenu::MAX_STARS(80);
 
 const double MenuOption::SEL_ENLARGE(1.2);
@@ -60,7 +58,7 @@ void MainMenu::Load()
    bigness = 1.0;
 
    // Show a new hint
-   hint_timeout = 0;
+   m_hintTimeout = 0.0f;
    hintidx = 0;
 
    selOption = optStart;
@@ -255,12 +253,12 @@ void MainMenu::Display()
       i18n("Collect the spinning rings to unlock the landing pads")
    };
 
-   if (hint_timeout == 0) {
+   if (m_hintTimeout <= 0.0f) {
       hintidx = rand() % numhints;
-      hint_timeout = HINT_DISPLAY_TIME;
+      m_hintTimeout = HINT_DISPLAY_TIME;
    }
    else
-      hint_timeout--;
+      m_hintTimeout -= opengl.GetTimeScale();
 
    glColor4d(0.0, 1.0, 0.0, fade);
    int x = (opengl.GetWidth() - hintFont.GetStringWidth(hints[hintidx])) / 2;

@@ -308,6 +308,7 @@ void ScoreFile::Sort()
 
 void ScoreFile::Load()
 {
+#ifndef EMSCRIPTEN
    // Check for file's existence
    string hsname(GetHighScoreFile());
    if (!std::experimental::filesystem::exists(hsname)) {
@@ -322,6 +323,7 @@ void ScoreFile::Load()
 
       Sort();
    }
+#endif
 }
 
 void ScoreFile::Save()
@@ -329,9 +331,11 @@ void ScoreFile::Save()
    if (!needsWrite)
       return;
 
+#ifndef EMSCRIPTEN
    ofstream fout(GetHighScoreFile().c_str());
    for (ScoreEntryVecIt it = scores.begin(); it != scores.end(); ++it)
       (*it).WriteOnStream(fout);
+#endif
 }
 
 void ScoreFile::Insert(const string& name, int score)

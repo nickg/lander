@@ -77,11 +77,12 @@ private:
    MenuState state;
    Image titleImage;
    Font hintFont;
+   int hintidx;
+   float m_hintTimeout = 0.0f;
 
-   int hint_timeout, hintidx;
-
-   static const int OPTIONS_OFFSET, HINT_DISPLAY_TIME;
-   static const double MENU_FADE_SPEED;
+   static const int OPTIONS_OFFSET;
+   static constexpr float HINT_DISPLAY_TIME = 140.0f;
+   static constexpr double MENU_FADE_SPEED = 0.1;
 
    static const unsigned MAX_STARS;
    typedef vector<MenuStar> StarList;
