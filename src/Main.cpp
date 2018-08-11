@@ -58,11 +58,7 @@ static void DestroyScreens()
       delete options;
 }
 
-//
-// Recreate all the screens. After a resolution switch for
-// example.
-//
-void RecreateScreens()
+static void RecreateScreens()
 {
    DestroyScreens();
 

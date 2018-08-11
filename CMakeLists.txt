@@ -63,11 +63,11 @@ file (GLOB SOUNDS ${PROJECT_SOURCE_DIR}/data/sounds/*.wav)
 install (TARGETS lander RUNTIME DESTINATION bin)
 
 install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/images
-  DESTINATION share/lander/images
+  DESTINATION share/lander
   FILES_MATCHING PATTERN "*.png")
 
 install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/sounds
-  DESTINATION share/lander/sounds
+  DESTINATION share/lander
   FILES_MATCHING PATTERN "*.wav")
 
 install (FILES ${PROJECT_SOURCE_DIR}/data/Default_Font.ttf

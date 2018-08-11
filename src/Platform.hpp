@@ -127,7 +127,6 @@
 
 using namespace std;
 
-void RecreateScreens();
 string LocateResource(const string& file);
 string GetConfigDir();
 

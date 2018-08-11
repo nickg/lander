@@ -45,22 +45,22 @@ Options::Options()
 
    const int min_width = 640;
    const int min_height = 480;
-   
+
    Item resolution = { "Resolution", 0 };
    for (vector<OpenGL::Resolution>::reverse_iterator it = available.rbegin();
         it != available.rend();
         ++it) {
 
       const OpenGL::Resolution& r = *it;
-      
+
       if (r.width >= min_width && r.height >= min_height) {
          ostringstream ss;
          ss << r.width << "x" << r.height;
-      
+
          resolution.values.push_back(ss.str());
       }
    }
-   
+
    int hres = cfile.get_int("hres");
    int vres = cfile.get_int("vres");
    string currentRes = MakeResolutionString(hres, vres);
@@ -103,7 +103,7 @@ void Options::Load()
 void Options::ProcessFadeIn()
 {
    fadeAlpha += FADE_SPEED;
-   
+
    if (fadeAlpha >= 1.0) {
       state = optMain;
       fadeAlpha = 1.0;
@@ -113,7 +113,7 @@ void Options::ProcessFadeIn()
 void Options::ProcessMain()
 {
    Input& input = Input::GetInstance();
-   
+
    if (input.QueryAction(Input::FIRE)) {
       state = optFadeOut;
       InterfaceSounds::PlaySelect();
@@ -151,11 +151,11 @@ void Options::Apply()
 {
    int hres = 0, vres = 0;
    bool fullscreen = false;
-   
+
    for (ItemListIt it = items.begin(); it != items.end(); ++it) {
       if ((*it).name == "Fullscreen") {
          fullscreen = (*it).active == 0;
-         
+
          cfile.put("fullscreen", fullscreen);
       }
       else if ((*it).name == "Resolution") {
@@ -167,7 +167,7 @@ void Options::Apply()
       else if ((*it).name == "Sound Effects") {
          bool sound = (*it).active == 0;
          SoundEffect::SetEnabled(sound);
-         
+
          cfile.put("sound", sound);
       }
       else if ((*it).name == "Start Level") {
@@ -186,10 +186,7 @@ void Options::Apply()
 // Changing the video mode on Windows invalidiates all the OpenGL textures
 // A temporary workaround is to require the user to restart the program
 #ifndef WIN32
-   if (OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres)) {
-      // This *must* be the very last thing that is done!
-      RecreateScreens();
-   }
+   OpenGL::GetInstance().SetVideoMode(fullscreen, hres, vres);
 #endif
 }
 
@@ -267,7 +264,7 @@ void Options::DisplayHelpText()
 
    int screen_w = OpenGL::GetInstance().GetWidth();
    int screen_h = OpenGL::GetInstance().GetHeight();
-   
+
    glColor4d(0.0, 1.0, 0.0, fadeAlpha);
 
    // TODO: Remove this once texture loading bug is fixed
@@ -281,7 +278,7 @@ void Options::DisplayHelpText()
    x = (screen_w - helpFont.GetStringWidth(help1)) / 2;
    y = screen_h - vertOffset;
    helpFont.Print(x, y, help1);
-      
+
    const char* help2 = i18n("Use LEFT and RIGHT to change values");
    x = (screen_w - helpFont.GetStringWidth(help2)) / 2;
    y += 25;
@@ -290,14 +287,14 @@ void Options::DisplayHelpText()
    const char* help3 = i18n("Press FIRE or RETURN to exit");
    x = (screen_w - helpFont.GetStringWidth(help3)) / 2;
    y += 25;
-   helpFont.Print(x, y, help3);   
+   helpFont.Print(x, y, help3);
 
    // Temporary work around for texture reloading problem on Windows
 #ifdef WIN32
    const char* help4 = i18n("Please restart the game to change the resolution");
    x = (screen_w - helpFont.GetStringWidth(help4)) / 2;
    y += 25;
-   helpFont.Print(x, y, help4);   
+   helpFont.Print(x, y, help4);
 #endif
 }
 

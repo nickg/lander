@@ -110,9 +110,10 @@ public:
    bool SetVideoMode(bool fullscreen, int width, int height);
 
    struct Resolution {
-      Resolution(int w, int h) : width(w), height(h) {}
+      Resolution(int w, int h);
+      Resolution(const std::pair<int, int>& p);
 
-      int width, height;
+      const int width, height;
    };
    void EnumResolutions(vector<Resolution>& out) const;
 

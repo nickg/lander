@@ -25,6 +25,7 @@
 #include <ctime>
 #include <iostream>
 #include <cassert>
+#include <set>
 
 #include <boost/lexical_cast.hpp>
 
@@ -428,16 +429,20 @@ void OpenGL::SkipDisplay()
    dodisplay = false;
 }
 
-void OpenGL::EnumResolutions(vector<Resolution>& out) const
+void OpenGL::EnumResolutions(std::vector<Resolution>& out) const
 {
+   std::set<std::pair<int, int>> accum;
+
    const int numDisplayModes = SDL_GetNumDisplayModes(0);
    for (int i = 0; i < numDisplayModes; i++) {
       SDL_DisplayMode mode;
       if (SDL_GetDisplayMode(0, i, &mode) != 0)
          RuntimeError("SDL_GetDisplayMode failed: " + SDLErrorString());
 
-      out.push_back(Resolution(mode.w, mode.h));
+      accum.insert(std::make_pair(mode.w, mode.h));
    }
+
+   std::copy(accum.rbegin(), accum.rend(), std::back_inserter(out));
 }
 
 Renderable::Renderable(int x, int y, int width, int height,
@@ -493,4 +498,16 @@ void ColourQuad::Render()
    glTexCoord2f(1.0f, 0.0f); glVertex2i(width/2, height/2);
    glTexCoord2f(1.0f, 1.0f); glVertex2i(width/2, -(height/2));
    glEnd();
+}
+
+OpenGL::Resolution::Resolution(int w, int h)
+   : width(w), height(h)
+{
+
+}
+
+OpenGL::Resolution::Resolution(const std::pair<int, int>& p)
+   : width(p.first), height(p.second)
+{
+
 }
