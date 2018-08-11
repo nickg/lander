@@ -30,7 +30,10 @@ Uint16 SoundEffect::audioFormat(AUDIO_S16);
 bool SoundEffect::enabled(true);
 
 SoundEffect::SoundEffect(const string& filename, Uint8 volume)
-   : sound(NULL), channel(-1)
+#ifndef EMSCRIPTEN
+   : sound(NULL),
+     channel(-1)
+#endif
 {
 #ifndef EMSCRIPTEN
    if (++loadCount == 1) {

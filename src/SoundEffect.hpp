@@ -38,8 +38,8 @@ public:
 private:
 #ifndef EMSCRIPTEN
    Mix_Chunk* sound;
-#endif
    int channel;
+#endif
 
    static int loadCount;
    static int audioChannels, audioBuffers, audioRate;

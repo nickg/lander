@@ -19,7 +19,7 @@ if (DEFINED CMAKE_CROSSCOMPILING_EMULATOR)
   add_compile_options (-fno-math-errno)
   add_compile_options (-fno-exceptions)
   add_compile_options (-fno-rtti)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_FREETYPE=1 -s USE_SDL=2")
+  string (APPEND CMAKE_CXX_FLAGS "-s USE_FREETYPE=1 -s USE_SDL=2")
   add_definitions (-DEMSCRIPTEN)
 elseif (NOT MSVC)
   add_compile_options (-Wall)
@@ -27,6 +27,7 @@ elseif (NOT MSVC)
   add_compile_options (-fno-exceptions)
   add_compile_options (-fno-rtti)
   add_definitions (-DLINUX -DUNIX -DDATADIR=\"${CMAKE_INSTALL_PREFIX}/share/lander\")
+  set (STD_CXX_FS_LIBRARIES stdc++fs)
 else (NOT MSVC)
   add_definitions (-D_CRT_SECURE_NO_WARNINGS)
   add_definitions (-D_CRT_SECURE_NO_DEPRECATE)
@@ -66,12 +67,9 @@ target_include_directories (lander PRIVATE src ${SDL2_INCLUDE_DIRS}
 
 target_link_libraries (lander PRIVATE ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES}
   ${FREETYPE_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
-  ${SDL2_IMAGE_LIBRARIES} stdc++fs)
+  ${SDL2_IMAGE_LIBRARIES} ${STD_CXX_FS_LIBRARIES})
 
 set_target_properties (lander PROPERTIES CXX_STANDARD 14)
-
-file (GLOB IMAGES ${PROJECT_SOURCE_DIR}/data/images/*.png)
-file (GLOB SOUNDS ${PROJECT_SOURCE_DIR}/data/sounds/*.wav)
 
 install (TARGETS lander RUNTIME DESTINATION bin)
 

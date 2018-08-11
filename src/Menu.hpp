@@ -28,15 +28,14 @@
 class MenuStar {
 public:
    MenuStar();
-   
+
    bool Move();
    void Display(double fade=1.0);
 
 private:
    static const double ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
-   
+
    double scale;
-   bool active;
    double x, y, angle;
 
    static double starRotate;
@@ -48,7 +47,7 @@ public:
    MenuOption(const char* imgFile, int off, int order);
 
    void Display(bool selected, double bigness, double fade) const;
-   
+
 private:
    Image image;
    int y;
@@ -66,24 +65,24 @@ public:
    void Display();
    void DisplayStars();
    void MoveStars();
-   
+
 private:
    enum MenuState { msFadeIn, msInMenu, msFadeToStart,
                     msFadeToHigh, msFadeToOpt, msFadeToExit };
    enum SelOption { optStart, optScore, optOptions, optExit };
-   
+
    MenuOption startOpt, scoreOpt, optionsOpt, exitOpt;
    SelOption selOption;
    double fade, bigness;
    MenuState state;
    Image titleImage;
    Font hintFont;
-	
+
    int hint_timeout, hintidx;
 
    static const int OPTIONS_OFFSET, HINT_DISPLAY_TIME;
    static const double MENU_FADE_SPEED;
-   
+
    static const unsigned MAX_STARS;
    typedef vector<MenuStar> StarList;
    typedef StarList::iterator StarListIt;

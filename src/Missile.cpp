@@ -34,7 +34,7 @@ const int Missile::HORIZ_FIRE_RANGE(600);
 const int Missile::VERT_FIRE_RANGE(50);
 
 Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
-   : viewport(v), objgrid(o), speed(0.0), state(FIXED),
+   : viewport(v), speed(0.0), state(FIXED),
      image("images/missile.png")
 {
    // This constructor builds a missile attached to the side of the screen

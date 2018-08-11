@@ -271,7 +271,7 @@ void MainMenu::Display()
 double MenuStar::starRotate = 0.0;
 
 MenuStar::MenuStar()
-   : scale(INIT_SCALE), active(false)
+   : scale(INIT_SCALE)
 {
    if (NULL == starImage)
       starImage = new Image("images/star.png");

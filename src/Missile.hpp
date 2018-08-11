@@ -1,5 +1,5 @@
 //
-//  Missile.hpp -- Missiles on asteroids, etc. 
+//  Missile.hpp -- Missiles on asteroids, etc.
 //  Copyright (C) 2008-2009  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 class Missile {
 public:
    enum Side { SIDE_LEFT, SIDE_RIGHT };
-   
+
    Missile(ObjectGrid* o, Viewport* v, Side s);
 
    void Draw() const;
@@ -38,9 +38,8 @@ private:
    void MoveFixed(const Ship& ship);
    void MoveFlying();
    void MoveDestroyed();
-   
+
    Viewport* viewport;
-   ObjectGrid* objgrid;
    int x, y, dx, dy;
    double angle, speed;
 
@@ -48,10 +47,10 @@ private:
    State state;
 
    OrangeSmokeTrail exhaust;
-   
+
    static SoundEffect* fireSound;
    Image image;
-   
+
    static const double ACCEL;
    static const double MAX_SPEED;
    static const int HORIZ_FIRE_RANGE, VERT_FIRE_RANGE;
