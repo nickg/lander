@@ -27,8 +27,6 @@
 #include <cassert>
 #include <set>
 
-#include <boost/lexical_cast.hpp>
-
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -210,7 +208,7 @@ void OpenGL::DrawGLScene()
       GLenum error = glGetError();
       if (error != GL_NO_ERROR) {
          //throw runtime_error
-         //   ("OpenGL error: " + boost::lexical_cast<string>(gluErrorString(error)));
+         //   ("OpenGL error: " + string(gluErrorString(error)));
       }
 
       SDL_GL_SwapWindow(m_window);

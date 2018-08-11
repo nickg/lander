@@ -24,8 +24,6 @@
 #include <iostream>
 #include <cassert>
 
-#include <boost/lexical_cast.hpp>
-
 const int Input::RESET_TIMEOUT(7);
 
 //

@@ -27,6 +27,8 @@
 
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+
 #ifdef MACOSX
 namespace CF {
 #include "CoreFoundation/CoreFoundation.h"
@@ -34,9 +36,6 @@ namespace CF {
 #endif
 
 #include <SDL_main.h>
-
-#include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 
 namespace {
    MainMenu*   menu = NULL;
@@ -74,13 +73,14 @@ static void RecreateScreens()
    sm.AddScreen("OPTIONS", options);
 }
 
+#ifdef UNIX
 static void MigrateConfigFiles()
 {
    // Earlier versions of Lander stored config files directly in the
    // user's home directory. Now use use the XDG-compliant .config/lander
    // directory but we should move old configs and high scores there first
 
-   using namespace boost::filesystem;
+   using boost::filesystem::path;
 
    const path cfg = GetConfigDir();
    const path home = getenv("HOME");
@@ -94,6 +94,7 @@ static void MigrateConfigFiles()
    if (exists(old_scores))
       rename(old_scores, cfg / "scores");
 }
+#endif
 
 //
 // Entry point.
@@ -209,7 +210,7 @@ string LocateResource(const string& file)
 #endif
 
 #ifdef DATADIR
-   return boost::lexical_cast<string>(DATADIR) + "/" + file;
+   return string(DATADIR) + "/" + file;
 #else
    return file;
 #endif
@@ -217,7 +218,7 @@ string LocateResource(const string& file)
 
 string GetConfigDir()
 {
-   using namespace boost::filesystem;
+   using boost::filesystem::path;
 
 #ifdef UNIX
    path p;
