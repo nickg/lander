@@ -113,7 +113,7 @@ void Mine::Move()
          dir = dirNone;
    }
 
-   const float timeScale = OpenGL::GetInstance().GetTimeScale();
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
    const float delta = MINE_MOVE_SPEED * timeScale;
 
    switch(dir) {

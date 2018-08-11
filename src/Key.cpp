@@ -29,10 +29,8 @@ Key::Key(bool active, int xpos, int ypos, ArrowColour acol)
      active(active),
      image(KeyFileName(acol), 32, 32, KEY_FRAMES),
      arrow(ArrowFileName(acol))
-{  
+{
    alpha = active ? 1.0 : 0.0;
-
-   rotcount = KEY_ROTATION_SPEED;
 }
 
 void Key::DrawKey(Viewport* viewport)
@@ -40,9 +38,12 @@ void Key::DrawKey(Viewport* viewport)
    int draw_x = xpos*OBJ_GRID_SIZE - viewport->GetXAdjust();
    int draw_y = ypos*OBJ_GRID_SIZE - viewport->GetYAdjust() + OBJ_GRID_TOP;
    image.Draw(draw_x, draw_y, 0.0, 1.0, alpha);
-   if (--rotcount == 0) {
+
+   m_rotateAnim += KEY_ROTATION_SPEED * OpenGL::GetInstance().GetTimeScale();
+
+   if (m_rotateAnim > 1.0f) {
       image.NextFrame();
-      rotcount = KEY_ROTATION_SPEED;
+      m_rotateAnim = 0.0f;
    }
 
    if (!active && alpha > 0.0f)
@@ -58,20 +59,20 @@ void Key::DrawArrow(Viewport* viewport) const
 
       int screenWidth = OpenGL::GetInstance().GetWidth();
       int screenHeight = OpenGL::GetInstance().GetHeight();
-      
-      if (ax < 0) { 
-         ax = 0; 
+
+      if (ax < 0) {
+         ax = 0;
          angle = 90;
       }
-      else if (ax + ARROW_SIZE > screenWidth) { 
+      else if (ax + ARROW_SIZE > screenWidth) {
          ax = screenWidth - ARROW_SIZE;
          angle = 270;
       }
-      if (ay < 0) { 
+      if (ay < 0) {
          ay = 0;
          angle = 180;
       }
-      else if (ay + ARROW_SIZE > screenHeight) { 
+      else if (ay + ARROW_SIZE > screenHeight) {
          ay = screenHeight - ARROW_SIZE;
          angle = 0;
       }

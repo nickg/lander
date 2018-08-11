@@ -21,7 +21,7 @@
 #define INC_GAME_HPP
 
 #include "Platform.hpp"
-#include "OpenGL.hpp" 
+#include "OpenGL.hpp"
 #include "Emitter.hpp"
 #include "ScreenManager.hpp"
 #include "Font.hpp"
@@ -45,22 +45,23 @@ enum FontType { ftNormal, ftBig, ftScore, ftScoreName, ftLarge };
 class FuelMeter {
 public:
    FuelMeter();
-   
+
    void Display();
 
    void Refuel(int howmuch);
    bool OutOfFuel() const;
    void BurnFuel();
 
-   int GetFuel() const { return fuel; }
-   
+   int GetFuel() const;
+
 private:
    Image fuelMeterImage;
    Texture* fuelBarTexture;
 
    static const int FUELBAR_Y, FUELBAR_OFFSET;
-   
-   int fuel, maxfuel;
+
+   int maxfuel;
+   float m_fuel = 0.0f;
    TextureQuad border;
 };
 
@@ -75,7 +76,7 @@ private:
    Image speedMeterImage;
 
    static const float LAND_SPEED;
-   
+
    ColourQuad speedbar;
    Ship* ship;
 };
@@ -84,7 +85,7 @@ class Game : public Screen {
 public:
    Game();
    virtual ~Game();
-    
+
    void Load();
    void Process();
    void Display();
@@ -106,11 +107,11 @@ private:
    void MakeMissiles();
    void MakeGateways();
    void MakeMines();
-   
+
    void ExplodeShip();
    void EnterDeathWait(int timeout = DEATH_TIMEOUT);
    void CalculateScore(int padIndex);
-   
+
    static void MakeMultipleOf(int& n, int x, int y);
 
    Viewport viewport;
@@ -125,7 +126,7 @@ private:
    int score, newscore, nextnewlife, newscore_width;
    int countdown_timeout, leveltext_timeout, levelcomp_timeout;
 
-   enum GameState { gsNone, gsInGame, gsExplode, gsGameOver, gsDeathWait, 
+   enum GameState { gsNone, gsInGame, gsExplode, gsGameOver, gsDeathWait,
                     gsFadeIn, gsFadeToDeath, gsFadeToRestart, gsLevelComplete,
                     gsPaused };
    GameState state;
@@ -138,7 +139,7 @@ private:
    Font normalFont, scoreFont, bigFont;
 
    SoundEffect impactSound, collectSound;
-    
+
    // Stars
    static const int MAX_GAME_STARS = 2048;
    struct Star {
@@ -150,7 +151,7 @@ private:
    // Landing pads
    static const int MAX_PADS = 3;
    LandingPadList pads;
-    
+
    // Keys
    static const int MAX_KEYS = 5;
    typedef vector<Key> KeyList;

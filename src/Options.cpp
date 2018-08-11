@@ -192,7 +192,7 @@ void Options::Apply()
 
 void Options::ProcessFadeOut()
 {
-   fadeAlpha -= FADE_SPEED;
+   fadeAlpha -= FADE_SPEED * OpenGL::GetInstance().GetTimeScale();
 
    if (fadeAlpha <= 0.0) {
       fadeAlpha = 0.0;

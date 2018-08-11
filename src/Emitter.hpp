@@ -41,14 +41,14 @@ public:
    void NewCluster(int x, int y);
    void Reset();
    void Process(bool createnew, bool evolve = true);
-   
+
    virtual void ProcessEffect(int particle) { }
-   
+
    float partsize, r, g, b, deviation, xg, yg, life, maxspeed, flSize;
    float xpos, ypos, slowdown, createrate;
 
    float xi_bias, yi_bias;
-   
+
 protected:
    void NewParticle(int index);
 
@@ -60,12 +60,12 @@ protected:
       float xi, yi;
       float xg, yg;
    } particle[MAX_PARTICLES];
-   
+
    Texture* texture_;
 };
 
 
-// 
+//
 // A smoke trail.
 //
 class SmokeTrail : public Emitter {
@@ -73,10 +73,10 @@ public:
    SmokeTrail(float r, float g, float b,
               float dr, float dg, float db);
    virtual ~SmokeTrail() { }
-   
+
    void ProcessEffect(int particle);
 private:
-   float dr, dg, db;
+   const float dr, dg, db;
 };
 
 class BlueSmokeTrail : public SmokeTrail {
@@ -89,14 +89,14 @@ public:
    OrangeSmokeTrail();
 };
 
-// 
+//
 // An explosion.
 //
 class Explosion : public Emitter {
 public:
    Explosion();
    virtual ~Explosion() { }
-   
+
    void ProcessEffect(int particle);
 private:
 };

@@ -25,7 +25,7 @@ const float Fade::DEFAULT_FADE_SPEED(0.05f);
 Fade::Fade(float s)
    : state(fNone), alpha(0.0f), speed(s)
 {
-   
+
 }
 
 void Fade::BeginFadeIn()
@@ -46,9 +46,11 @@ void Fade::BeginFadeOut()
 
 bool Fade::Process()
 {
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
+
    switch (state) {
    case fOut:
-      alpha += speed;
+      alpha += speed * timeScale;
       if (alpha >= 1.0f) {
          state = fNone;
          return true;
@@ -56,7 +58,7 @@ bool Fade::Process()
       else
          return false;
    case fIn:
-      alpha -= speed;
+      alpha -= speed * timeScale;
       if (alpha <= 0.0f) {
          state = fNone;
          return true;

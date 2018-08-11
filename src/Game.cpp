@@ -90,7 +90,7 @@ void Game::Load()
 
 Game::~Game()
 {
-   
+
 }
 
 void Game::NewGame()
@@ -127,7 +127,7 @@ void Game::Process()
 {
    Input& input = Input::GetInstance();
    OpenGL& opengl = OpenGL::GetInstance();
-   
+
    // Check keys
    if (input.QueryAction(Input::PAUSE)) {
       if (state == gsPaused) {
@@ -139,7 +139,7 @@ void Game::Process()
          state = gsPaused;
          ship.ThrustOff();
       }
-      
+
       input.ResetAction(Input::PAUSE);
    }
 
@@ -159,7 +159,7 @@ void Game::Process()
    }
    else
       ship.ThrustOff();
-   
+
    if (input.QueryAction(Input::RIGHT) && state == gsInGame) {
       // Turn clockwise
       ship.Turn(TURN_ANGLE);
@@ -168,7 +168,7 @@ void Game::Process()
       // Turn anti-clockwise
       ship.Turn(-TURN_ANGLE);
    }
-   
+
    if (input.QueryAction(Input::SKIP) && state == gsExplode) {
       // The player got bored watching the explosion
       EnterDeathWait(lives == 0 ? DEATH_TIMEOUT : 1);
@@ -203,7 +203,7 @@ void Game::Process()
    // Move or fire missiles
    for (MissileListIt it = missiles.begin(); it != missiles.end(); ++it)
       (*it).Move(ship);
-   
+
    // Calculate view adjusts
    ship.CentreInViewport();
 
@@ -233,13 +233,13 @@ void Game::Process()
       else if (state == gsExplode)
          EnterDeathWait();
    }
-   
+
    // Check for collisions with asteroids
    LineSegment l1, l2;
    for (AsteroidListIt it = asteroids_.begin();
         it != asteroids_.end(); ++it) {
       const Asteroid& a = *it;
-      
+
       if (a.ObjectInScreen(&viewport)) {
          if (a.CheckCollision(ship)) {
             // Crashed
@@ -286,7 +286,7 @@ void Game::Process()
    for (MissileListIt it = missiles.begin(); it != missiles.end(); ++it) {
       if ((*it).CheckCollison(ship)) {
          if (state == gsInGame) {
-            // Destroy the ship 
+            // Destroy the ship
             ExplodeShip();
             ship.Bounce();
          }
@@ -365,16 +365,16 @@ void Game::Process()
       }
       else {
          int dec = level * 2;
-         
+
          // Decrease the score
          newscore -= dec;
          score += dec;
-         
+
          if (score > nextnewlife) {
             lives++;
             nextnewlife *= 2;
          }
-         
+
          if (newscore < 0) {
             // Move to the next level (after a 1s pause)
             score -= -newscore;
@@ -382,7 +382,7 @@ void Game::Process()
          }
       }
    }
-   
+
    // Decrease level text timeout
    if (leveltext_timeout > 0)
       leveltext_timeout--;
@@ -406,20 +406,20 @@ void Game::MakeLandingPads()
    int nLandingPads = rand()%MAX_PADS + 1;
 
    cout << "  Landing pads: " << nLandingPads << endl;
-   
+
    for (int i = 0; i < nLandingPads; i++) {
       int index, length;
       bool overlap;
       do {
          index = rand() % (viewport.GetLevelWidth() / Surface::SURFACE_SIZE);
          length = rand() % MAX_PAD_SIZE + 3;
-         
+
          // Check for overlap
          overlap = false;
          if (index + length > (viewport.GetLevelWidth() / Surface::SURFACE_SIZE))
             overlap = true;
          for (int j = 0; j < i; j++) {
-            if (pads[j].GetIndex() == index) 
+            if (pads[j].GetIndex() == index)
                overlap = true;
             else if (pads[j].GetIndex() < index
                      && pads[j].GetIndex() + pads[j].GetLength() >= index)
@@ -429,9 +429,9 @@ void Game::MakeLandingPads()
                overlap = true;
          }
       } while (overlap);
-      
+
       pads.push_back(LandingPad(&viewport, index, length));
-   }   
+   }
 }
 
 // There are (level / 2) + (level % 2) keys per level
@@ -459,7 +459,7 @@ void Game::MakeAsteroids(int surftex)
    cout << "  Asteroids: " << asteroidCount << endl;
 
    asteroids_.clear();
-   
+
    for (int i = 0; i < asteroidCount; i++) {
       // Allocate space, check for timeout
       int x, y, width = rand() % (Asteroid::MAX_ASTEROID_WIDTH - 4) + 4;
@@ -467,7 +467,7 @@ void Game::MakeAsteroids(int surftex)
          // Failed to allocate space so don't make any more asteroids
          break;
       }
-      
+
       // Generate the asteroid
       asteroids_.push_back(Asteroid(x, y, width, surftex));
    }
@@ -479,7 +479,7 @@ void Game::MakeMissiles()
    if (missileCount > MAX_MISSILES)
       missileCount = MAX_MISSILES;
    cout << "  Missiles: " << missileCount << endl;
-   
+
    missiles.clear();
    for (int i = 0; i < missileCount; i++) {
       Missile::Side side =
@@ -495,12 +495,12 @@ void Game::MakeGateways()
    if (gatewaycount > MAX_GATEWAYS)
       gatewaycount = MAX_GATEWAYS;
    cout << "  Gateways: " << gatewaycount << endl;
-   
+
    for (int i = 0; i < gatewaycount; i++) {
       // Allocate space for gateway
       int length = rand()%(MAX_GATEWAY_LENGTH-3) + 3;
       bool vertical = rand() % 2 == 0;
-		
+
       bool result;
       int xpos, ypos;
       if (vertical)
@@ -520,7 +520,7 @@ void Game::MakeMines()
 {
    int minecount = max(level/2 + rand()%level - 1, 0);
    cout << "  Mines: " << minecount << endl;
-   
+
    mines.clear();
    if (minecount > MAX_MINES)
       minecount = MAX_MINES;
@@ -539,13 +539,13 @@ void Game::MakeMines()
 void Game::StartLevel()
 {
    cout << endl << "Start level " << level << ":" << endl;
-   
+
    // Set level size
    int levelWidth = 2000 + 2*Surface::SURFACE_SIZE*level;
    MakeMultipleOf(levelWidth, Surface::SURFACE_SIZE, ObjectGrid::OBJ_GRID_SIZE);
 
    int levelHeight = 1500 + 2*Surface::SURFACE_SIZE*level;
-   
+
    viewport.SetLevelWidth(levelWidth);
    viewport.SetLevelHeight(levelHeight);
    flGravity = GRAVITY;
@@ -567,7 +567,7 @@ void Game::StartLevel()
       stars[i].ypos = (int)(rand()%(viewport.GetLevelHeight()/20))*20;
       stars[i].scale = (double)rand()/(double)RAND_MAX/8.0;
    }
-   
+
    MakeLandingPads();
 
    // Generate the surface
@@ -578,10 +578,10 @@ void Game::StartLevel()
    MakeAsteroids(surftex);
    MakeMissiles();
    MakeGateways();
-   
+
    // Create mines (MUST BE CREATED LAST)
    MakeMines();
-   
+
    // Set ship starting position
    ship.Reset();
 
@@ -596,7 +596,7 @@ void Game::StartLevel()
    life_alpha = LIFE_ALPHA_BASE + 1.0f;
 }
 
-// 
+//
 // Destroys the ship after a collision.
 //
 void Game::ExplodeShip()
@@ -613,14 +613,14 @@ void Game::ExplodeShip()
 void Game::Display()
 {
    OpenGL& opengl = OpenGL::GetInstance();
-   
+
    // Draw the stars
    for (int i = 0; i < nStarCount; i++) {
       int x = stars[i].xpos - viewport.GetXAdjust();
       int y = stars[i].ypos - viewport.GetYAdjust();
-      
+
       starImage.Draw(x, y, starrotate, stars[i].scale);
-      starrotate += 0.005f;
+      starrotate += 0.005f * opengl.GetTimeScale();
    }
 
    surface.Display();
@@ -629,17 +629,17 @@ void Game::Display()
    for (AsteroidListIt it = asteroids_.begin();
         it != asteroids_.end(); ++it) {
       if ((*it).ObjectInScreen(&viewport))
-         (*it).Draw(viewport.GetXAdjust(), viewport.GetYAdjust());			
+         (*it).Draw(viewport.GetXAdjust(), viewport.GetYAdjust());
    }
 
    // Draw the keys
    for (KeyListIt it = keys.begin(); it != keys.end(); ++it)
-      (*it).DrawKey(&viewport);   
-      
+      (*it).DrawKey(&viewport);
+
    // Draw gateways
    for (ElectricGateListIt it = gateways.begin(); it != gateways.end(); ++it)
       (*it).Draw();
-   
+
    // Draw mines
    for (MineListIt it = mines.begin(); it != mines.end(); ++it)
       (*it).Draw();
@@ -683,12 +683,12 @@ void Game::Display()
 
    // Draw the exhaust
    ship.DrawExhaust();
-   
+
    if (state != gsDeathWait && state != gsGameOver
        && state != gsFadeToDeath && state != gsFadeToRestart) {
       ship.Display();
    }
-   
+
    // Draw the explosion if necessary
    if (state == gsExplode) {
       ship.DrawExplosion();
@@ -698,11 +698,11 @@ void Game::Display()
       int y = opengl.GetHeight() - 40;
       normalFont.Print(x, y, sdeath);
    }
-   else if (state == gsDeathWait || state == gsGameOver 
+   else if (state == gsDeathWait || state == gsGameOver
             || state == gsFadeToDeath || state == gsFadeToRestart) {
       ship.DrawExplosion();
    }
-   
+
    // Draw the arrows
    for (KeyListIt it = keys.begin(); it != keys.end(); ++it)
       (*it).DrawArrow(&viewport);
@@ -734,9 +734,9 @@ void Game::Display()
       else
          smallShip.Draw(draw_x, draw_y);
    }
-   
+
    // Draw key icons
-   int offset = (opengl.GetWidth() - MAX_KEYS*32)/2; 
+   int offset = (opengl.GetWidth() - MAX_KEYS*32)/2;
    if (nKeysRemaining > 0) {
       int i = 0;
       for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
@@ -762,14 +762,14 @@ void Game::Display()
       int lc_x = (opengl.GetWidth() - levelComp.GetWidth()) / 2;
       int lc_y = (opengl.GetHeight() - levelComp.GetHeight()) / 2 - 50;
       levelComp.Draw(lc_x, lc_y);
-         
+
       glColor3f(0.0f, 0.5f, 0.9f);
       int printScore = newscore > 0 ? newscore : 0;
       int x = (opengl.GetWidth() - newscore_width) / 2;
       int y = (opengl.GetHeight() - 30)/2 + 50;
       bigFont.Print(x, y, scoretxt, printScore);
    }
-   
+
    // Draw level number text
    if (leveltext_timeout) {
       glColor3f(0.9f, 0.9f, 0.0f);
@@ -803,16 +803,16 @@ void Game::Display()
 FuelMeter::FuelMeter()
    : fuelMeterImage("images/fuelmeter.png"),
      fuelBarTexture(LoadTexture("images/fuelbar.png")),
-     fuel(0), maxfuel(1)
+     maxfuel(1)
 {
-   
+
 }
 
 void FuelMeter::Display()
 {
    OpenGL& opengl = OpenGL::GetInstance();
-   
-   int fbsize = (int)(((float)fuel/(float)maxfuel)*(256-FUELBAR_OFFSET)); 
+
+   int fbsize = (int)((m_fuel/(float)maxfuel)*(256-FUELBAR_OFFSET));
    float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
    glEnable(GL_BLEND);
    glDisable(GL_DEPTH_TEST);
@@ -838,18 +838,25 @@ void FuelMeter::Display()
 void FuelMeter::Refuel(int howmuch)
 {
    maxfuel = howmuch;
-   fuel = maxfuel;
+   m_fuel = maxfuel;
 }
 
 void FuelMeter::BurnFuel()
 {
-   assert(fuel > 0);
-   fuel--;
+   assert(m_fuel > 0.0f);
+   m_fuel -= OpenGL::GetInstance().GetTimeScale();
+   if (m_fuel < 0.0f)
+      m_fuel = 0.0f;
+}
+
+int FuelMeter::GetFuel() const
+{
+   return static_cast<int>(m_fuel);
 }
 
 bool FuelMeter::OutOfFuel() const
 {
-   return fuel <= 0;
+   return m_fuel <= 0.0f;
 }
 
 SpeedMeter::SpeedMeter(Ship* ship)
@@ -869,10 +876,10 @@ void SpeedMeter::Display()
 {
    // Resize the speed bar
    float flSpeed1 = 30.0f / LAND_SPEED;
-   int width = (int)((float)ship->GetYSpeed() * flSpeed1); 
-   if (width < 0) 
+   int width = (int)((float)ship->GetYSpeed() * flSpeed1);
+   if (width < 0)
       width = 0;
-   if (width > 124) 
+   if (width > 124)
       width = 124;
    speedbar.blue = 0.0f;
    speedbar.red = (float)width/124.0f;
@@ -888,4 +895,3 @@ bool SpeedMeter::SafeLandingSpeed() const
 {
    return ship->GetYSpeed() < LAND_SPEED;
 }
-

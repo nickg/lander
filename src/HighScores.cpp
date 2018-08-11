@@ -57,6 +57,8 @@ void HighScores::Process()
    OpenGL& opengl = OpenGL::GetInstance();
    int i;
 
+   const OpenGL::TimeScale timeScale = opengl.GetTimeScale();
+
    // Check for input
    if (state == hssDisplay) {
       if (input.QueryAction(Input::SKIP)
@@ -99,7 +101,7 @@ void HighScores::Process()
    // Process fireworks
    for (i = 0; i < MAX_FIREWORKS; i++) {
       if (fw[i].active)	{
-         fw[i].y-=fw[i].speed;
+         fw[i].y -= fw[i].speed * timeScale;
          fw[i].em->xpos = (float)fw[i].x;
          fw[i].em->ypos = (float)fw[i].y;
 
@@ -124,7 +126,7 @@ void HighScores::Process()
          fw[i].em->r = (rand() % 100) / 100.0f;
          fw[i].em->g = (rand() % 100) / 100.0f;
          fw[i].em->b = (rand() % 100) / 100.0f;
-         fw[i].em->life = 0.5f;
+         fw[i].em->life = 0.2f;
          fw[i].speed = 2 + rand() % 2;
          fw[i].life = rand() % (opengl.GetHeight()-100) + 100;
          fw[i].timeout = -1;
@@ -140,12 +142,12 @@ void HighScores::Process()
 
    // Fade in or out
    if (fade >= 0.001f)	{
-      flAlpha += fade;
+      flAlpha += fade * timeScale;
       if (flAlpha >= 1.0f)
          fade = 0.000000f;
    }
    else if (fade <= -0.001f)	{
-      flAlpha += fade;
+      flAlpha += fade * timeScale;
       if (flAlpha < 0.0f)	{
          fade = 0.000000f;
 

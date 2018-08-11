@@ -18,6 +18,7 @@
 
 #include "ElectricGate.hpp"
 #include "Ship.hpp"
+#include "OpenGL.hpp"
 
 #include <string>
 
@@ -26,35 +27,35 @@ ElectricGate::ElectricGate(Viewport* v, int length, bool vertical, int x, int y)
      gateImage("images/gateway.png")
 {
    lightning.Build(length * OBJ_GRID_SIZE, vertical);
-   
-   timer = rand() % 70 + 10;
+
+   m_timer = rand() % 70 + 10;
 }
 
 bool ElectricGate::CheckCollision(Ship& ship)
 {
    int dx = vertical ? 0 : length;
    int dy = vertical ? length : 0;
-   if (timer > GATEWAY_ACTIVE) {
+   if (m_timer > GATEWAY_ACTIVE) {
       bool collide1 = ship.BoxCollision
          (xpos*OBJ_GRID_SIZE,
           ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP,
           OBJ_GRID_SIZE,
           OBJ_GRID_SIZE);
-			
+
       bool collide2 = ship.BoxCollision
          ((xpos + dx)*OBJ_GRID_SIZE,
           (ypos + dy)*OBJ_GRID_SIZE + OBJ_GRID_TOP,
           OBJ_GRID_SIZE,
           OBJ_GRID_SIZE);
-		
+
       return collide1 || collide2;
    }
    else {
       return ship.BoxCollision
-         (xpos*OBJ_GRID_SIZE, 
+         (xpos*OBJ_GRID_SIZE,
           ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP,
           (dx + 1)*OBJ_GRID_SIZE,
-          (dy + 1)*OBJ_GRID_SIZE); 
+          (dy + 1)*OBJ_GRID_SIZE);
    }
 }
 
@@ -77,7 +78,8 @@ void ElectricGate::Draw()
    gateImage.Draw(draw_x, draw_y);
 
    // Draw the electricity stuff
-   if (--timer < GATEWAY_ACTIVE) { 
+   m_timer -= OpenGL::GetInstance().GetTimeScale();
+   if (m_timer < GATEWAY_ACTIVE) {
       double x = xpos*OBJ_GRID_SIZE + 16 - viewport->GetXAdjust();
       double y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();
 
@@ -85,12 +87,12 @@ void ElectricGate::Draw()
       glTranslated(x, y, 0.0);
       lightning.Draw();
 
-      if (timer % 5 == 0)
+      if (static_cast<int>(m_timer) % 5 == 0)
          lightning.Build(length * OBJ_GRID_SIZE, vertical);
-            
-      // Reset timer 
-      if (timer < 0)
-         timer = 100;
+
+      // Reset timer
+      if (m_timer < 0.0f)
+         m_timer = 100.0f;
    }
 }
 
@@ -109,7 +111,7 @@ void Lightning::Build(int length, bool vertical)
    for (int i = 0; i < npoints; i++) {
       if (i == npoints - 1)
          y = 0;
-      
+
       line.AddPoint(i*delta, y);
 
       double swing = rand() % 2 == 0 ? -1 : 1;
@@ -125,12 +127,12 @@ void Lightning::Draw() const
 {
    glDisable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   
+
    line.Draw();
 }
 
 void LightLineStrip::AddPoint(double x, double y)
-{   
+{
    if (swapXandY)
       points.push_back(Point_t(y, x));
    else
@@ -143,13 +145,13 @@ void LightLineStrip::Draw() const
 
    DrawWithOffset(1, 0.8, 0.8, 1, 0.8);
    DrawWithOffset(-1, 0.8, 0.8, 1, 0.8);
-   
+
    DrawWithOffset(2, 0.6, 0.6, 1, 0.6);
    DrawWithOffset(-2, 0.6, 0.6, 1, 0.6);
-   
+
    DrawWithOffset(3, 0.4, 0.4, 1, 0.4);
    DrawWithOffset(-3, 0.4, 0.4, 1, 0.4);
-   
+
    DrawWithOffset(4, 0.2, 0.2, 1, 0.2);
    DrawWithOffset(-4, 0.2, 0.2, 1, 0.2);
 }
@@ -162,11 +164,10 @@ void LightLineStrip::DrawWithOffset(double off, double r, double g, double b,
 
    glColor4d(r, g, b, a);
    glBegin(GL_LINE_STRIP);
-   
+
    list<Point_t>::const_iterator it;
    for (it = points.begin(); it != points.end(); ++it)
       glVertex2d((*it).first + x_off, (*it).second + y_off);
-   
+
    glEnd();
 }
-

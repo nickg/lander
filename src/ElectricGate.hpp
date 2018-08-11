@@ -27,12 +27,12 @@
 #include <list>
 
 //
-// A line strip used for rendering lightning. 
+// A line strip used for rendering lightning.
 //
 class LightLineStrip {
 public:
    LightLineStrip() : swapXandY(false) {}
-   
+
    void AddPoint(double x, double y);
    void Draw() const;
    void SwapXandY(bool b) { swapXandY = b; }
@@ -40,7 +40,7 @@ public:
 private:
    void DrawWithOffset(double off, double r, double g, double b,
                        double a) const;
-   
+
    typedef pair<double, double> Point_t;
    list<Point_t> points;
    bool swapXandY;
@@ -50,10 +50,10 @@ class Lightning {
 public:
    void Build(int length, bool vertical);
    void Draw() const;
-private:   
+private:
    LightLineStrip line;
 };
-   
+
 
 class ElectricGate : public StaticObject {
 public:
@@ -61,15 +61,16 @@ public:
 
    bool CheckCollision(Ship& ship);
    void Draw();
-   
+
 private:
-   static const int GATEWAY_ACTIVE = 30;
-   
-   int length, timer;
+   static constexpr float GATEWAY_ACTIVE = 30.0f;
+
+   int length;
    bool vertical;
    Viewport* viewport;
    Lightning lightning;
    Image gateImage;
+   float m_timer = 0.0f;
 };
 
 #endif

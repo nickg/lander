@@ -62,42 +62,44 @@ void Ship::Move()
 {
    RotatePoints(hotspots, points, NUM_HOTSPOTS, angle*M_PI/180, -16, 16);
 
-    xpos += speedX;
-    ypos += speedY;
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
 
-    // Check bounds
-    if (xpos <= 0.0) {
-       xpos = 0.0;
-       speedX *= -0.5;
-        boingSound.Play();
-    }
-    else if (xpos + shipImage.GetWidth() > viewport->GetLevelWidth()) {
-       xpos = (double)(viewport->GetLevelWidth() - shipImage.GetWidth());
-       speedX *= -0.5;
-       boingSound.Play();
-    }
-    if (ypos <= 0.0) {
-       ypos = 0.0;
-       speedY *= -0.5;
-       boingSound.Play();
-    }
-    else if (ypos + shipImage.GetHeight() > viewport->GetLevelHeight()) {
-       ypos = (double)(viewport->GetLevelHeight() - shipImage.GetHeight());
-       speedY *= -0.5;
-       boingSound.Play();
-    }
+   xpos += speedX * timeScale;
+   ypos += speedY * timeScale;
 
-    exhaust.xpos = xpos + shipImage.GetWidth()/2
-       - (shipImage.GetWidth()/2)*sin(angle*(M_PI/180));
-    exhaust.ypos = ypos + shipImage.GetHeight()/2
-       + (shipImage.GetHeight()/2)*cos(angle*(M_PI/180));
+   // Check bounds
+   if (xpos <= 0.0) {
+      xpos = 0.0;
+      speedX *= -0.5;
+      boingSound.Play();
+   }
+   else if (xpos + shipImage.GetWidth() > viewport->GetLevelWidth()) {
+      xpos = (double)(viewport->GetLevelWidth() - shipImage.GetWidth());
+      speedX *= -0.5;
+      boingSound.Play();
+   }
+   if (ypos <= 0.0) {
+      ypos = 0.0;
+      speedY *= -0.5;
+      boingSound.Play();
+   }
+   else if (ypos + shipImage.GetHeight() > viewport->GetLevelHeight()) {
+      ypos = (double)(viewport->GetLevelHeight() - shipImage.GetHeight());
+      speedY *= -0.5;
+      boingSound.Play();
+   }
 
-    const float SCALE = 1.0f;
-    exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
-    exhaust.xi_bias = SCALE * -sinf(angle*M_PI/180) + speedX;
+   exhaust.xpos = xpos + shipImage.GetWidth()/2
+      - (shipImage.GetWidth()/2)*sin(angle*(M_PI/180));
+   exhaust.ypos = ypos + shipImage.GetHeight()/2
+      + (shipImage.GetHeight()/2)*cos(angle*(M_PI/180));
 
-    explosion.xpos = xpos + shipImage.GetWidth()/2;
-    explosion.ypos = ypos + shipImage.GetHeight()/2;
+   const float SCALE = 1.0f;
+   exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
+   exhaust.xi_bias = SCALE * -sinf(angle*M_PI/180) + speedX;
+
+   explosion.xpos = xpos + shipImage.GetWidth()/2;
+   explosion.ypos = ypos + shipImage.GetHeight()/2;
 }
 
 void Ship::ProcessEffects(bool paused, bool exploding)
@@ -124,7 +126,7 @@ void Ship::Thrust(double speed)
 
 void Ship::Turn(double delta)
 {
-   angle += delta;
+   angle += delta * OpenGL::GetInstance().GetTimeScale();
 }
 
 void Ship::ApplyGravity(double gravity)
@@ -221,9 +223,11 @@ bool Ship::CheckCollision(LineSegment& l, double dx, double dy) const
        ((int)xpos, (int)ypos, shipImage.GetWidth(), shipImage.GetHeight()))
       return false;
 
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
+
    // Get position after next move
-   double cX = xpos + speedX;
-   double cY = ypos + speedY;
+   double cX = xpos + speedX * timeScale;
+   double cY = ypos + speedY * timeScale;
 
    // Get displacement
    double vecX = cX - xpos;

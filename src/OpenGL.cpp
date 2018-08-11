@@ -26,8 +26,6 @@
 #include <cassert>
 #include <set>
 
-#include <unistd.h>  // XXX
-
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -111,17 +109,20 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
 
 void OpenGL::Run()
 {
-   unsigned int tick_start, tick_now;
-
    running = true;
    active = true;
-   m_timeScale = 1.0;
 
-   const unsigned window = 1000/FRAME_RATE;
+   unsigned lastTick = 0;
 
    // Loop until program ends
    do {
-      tick_start = SDL_GetTicks();
+      const unsigned tickStart = SDL_GetTicks();
+      if (lastTick == 0)
+         m_timeScale = 1.0;
+      else {
+         const float delta = tickStart - lastTick;
+         m_timeScale = delta / (1000.0 / FRAME_RATE);
+      }
 
       Input::GetInstance().Update();
 
@@ -132,19 +133,7 @@ void OpenGL::Run()
       if (active)
          DrawGLScene();
 
-      // Limit the frame rate
-      tick_now = SDL_GetTicks();
-      if (tick_now > tick_start + window) {
-         //cout << "Missed window by " << tick_now - tick_start - window
-         //     << "ms (skipping next frame)" << endl;
-         SkipDisplay();
-      }
-      else {
-         while (tick_now < tick_start + window)	{
-            usleep((tick_start + window - tick_now) * 1000);
-            tick_now = SDL_GetTicks();
-         }
-      }
+      lastTick = tickStart;
    } while (running);
 }
 
@@ -414,9 +403,6 @@ void OpenGL::Stop()
    running = false;
 }
 
-//
-// Generate, but do not display the next frame.
-//
 void OpenGL::SkipDisplay()
 {
    dodisplay = false;

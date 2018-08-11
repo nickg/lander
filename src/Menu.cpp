@@ -49,7 +49,7 @@ MainMenu::MainMenu()
      titleImage("images/title.png"),
      hintFont(LocateResource("Default_Font.ttf"), 11)
 {
-   
+
 }
 
 void MainMenu::Load()
@@ -71,6 +71,8 @@ void MainMenu::Process()
    Input& input = Input::GetInstance();
    OpenGL& opengl = OpenGL::GetInstance();
    ScreenManager& sm = ScreenManager::GetInstance();
+
+   const OpenGL::TimeScale timeScale = opengl.GetTimeScale();
 
    // Stop user doing something when they're not supposed to
    if (state == msInMenu) {
@@ -136,7 +138,7 @@ void MainMenu::Process()
       else if (input.QueryResetAction(Input::SCREENSHOT))
          OpenGL::GetInstance().DeferScreenShot();
    }
-   
+
    // See what menu state we're in
    if (state == msFadeIn) {
       // Apply the fade to the menu items
@@ -146,8 +148,8 @@ void MainMenu::Process()
          fade = 1.0;
       }
       else
-         fade += MENU_FADE_SPEED;
-   }	
+         fade += MENU_FADE_SPEED * timeScale;
+   }
    else if (state == msFadeToStart) {
       // Apply fade
       if (fade <= 0.0) {
@@ -157,7 +159,7 @@ void MainMenu::Process()
          g->NewGame();
       }
       else {
-         fade -= MENU_FADE_SPEED;
+         fade -= MENU_FADE_SPEED * timeScale;
          bigness += 0.5f;
       }
    }
@@ -169,7 +171,7 @@ void MainMenu::Process()
          hs->DisplayScores();
       }
       else {
-         fade -= MENU_FADE_SPEED;
+         fade -= MENU_FADE_SPEED * timeScale;
          bigness += 0.5f;
       }
    }
@@ -180,7 +182,7 @@ void MainMenu::Process()
          sm.SelectScreen("OPTIONS");
       }
       else {
-         fade -= MENU_FADE_SPEED;
+         fade -= MENU_FADE_SPEED * timeScale;
          bigness += 0.5f;
       }
    }
@@ -191,7 +193,7 @@ void MainMenu::Process()
          opengl.Stop();
       }
       else {
-         fade -= MENU_FADE_SPEED;
+         fade -= MENU_FADE_SPEED * timeScale;
          bigness += 0.5f;
       }
    }
@@ -212,8 +214,8 @@ void MainMenu::MoveStars()
    }
 
    // Maybe create a new star
-   if (stars.size() < MAX_STARS) 
-      stars.push_back(MenuStar()); 
+   if (stars.size() < MAX_STARS)
+      stars.push_back(MenuStar());
 }
 
 //
@@ -222,7 +224,7 @@ void MainMenu::MoveStars()
 void MainMenu::DisplayStars()
 {
    for (StarListIt it = stars.begin(); it != stars.end(); ++it)
-      (*it).Display(); 
+      (*it).Display();
 }
 
 void MainMenu::Display()
@@ -230,7 +232,7 @@ void MainMenu::Display()
    OpenGL& opengl = OpenGL::GetInstance();
 
    DisplayStars();
-   
+
    // Draw logo and menu items
    startOpt.Display(selOption == optStart, bigness, fade);
    scoreOpt.Display(selOption == optScore, bigness, fade);
@@ -240,7 +242,7 @@ void MainMenu::Display()
    int title_x = (opengl.GetWidth() - titleImage.GetWidth()) / 2;
    int title_y = 100;
    titleImage.Draw(title_x, title_y, 0.0, 1.0, fade);
-   
+
    // Draw some hint texts
    const int numhints = 7;
    const char* hints[] = {
@@ -270,7 +272,7 @@ double MenuStar::starRotate = 0.0;
 
 MenuStar::MenuStar()
    : scale(INIT_SCALE), active(false)
-{   
+{
    if (NULL == starImage)
       starImage = new Image("images/star.png");
 
@@ -281,7 +283,7 @@ MenuStar::MenuStar()
       x = (double)(rand()%(screenWidth/2) + screenWidth/4);
       y = (double)(rand()%(screenHeight/2) + screenHeight/4);
    } while (y == screenHeight/2 || x == screenWidth/2);
-   
+
    double ratio = (y - screenHeight/2) / (x - screenWidth/2);
    angle = atan(ratio);
 }
@@ -289,21 +291,23 @@ MenuStar::MenuStar()
 void MenuStar::Display(double fade)
 {
    starImage->Draw(x, y, starRotate, scale);
-   starRotate += ROTATE_SPEED;
+   starRotate += ROTATE_SPEED * OpenGL::GetInstance().GetTimeScale();
 }
 
 bool MenuStar::Move()
 {
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
+
    if (x > OpenGL::GetInstance().GetWidth() / 2) {
-      x += SPEED * cos(angle);
-      y += SPEED * sin(angle);
+      x += SPEED * cos(angle) * timeScale;
+      y += SPEED * sin(angle) * timeScale;
    }
    else {
-      x -= SPEED * cos(angle);
-      y -= SPEED * sin(angle);
+      x -= SPEED * cos(angle) * timeScale;
+      y -= SPEED * sin(angle) * timeScale;
    }
-   
-   scale += ENLARGE_RATE;
+
+   scale += ENLARGE_RATE * timeScale;
 
    // Has it left the screen?
    return (x > OpenGL::GetInstance().GetWidth()

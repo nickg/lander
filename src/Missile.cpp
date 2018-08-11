@@ -1,5 +1,5 @@
 //
-//  Missile.cpp -- Missiles on asteroids, etc. 
+//  Missile.cpp -- Missiles on asteroids, etc.
 //  Copyright (C) 2008  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 #include "Image.hpp"
 #include "ObjectGrid.hpp"
 #include "Ship.hpp"
+#include "OpenGL.hpp"
 
 #include <cmath>
 #include <string>
@@ -30,14 +31,14 @@ SoundEffect* Missile::fireSound(NULL);
 const double Missile::ACCEL(0.1);
 const double Missile::MAX_SPEED(5.0);
 const int Missile::HORIZ_FIRE_RANGE(600);
-const int Missile::VERT_FIRE_RANGE(50); 
+const int Missile::VERT_FIRE_RANGE(50);
 
 Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
    : viewport(v), objgrid(o), speed(0.0), state(FIXED),
      image("images/missile.png")
 {
    // This constructor builds a missile attached to the side of the screen
-   
+
    if (NULL == fireSound)
       fireSound = new SoundEffect(LocateResource("sounds/missile.wav"),
                                   60); // Volume
@@ -48,7 +49,7 @@ Missile::Missile(ObjectGrid* o, Viewport* v, Side s)
    do {
       y = rand() % o->GetHeight();
    } while (o->IsFilled(x, y));
-   
+
    ObjectGrid::Offset(x, y, &dx, &dy);
 
    angle = (s == SIDE_LEFT) ? 90 : 270;
@@ -93,7 +94,7 @@ void Missile::MoveFixed(const Ship& ship)
 
    int xDistance = abs(static_cast<int>(ship.GetX()) - missileMidX);
    int yDistance = abs(static_cast<int>(ship.GetY()) - missileMidY);
-   
+
    if (xDistance <= HORIZ_FIRE_RANGE && yDistance <= VERT_FIRE_RANGE) {
       state = FLYING;
       fireSound->Play();
@@ -104,8 +105,10 @@ void Missile::MoveFixed(const Ship& ship)
 
 void Missile::MoveFlying()
 {
-   dx += speed * sin(angle * M_PI/180);
-   dy += speed * cos(angle * M_PI/180);
+   const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
+
+   dx += speed * timeScale * sin(angle * M_PI/180);
+   dy += speed * timeScale * cos(angle * M_PI/180);
 
    exhaust.xpos = dx + image.GetWidth()/2
       - (image.GetWidth()/2)*sin(angle*(M_PI/180));
@@ -125,4 +128,3 @@ void Missile::MoveDestroyed()
 {
    exhaust.Process(false);
 }
-
