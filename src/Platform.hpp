@@ -96,7 +96,10 @@
 // Linux
 #elif defined LINUX
 
-#include <GL/gl.h>
+//#define GL_GLEXT_PROTOTYPES
+//#include <GL/gl.h>
+//#include <GLES2/gl2.h>
+#include <GL/glew.h>
 
 #include <libintl.h>
 #define i18n(x) gettext(x)

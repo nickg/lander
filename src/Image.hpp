@@ -29,14 +29,15 @@ public:
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;
 
-   inline int GetWidth() const { return texture->GetWidth(); }
-   inline int GetHeight() const { return texture->GetHeight(); }
+   int GetWidth() const;
+   int GetHeight() const;
 
 protected:
-   inline Texture* GetTexture() const { return texture; }
-   
+   Texture* GetTexture() const { return m_texture; }
+
 private:
-   Texture* texture;
+   Texture* m_texture = NULL;
+   GLuint m_vbo = 0;
 };
 
 #endif

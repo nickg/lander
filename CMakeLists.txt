@@ -9,6 +9,7 @@ if (NOT DEFINED CMAKE_CROSSCOMPILING_EMULATOR)
   find_package (SDL2_mixer REQUIRED)
   find_package (SDL2_image REQUIRED)
   find_package (OpenGL REQUIRED)
+  find_package (GLEW REQUIRED)
   find_package (Freetype REQUIRED)
 endif ()
 
@@ -66,7 +67,7 @@ target_include_directories (lander PRIVATE src ${SDL2_INCLUDE_DIRS}
   ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
 target_link_libraries (lander PRIVATE ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES}
-  ${FREETYPE_LIBRARIES} ${SDL2_MIXER_LIBRARIES}
+  ${FREETYPE_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${GLEW_LIBRARIES}
   ${SDL2_IMAGE_LIBRARIES} ${STD_CXX_FS_LIBRARIES})
 
 set_target_properties (lander PROPERTIES CXX_STANDARD 14)

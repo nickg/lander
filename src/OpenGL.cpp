@@ -26,6 +26,87 @@
 #include <cassert>
 #include <set>
 
+static const char *g_vertexShader =
+   "#version 130\n"
+   "in vec2 Position;\n"
+   "uniform vec2 WindowSize;\n"
+   "uniform vec2 Translate;\n"
+   "uniform float Scale;\n"
+   "void main()\n"
+   "{\n"
+   "   vec2 tmp = Position * Scale + Translate;\n"
+   "   vec2 winscale = vec2(WindowSize.x / 2, WindowSize.y / 2);\n"
+   "   tmp -= winscale;\n"
+   "   tmp /= winscale;\n"
+   "   gl_Position = vec4(tmp.x, -tmp.y, 0.0, 1.0);\n"
+   "}\n";
+
+static const char *g_fragmentShader =
+   "#version 130\n"
+   "out vec4 FragColor;\n"
+   "uniform vec4 Colour;\n"
+   "void main()\n"
+   "{\n"
+    "   FragColor = Colour;\n"
+   "}\n";
+
+void OpenGL::AddShader(GLuint program, const char* text, GLenum type)
+{
+    GLuint obj = glCreateShader(type);
+    if (obj == 0)
+       Die("Error creating shader type %d", type);
+
+    const GLchar* p[1] = { text };
+    GLint lengths[1];
+    lengths[0]= strlen(text);
+    glShaderSource(obj, 1, p, lengths);
+
+    glCompileShader(obj);
+
+    GLint success;
+    glGetShaderiv(obj, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(obj, sizeof(infoLog), NULL, infoLog);
+        Die("Error compiling shader type %d: %s", type, infoLog);
+    }
+
+    glAttachShader(program, obj);
+}
+
+void OpenGL::CompileShaders()
+{
+    m_program = glCreateProgram();
+    if (m_program == 0)
+       Die("Error creating shader program");
+
+    AddShader(m_program, g_vertexShader, GL_VERTEX_SHADER);
+    AddShader(m_program, g_fragmentShader, GL_FRAGMENT_SHADER);
+
+    GLint success = 0;
+    GLchar errorLog[1024] = { 0 };
+
+    glLinkProgram(m_program);
+    glGetProgramiv(m_program, GL_LINK_STATUS, &success);
+    if (success == 0) {
+       glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
+       Die("Error linking shader program: %s", errorLog);
+    }
+
+    glValidateProgram(m_program);
+    glGetProgramiv(m_program, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
+        Die("Invalid shader program: %s", errorLog);
+    }
+
+    glUseProgram(m_program);
+
+   m_translateU = glGetUniformLocation(m_program, "Translate");
+   m_scaleU = glGetUniformLocation(m_program, "Scale");
+   m_colourU = glGetUniformLocation(m_program, "Colour");
+}
+
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -64,10 +145,6 @@ void OpenGL::Init(int width, int height, int depth, bool fullscreen)
    SetVideoMode(fullscreen, width, height);
 
    SDL_ShowCursor(SDL_DISABLE);
-
-   // Start OpenGL
-   if (!InitGL())
-      Die("Initialisation failed.");
 }
 
 bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
@@ -96,6 +173,8 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
 
       if ((m_glcontext = SDL_GL_CreateContext(m_window)) == NULL)
          Die("Failed to create GL context: %s", SDL_GetError());
+
+      InitGL();
    }
    else {
       SDL_SetWindowSize(m_window, screen_width, screen_height);
@@ -178,22 +257,38 @@ void OpenGL::TakeScreenShot() const
    cout << "Wrote screen shot to " << fileName << endl;
 }
 
+void OpenGL::CheckError(const char *text)
+{
+   GLenum error = glGetError();
+   if (error == GL_NO_ERROR)
+      return;
+
+   if (text != NULL)
+      fprintf(stderr, "%s: ", text);
+
+   switch (error) {
+   case GL_INVALID_VALUE:
+      Die("OpenGL error: GL_INVALID_VALUE");
+   case GL_INVALID_OPERATION:
+      Die("OpenGL error: GL_INVALID_OPERATION");
+   default:
+      Die("OpenGL error: %d", error);
+   }
+}
+
 void OpenGL::DrawGLScene()
 {
    // Render the scene
    if (dodisplay) {
       // Clear the screen
       glClear(GL_COLOR_BUFFER_BIT);
-      glLoadIdentity();
+
+      glUseProgram(m_program);
+      Reset();
 
       ScreenManager::GetInstance().Display();
 
-      // Check for OpenGL errors
-      GLenum error = glGetError();
-      if (error != GL_NO_ERROR) {
-         //throw runtime_error
-         //   ("OpenGL error: " + string(gluErrorString(error)));
-      }
+      CheckError("DrawGLScene");
 
       SDL_GL_SwapWindow(m_window);
 
@@ -223,11 +318,6 @@ void OpenGL::DrawGLScene()
       }
 #endif /* #ifdef SHOW_FPS */
    }
-}
-
-void OpenGL::Viewport(int x, int y, int width, int height)
-{
-   glViewport(x, y, width, height);
 }
 
 void OpenGL::Draw(Renderable* r)
@@ -337,6 +427,9 @@ void OpenGL::DrawRotateBlendScale(Renderable* r, float angle, float alpha, float
 
 OpenGL::~OpenGL()
 {
+   if (m_program != 0)
+      glDeleteProgram(m_program);
+
    if (m_glcontext != NULL)
       SDL_GL_DeleteContext(m_glcontext);
 
@@ -356,8 +449,16 @@ bool OpenGL::IsTextureSizeSupported(int width, int height, int ncols, GLenum for
 
 bool OpenGL::InitGL()
 {
+   cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
+
+   GLenum res = glewInit();
+   if (res != GLEW_OK)
+      Die("Error: glewInit failed: %s", glewGetErrorString(res));
+
    // Clear any error bit (this seems to be required on Windows??)
    glGetError();
+
+   CompileShaders();
 
    // Set options
    glShadeModel(GL_SMOOTH);			        // Enable smooth shading
@@ -370,6 +471,8 @@ bool OpenGL::InitGL()
    glDisable(GL_NORMALIZE);
    glDisable(GL_DEPTH_TEST);
 
+   CheckError("InitGL");
+
    // All went OK
    return true;
 }
@@ -378,16 +481,39 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 {
    if (height == 0) height = 1;
 
-   // Reset viewport
-   glViewport(0, 0, width, height);
+   glUseProgram(m_program);
 
-   // Set it to 2D mode
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   glOrtho(0.0, screen_width, screen_height, 0.0, -1.0, 1.0);
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
-   glPushMatrix();
+   GLuint windowSizeU = glGetUniformLocation(m_program, "WindowSize");
+   glUniform2f(windowSizeU, width, height);
+
+   CheckError("ResizeGLScene");
+}
+
+void OpenGL::Reset()
+{
+   Translate(0.0f, 0.0f);
+   Scale(0.0f);
+   Colour(1.0f, 1.0f, 1.0f);
+}
+
+void OpenGL::Translate(float x, float y)
+{
+   glUniform2f(m_translateU, x, y);
+}
+
+void OpenGL::Scale(float scale)
+{
+   glUniform1f(m_scaleU, scale);
+}
+
+void OpenGL::Colour(float r, float g, float b, float a)
+{
+   glUniform4f(m_colourU, r, g, b, a);
+}
+
+void OpenGL::Colour(float r, float g, float b)
+{
+   Colour(r, g, b, 1.0f);
 }
 
 int OpenGL::GetFPS()

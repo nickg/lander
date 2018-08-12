@@ -89,8 +89,6 @@ public:
    void SkipDisplay();
    int GetFPS();
 
-   void Viewport(int x, int y, int width, int height);
-
    // Renderer functions
    void Draw(Renderable* r);
    void Draw(Poly* cp);
@@ -101,6 +99,12 @@ public:
    void DrawRotateScale(Renderable* r, float angle, float factor);
    void DrawBlendScale(Renderable* r, float alpha, float factor);
    void DrawRotateBlendScale(Renderable* r, float angle, float alpha, float factor);
+
+   void Reset();
+   void Translate(float x, float y);
+   void Scale(float scale);
+   void Colour(float r, float g, float b, float a);
+   void Colour(float r, float g, float b);
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
@@ -124,6 +128,8 @@ public:
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);
 
+   static void CheckError(const char *text=NULL);
+
    static const GLuint INVALID_TEXTURE = 0xFFFFFFFF;
 
 private:
@@ -136,6 +142,8 @@ private:
    bool InitGL();
    void DrawGLScene();
    void TakeScreenShot() const;
+   void AddShader(GLuint program, const char* text, GLenum type);
+   void CompileShaders();
 
    // Window related variables
    int screen_width, screen_height;
@@ -144,6 +152,10 @@ private:
    int sdl_flags;
    SDL_Window *m_window;
    SDL_GLContext m_glcontext;
+   GLuint m_program = 0;
+   GLuint m_translateU = 0;
+   GLuint m_scaleU = 0;
+   GLuint m_colourU = 0;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

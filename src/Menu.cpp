@@ -229,13 +229,14 @@ void MainMenu::Display()
 {
    OpenGL& opengl = OpenGL::GetInstance();
 
-   DisplayStars();
+   //DisplayStars();
 
    // Draw logo and menu items
    startOpt.Display(selOption == optStart, bigness, fade);
    scoreOpt.Display(selOption == optScore, bigness, fade);
    optionsOpt.Display(selOption == optOptions, bigness, fade);
    exitOpt.Display(selOption == optExit, bigness, fade);
+   return;
 
    int title_x = (opengl.GetWidth() - titleImage.GetWidth()) / 2;
    int title_y = 100;
