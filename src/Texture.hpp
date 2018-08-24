@@ -25,17 +25,19 @@ public:
    Texture(const string& file);
    virtual ~Texture();
 
-   GLuint GetGLTexture() const { return texture; }
-   
-   int GetWidth() const { return width; }
-   int GetHeight() const { return height; }
+   void Bind(int textureUnit=0);
+
+   GLuint GetGLTexture() const { return m_texture; }
+
+   int GetWidth() const { return m_width; }
+   int GetHeight() const { return m_height; }
 
    friend Texture* loadTexture(const string& fileName);
-   
+
 private:
-   GLuint texture;
-   int width, height;
-   
+   GLuint m_texture;
+   int m_width, m_height;
+
    static bool IsPowerOfTwo(int n);
 };
 

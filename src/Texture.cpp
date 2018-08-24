@@ -78,11 +78,11 @@ Texture::Texture(const string& file)
    else
       Die("Unsupported image colour format: %s", file.c_str());
 
-   width = surface->w;
-   height = surface->h;
+   m_width = surface->w;
+   m_height = surface->h;
 
-   glGenTextures(1, &texture);
-   glBindTexture(GL_TEXTURE_2D, texture);
+   glGenTextures(1, &m_texture);
+   glBindTexture(GL_TEXTURE_2D, m_texture);
 
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -96,7 +96,7 @@ Texture::Texture(const string& file)
 
 Texture::~Texture()
 {
-   glDeleteTextures(1, &texture);
+   glDeleteTextures(1, &m_texture);
 }
 
 bool Texture::IsPowerOfTwo(int n)
@@ -109,4 +109,10 @@ bool Texture::IsPowerOfTwo(int n)
          pop++;
    }
    return pop == 1;
+}
+
+void Texture::Bind(int textureUnit)
+{
+   glActiveTexture(textureUnit);
+   glBindTexture(GL_TEXTURE_2D, m_texture);
 }

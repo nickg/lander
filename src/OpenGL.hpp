@@ -144,6 +144,7 @@ private:
    void TakeScreenShot() const;
    void AddShader(GLuint program, const char* text, GLenum type);
    void CompileShaders();
+   GLuint GetUniformLocation(const char *name);
 
    // Window related variables
    int screen_width, screen_height;
@@ -153,9 +154,9 @@ private:
    SDL_Window *m_window;
    SDL_GLContext m_glcontext;
    GLuint m_program = 0;
-   GLuint m_translateU = 0;
-   GLuint m_scaleU = 0;
-   GLuint m_colourU = 0;
+   GLuint m_translateLocation = 0;
+   GLuint m_scaleLocation = 0;
+   GLuint m_colourLocation = 0;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

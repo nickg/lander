@@ -22,3 +22,6 @@ po/Makevars.template
 config.rpath
 po/Makefile.in.in
 po/Rules-quot
+GPATH
+GRTAGS
+GTAGS

@@ -29,9 +29,11 @@
 static const char *g_vertexShader =
    "#version 130\n"
    "in vec2 Position;\n"
+   "in vec2 TexCoord;\n"
    "uniform vec2 WindowSize;\n"
    "uniform vec2 Translate;\n"
    "uniform float Scale;\n"
+   "out vec2 TexCoord0;\n"
    "void main()\n"
    "{\n"
    "   vec2 tmp = Position * Scale + Translate;\n"
@@ -39,73 +41,19 @@ static const char *g_vertexShader =
    "   tmp -= winscale;\n"
    "   tmp /= winscale;\n"
    "   gl_Position = vec4(tmp.x, -tmp.y, 0.0, 1.0);\n"
+   "   TexCoord0 = TexCoord;\n"
    "}\n";
 
 static const char *g_fragmentShader =
    "#version 130\n"
+   "in vec2 TexCoord0;\n"
    "out vec4 FragColor;\n"
    "uniform vec4 Colour;\n"
+   "uniform sampler2D Sampler;\n"
    "void main()\n"
    "{\n"
-    "   FragColor = Colour;\n"
+   "   FragColor = texture2D(Sampler, TexCoord0.st) * vec4(Colour);\n"
    "}\n";
-
-void OpenGL::AddShader(GLuint program, const char* text, GLenum type)
-{
-    GLuint obj = glCreateShader(type);
-    if (obj == 0)
-       Die("Error creating shader type %d", type);
-
-    const GLchar* p[1] = { text };
-    GLint lengths[1];
-    lengths[0]= strlen(text);
-    glShaderSource(obj, 1, p, lengths);
-
-    glCompileShader(obj);
-
-    GLint success;
-    glGetShaderiv(obj, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        GLchar infoLog[1024];
-        glGetShaderInfoLog(obj, sizeof(infoLog), NULL, infoLog);
-        Die("Error compiling shader type %d: %s", type, infoLog);
-    }
-
-    glAttachShader(program, obj);
-}
-
-void OpenGL::CompileShaders()
-{
-    m_program = glCreateProgram();
-    if (m_program == 0)
-       Die("Error creating shader program");
-
-    AddShader(m_program, g_vertexShader, GL_VERTEX_SHADER);
-    AddShader(m_program, g_fragmentShader, GL_FRAGMENT_SHADER);
-
-    GLint success = 0;
-    GLchar errorLog[1024] = { 0 };
-
-    glLinkProgram(m_program);
-    glGetProgramiv(m_program, GL_LINK_STATUS, &success);
-    if (success == 0) {
-       glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
-       Die("Error linking shader program: %s", errorLog);
-    }
-
-    glValidateProgram(m_program);
-    glGetProgramiv(m_program, GL_VALIDATE_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
-        Die("Invalid shader program: %s", errorLog);
-    }
-
-    glUseProgram(m_program);
-
-   m_translateU = glGetUniformLocation(m_program, "Translate");
-   m_scaleU = glGetUniformLocation(m_program, "Scale");
-   m_colourU = glGetUniformLocation(m_program, "Colour");
-}
 
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
@@ -184,6 +132,74 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
    ResizeGLScene(screen_width, screen_height);
 
    return resized;
+}
+
+void OpenGL::AddShader(GLuint program, const char* text, GLenum type)
+{
+   GLuint obj = glCreateShader(type);
+   if (obj == 0)
+      Die("Error creating shader type %d", type);
+
+   const GLchar* p[1] = { text };
+   GLint lengths[1];
+   lengths[0]= strlen(text);
+   glShaderSource(obj, 1, p, lengths);
+
+   glCompileShader(obj);
+
+   GLint success;
+   glGetShaderiv(obj, GL_COMPILE_STATUS, &success);
+   if (!success) {
+      GLchar infoLog[1024];
+      glGetShaderInfoLog(obj, sizeof(infoLog), NULL, infoLog);
+      Die("Error compiling shader type %d: %s", type, infoLog);
+   }
+
+   glAttachShader(program, obj);
+}
+
+void OpenGL::CompileShaders()
+{
+   m_program = glCreateProgram();
+   if (m_program == 0)
+      Die("Error creating shader program");
+
+   AddShader(m_program, g_vertexShader, GL_VERTEX_SHADER);
+   AddShader(m_program, g_fragmentShader, GL_FRAGMENT_SHADER);
+
+   GLint success = 0;
+   GLchar errorLog[1024] = { 0 };
+
+   glLinkProgram(m_program);
+   glGetProgramiv(m_program, GL_LINK_STATUS, &success);
+   if (success == 0) {
+      glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
+      Die("Error linking shader program: %s", errorLog);
+   }
+
+   glValidateProgram(m_program);
+   glGetProgramiv(m_program, GL_VALIDATE_STATUS, &success);
+   if (!success) {
+      glGetProgramInfoLog(m_program, sizeof(errorLog), NULL, errorLog);
+      Die("Invalid shader program: %s", errorLog);
+   }
+
+   glUseProgram(m_program);
+
+   m_translateLocation = GetUniformLocation("Translate");
+   m_scaleLocation = GetUniformLocation("Scale");
+   m_colourLocation = GetUniformLocation("Colour");
+
+   //glUniform1i(GetUniformLocation("Sampler"), 0);
+}
+
+GLuint OpenGL::GetUniformLocation(const char *name)
+{
+   GLuint location = glGetUniformLocation(m_program, name);
+   if (location == 0xffffffff)
+      Die("Failed to get uniform location: %s", name);
+
+   return location;
 }
 
 void OpenGL::Run()
@@ -483,7 +499,7 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 
    glUseProgram(m_program);
 
-   GLuint windowSizeU = glGetUniformLocation(m_program, "WindowSize");
+   GLuint windowSizeU = GetUniformLocation("WindowSize");
    glUniform2f(windowSizeU, width, height);
 
    CheckError("ResizeGLScene");
@@ -498,17 +514,17 @@ void OpenGL::Reset()
 
 void OpenGL::Translate(float x, float y)
 {
-   glUniform2f(m_translateU, x, y);
+   glUniform2f(m_translateLocation, x, y);
 }
 
 void OpenGL::Scale(float scale)
 {
-   glUniform1f(m_scaleU, scale);
+   glUniform1f(m_scaleLocation, scale);
 }
 
 void OpenGL::Colour(float r, float g, float b, float a)
 {
-   glUniform4f(m_colourU, r, g, b, a);
+   glUniform4f(m_colourLocation, r, g, b, a);
 }
 
 void OpenGL::Colour(float r, float g, float b)

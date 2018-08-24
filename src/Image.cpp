@@ -25,14 +25,14 @@ Image::Image(const string& fileName)
 
    glGenBuffers(1, &m_vbo);
 
-   const int width = GetWidth();
-   const int height = GetHeight();
+   const float width = GetWidth();
+   const float height = GetHeight();
 
-   const int vertices[][2] = {
-      { -(width/2), -(height/2) },
-      { -(width/2), height/2 },
-      { width/2, height/2 },
-      { width/2, -height/2 }
+   const float vertices[][4] = {
+      { -(width/2), -(height/2), 0.0f, 0.0f },
+      { -(width/2), height/2, 0.0f, 1.0f },
+      { width/2, height/2, 1.0f, 1.0f },
+      { width/2, -height/2, 1.0f, 0.0f }
    };
 
    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -50,24 +50,12 @@ void Image::Draw(int x, int y, double rotate, double scale,
    int width = GetWidth();
    int height = GetHeight();
 
-   glEnable(GL_TEXTURE_2D);
-   glEnable(GL_BLEND);
    glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + width/2), (double)(y + height/2), 0.0);
    glScaled(scale, scale, 0);
    glRotated(rotate, 0.0, 0.0, 1.0);
    glColor4d(white, white, white, alpha);
-
-   #if 0
-   glBegin(GL_QUADS);
-   glTexCoord2d(0.0, 0.0); glVertex2i(-(width/2), -(height/2));
-   glTexCoord2d(0.0, 1.0); glVertex2i(-(width/2), height/2);
-   glTexCoord2d(1.0, 1.0); glVertex2i(width/2, height/2);
-   glTexCoord2d(1.0, 0.0); glVertex2i(width/2, -(height/2));
-   glEnd();
-#else
-   glDisable(GL_TEXTURE_2D);  // XXX
 
    OpenGL& opengl = OpenGL::GetInstance();
 
@@ -76,18 +64,14 @@ void Image::Draw(int x, int y, double rotate, double scale,
    opengl.Scale(scale);
 
    glEnableVertexAttribArray(0);
+   glEnableVertexAttribArray(1);
    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, 0, 0);
-#if 1
+   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                         reinterpret_cast<const void *>(2 * sizeof(float)));
    glDrawArrays(GL_QUADS, 0, 4);
-#else
-   GLubyte indices[] = {0,1,2, // first triangle (bottom left - top left - top right)
-                     0,2,3}; // second triangle (bottom left - top right - bottom right)
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
-#endif
    glDisableVertexAttribArray(0);
-
-#endif
+   glDisableVertexAttribArray(1);
 }
 
 int Image::GetWidth() const
