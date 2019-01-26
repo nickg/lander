@@ -79,15 +79,19 @@ target_link_libraries (lander PRIVATE ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES}
 
 set_target_properties (lander PROPERTIES CXX_STANDARD 14)
 
-install (TARGETS lander RUNTIME DESTINATION bin)
+if (WIN32)
 
-install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/images
-  DESTINATION share/lander
-  FILES_MATCHING PATTERN "*.png")
+else ()
+  install (TARGETS lander RUNTIME DESTINATION bin)
 
-install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/sounds
-  DESTINATION share/lander
-  FILES_MATCHING PATTERN "*.wav")
+  install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/images
+    DESTINATION share/lander
+    FILES_MATCHING PATTERN "*.png")
 
-install (FILES ${PROJECT_SOURCE_DIR}/data/Default_Font.ttf
-  DESTINATION share/lander/)
+  install (DIRECTORY ${PROJECT_SOURCE_DIR}/data/sounds
+    DESTINATION share/lander
+    FILES_MATCHING PATTERN "*.wav")
+
+  install (FILES ${PROJECT_SOURCE_DIR}/data/Default_Font.ttf
+    DESTINATION share/lander/)
+endif ()

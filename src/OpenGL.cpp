@@ -122,6 +122,8 @@ bool OpenGL::SetVideoMode(bool fullscreen, int width, int height)
       if ((m_glcontext = SDL_GL_CreateContext(m_window)) == NULL)
          Die("Failed to create GL context: %s", SDL_GetError());
 
+      SDL_GL_SetSwapInterval(1);
+
       InitGL();
    }
    else {
@@ -216,7 +218,7 @@ void OpenGL::Run()
          m_timeScale = 1.0;
       else {
          const float delta = tickStart - lastTick;
-         m_timeScale = delta / (1000.0 / FRAME_RATE);
+         m_timeScale = delta / (1000.0f / FRAME_RATE);
       }
 
       Input::GetInstance().Update();
