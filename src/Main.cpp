@@ -235,7 +235,7 @@ string GetConfigDir()
    appdata /= "doof.me.uk";
    appdata /= "Lander";
    create_directories(appdata);
-   return appdata.file_string() + "\\";
+   return appdata.string() + "\\";
 #elif defined EMSCRIPTEN
    return "";
 #else
@@ -247,14 +247,25 @@ void Die(const char *fmt, ...)
 {
    va_list ap;
    va_start(ap, fmt);
+
+#ifdef WIN32
+   int len = _vscprintf(fmt, ap);
+   char *buf = new char[len + 1];
+   vsprintf_s(buf, len + 1, fmt, ap);
+
+   fputs(buf, stderr);
+   fputs("\r\n", stderr);
+   fflush(stderr);
+
+   MessageBox(NULL, buf, "Runtime Error", MB_OK | MB_ICONSTOP);
+
+   delete[] buf;
+#else
    vfprintf(stderr, fmt, ap);
    fprintf(stderr, "\n");
    fflush(stderr);
-   va_end(ap);
-
-#ifdef WIN32
-   MessageBox(NULL, e.what(), "Runtime Error", MB_OK | MB_ICONSTOP);
 #endif
 
+   va_end(ap);
    exit(EXIT_FAILURE);
 }

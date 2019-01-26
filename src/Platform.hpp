@@ -37,7 +37,7 @@
 
 #include "SDL.h"
 
-#include <GL\gl.h>
+#include <GL/glew.h>
 
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
@@ -45,7 +45,9 @@
 
 #define i18n(x) x
 
-#define PATH_MAX  256
+#ifndef PATH_MAX
+#define PATH_MAX  260
+#endif
 
 // Don't have these on Windows for some reason
 #ifndef GL_BGRA
