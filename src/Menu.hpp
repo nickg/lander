@@ -1,6 +1,6 @@
 //
 // Menu.hpp -- Defintition of main menu screen.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ public:
    MenuStar();
 
    bool Move();
-   void Display(double fade=1.0);
+   void Display(double fade=1.0) const;
 
 private:
    static const double ROTATE_SPEED, ENLARGE_RATE, INIT_SCALE, SPEED;
@@ -58,12 +58,11 @@ private:
 class MainMenu : public Screen {
 public:
    MainMenu();
-   virtual ~MainMenu() {}
 
    void Load();
    void Process();
    void Display();
-   void DisplayStars();
+   void DisplayStars() const;
    void MoveStars();
 
 private:
@@ -89,6 +88,5 @@ private:
    typedef StarList::iterator StarListIt;
    vector<MenuStar> stars;
 };
-
 
 #endif

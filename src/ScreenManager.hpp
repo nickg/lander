@@ -24,7 +24,7 @@
 
 #include <map>
 
-// 
+//
 // A screen within the game that can be displayed.
 //
 class Screen {
@@ -49,11 +49,11 @@ public:
    void Display();
    void RemoveAllScreens();
    Screen* GetScreenById(const string& id) const;
-	
+
 private:
    ScreenManager();
    ~ScreenManager();
-   
+
    // Holds data about the state of an individual screen
    struct ScreenData {
       bool loaded;

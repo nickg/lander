@@ -1,6 +1,6 @@
 //
 // Menu.cpp -- Implementation of main menu screen.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -219,24 +219,23 @@ void MainMenu::MoveStars()
 //
 // This is also used by the options screen.
 //
-void MainMenu::DisplayStars()
+void MainMenu::DisplayStars() const
 {
-   for (StarListIt it = stars.begin(); it != stars.end(); ++it)
-      (*it).Display();
+   for (const MenuStar& star : stars)
+      star.Display();
 }
 
 void MainMenu::Display()
 {
    OpenGL& opengl = OpenGL::GetInstance();
 
-   //DisplayStars();
+   DisplayStars();
 
    // Draw logo and menu items
    startOpt.Display(selOption == optStart, bigness, fade);
    scoreOpt.Display(selOption == optScore, bigness, fade);
    optionsOpt.Display(selOption == optOptions, bigness, fade);
    exitOpt.Display(selOption == optExit, bigness, fade);
-   return;
 
    int title_x = (opengl.GetWidth() - titleImage.GetWidth()) / 2;
    int title_y = 100;
@@ -287,10 +286,9 @@ MenuStar::MenuStar()
    angle = atan(ratio);
 }
 
-void MenuStar::Display(double fade)
+void MenuStar::Display(double fade) const
 {
    starImage->Draw(x, y, starRotate, scale);
-   starRotate += ROTATE_SPEED * OpenGL::GetInstance().GetTimeScale();
 }
 
 bool MenuStar::Move()
@@ -307,6 +305,7 @@ bool MenuStar::Move()
    }
 
    scale += ENLARGE_RATE * timeScale;
+   starRotate += ROTATE_SPEED * timeScale;
 
    // Has it left the screen?
    return (x > OpenGL::GetInstance().GetWidth()

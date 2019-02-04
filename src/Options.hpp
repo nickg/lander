@@ -1,5 +1,5 @@
 //  Options.hpp -- The options screen.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 class Options : public Screen {
 public:
    Options();
-   virtual ~Options() {}
 
    void Load();
    void Process();
@@ -35,7 +34,7 @@ private:
    void ProcessFadeIn();
    void ProcessMain();
    void ProcessFadeOut();
-   
+
    void DisplayHelpText();
    void DisplayItems();
 
@@ -45,7 +44,7 @@ private:
    void Apply();
 
    static const double FADE_SPEED;
-   
+
    enum OptionState {
       optFadeIn, optMain, optFadeOut
    };
@@ -60,7 +59,7 @@ private:
    };
    typedef vector<Item> ItemList;
    typedef ItemList::iterator ItemListIt;
-   
+
    OptionState state;
    Font helpFont, itemFont;
    double fadeAlpha;
