@@ -25,9 +25,8 @@
 #include <stdexcept>
 
 ScreenManager::ScreenManager()
+   : m_active(NULL)
 {
-   active.loaded = false;
-   active.ptr = NULL;
 }
 
 ScreenManager::~ScreenManager()
@@ -38,34 +37,31 @@ ScreenManager::~ScreenManager()
 ScreenManager& ScreenManager::GetInstance()
 {
    static ScreenManager sm;
-
    return sm;
 }
 
 void ScreenManager::AddScreen(const string& id, Screen* ptr)
 {
-   if (screens.find(id) != screens.end())
+   if (m_screens.find(id) != m_screens.end())
       Die("Screen already registered: %s", id.c_str());
 
-   ScreenData sd;
-   sd.loaded = false;
-   sd.ptr = ptr;
-
-   screens[id] = sd;
+   m_screens[id] = ptr;
 }
 
 void ScreenManager::SelectScreen(const string& id)
 {
-   ScreenMapIt it = screens.find(id);
+   ScreenMapIt it = m_screens.find(id);
 
-   if (it == screens.end())
+   if (it == m_screens.end())
       Die("Screen does not exist: %s", id.c_str());
 
-   active = (*it).second;
+   m_active = (*it).second;
 
-   active.ptr->Load();
-   active.loaded = true;
-   screens[id] = active;
+   m_active->Load();
+   if (!m_active->IsLoaded())
+      Die("Screen %s did not call superclass Screen::Load()", id.c_str());
+
+   m_screens[id] = m_active;
 
    // Allow the new screen to generate a frame
    OpenGL::GetInstance().SkipDisplay();
@@ -75,30 +71,41 @@ Screen* ScreenManager::GetScreenById(const string& id) const
 {
    ScreenMap::const_iterator it;
 
-   it = screens.find(id);
-   if (it == screens.end())
+   it = m_screens.find(id);
+   if (it == m_screens.end())
       Die("Screen %s does not exist", id.c_str());
    else
-      return (*it).second.ptr;
+      return (*it).second;
 }
 
 void ScreenManager::Process()
 {
-   if (active.ptr != NULL)	{
-      assert(active.loaded);
-      active.ptr->Process();
+   if (m_active != NULL)	{
+      assert(m_active->IsLoaded());
+      m_active->Process();
    }
 }
 
 void ScreenManager::Display()
 {
-   if (active.ptr != NULL) {
-      assert(active.loaded);
-      active.ptr->Display();
+   if (m_active != NULL) {
+      assert(m_active->IsLoaded());
+      m_active->Display();
    }
 }
 
 void ScreenManager::RemoveAllScreens()
 {
-   screens.clear();
+   m_screens.clear();
+}
+
+Screen::Screen()
+   : m_loaded(false)
+{
+}
+
+void Screen::Load()
+{
+   assert(!m_loaded);
+   m_loaded = true;
 }

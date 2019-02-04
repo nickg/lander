@@ -1,6 +1,6 @@
 //
 //  Options.cpp -- The options screen.
-//  Copyright (C) 2008-2010  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -95,6 +95,8 @@ Options::Options()
 
 void Options::Load()
 {
+   Screen::Load();
+
    state = optFadeIn;
    fadeAlpha = 0.0;
    selected = 0;

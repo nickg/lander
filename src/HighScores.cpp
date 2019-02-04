@@ -1,6 +1,6 @@
 //
 // HighScores.cpp - Implementation of high scores screen.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,10 +43,11 @@ HighScores::HighScores()
 //
 void HighScores::Load()
 {
+   Screen::Load();
+
    // Set state
    state = hssDisplay;
 }
-
 
 //
 // Processes user input. Called at the start of each frame.
@@ -55,7 +56,6 @@ void HighScores::Process()
 {
    Input& input = Input::GetInstance();
    OpenGL& opengl = OpenGL::GetInstance();
-   int i;
 
    const OpenGL::TimeScale timeScale = opengl.GetTimeScale();
 
@@ -67,7 +67,7 @@ void HighScores::Process()
 
          // Go back to main menu
          fade = FADE_OUT_SPEED;
-         for (i = 0; i < MAX_FIREWORKS; i++) {
+         for (int i = 0; i < MAX_FIREWORKS; i++) {
             fw[i].em->maxspeed = 200;
             fw[i].speed = 0;
             fw[i].em->createrate = 2.0f;
@@ -99,7 +99,7 @@ void HighScores::Process()
    }
 
    // Process fireworks
-   for (i = 0; i < MAX_FIREWORKS; i++) {
+   for (int i = 0; i < MAX_FIREWORKS; i++) {
       if (fw[i].active)	{
          fw[i].y -= fw[i].speed * timeScale;
          fw[i].em->xpos = (float)fw[i].x;
@@ -157,7 +157,6 @@ void HighScores::Process()
       }
    }
 }
-
 
 //
 // Renders the next frame.

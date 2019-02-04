@@ -1,6 +1,6 @@
 //
 // Game.cpp -- Implementation of core game logic.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -81,6 +81,8 @@ Game::Game()
 
 void Game::Load()
 {
+   Screen::Load();
+
    starrotate = 0.0f;
    death_timeout = 0;
    state = gsNone;

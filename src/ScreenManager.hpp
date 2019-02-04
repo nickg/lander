@@ -29,10 +29,18 @@
 //
 class Screen {
 public:
+   Screen();
+   Screen(const Screen&) = delete;
+
+   bool IsLoaded() const { return m_loaded; }
+
    virtual ~Screen() { }
-   virtual void Load() { }
+   virtual void Load();
    virtual void Display() { }
    virtual void Process() { }
+
+private:
+   bool m_loaded;
 };
 
 
@@ -54,16 +62,11 @@ private:
    ScreenManager();
    ~ScreenManager();
 
-   // Holds data about the state of an individual screen
-   struct ScreenData {
-      bool loaded;
-      Screen* ptr;
-   };
-
-   typedef map<string, ScreenData> ScreenMap;
+   typedef map<string, Screen*> ScreenMap;
    typedef ScreenMap::iterator ScreenMapIt;
-   ScreenMap screens;
-   ScreenData active;
+
+   ScreenMap m_screens;
+   Screen *m_active;
 };
 
 #endif
