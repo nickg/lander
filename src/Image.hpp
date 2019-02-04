@@ -1,5 +1,5 @@
 //  Image.hpp -- Wrapper for loading and displaying images
-//  Copyright (C) 2008-2009  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ public:
    Image(const string& fileName);
    virtual ~Image();
 
-   void Draw(int x, int y, double rotate=0.0, double scale=1.0,
-             double alpha=1.0, double white=1.0) const;
+   void Draw(int x, int y, float rotate=0.0f, float scale=1.0f,
+             float alpha=1.0f, float white=1.0f) const;
 
    int GetWidth() const;
    int GetHeight() const;

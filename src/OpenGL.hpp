@@ -103,6 +103,7 @@ public:
    void Reset();
    void Translate(float x, float y);
    void Scale(float scale);
+   void Rotate(float angle);
    void Colour(float r, float g, float b, float a);
    void Colour(float r, float g, float b);
 
@@ -157,6 +158,7 @@ private:
    GLuint m_translateLocation = 0;
    GLuint m_scaleLocation = 0;
    GLuint m_colourLocation = 0;
+   GLuint m_angleLocation = 0;
 
    // Frame rate variables
    int fps_lastcheck, fps_framesdrawn, fps_rate;

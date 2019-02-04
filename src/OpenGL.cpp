@@ -33,10 +33,13 @@ static const char *g_vertexShader =
    "uniform vec2 WindowSize;\n"
    "uniform vec2 Translate;\n"
    "uniform float Scale;\n"
+   "uniform float Angle;\n"
    "out vec2 TexCoord0;\n"
    "void main()\n"
    "{\n"
-   "   vec2 tmp = Position * Scale + Translate;\n"
+   "   mat2 Rotate = mat2(cos(Angle), -sin(Angle),\n"
+   "                      sin(Angle),  cos(Angle));\n"
+   "   vec2 tmp = Position * Rotate * Scale + Translate;\n"
    "   vec2 winscale = vec2(WindowSize.x / 2, WindowSize.y / 2);\n"
    "   tmp -= winscale;\n"
    "   tmp /= winscale;\n"
@@ -191,6 +194,7 @@ void OpenGL::CompileShaders()
    m_translateLocation = GetUniformLocation("Translate");
    m_scaleLocation = GetUniformLocation("Scale");
    m_colourLocation = GetUniformLocation("Colour");
+   m_angleLocation = GetUniformLocation("Angle");
 
    //glUniform1i(GetUniformLocation("Sampler"), 0);
 }
@@ -512,11 +516,17 @@ void OpenGL::Reset()
    Translate(0.0f, 0.0f);
    Scale(0.0f);
    Colour(1.0f, 1.0f, 1.0f);
+   Rotate(0.0f);
 }
 
 void OpenGL::Translate(float x, float y)
 {
    glUniform2f(m_translateLocation, x, y);
+}
+
+void OpenGL::Rotate(float angle)
+{
+   glUniform1f(m_angleLocation, angle * (M_PI / 180));
 }
 
 void OpenGL::Scale(float scale)

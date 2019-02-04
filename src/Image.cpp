@@ -1,5 +1,5 @@
 //  Image.cpp -- Wrapper for loading and displaying images
-//  Copyright (C) 2008-2009  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -44,24 +44,20 @@ Image::~Image()
    glDeleteBuffers(1, &m_vbo);
 }
 
-void Image::Draw(int x, int y, double rotate, double scale,
-                 double alpha, double white) const
+void Image::Draw(int x, int y, float rotate, float scale,
+                 float alpha, float white) const
 {
    int width = GetWidth();
    int height = GetHeight();
 
    glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
-   glLoadIdentity();
-   glTranslated((double)(x + width/2), (double)(y + height/2), 0.0);
-   glScaled(scale, scale, 0);
-   glRotated(rotate, 0.0, 0.0, 1.0);
-   glColor4d(white, white, white, alpha);
 
    OpenGL& opengl = OpenGL::GetInstance();
 
    opengl.Colour(white, white, white, alpha);
    opengl.Translate(x + width/2, y + height/2);
    opengl.Scale(scale);
+   opengl.Rotate(rotate);
 
    glEnableVertexAttribArray(0);
    glEnableVertexAttribArray(1);
