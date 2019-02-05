@@ -25,9 +25,6 @@
 
 #include <vector>
 
-#define WINDOW_TITLE "Lunar Lander"
-#define FRAME_RATE 35
-
 struct Renderable {
    Renderable(int x, int y, int width, int height,
               float r, float g, float b);
@@ -60,22 +57,6 @@ struct TextureQuad : Renderable {
    GLuint uTexture;
 };
 
-
-//
-// A generic polygon.
-//
-struct Poly {
-   Poly()
-      : pointcount(0), xpos(0), ypos(0), uTexture(0), texX(0), texwidth(1.0f)
-   { }
-
-   static const int MAX_POINTS = 4;
-   Point points[MAX_POINTS];	// MAX_PointS=4 at the moment (!)
-   int pointcount, xpos, ypos;
-   GLuint uTexture;
-   float texX, texwidth;
-};
-
 //
 // A wrapper around common 2D OpenGL functions.
 //
@@ -89,17 +70,7 @@ public:
    void SkipDisplay();
    int GetFPS();
 
-   // Renderer functions
    void Draw(Renderable* r);
-   void Draw(Poly* cp);
-   void DrawRotate(Renderable* r, float angle);
-   void DrawBlend(Renderable* r, float alpha);
-   void DrawRotateBlend(Renderable* r, float angle, float alpha);
-   void DrawScale(Renderable* r, float factor);
-   void DrawRotateScale(Renderable* r, float angle, float factor);
-   void DrawBlendScale(Renderable* r, float alpha, float factor);
-   void DrawRotateBlendScale(Renderable* r, float angle, float alpha, float factor);
-
    void Reset();
    void Translate(float x, float y);
    void Scale(float scale);
@@ -146,6 +117,8 @@ private:
    void AddShader(GLuint program, const char* text, GLenum type);
    void CompileShaders();
    GLuint GetUniformLocation(const char *name);
+
+   static const int VIRTUAL_FRAME_RATE = 35;
 
    // Window related variables
    int screen_width, screen_height;

@@ -26,6 +26,8 @@
 #include <cassert>
 #include <set>
 
+#define WINDOW_TITLE "Lunar Lander"
+
 static const char *g_vertexShader =
    "#version 130\n"
    "in vec2 Position;\n"
@@ -222,7 +224,7 @@ void OpenGL::Run()
          m_timeScale = 1.0;
       else {
          const float delta = tickStart - lastTick;
-         m_timeScale = delta / (1000.0f / FRAME_RATE);
+         m_timeScale = delta / (1000.0f / VIRTUAL_FRAME_RATE);
       }
 
       Input::GetInstance().Update();
@@ -348,102 +350,6 @@ void OpenGL::Draw(Renderable* r)
    glLoadIdentity();
    r->TranslateTo();
    r->ApplyColour();
-   r->Render();
-}
-
-void OpenGL::Draw(Poly* cp)
-{
-   glDisable(GL_BLEND);
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, cp->uTexture);
-   glLoadIdentity();
-   glTranslatef((float)cp->xpos, (float)cp->ypos, 0.0f);
-   glColor3f(1.0f, 1.0f, 1.0f);
-   glBegin(GL_QUADS);
-   glTexCoord2f(cp->texX, 0.0f);
-   glVertex2i(cp->points[0].x, cp->points[0].y);
-   glTexCoord2f(cp->texX, 1.0f);
-   glVertex2i(cp->points[1].x, cp->points[1].y);
-   glTexCoord2f(cp->texX + cp->texwidth, 1.0f);
-   glVertex2i(cp->points[2].x, cp->points[2].y);
-   glTexCoord2f(cp->texX + cp->texwidth, 0.0f);
-   glVertex2i(cp->points[3].x, cp->points[3].y);
-   glEnd();
-}
-
-void OpenGL::DrawRotate(Renderable* r, float angle)
-{
-   glDisable(GL_BLEND);
-   glDisable(GL_TEXTURE_2D);
-   glLoadIdentity();
-   r->TranslateTo();
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   r->ApplyColour();
-   r->Render();
-}
-
-void OpenGL::DrawBlend(Renderable* r, float alpha)
-{
-   glDisable(GL_DEPTH_TEST);
-   glEnable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   r->ApplyColour(alpha);
-   r->Render();
-}
-
-void OpenGL::DrawRotateBlend(Renderable* r, float angle, float alpha)
-{
-   glDisable(GL_DEPTH_TEST);
-   glEnable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   r->ApplyColour(alpha);
-   r->Render();
-}
-
-void OpenGL::DrawScale(Renderable* r, float factor)
-{
-   glDisable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   glScalef(factor, factor, 0);
-   r->ApplyColour();
-   r->Render();
-}
-
-void OpenGL::DrawRotateScale(Renderable* r, float angle, float factor)
-{
-   glDisable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   glScalef(factor, factor, 0);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   r->ApplyColour();
-   r->Render();
-}
-
-void OpenGL::DrawBlendScale(Renderable* r, float alpha, float factor)
-{
-   glDisable(GL_DEPTH_TEST);
-   glEnable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   glScalef(factor, factor, 0);
-   r->ApplyColour();
-   r->Render();
-}
-
-void OpenGL::DrawRotateBlendScale(Renderable* r, float angle, float alpha, float factor)
-{
-   glDisable(GL_DEPTH_TEST);
-   glEnable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   glScalef(factor, factor, 0);
-   glRotatef(angle, 0.0f, 0.0f, 1.0f);
-   r->ApplyColour(alpha);
    r->Render();
 }
 

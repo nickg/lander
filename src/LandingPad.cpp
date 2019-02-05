@@ -27,7 +27,7 @@ LandingPad::LandingPad(Viewport* v, int index, int length)
    : index(index), length(length), viewport(v),
      landTexture_(LoadTexture("images/landingpad.png")),
      noLandTexture_(LoadTexture("images/landingpadred.png"))
-{   
+{
    quad.x = index * Surface::SURFACE_SIZE;
    quad.width = length * Surface::SURFACE_SIZE;
    quad.height = 16;
