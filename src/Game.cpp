@@ -81,8 +81,6 @@ Game::Game()
 
 void Game::Load()
 {
-   Screen::Load();
-
    starrotate = 0.0f;
    death_timeout = 0;
    state = gsNone;

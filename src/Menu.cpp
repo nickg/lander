@@ -52,8 +52,6 @@ MainMenu::MainMenu()
 
 void MainMenu::Load()
 {
-   Screen::Load();
-
    // Set fade in state
    state = msFadeIn;
    fade = 0.0;

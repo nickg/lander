@@ -95,8 +95,6 @@ Options::Options()
 
 void Options::Load()
 {
-   Screen::Load();
-
    state = optFadeIn;
    fadeAlpha = 0.0;
    selected = 0;

@@ -56,10 +56,7 @@ void ScreenManager::SelectScreen(const string& id)
       Die("Screen does not exist: %s", id.c_str());
 
    m_active = (*it).second;
-
    m_active->Load();
-   if (!m_active->IsLoaded())
-      Die("Screen %s did not call superclass Screen::Load()", id.c_str());
 
    m_screens[id] = m_active;
 
@@ -80,32 +77,17 @@ Screen* ScreenManager::GetScreenById(const string& id) const
 
 void ScreenManager::Process()
 {
-   if (m_active != NULL)	{
-      assert(m_active->IsLoaded());
+   if (m_active != NULL)
       m_active->Process();
-   }
 }
 
 void ScreenManager::Display()
 {
-   if (m_active != NULL) {
-      assert(m_active->IsLoaded());
+   if (m_active != NULL)
       m_active->Display();
-   }
 }
 
 void ScreenManager::RemoveAllScreens()
 {
    m_screens.clear();
-}
-
-Screen::Screen()
-   : m_loaded(false)
-{
-}
-
-void Screen::Load()
-{
-   assert(!m_loaded);
-   m_loaded = true;
 }

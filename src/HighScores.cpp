@@ -43,8 +43,6 @@ HighScores::HighScores()
 //
 void HighScores::Load()
 {
-   Screen::Load();
-
    // Set state
    state = hssDisplay;
 }

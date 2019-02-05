@@ -29,18 +29,13 @@
 //
 class Screen {
 public:
-   Screen();
+   Screen() = default;
    Screen(const Screen&) = delete;
 
-   bool IsLoaded() const { return m_loaded; }
-
    virtual ~Screen() { }
-   virtual void Load();
+   virtual void Load() { }
    virtual void Display() { }
    virtual void Process() { }
-
-private:
-   bool m_loaded;
 };
 
 
