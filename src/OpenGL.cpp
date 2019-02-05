@@ -420,7 +420,7 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 void OpenGL::Reset()
 {
    Translate(0.0f, 0.0f);
-   Scale(0.0f);
+   Scale(1.0f);
    Colour(1.0f, 1.0f, 1.0f);
    Rotate(0.0f);
 }

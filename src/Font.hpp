@@ -1,6 +1,6 @@
 //
 // FreeType.hpp -- A wrapper around FreeType.
-// Copyright (C) 2006, 2011  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,25 +30,27 @@
 
 class Font {
 public:
-   Font(string filename, unsigned int h);
+   Font(const string& filename, unsigned int h);
+   Font(const Font&) = delete;
    ~Font();
 
    void Print(int x, int y, const char* fmt, ...);
    int GetStringWidth(const char* fmt, ...);
-private:   
+private:
    int NextPowerOf2(int a);
-   void MakeDisplayList(FT_Face face, char ch, GLuint listBase,
-                        GLuint* texBase, unsigned short* widths);
-   void SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap);
-   
-   GLuint* textures;
-   GLuint listBase;
+   void MakeDisplayList(FT_Face face, char ch, float *vertexBuf);
+   void SplitIntoLines(vector<string>& lines, const char* fmt, va_list ap);
+
+   static const int MAX_CHAR = 128;
+   static const int MAX_TXT_BUF = 1024;
+   static const int VERTEX_SIZE = 4;
+
+   GLuint m_textures[MAX_CHAR];
+   GLuint m_vbo;
    float height;
-   unsigned short* widths;
+   unsigned m_widths[MAX_CHAR];
    char* buf;
 
-   static const int MAX_TXT_BUF = 1024;
-   
    static int fontRefCount;
    static FT_Library library;
 };

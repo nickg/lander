@@ -102,7 +102,7 @@ void Options::Load()
 
 void Options::ProcessFadeIn()
 {
-   fadeAlpha += FADE_SPEED;
+   fadeAlpha += FADE_SPEED * OpenGL::GetInstance().GetTimeScale();
 
    if (fadeAlpha >= 1.0) {
       state = optMain;

@@ -1,6 +1,6 @@
 //
 // Font.cpp -- A wrapper around FreeType.
-// Copyright (C) 2006, 2011-2015  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 //
 
 #include "Font.hpp"
+#include "OpenGL.hpp"
 
 #include <string>
 #include <stdexcept>
@@ -25,21 +26,20 @@
 int Font::fontRefCount = 0;
 FT_Library Font::library;
 
-Font::Font(string filename, unsigned int h)
+// TODO
+//  * Just one big texture
+//  * Use ints for VBO instead of float
+
+
+Font::Font(const string& filename, unsigned int h)
 {
    if (++fontRefCount == 1) {
       if (FT_Init_FreeType(&library))
          Die("FT_Init_FreeType failed");
    }
 
-   unsigned char i;
-
    buf = new char[MAX_TXT_BUF];
-
-   // Allocate memory for textures
-   textures = new GLuint[128];
    height = (float)h;
-   widths = new unsigned short[128];
 
    // Create the face
    FT_Face face;
@@ -49,12 +49,19 @@ Font::Font(string filename, unsigned int h)
    // FreeType measures font sizes in 1/64ths of a pixel...
    FT_Set_Char_Size(face, h<<6, h<<6, 96, 96);
 
-   listBase = glGenLists(128);
-   glGenTextures(128, textures);
+   glGenBuffers(1, &m_vbo);
+   glGenTextures(MAX_CHAR, m_textures);
 
    // Generate the characters
-   for (i = 0; i < 128; i++)
-      MakeDisplayList(face, i, listBase, textures, widths);
+   float *vertexBuf = new float[MAX_CHAR * VERTEX_SIZE * 4];
+   for (int i = 0; i < MAX_CHAR; i++)
+      MakeDisplayList(face, i, vertexBuf + i * VERTEX_SIZE * 4);
+
+   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_CHAR * VERTEX_SIZE * 4,
+                vertexBuf, GL_STATIC_DRAW);
+
+   delete[] vertexBuf;
 
    // Free face data
    FT_Done_Face(face);
@@ -62,10 +69,9 @@ Font::Font(string filename, unsigned int h)
 
 Font::~Font()
 {
-   glDeleteLists(listBase, 128);
-   glDeleteTextures(128, textures);
-   delete[] textures;
-   delete[] widths;
+   glDeleteBuffers(1, &m_vbo);
+   glDeleteTextures(128, m_textures);
+
    delete[] buf;
 
    if (--fontRefCount == 0) {
@@ -83,8 +89,7 @@ int Font::NextPowerOf2(int a)
    return rval;
 }
 
-void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
-                           GLuint* texBase, unsigned short* widths)
+void Font::MakeDisplayList(FT_Face face, char ch, float *vertexBuf)
 {
    // Load the character's glyph
    if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
@@ -120,7 +125,7 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    }
 
    // Set texture parameters
-   glBindTexture(GL_TEXTURE_2D, texBase[(int)ch]);
+   glBindTexture(GL_TEXTURE_2D, m_textures[(int)ch]);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -131,38 +136,25 @@ void Font::MakeDisplayList(FT_Face face, char ch, GLuint listBase,
    // Free expanded data
    delete[] expandedData;
 
-   // Create the display list
-   glNewList(listBase+ch, GL_COMPILE);
-   glBindTexture(GL_TEXTURE_2D, texBase[(int)ch]);
-
-   glPushMatrix();
+   const float tx = (float)bitmap.width / (float)width;
+   const float ty = (float)bitmap.rows / (float)height;
 
    // Insert some space between characters
-   glTranslatef((float)bitmapGlyph->left, 0, 0);
-   widths[(int)ch] = bitmapGlyph->left;
+   const float x = bitmapGlyph->left;
 
    // Move down a bit to accomodate characters such as p and q
-   glTranslatef(0, (float)(-bitmapGlyph->top), 0);
+   const float y = -bitmapGlyph->top;
 
-   float x = (float)bitmap.width / (float)width;
-   float y = (float)bitmap.rows / (float)height;
+   const float vertices[4 * VERTEX_SIZE] = {
+      x, y + bitmap.rows, 0.0f, ty,
+      x, y, 0.0f, 0.0f,
+      x + bitmap.width, y, tx, 0.0f,
+      x + bitmap.width, y + bitmap.rows, tx, ty
+   };
 
-   // Draw the quad
-   glBegin(GL_QUADS);
-   glTexCoord2f(0, y); glVertex2f(0, (float)bitmap.rows);
-   glTexCoord2f(0, 0); glVertex2f(0, 0);
-   glTexCoord2f(x, 0); glVertex2f((float)bitmap.width, 0);
-   glTexCoord2f(x, y); glVertex2f((float)bitmap.width, (float)bitmap.rows);
-   glEnd();
+   copy(vertices, vertices + 4 * VERTEX_SIZE, vertexBuf);
 
-   glPopMatrix();
-
-   // Move along to the next character
-   glTranslatef((float)(face->glyph->advance.x >> 6), 0, 0);
-   widths[(int)ch] += (short)face->glyph->advance.x >> 6;
-
-   // Finish display list
-   glEndList();
+   m_widths[(int)ch] = (short)face->glyph->advance.x >> 6;
 
    FT_Done_Glyph(glyph);
 }
@@ -175,7 +167,7 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
       vsnprintf(buf, MAX_TXT_BUF, fmt, ap);
 
    const char* start_line = buf, *c;
-   for (c = buf; *c; c++)	{
+   for (c = buf; *c; c++) {
       if (*c == '\n')	{
          string line;
          for (const char* n = start_line; n < c; n++)
@@ -195,9 +187,8 @@ void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
 
 void Font::Print(int x, int y, const char* fmt, ...)
 {
-   glPushMatrix();
+   OpenGL& opengl = OpenGL::GetInstance();
 
-   GLuint font = listBase;
    float h = height / 0.63f;   // Add some space between lines
 
    vector<string> lines;
@@ -206,25 +197,32 @@ void Font::Print(int x, int y, const char* fmt, ...)
    SplitIntoLines(lines, fmt, ap);
    va_end(ap);
 
-   // Set attributes
-   glEnable(GL_TEXTURE_2D);
-   glDisable(GL_DEPTH_TEST);
-   glEnable(GL_BLEND);
-   glListBase(font);
+   opengl.Reset();
+
+   glEnableVertexAttribArray(0);
+   glEnableVertexAttribArray(1);
+   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                         reinterpret_cast<const void *>(2 * sizeof(float)));
 
    // Draw the text
    const unsigned nlines = lines.size();
    for (unsigned i = 0; i < nlines; i++) {
-      glPushMatrix();
-      glLoadIdentity();
-      glTranslatef((float)x, (float)y - h*i, 0.0f);
+      float offset = 0.0f;
+      for (char ch : lines[i]) {
+         if ((int)ch < MAX_CHAR) {
+            opengl.Translate(x + offset, y - h*i);
+            glBindTexture(GL_TEXTURE_2D, m_textures[(int)ch]);
+            glDrawArrays(GL_QUADS, ch * 4, 4);
 
-      glCallLists((GLsizei)lines[i].length(), GL_UNSIGNED_BYTE, lines[i].c_str());
-
-      glPopMatrix();
+            offset += m_widths[(int)ch];
+         }
+      }
    }
 
-   glPopMatrix();
+   glDisableVertexAttribArray(0);
+   glDisableVertexAttribArray(1);
 }
 
 int Font::GetStringWidth(const char* fmt, ...)
@@ -237,11 +235,10 @@ int Font::GetStringWidth(const char* fmt, ...)
    va_end(ap);
 
    int maxlen = 0;
-   vector<string>::iterator it;
    for (const string& line : lines) {
       int len = 0;
       for (const char ch : line)
-         len += widths[static_cast<int>(ch)];
+         len += m_widths[static_cast<int>(ch)];
 
       if (len > maxlen)
          maxlen = len;

@@ -264,6 +264,8 @@ void MainMenu::Display()
    int x = (opengl.GetWidth() - hintFont.GetStringWidth(hints[hintidx])) / 2;
    int y = opengl.GetHeight() - 120;
    hintFont.Print(x, y, hints[hintidx]);
+
+   hintFont.Print(20, 20, "abcdefhijklmnopqrstuvwxyz");
 }
 
 double MenuStar::starRotate = 0.0;
