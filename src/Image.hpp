@@ -15,15 +15,17 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef INC_IMAGE_HPP
-#define INC_IMAGE_HPP
+#pragma once
 
 #include "Platform.hpp"
 #include "Texture.hpp"
+#include "OpenGL.hpp"
 
 class Image {
 public:
-   Image(const string& fileName);
+   explicit Image(const string& fileName);
+   Image(const Image&) = delete;
+   Image(Image&&) = default;
    virtual ~Image();
 
    void Draw(int x, int y, float rotate=0.0f, float scale=1.0f,
@@ -37,7 +39,5 @@ protected:
 
 private:
    Texture* m_texture = NULL;
-   GLuint m_vbo = 0;
+   VertexBuffer m_vbo;
 };
-
-#endif

@@ -349,8 +349,15 @@ void OpenGL::DrawGLScene()
 
 void OpenGL::Draw(const VertexBuffer& vbo, int first, int count)
 {
+   assert(first + count <= vbo.m_count);
+
    BindVertexBuffer bind(vbo);
    glDrawArrays(GL_QUADS, first, count);
+}
+
+void OpenGL::Draw(const VertexBuffer& vbo)
+{
+   Draw(vbo, 0, vbo.m_count);
 }
 
 OpenGL::~OpenGL()
@@ -555,6 +562,9 @@ OpenGL::Resolution::Resolution(const std::pair<int, int>& p)
 OpenGL::BindVertexBuffer::BindVertexBuffer(const VertexBuffer& vbo)
    : m_didBind(false)
 {
+   if (vbo.m_vbo == 0)
+      Die("Attempt to bind invalid VBO");
+
    GLuint bound;
    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint *)&bound);
 

@@ -115,6 +115,7 @@ public:
    int GetFPS();
 
    void Draw(const VertexBuffer& vbo, int start, int count);
+   void Draw(const VertexBuffer& vbo);
    void Reset();
    void Translate(float x, float y);
    void Scale(float scale);

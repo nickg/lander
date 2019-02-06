@@ -26,8 +26,7 @@
 
 Asteroid::Asteroid(int x, int y, int width, int surftex)
    : StaticObject(x, y, width, 4),
-     m_texture(LoadTexture(SurfaceFileName(surftex))),
-     m_vbo(GL_INVALID_VALUE)
+     m_texture(LoadTexture(SurfaceFileName(surftex)))
 {
    assert(width > 0);
 
@@ -109,22 +108,8 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
    GenerateDisplayList(surftex);
 }
 
-Asteroid::Asteroid(Asteroid&& other)
-   : StaticObject(other),
-     m_texture(other.m_texture),
-     m_vbo(other.m_vbo)
-{
-   copy(other.uppolys, other.uppolys + MAX_ASTEROID_WIDTH, uppolys);
-   copy(other.downpolys, other.downpolys + MAX_ASTEROID_WIDTH, downpolys);
-
-   other.m_vbo = GL_INVALID_VALUE;
-   other.m_texture = nullptr;
-}
-
 Asteroid::~Asteroid()
 {
-   if (m_vbo != GL_INVALID_VALUE)
-      glDeleteBuffers(1, &m_vbo);
 }
 
 const char *Asteroid::SurfaceFileName(int textureId)
@@ -143,12 +128,10 @@ const char *Asteroid::SurfaceFileName(int textureId)
 
 void Asteroid::GenerateDisplayList(int texidx)
 {
-   glGenBuffers(1, &m_vbo);
-
-   Vertex<int> *vertexBuf = new Vertex<int>[width * 8];
+   VertexI *vertexBuf = new VertexI[width * 8];
 
    for (int i = 0; i < width; i++) {
-      const Vertex<int> vertices[] = {
+      const VertexI vertices[] = {
          // Up
          { uppolys[i].points[0].x, uppolys[i].points[0].y,
            uppolys[i].texX, 0.0f },
@@ -177,9 +160,7 @@ void Asteroid::GenerateDisplayList(int texidx)
       copy(vertices, vertices + 8, vertexBuf + i*8);
    };
 
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex<int>) * width * 8,
-                vertexBuf, GL_STATIC_DRAW);
+   m_vbo = VertexBuffer::Make(vertexBuf, width * 8);
 
    delete[] vertexBuf;
 }
@@ -210,11 +191,6 @@ LineSegment Asteroid::GetDownBoundary(int poly) const
 
 void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 {
-   if (m_vbo == GL_INVALID_VALUE) {
-      // This asteroid has been moved and lost its VBO reference
-      Die("Asteroid::Draw called on invalid asteroid copy");
-   }
-
    float ix = xpos*OBJ_GRID_SIZE - viewadjust_x;
    float iy = ypos*OBJ_GRID_SIZE - viewadjust_y + OBJ_GRID_TOP;
 
@@ -223,19 +199,9 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
    opengl.Reset();
    opengl.Translate(ix, iy);
 
-   glEnableVertexAttribArray(0);
-   glEnableVertexAttribArray(1);
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, 4 * sizeof(int), 0);
-   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                         (GLvoid*)offsetof(Vertex<int>, tx));
-
    glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
 
-   glDrawArrays(GL_QUADS, 0, width * 8);
-
-   glDisableVertexAttribArray(0);
-   glDisableVertexAttribArray(1);
+   opengl.Draw(m_vbo);
 }
 
 bool Asteroid::CheckCollision(const Ship& ship) const

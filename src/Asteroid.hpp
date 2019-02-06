@@ -28,7 +28,7 @@
 class Asteroid : public StaticObject {
 public:
    Asteroid(int x, int y, int width, int surftex);
-   Asteroid(Asteroid&& other);
+   Asteroid(Asteroid&& other) = default;
    Asteroid(const Asteroid& other) = delete;
    ~Asteroid();
 
@@ -46,7 +46,7 @@ private:
    static const char *SurfaceFileName(int textureId);
 
    Texture* m_texture;
-   GLuint m_vbo;
+   VertexBuffer m_vbo;
 
    struct AsteroidSection {
       float texX, texwidth;

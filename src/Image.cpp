@@ -23,25 +23,22 @@ Image::Image(const string& fileName)
 {
    m_texture = LoadTexture(fileName);
 
-   glGenBuffers(1, &m_vbo);
-
    const float width = GetWidth();
    const float height = GetHeight();
 
-   const float vertices[][4] = {
+   const VertexF vertices[4] = {
       { -(width/2), -(height/2), 0.0f, 0.0f },
       { -(width/2), height/2, 0.0f, 1.0f },
       { width/2, height/2, 1.0f, 1.0f },
       { width/2, -height/2, 1.0f, 0.0f }
    };
 
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+   m_vbo = VertexBuffer::Make(vertices, 4);
 }
 
 Image::~Image()
 {
-   glDeleteBuffers(1, &m_vbo);
+
 }
 
 void Image::Draw(int x, int y, float rotate, float scale,
@@ -58,16 +55,7 @@ void Image::Draw(int x, int y, float rotate, float scale,
    opengl.Translate(x + width/2, y + height/2);
    opengl.Scale(scale);
    opengl.Rotate(rotate);
-
-   glEnableVertexAttribArray(0);
-   glEnableVertexAttribArray(1);
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                         reinterpret_cast<const void *>(2 * sizeof(float)));
-   glDrawArrays(GL_QUADS, 0, 4);
-   glDisableVertexAttribArray(0);
-   glDisableVertexAttribArray(1);
+   opengl.Draw(m_vbo);
 }
 
 int Image::GetWidth() const
