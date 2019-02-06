@@ -24,8 +24,9 @@
 
 #include <vector>
 
+template <typename T>
 struct Vertex {
-   float x, y;
+   T x, y;
    float tx, ty;
 };
 

@@ -54,7 +54,7 @@ Font::Font(const string& filename, unsigned int h)
    const float normCellSize = 1.0f / MAX_CHAR;
 
    GLubyte *textureData = new GLubyte[2 * cellSize * textureWidth];
-   Vertex *vertexBuf = new Vertex[MAX_CHAR * 4];
+   Vertex<float> *vertexBuf = new Vertex<float>[MAX_CHAR * 4];
 
    // Generate the characters
    for (int i = 0; i < MAX_CHAR; i++) {
@@ -98,7 +98,7 @@ Font::Font(const string& filename, unsigned int h)
       // Move down a bit to accomodate characters such as p and q
       const float y = -bitmapGlyph->top;
 
-      const Vertex vertices[4] = {
+      const Vertex<float> vertices[4] = {
          { x, y + bitmap.rows, tx, th},
          { x, y, tx, 0.0f },
          { x + bitmap.width, y, tx + tw, 0.0f },
@@ -122,7 +122,7 @@ Font::Font(const string& filename, unsigned int h)
                 GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, textureData);
 
    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_CHAR * 4,
+   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex<float>) * MAX_CHAR * 4,
                 vertexBuf, GL_STATIC_DRAW);
 
    delete[] vertexBuf;
@@ -202,7 +202,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                         reinterpret_cast<const void *>(2 * sizeof(float)));
+                         (GLvoid*)offsetof(Vertex<float>, tx));
 
    glBindTexture(GL_TEXTURE_2D, m_texture);
 

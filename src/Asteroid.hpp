@@ -1,6 +1,6 @@
 //
 //  Asteroid.hpp -- Randomly generated asteroid.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef INC_ASTEROID_HPP
-#define INC_ASTEROID_HPP
+#pragma once
 
 #include "GameObjFwd.hpp"
 #include "GraphicsFwd.hpp"
@@ -29,7 +28,8 @@
 class Asteroid : public StaticObject {
 public:
    Asteroid(int x, int y, int width, int surftex);
-   Asteroid(const Asteroid& other);
+   Asteroid(Asteroid&& other);
+   Asteroid(const Asteroid& other) = delete;
    ~Asteroid();
 
    void Draw(int viewadjust_x, int viewadjust_y) const;
@@ -43,17 +43,14 @@ private:
    static const int AS_VARIANCE = 64;
 
    void GenerateDisplayList(int texidx);
-   static string SurfaceFileName(int textureId);
+   static const char *SurfaceFileName(int textureId);
 
-   Texture* surfaceTexture;
-   shared_ptr<GLuint> displayList;
+   Texture* m_texture;
+   GLuint m_vbo;
 
    struct AsteroidSection {
-      double texX, texwidth;
+      float texX, texwidth;
       Point points[4];
    };
    AsteroidSection uppolys[MAX_ASTEROID_WIDTH], downpolys[MAX_ASTEROID_WIDTH];
 };
-
-
-#endif
