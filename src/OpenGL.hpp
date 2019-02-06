@@ -25,6 +25,11 @@
 
 #include <vector>
 
+struct Vertex {
+   float x, y;
+   float tx, ty;
+};
+
 struct Renderable {
    Renderable(int x, int y, int width, int height,
               float r, float g, float b);

@@ -17,8 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef INC_FREETYPE_HPP
-#define INC_FREETYPE_HPP
+#pragma once
 
 #include "Platform.hpp"
 
@@ -38,15 +37,13 @@ public:
    int GetStringWidth(const char* fmt, ...);
 private:
    int NextPowerOf2(int a);
-   void MakeDisplayList(FT_Face face, char ch, float *vertexBuf);
    void SplitIntoLines(vector<string>& lines, const char* fmt, va_list ap);
 
    static const int MAX_CHAR = 128;
    static const int MAX_TXT_BUF = 1024;
-   static const int VERTEX_SIZE = 4;
 
-   GLuint m_textures[MAX_CHAR];
    GLuint m_vbo;
+   GLuint m_texture;
    float height;
    unsigned m_widths[MAX_CHAR];
    char* buf;
@@ -54,6 +51,3 @@ private:
    static int fontRefCount;
    static FT_Library library;
 };
-
-
-#endif

@@ -22,14 +22,10 @@
 
 #include <string>
 #include <stdexcept>
+#include <cassert>
 
 int Font::fontRefCount = 0;
 FT_Library Font::library;
-
-// TODO
-//  * Just one big texture
-//  * Use ints for VBO instead of float
-
 
 Font::Font(const string& filename, unsigned int h)
 {
@@ -50,18 +46,88 @@ Font::Font(const string& filename, unsigned int h)
    FT_Set_Char_Size(face, h<<6, h<<6, 96, 96);
 
    glGenBuffers(1, &m_vbo);
-   glGenTextures(MAX_CHAR, m_textures);
+   glGenTextures(1, &m_texture);
+
+   const unsigned cellSize = NextPowerOf2(h * 2);
+   const unsigned textureWidth = NextPowerOf2(cellSize * MAX_CHAR);
+   const float normCellSize = 1.0f / MAX_CHAR;
+
+   GLubyte *textureData = new GLubyte[2 * cellSize * textureWidth];
+   Vertex *vertexBuf = new Vertex[MAX_CHAR * 4];
+
+
 
    // Generate the characters
-   float *vertexBuf = new float[MAX_CHAR * VERTEX_SIZE * 4];
-   for (int i = 0; i < MAX_CHAR; i++)
-      MakeDisplayList(face, i, vertexBuf + i * VERTEX_SIZE * 4);
+   for (int i = 0; i < MAX_CHAR; i++) {
+      // Load the character's glyph
+      if (FT_Load_Glyph(face, FT_Get_Char_Index(face, i), FT_LOAD_DEFAULT))
+         Die("FT_Load_Glyph failed");
+
+      // Store the face's glyph in a glyph object
+      FT_Glyph glyph;
+      if (FT_Get_Glyph(face->glyph, &glyph))
+         Die("FT_Get_Glyph failed");
+
+      // Convert the glyph to a bitmap
+      FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
+      FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
+
+      // Get a reference to the bitmap
+      FT_Bitmap& bitmap = bitmapGlyph->bitmap;
+
+      assert(bitmap.width <= cellSize);
+      assert(bitmap.rows <= cellSize);
+
+      // Convert greyscale bitmap to lumiance and alpha channel
+      for (unsigned y = 0; y < cellSize; y++) {
+         for (unsigned x = 0; x < cellSize; x++) {
+            const int offset = 2 * (x + i*cellSize + y*textureWidth);
+            textureData[offset] = textureData[offset + 1] =
+               (x >= bitmap.width || y >= bitmap.rows)
+               ? 0
+               : bitmap.buffer[x + bitmap.width*y];
+         }
+      }
+
+      const float tx = i * normCellSize;
+      const float tw = ((float)bitmap.width / (float)cellSize) * normCellSize;
+      const float th = (float)bitmap.rows / (float)cellSize;
+
+      // Insert some space between characters
+      const float x = bitmapGlyph->left;
+
+      // Move down a bit to accomodate characters such as p and q
+      const float y = -bitmapGlyph->top;
+
+      const Vertex vertices[4] = {
+         { x, y + bitmap.rows, tx, th},
+         { x, y, tx, 0.0f },
+         { x + bitmap.width, y, tx + tw, 0.0f },
+         { x + bitmap.width, y + bitmap.rows, tx + tw, th }
+      };
+
+      copy(vertices, vertices + 4, vertexBuf + i * 4);
+
+      m_widths[i] = (short)face->glyph->advance.x >> 6;
+
+      FT_Done_Glyph(glyph);
+   }
+
+   glBindTexture(GL_TEXTURE_2D, m_texture);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, cellSize, 0,
+                GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, textureData);
 
    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_CHAR * VERTEX_SIZE * 4,
+   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_CHAR * 4,
                 vertexBuf, GL_STATIC_DRAW);
 
    delete[] vertexBuf;
+   delete[] textureData;
 
    // Free face data
    FT_Done_Face(face);
@@ -70,7 +136,7 @@ Font::Font(const string& filename, unsigned int h)
 Font::~Font()
 {
    glDeleteBuffers(1, &m_vbo);
-   glDeleteTextures(128, m_textures);
+   glDeleteTextures(1, &m_texture);
 
    delete[] buf;
 
@@ -87,76 +153,6 @@ int Font::NextPowerOf2(int a)
       rval <<= 1;
 
    return rval;
-}
-
-void Font::MakeDisplayList(FT_Face face, char ch, float *vertexBuf)
-{
-   // Load the character's glyph
-   if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
-      Die("FT_Load_Glyph failed");
-
-   // Store the face's glyph in a glyph object
-   FT_Glyph glyph;
-   if (FT_Get_Glyph(face->glyph, &glyph))
-      Die("FT_Get_Glyph failed");
-
-   // Convert the glyph to a bitmap
-   FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
-   FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
-
-   // Get a reference to the bitmap
-   FT_Bitmap& bitmap = bitmapGlyph->bitmap;
-
-   // Make the width and height a power of 2
-   const unsigned width = NextPowerOf2(bitmap.width);
-   const unsigned height = NextPowerOf2(bitmap.rows);
-
-   // Allocate memory for the texture data
-   GLubyte* expandedData = new GLubyte[2 * width * height];
-
-   // Fill in the bitmap's extended data
-   for (unsigned j = 0; j < height; j++) {
-      for (unsigned i = 0; i < width; i++) {
-         expandedData[2*(i+j*width)] = expandedData[2*(i+j*width)+1] =
-            (i >= bitmap.width || j >= bitmap.rows)
-            ? 0
-            : bitmap.buffer[i + bitmap.width*j];
-      }
-   }
-
-   // Set texture parameters
-   glBindTexture(GL_TEXTURE_2D, m_textures[(int)ch]);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-   // Create the texture
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-                GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
-
-   // Free expanded data
-   delete[] expandedData;
-
-   const float tx = (float)bitmap.width / (float)width;
-   const float ty = (float)bitmap.rows / (float)height;
-
-   // Insert some space between characters
-   const float x = bitmapGlyph->left;
-
-   // Move down a bit to accomodate characters such as p and q
-   const float y = -bitmapGlyph->top;
-
-   const float vertices[4 * VERTEX_SIZE] = {
-      x, y + bitmap.rows, 0.0f, ty,
-      x, y, 0.0f, 0.0f,
-      x + bitmap.width, y, tx, 0.0f,
-      x + bitmap.width, y + bitmap.rows, tx, ty
-   };
-
-   copy(vertices, vertices + 4 * VERTEX_SIZE, vertexBuf);
-
-   m_widths[(int)ch] = (short)face->glyph->advance.x >> 6;
-
-   FT_Done_Glyph(glyph);
 }
 
 void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
@@ -206,6 +202,8 @@ void Font::Print(int x, int y, const char* fmt, ...)
    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
                          reinterpret_cast<const void *>(2 * sizeof(float)));
 
+   glBindTexture(GL_TEXTURE_2D, m_texture);
+
    // Draw the text
    const unsigned nlines = lines.size();
    for (unsigned i = 0; i < nlines; i++) {
@@ -213,7 +211,6 @@ void Font::Print(int x, int y, const char* fmt, ...)
       for (char ch : lines[i]) {
          if ((int)ch < MAX_CHAR) {
             opengl.Translate(x + offset, y - h*i);
-            glBindTexture(GL_TEXTURE_2D, m_textures[(int)ch]);
             glDrawArrays(GL_QUADS, ch * 4, 4);
 
             offset += m_widths[(int)ch];
