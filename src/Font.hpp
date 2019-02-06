@@ -20,6 +20,7 @@
 #pragma once
 
 #include "Platform.hpp"
+#include "OpenGL.hpp"
 
 #include <vector>
 
@@ -33,10 +34,11 @@ public:
    Font(const Font&) = delete;
    ~Font();
 
+   void SetColour(float r, float g, float b, float a=1.0f);
    void Print(int x, int y, const char* fmt, ...);
    int GetStringWidth(const char* fmt, ...);
 private:
-   int NextPowerOf2(int a);
+   int NextPowerOf2(unsigned a);
    void SplitIntoLines(vector<string>& lines, const char* fmt, va_list ap);
 
    static const int MAX_CHAR = 128;
@@ -47,6 +49,7 @@ private:
    float height;
    unsigned m_widths[MAX_CHAR];
    char* buf;
+   Colour m_colour;
 
    static int fontRefCount;
    static FT_Library library;

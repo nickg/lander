@@ -260,12 +260,10 @@ void MainMenu::Display()
    else
       m_hintTimeout -= opengl.GetTimeScale();
 
-   glColor4d(0.0, 1.0, 0.0, fade);
    int x = (opengl.GetWidth() - hintFont.GetStringWidth(hints[hintidx])) / 2;
    int y = opengl.GetHeight() - 120;
+   hintFont.SetColour(0.0f, 1.0f, 0.0f, fade);
    hintFont.Print(x, y, hints[hintidx]);
-
-   hintFont.Print(20, 20, "abcdefhijklmnopqrstuvwxyz");
 }
 
 double MenuStar::starRotate = 0.0;

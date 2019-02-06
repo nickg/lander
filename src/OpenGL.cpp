@@ -60,6 +60,9 @@ static const char *g_fragmentShader =
    "   FragColor = texture2D(Sampler, TexCoord0.st) * vec4(Colour);\n"
    "}\n";
 
+const Colour Colour::WHITE = Colour::Make(1.0f, 1.0f, 1.0f);
+const Colour Colour::BLACK = Colour::Make(0.0f, 0.0f, 0.0f);
+
 OpenGL::OpenGL()
    : screen_width(0), screen_height(0),
      fullscreen(false), running(false), active(true),
@@ -398,6 +401,7 @@ bool OpenGL::InitGL()
    glAlphaFunc(GL_GREATER, 0.0);			// Alpha testing function
    glDisable(GL_NORMALIZE);
    glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
 
    CheckError("InitGL");
 
@@ -445,9 +449,9 @@ void OpenGL::Colour(float r, float g, float b, float a)
    glUniform4f(m_colourLocation, r, g, b, a);
 }
 
-void OpenGL::Colour(float r, float g, float b)
+void OpenGL::Colour(const ::Colour& colour)
 {
-   Colour(r, g, b, 1.0f);
+   Colour(colour.r, colour.g, colour.b, colour.a);
 }
 
 int OpenGL::GetFPS()
@@ -549,4 +553,10 @@ OpenGL::Resolution::Resolution(const std::pair<int, int>& p)
    : width(p.first), height(p.second)
 {
 
+}
+
+Colour Colour::Make(float r, float g, float b, float a)
+{
+   Colour c = { r, g, b, a };
+   return c;
 }

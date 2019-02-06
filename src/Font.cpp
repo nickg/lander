@@ -28,6 +28,7 @@ int Font::fontRefCount = 0;
 FT_Library Font::library;
 
 Font::Font(const string& filename, unsigned int h)
+   : m_colour(Colour::WHITE)
 {
    if (++fontRefCount == 1) {
       if (FT_Init_FreeType(&library))
@@ -54,8 +55,6 @@ Font::Font(const string& filename, unsigned int h)
 
    GLubyte *textureData = new GLubyte[2 * cellSize * textureWidth];
    Vertex *vertexBuf = new Vertex[MAX_CHAR * 4];
-
-
 
    // Generate the characters
    for (int i = 0; i < MAX_CHAR; i++) {
@@ -108,7 +107,7 @@ Font::Font(const string& filename, unsigned int h)
 
       copy(vertices, vertices + 4, vertexBuf + i * 4);
 
-      m_widths[i] = (short)face->glyph->advance.x >> 6;
+      m_widths[i] = face->glyph->advance.x >> 6;
 
       FT_Done_Glyph(glyph);
    }
@@ -145,14 +144,16 @@ Font::~Font()
    }
 }
 
-int Font::NextPowerOf2(int a)
+int Font::NextPowerOf2(unsigned a)
 {
-   int rval = 1;
-
-   while (rval < a)
-      rval <<= 1;
-
-   return rval;
+   a--;
+   a |= a >> 1;
+   a |= a >> 2;
+   a |= a >> 4;
+   a |= a >> 8;
+   a |= a >> 16;
+   a++;
+   return a;
 }
 
 void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
@@ -194,6 +195,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
    va_end(ap);
 
    opengl.Reset();
+   opengl.Colour(m_colour);
 
    glEnableVertexAttribArray(0);
    glEnableVertexAttribArray(1);
@@ -242,4 +244,9 @@ int Font::GetStringWidth(const char* fmt, ...)
    }
 
    return maxlen;
+}
+
+void Font::SetColour(float r, float g, float b, float a)
+{
+   m_colour = Colour::Make(r, g, b, a);
 }

@@ -17,8 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef INC_OPENGL_HPP
-#define INC_OPENGL_HPP
+#pragma once
 
 #include "Platform.hpp"
 #include "Geometry.hpp"
@@ -28,6 +27,15 @@
 struct Vertex {
    float x, y;
    float tx, ty;
+};
+
+struct Colour {
+   float r, g, b, a;
+
+   static Colour Make(float r, float g, float b, float a=1.0f);
+
+   static const Colour WHITE;
+   static const Colour BLACK;
 };
 
 struct Renderable {
@@ -80,8 +88,8 @@ public:
    void Translate(float x, float y);
    void Scale(float scale);
    void Rotate(float angle);
-   void Colour(float r, float g, float b, float a);
-   void Colour(float r, float g, float b);
+   void Colour(float r, float g, float b, float a=1.0f);
+   void Colour(const ::Colour& colour);
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
@@ -144,5 +152,3 @@ private:
 
    bool deferredScreenShot;
 };
-
-#endif

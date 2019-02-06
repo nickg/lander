@@ -240,16 +240,16 @@ void Options::DisplayItems()
       int space_w = itemFont.GetStringWidth("  ");
 
       if (i == selected)
-         glColor4d(0.0, 1.0, 0.0, fadeAlpha);
+         itemFont.SetColour(0.0f, 1.0f, 0.0f, fadeAlpha);
       else
-         glColor4d(0.0, 0.5, 0.0, fadeAlpha);
+         itemFont.SetColour(0.0f, 0.5f, 0.0f, fadeAlpha);
       int x = (screen_w - all_w) / 2;
       itemFont.Print(x, y, (*it).name.c_str());
 
       if (i == selected)
-         glColor4d(0.0, 0.7, 1.0, fadeAlpha);
+         itemFont.SetColour(0.0f, 0.7f, 1.0f, fadeAlpha);
       else
-         glColor4d(0.0, 0.2, 0.7, fadeAlpha);
+         itemFont.SetColour(0.0f, 0.2f, 0.7f, fadeAlpha);
       x += name_w + space_w;
       itemFont.Print(x, y, (*it).values[(*it).active].c_str());
 
@@ -265,7 +265,7 @@ void Options::DisplayHelpText()
    int screen_w = OpenGL::GetInstance().GetWidth();
    int screen_h = OpenGL::GetInstance().GetHeight();
 
-   glColor4d(0.0, 1.0, 0.0, fadeAlpha);
+   helpFont.SetColour(0.0f, 1.0f, 0.0f, fadeAlpha);
 
    // TODO: Remove this once texture loading bug is fixed
 #ifdef WIN32
