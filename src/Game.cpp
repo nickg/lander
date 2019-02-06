@@ -886,7 +886,7 @@ void SpeedMeter::Display()
    speedbar.green = 1.0f - (float)width/124.0f;
    speedbar.width = width;
 
-   OpenGL::GetInstance().Draw(&speedbar);
+   //OpenGL::GetInstance().Draw(&speedbar);
 
    speedMeterImage.Draw(10, 40);
 }

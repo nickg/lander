@@ -46,7 +46,6 @@ Font::Font(const string& filename, unsigned int h)
    // FreeType measures font sizes in 1/64ths of a pixel...
    FT_Set_Char_Size(face, h<<6, h<<6, 96, 96);
 
-   glGenBuffers(1, &m_vbo);
    glGenTextures(1, &m_texture);
 
    const unsigned cellSize = NextPowerOf2(h * 2);
@@ -121,9 +120,7 @@ Font::Font(const string& filename, unsigned int h)
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, cellSize, 0,
                 GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, textureData);
 
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex<float>) * MAX_CHAR * 4,
-                vertexBuf, GL_STATIC_DRAW);
+   m_vbo = VertexBuffer::Make(vertexBuf, MAX_CHAR * 4);
 
    delete[] vertexBuf;
    delete[] textureData;
@@ -134,7 +131,6 @@ Font::Font(const string& filename, unsigned int h)
 
 Font::~Font()
 {
-   glDeleteBuffers(1, &m_vbo);
    glDeleteTextures(1, &m_texture);
 
    delete[] buf;
@@ -197,14 +193,9 @@ void Font::Print(int x, int y, const char* fmt, ...)
    opengl.Reset();
    opengl.Colour(m_colour);
 
-   glEnableVertexAttribArray(0);
-   glEnableVertexAttribArray(1);
-   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                         (GLvoid*)offsetof(Vertex<float>, tx));
-
    glBindTexture(GL_TEXTURE_2D, m_texture);
+
+   OpenGL::BindVertexBuffer bind(m_vbo);
 
    // Draw the text
    const unsigned nlines = lines.size();
@@ -213,15 +204,12 @@ void Font::Print(int x, int y, const char* fmt, ...)
       for (char ch : lines[i]) {
          if ((int)ch < MAX_CHAR) {
             opengl.Translate(x + offset, y - h*i);
-            glDrawArrays(GL_QUADS, ch * 4, 4);
+            opengl.Draw(m_vbo, ch * 4, 4);
 
             offset += m_widths[(int)ch];
          }
       }
    }
-
-   glDisableVertexAttribArray(0);
-   glDisableVertexAttribArray(1);
 }
 
 int Font::GetStringWidth(const char* fmt, ...)

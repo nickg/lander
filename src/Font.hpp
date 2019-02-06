@@ -44,7 +44,7 @@ private:
    static const int MAX_CHAR = 128;
    static const int MAX_TXT_BUF = 1024;
 
-   GLuint m_vbo;
+   VertexBuffer m_vbo;
    GLuint m_texture;
    float height;
    unsigned m_widths[MAX_CHAR];

@@ -347,13 +347,10 @@ void OpenGL::DrawGLScene()
    }
 }
 
-void OpenGL::Draw(Renderable* r)
+void OpenGL::Draw(const VertexBuffer& vbo, int first, int count)
 {
-   glDisable(GL_BLEND);
-   glLoadIdentity();
-   r->TranslateTo();
-   r->ApplyColour();
-   r->Render();
+   BindVertexBuffer bind(vbo);
+   glDrawArrays(GL_QUADS, first, count);
 }
 
 OpenGL::~OpenGL()
@@ -555,8 +552,106 @@ OpenGL::Resolution::Resolution(const std::pair<int, int>& p)
 
 }
 
+OpenGL::BindVertexBuffer::BindVertexBuffer(const VertexBuffer& vbo)
+   : m_didBind(false)
+{
+   GLuint bound;
+   glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint *)&bound);
+
+   if (bound == vbo.m_vbo)
+      return;
+
+   glEnableVertexAttribArray(0);
+   glEnableVertexAttribArray(1);
+   glBindBuffer(GL_ARRAY_BUFFER, vbo.m_vbo);
+   glVertexAttribPointer(0, 2, vbo.m_vertType, GL_FALSE, vbo.m_stride, 0);
+   glVertexAttribPointer(1, 2, vbo.m_texType, GL_FALSE, vbo.m_stride,
+                         vbo.m_texOffset);
+
+   m_didBind = true;
+}
+
+OpenGL::BindVertexBuffer::~BindVertexBuffer()
+{
+   if (m_didBind) {
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glDisableVertexAttribArray(0);
+      glDisableVertexAttribArray(1);
+   }
+}
+
 Colour Colour::Make(float r, float g, float b, float a)
 {
    Colour c = { r, g, b, a };
    return c;
+}
+
+VertexBuffer VertexBuffer::Make(const VertexF *vertices, int count)
+{
+   VertexBuffer vb(sizeof(VertexF), GL_FLOAT, GL_FLOAT,
+                   (GLvoid*)offsetof(VertexF, tx), count);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
+   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexF),
+                vertices, GL_STATIC_DRAW);
+
+   return vb;
+}
+
+VertexBuffer VertexBuffer::Make(const VertexI *vertices, int count)
+{
+   VertexBuffer vb(sizeof(VertexI), GL_INT, GL_FLOAT,
+                   (GLvoid*)offsetof(VertexI, tx), count);
+
+   glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
+   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexI),
+                vertices, GL_STATIC_DRAW);
+
+   return vb;
+}
+
+VertexBuffer::VertexBuffer(GLuint stride, GLuint vertType, GLuint texType,
+                           GLvoid *texOffset, int count)
+   : m_stride(stride),
+     m_vertType(vertType),
+     m_texType(texType),
+     m_texOffset(texOffset),
+     m_count(count)
+{
+   glGenBuffers(1, &m_vbo);
+}
+
+VertexBuffer::VertexBuffer(VertexBuffer&& other)
+   : m_vbo(other.m_vbo),
+     m_stride(other.m_stride),
+     m_vertType(other.m_vertType),
+     m_texType(other.m_texType),
+     m_texOffset(other.m_texOffset),
+     m_count(other.m_count)
+{
+   other.m_vbo = 0;
+}
+
+VertexBuffer::~VertexBuffer()
+{
+   if (m_vbo != 0)
+      glDeleteBuffers(1, &m_vbo);
+}
+
+VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
+{
+   if (this != &other) {
+      assert(m_vbo == 0);
+
+      m_vbo = other.m_vbo;
+      m_stride = other.m_stride;
+      m_vertType = other.m_vertType;
+      m_texType = other.m_texType;
+      m_texOffset = other.m_texOffset;
+      m_count = other.m_count;
+
+      other.m_vbo = 0;
+   }
+
+   return *this;
 }

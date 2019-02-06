@@ -30,6 +30,36 @@ struct Vertex {
    float tx, ty;
 };
 
+typedef Vertex<int> VertexI;
+typedef Vertex<float> VertexF;
+
+class VertexBuffer {
+public:
+   static VertexBuffer Make(const VertexI *vertices, int count);
+   static VertexBuffer Make(const VertexF *vertices, int count);
+   static VertexBuffer Invalid();
+
+   VertexBuffer() = default;
+   VertexBuffer(VertexBuffer&& other);
+   ~VertexBuffer();
+
+   VertexBuffer& operator=(VertexBuffer&& other);
+
+private:
+   friend class OpenGL;
+
+   VertexBuffer(GLuint stride, GLuint vertType, GLuint texType,
+                GLvoid *texOffset, int count);
+   VertexBuffer(const VertexBuffer&) = delete;
+
+   GLuint m_vbo = 0;
+   GLuint m_stride = 0;
+   GLuint m_vertType = 0;
+   GLuint m_texType = 0;
+   GLvoid *m_texOffset = nullptr;
+   int m_count = 0;
+};
+
 struct Colour {
    float r, g, b, a;
 
@@ -84,7 +114,7 @@ public:
    void SkipDisplay();
    int GetFPS();
 
-   void Draw(Renderable* r);
+   void Draw(const VertexBuffer& vbo, int start, int count);
    void Reset();
    void Translate(float x, float y);
    void Scale(float scale);
@@ -102,6 +132,16 @@ public:
    void DeferScreenShot();
 
    bool SetVideoMode(bool fullscreen, int width, int height);
+
+   class BindVertexBuffer {
+   public:
+      explicit BindVertexBuffer(const VertexBuffer& vbo);
+      ~BindVertexBuffer();
+      BindVertexBuffer(const BindVertexBuffer&) = delete;
+
+   private:
+      bool m_didBind;
+   };
 
    struct Resolution {
       Resolution(int w, int h);
