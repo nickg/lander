@@ -1,5 +1,5 @@
 //  Surface.cpp -- Randomly generated planet surface.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -54,9 +54,9 @@ void Surface::Generate(int surftex, LandingPadList& pads)
    int texloop = 0;
    for (int i = 0; i < nPolys; i++) {
       surface[i].texX = ((double)texloop)/10.0;
-      if (texloop++ == 10)
+      if (++texloop == 10)
          texloop = 0;
-      surface[i].texwidth = 0.1;
+      surface[i].texwidth = 0.1f;
 
       surface[i].points[0].x = 0;
       surface[i].points[0].y = MAX_SURFACE_HEIGHT;
@@ -109,9 +109,30 @@ void Surface::Generate(int surftex, LandingPadList& pads)
       surface[i].points[3].x = SURFACE_SIZE;
       surface[i].points[3].y = MAX_SURFACE_HEIGHT;
    }
+
+   VertexI *vertexBuf = new VertexI[4 * nPolys];
+
+   for (int i = 0; i < nPolys; i++) {
+      const VertexI vertices[4] = {
+         { surface[i].points[0].x, surface[i].points[0].y,
+           surface[i].texX, 0.0f },
+         { surface[i].points[1].x, surface[i].points[1].y,
+           surface[i].texX, 1.0f },
+         { surface[i].points[2].x, surface[i].points[2].y,
+           surface[i].texX + surface[i].texwidth, 1.0f },
+         { surface[i].points[3].x, surface[i].points[3].y,
+           surface[i].texX + surface[i].texwidth, 0.0f }
+      };
+
+      copy(vertices, vertices + 4, vertexBuf + i*4);
+   }
+
+   m_vbo = VertexBuffer::Make(vertexBuf, 4 * nPolys);
+
+   delete[] vertexBuf;
 }
 
-void Surface::Display()
+void Surface::Display() const
 {
    int left = viewport->GetXAdjust()/SURFACE_SIZE;
    int right = left + OpenGL::GetInstance().GetWidth()/SURFACE_SIZE + 1;
@@ -119,28 +140,18 @@ void Surface::Display()
    if (right > max)
       right = max;
 
-   glDisable(GL_BLEND);
-   glEnable(GL_TEXTURE_2D);
-   glColor4d(1.0, 1.0, 1.0, 1.0);
-   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx].GetGLTexture());
+   OpenGL& opengl = OpenGL::GetInstance();
+
+   opengl.Reset();
+   opengl.SetTexture(surfTexture[texidx]);
 
    for (int i = left; i < right; i++) {
-      double xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
-      double ypos = viewport->GetLevelHeight()
+      float xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
+      float ypos = viewport->GetLevelHeight()
          - viewport->GetYAdjust() - MAX_SURFACE_HEIGHT;
 
-      glLoadIdentity();
-      glTranslated(xpos, ypos, 0.0);
-      glBegin(GL_QUADS);
-        glTexCoord2d(surface[i].texX, 0.0);
-        glVertex2i(surface[i].points[0].x, surface[i].points[0].y);
-        glTexCoord2d(surface[i].texX, 1.0);
-        glVertex2i(surface[i].points[1].x, surface[i].points[1].y);
-        glTexCoord2d(surface[i].texX + surface[i].texwidth, 1.0);
-        glVertex2i(surface[i].points[2].x, surface[i].points[2].y);
-        glTexCoord2d(surface[i].texX + surface[i].texwidth, 0.0);
-        glVertex2i(surface[i].points[3].x, surface[i].points[3].y);
-      glEnd();
+      opengl.SetTranslation(xpos, ypos);
+      opengl.Draw(m_vbo, i * 4, 4);
    }
 }
 

@@ -662,7 +662,8 @@ VertexBuffer::~VertexBuffer()
 VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
 {
    if (this != &other) {
-      assert(m_vbo == 0);
+      if (m_vbo != 0)
+         glDeleteBuffers(1, &m_vbo);
 
       m_vbo = other.m_vbo;
       m_stride = other.m_stride;

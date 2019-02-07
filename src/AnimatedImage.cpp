@@ -67,6 +67,8 @@ AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
    }
 
    m_vbo = VertexBuffer::Make(vertexBuf, 4 * frameCount);
+
+   delete[] vertexBuf;
 }
 
 // Draw a particular frame

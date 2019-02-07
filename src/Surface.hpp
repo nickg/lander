@@ -1,5 +1,5 @@
 //  Surface.hpp -- Randomly generated planet surface.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef INC_SURFACE_HPP
-#define INC_SURFACE_HPP
+#pragma once
 
 #include "GraphicsFwd.hpp"
 #include "GameObjFwd.hpp"
@@ -29,7 +28,7 @@ public:
 
    void Generate(int surftex, LandingPadList& pads);
    bool CheckCollisions(Ship& ship, LandingPadList& pads, int* padIndex);
-   void Display();
+   void Display() const;
 
    static const int NUM_SURF_TEX = 4;   // Number of available surface textures
    static const int SURFACE_SIZE;
@@ -42,12 +41,11 @@ private:
 
    int texidx;
    Viewport* viewport;
+   VertexBuffer m_vbo;
 
    struct SurfaceSection {
-      double texX, texwidth;
+      float texX, texwidth;
       Point points[4];
    };
    SurfaceSection* surface;
 };
-
-#endif
