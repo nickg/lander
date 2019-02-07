@@ -39,17 +39,17 @@ public:
    int GetStringWidth(const char* fmt, ...);
 private:
    int NextPowerOf2(unsigned a);
-   void SplitIntoLines(vector<string>& lines, const char* fmt, va_list ap);
+   int SplitIntoLines(const char* fmt, va_list ap);
 
    static const int MAX_CHAR = 128;
    static const int MAX_TXT_BUF = 1024;
 
    VertexBuffer m_vbo;
-   GLuint m_texture;
-   float height;
-   unsigned m_widths[MAX_CHAR];
-   char* buf;
-   Colour m_colour;
+   GLuint       m_texture;
+   const float  m_height;
+   unsigned     m_widths[MAX_CHAR];
+   char        *m_buf;
+   Colour       m_colour;
 
    static int fontRefCount;
    static FT_Library library;

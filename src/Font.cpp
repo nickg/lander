@@ -28,15 +28,15 @@ int Font::fontRefCount = 0;
 FT_Library Font::library;
 
 Font::Font(const string& filename, unsigned int h)
-   : m_colour(Colour::WHITE)
+   : m_height(h),
+     m_colour(Colour::WHITE)
 {
    if (++fontRefCount == 1) {
       if (FT_Init_FreeType(&library))
          Die("FT_Init_FreeType failed");
    }
 
-   buf = new char[MAX_TXT_BUF];
-   height = (float)h;
+   m_buf = new char[MAX_TXT_BUF];
 
    // Create the face
    FT_Face face;
@@ -133,7 +133,7 @@ Font::~Font()
 {
    glDeleteTextures(1, &m_texture);
 
-   delete[] buf;
+   delete[] m_buf;
 
    if (--fontRefCount == 0) {
       FT_Done_FreeType(library);
@@ -152,42 +152,33 @@ int Font::NextPowerOf2(unsigned a)
    return a;
 }
 
-void Font::SplitIntoLines(vector<string> &lines, const char* fmt, va_list ap)
+int Font::SplitIntoLines(const char* fmt, va_list ap)
 {
    if (fmt == NULL)
-      *buf = 0;
+      m_buf[0] = '\0';
    else
-      vsnprintf(buf, MAX_TXT_BUF, fmt, ap);
+      vsnprintf(m_buf, MAX_TXT_BUF, fmt, ap);
 
-   const char* start_line = buf, *c;
-   for (c = buf; *c; c++) {
-      if (*c == '\n')	{
-         string line;
-         for (const char* n = start_line; n < c; n++)
-            line.append(1, *n);
-         lines.push_back(line);
-         start_line = c+1;
+   int nlines = 1;
+   for (char *p = m_buf; *p != '\0'; p++) {
+      if (*p == '\n') {
+         *p = '\0';
+         nlines++;
       }
    }
 
-   if (start_line) {
-      string line;
-      for (const char* n = start_line; n < c; n++)
-         line.append(1, *n);
-      lines.push_back(line);
-   }
+   return nlines;
 }
 
 void Font::Print(int x, int y, const char* fmt, ...)
 {
    OpenGL& opengl = OpenGL::GetInstance();
 
-   float h = height / 0.63f;   // Add some space between lines
+   float h = m_height / 0.63f;   // Add some space between lines
 
-   vector<string> lines;
    va_list ap;
    va_start(ap, fmt);
-   SplitIntoLines(lines, fmt, ap);
+   const int nlines = SplitIntoLines(fmt, ap);
    va_end(ap);
 
    opengl.Reset();
@@ -197,18 +188,18 @@ void Font::Print(int x, int y, const char* fmt, ...)
 
    OpenGL::BindVertexBuffer bind(m_vbo);
 
-   // Draw the text
-   const unsigned nlines = lines.size();
-   for (unsigned i = 0; i < nlines; i++) {
+   const char *p = m_buf;
+   for (int i = 0; i < nlines; i++) {
       float offset = 0.0f;
-      for (char ch : lines[i]) {
-         if ((int)ch < MAX_CHAR) {
+      for (; *p != '\0'; p++) {
+         if ((int)*p < MAX_CHAR) {
             opengl.Translate(x + offset, y - h*i);
-            opengl.Draw(m_vbo, ch * 4, 4);
+            opengl.Draw(m_vbo, *p * 4, 4);
 
-            offset += m_widths[(int)ch];
+            offset += m_widths[(int)*p];
          }
       }
+      ++p;
    }
 }
 
@@ -218,14 +209,16 @@ int Font::GetStringWidth(const char* fmt, ...)
    vector<string> lines;
 
    va_start(ap, fmt);
-   SplitIntoLines(lines, fmt, ap);
+   const int nlines = SplitIntoLines(fmt, ap);
    va_end(ap);
 
    int maxlen = 0;
-   for (const string& line : lines) {
+   const char *p = m_buf;
+   for (int i = 0; i < nlines; i++) {
       int len = 0;
-      for (const char ch : line)
-         len += m_widths[static_cast<int>(ch)];
+      for (; *p != '\0'; p++)
+         len += m_widths[static_cast<int>(*p)];
+      ++p;
 
       if (len > maxlen)
          maxlen = len;

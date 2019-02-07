@@ -692,10 +692,10 @@ void Game::Display()
    // Draw the explosion if necessary
    if (state == gsExplode) {
       ship.DrawExplosion();
-      glColor3f(0.0f, 1.0f, 0.0f);
       const char* sdeath = i18n("Press SPACE to continue");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sdeath)) / 2;
       int y = opengl.GetHeight() - 40;
+      normalFont.SetColour(0.0f, 1.0f, 0.0f);
       normalFont.Print(x, y, sdeath);
    }
    else if (state == gsDeathWait || state == gsGameOver
@@ -708,7 +708,7 @@ void Game::Display()
       (*it).DrawArrow(&viewport);
 
    // Draw HUD
-   glColor3f(0.0f, 0.9f, 0.0f);
+   scoreFont.SetColour(0.0f, 0.9f, 0.0f);
    scoreFont.Print(10, SCORE_Y, "%.7d", score);
 
    fuelmeter.Display();
@@ -750,9 +750,10 @@ void Game::Display()
          (*it).DrawIcon(offset + i*32, 0.0f);
          i += 32;
       }
-      glColor3f(0.0f, 1.0f, 0.0f);
+
       const char* sland = i18n("Land  now");
       int x = (opengl.GetWidth() - normalFont.GetStringWidth(sland)) / 2;
+      normalFont.SetColour(0.0f, 1.0f, 0.0f);
       normalFont.Print(x, 30, sland);
    }
 
@@ -763,19 +764,19 @@ void Game::Display()
       int lc_y = (opengl.GetHeight() - levelComp.GetHeight()) / 2 - 50;
       levelComp.Draw(lc_x, lc_y);
 
-      glColor3f(0.0f, 0.5f, 0.9f);
       int printScore = newscore > 0 ? newscore : 0;
       int x = (opengl.GetWidth() - newscore_width) / 2;
       int y = (opengl.GetHeight() - 30)/2 + 50;
+      bigFont.SetColour(0.0f, 0.5f, 0.9f);
       bigFont.Print(x, y, scoretxt, printScore);
    }
 
    // Draw level number text
    if (leveltext_timeout) {
-      glColor3f(0.9f, 0.9f, 0.0f);
       const char* lvltxt = i18n("Level  %d");
       int x = (opengl.GetWidth() - bigFont.GetStringWidth(lvltxt, level)) / 2;
       int y = (opengl.GetHeight() - 30) / 2;
+      bigFont.SetColour(0.9f, 0.9f, 0.0f);
       bigFont.Print(x, y, lvltxt, level);
    }
 
@@ -793,9 +794,9 @@ void Game::Display()
    // Draw paused message
    if (state == gsPaused) {
       const char* txtpaused = i18n("Paused");
-      glColor3f(0.0f, 0.5f, 1.0f);
       int x = (opengl.GetWidth() - bigFont.GetStringWidth(txtpaused) - 20) / 2;
       int y = (opengl.GetHeight() - 150) / 2;
+      bigFont.SetColour(0.0f, 0.5f, 1.0f);
       bigFont.Print(x, y, txtpaused);
    }
 }
