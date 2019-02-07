@@ -1,5 +1,5 @@
 //  Fade.hpp -- Generic fade in/out effect.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,22 +19,25 @@
 #define INC_FADE_HPP
 
 #include "Platform.hpp"
+#include "OpenGL.hpp"
 
 class Fade {
 public:
    static const float DEFAULT_FADE_SPEED;
-   
+
    Fade(float s = DEFAULT_FADE_SPEED);
 
    void BeginFadeIn();
    void BeginFadeOut();
-   void Display();
+   void Display() const;
    bool Process();
 private:
    enum State { fNone, fIn, fOut };
 
-   State state;
-   float alpha, speed;
+   State        m_state;
+   float        m_alpha;
+   const float  m_speed;
+   VertexBuffer m_vbo;
 };
 
 #endif

@@ -1,5 +1,5 @@
 //  Fade.cpp -- Generic fade in/out effect.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,44 +23,56 @@
 const float Fade::DEFAULT_FADE_SPEED(0.05f);
 
 Fade::Fade(float s)
-   : state(fNone), alpha(0.0f), speed(s)
+   : m_state(fNone),
+     m_alpha(0.0f),
+     m_speed(s)
 {
+   const int w = OpenGL::GetInstance().GetWidth();
+   const int h = OpenGL::GetInstance().GetHeight();
 
+   const VertexI vertices[4] = {
+      { 0, 0, 0.0f, 0.0f },
+      { 0, h, 0.0f, 1.0f },
+      { w, h, 1.0f, 1.0f },
+      { w, 0, 1.0f, 0.0f }
+   };
+
+   m_vbo = VertexBuffer::Make(vertices, 4);
 }
 
 void Fade::BeginFadeIn()
 {
-   assert(state == fNone);
+   assert(m_state == fNone);
 
-   state = fIn;
-   alpha = 1.0f;
+   m_state = fIn;
+   m_alpha = 1.0f;
 }
 
 void Fade::BeginFadeOut()
 {
-   assert(state == fNone);
+   assert(m_state == fNone);
 
-   state = fOut;
-   alpha = 0.0f;
+   m_state = fOut;
+   m_alpha = 0.0f;
 }
 
 bool Fade::Process()
 {
    const OpenGL::TimeScale timeScale = OpenGL::GetInstance().GetTimeScale();
 
-   switch (state) {
+   switch (m_state) {
    case fOut:
-      alpha += speed * timeScale;
-      if (alpha >= 1.0f) {
-         state = fNone;
+      m_alpha += min(m_speed * timeScale, 1.0f);
+      if (m_alpha >= 1.0f) {
+         m_state = fNone;
          return true;
       }
       else
          return false;
    case fIn:
-      alpha -= speed * timeScale;
-      if (alpha <= 0.0f) {
-         state = fNone;
+      m_alpha -= max(m_speed * timeScale, 0.0f);
+      if (m_alpha <= 0.0f) {
+         m_state = fNone;
          return true;
       }
       else
@@ -70,19 +82,13 @@ bool Fade::Process()
    }
 }
 
-void Fade::Display()
+void Fade::Display() const
 {
-   const int w = OpenGL::GetInstance().GetWidth();
-   const int h = OpenGL::GetInstance().GetHeight();
+   OpenGL& opengl = OpenGL::GetInstance();
 
-   glEnable(GL_BLEND);
-   glDisable(GL_TEXTURE_2D);
-   glColor4f(0.0f, 0.0f, 0.0f, alpha);
-   glLoadIdentity();
-   glBegin(GL_QUADS);
-   glVertex3i(0, 0, 0);
-   glVertex3i(0, h, 0);
-   glVertex3i(w, h, 0);
-   glVertex3i(w, 0, 0);
-   glEnd();
+   glBindTexture(GL_TEXTURE_2D, 0);
+
+   opengl.Reset();
+   opengl.Colour(0.0f, 0.0f, 0.0f, m_alpha);
+   opengl.Draw(m_vbo);
 }

@@ -206,8 +206,6 @@ void Font::Print(int x, int y, const char* fmt, ...)
 int Font::GetStringWidth(const char* fmt, ...)
 {
    va_list ap;
-   vector<string> lines;
-
    va_start(ap, fmt);
    const int nlines = SplitIntoLines(fmt, ap);
    va_end(ap);
