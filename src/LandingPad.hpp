@@ -31,7 +31,7 @@ public:
 
    void Draw(bool locked);
    void SetYPos(int ypos) { this->ypos = ypos; }
-	
+
    int GetLength() const { return length; }
    int GetIndex() const { return index; }
 
@@ -39,9 +39,9 @@ private:
    TextureQuad quad;
    int index, length, ypos;
    Viewport* viewport;
-   
-   Texture* landTexture_;
-   Texture* noLandTexture_;
+
+   Texture m_landTexture;
+   Texture m_noLandTexture;
 };
 
 typedef vector<LandingPad> LandingPadList;

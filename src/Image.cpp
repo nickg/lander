@@ -20,8 +20,8 @@
 #include "Texture.hpp"
 
 Image::Image(const string& fileName)
+   : m_texture(Texture::Load(fileName))
 {
-   m_texture = LoadTexture(fileName);
 
    const float width = GetWidth();
    const float height = GetHeight();
@@ -38,7 +38,6 @@ Image::Image(const string& fileName)
 
 Image::~Image()
 {
-
 }
 
 void Image::Draw(int x, int y, float rotate, float scale,
@@ -49,7 +48,7 @@ void Image::Draw(int x, int y, float rotate, float scale,
 
    OpenGL& opengl = OpenGL::GetInstance();
 
-   opengl.SetTexture(*m_texture);
+   opengl.SetTexture(m_texture);
    opengl.SetColour(white, white, white, alpha);
    opengl.SetTranslation(x + width/2, y + height/2);
    opengl.SetScale(scale);
@@ -59,10 +58,10 @@ void Image::Draw(int x, int y, float rotate, float scale,
 
 int Image::GetWidth() const
 {
-   return m_texture->GetWidth();
+   return m_texture.GetWidth();
 }
 
 int Image::GetHeight() const
 {
-   return m_texture->GetHeight();
+   return m_texture.GetHeight();
 }

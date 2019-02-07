@@ -61,7 +61,7 @@ protected:
       float xg, yg;
    } particle[MAX_PARTICLES];
 
-   Texture* texture_;
+   Texture m_texture;
 };
 
 

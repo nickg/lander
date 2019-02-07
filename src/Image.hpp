@@ -35,9 +35,9 @@ public:
    int GetHeight() const;
 
 protected:
-   Texture* GetTexture() const { return m_texture; }
+   const Texture& GetTexture() const { return m_texture; }
 
 private:
-   Texture* m_texture = NULL;
+   Texture m_texture;
    VertexBuffer m_vbo;
 };

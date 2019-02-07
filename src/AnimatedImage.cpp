@@ -53,7 +53,7 @@ void AnimatedImage::DrawFrame(int frame, int x, int y, double rotate, double sca
 
    glEnable(GL_TEXTURE_2D);
    glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, GetTexture()->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, GetTexture().GetGLTexture());
    glLoadIdentity();
    glTranslated((double)(x + frameWidth/2), (double)(y + frameHeight/2), 0.0);
    glScaled(scale, scale, 0);

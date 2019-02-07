@@ -56,7 +56,7 @@ public:
 
 private:
    Image fuelMeterImage;
-   Texture* fuelBarTexture;
+   Texture fuelBarTexture;
 
    static const int FUELBAR_Y, FUELBAR_OFFSET;
 

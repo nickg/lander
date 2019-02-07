@@ -26,7 +26,7 @@
 
 Asteroid::Asteroid(int x, int y, int width, int surftex)
    : StaticObject(x, y, width, 4),
-     m_texture(LoadTexture(SurfaceFileName(surftex)))
+     m_texture(Texture::Load(SurfaceFileName(surftex)))
 {
    assert(width > 0);
 
@@ -198,9 +198,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
 
    opengl.Reset();
    opengl.SetTranslation(ix, iy);
-
-   glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
-
+   opengl.SetTexture(m_texture);
    opengl.Draw(m_vbo);
 }
 

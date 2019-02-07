@@ -45,7 +45,7 @@ private:
    void GenerateDisplayList(int texidx);
    static const char *SurfaceFileName(int textureId);
 
-   Texture* m_texture;
+   Texture m_texture;
    VertexBuffer m_vbo;
 
    struct AsteroidSection {

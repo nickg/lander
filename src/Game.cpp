@@ -803,7 +803,7 @@ void Game::Display()
 
 FuelMeter::FuelMeter()
    : fuelMeterImage("images/fuelmeter.png"),
-     fuelBarTexture(LoadTexture("images/fuelbar.png")),
+     fuelBarTexture(Texture::Load("images/fuelbar.png")),
      maxfuel(1)
 {
 
@@ -818,7 +818,7 @@ void FuelMeter::Display()
    glEnable(GL_BLEND);
    glDisable(GL_DEPTH_TEST);
    glColor3f(1.0f, 1.0f, 1.0f);
-   glBindTexture(GL_TEXTURE_2D, fuelBarTexture->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, fuelBarTexture.GetGLTexture());
    glLoadIdentity();
    glBegin(GL_QUADS);
      glTexCoord2f(1.0f-texsize, 1.0f);

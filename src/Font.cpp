@@ -46,8 +46,6 @@ Font::Font(const string& filename, unsigned int h)
    // FreeType measures font sizes in 1/64ths of a pixel...
    FT_Set_Char_Size(face, h<<6, h<<6, 96, 96);
 
-   glGenTextures(1, &m_texture);
-
    const unsigned cellSize = NextPowerOf2(h * 2);
    const unsigned textureWidth = NextPowerOf2(cellSize * MAX_CHAR);
    const float normCellSize = 1.0f / MAX_CHAR;
@@ -111,14 +109,8 @@ Font::Font(const string& filename, unsigned int h)
       FT_Done_Glyph(glyph);
    }
 
-   glBindTexture(GL_TEXTURE_2D, m_texture);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, cellSize, 0,
-                GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, textureData);
+   m_texture = Texture::Make(textureWidth, cellSize, textureData,
+                             GL_LUMINANCE_ALPHA, GL_NEAREST);
 
    m_vbo = VertexBuffer::Make(vertexBuf, MAX_CHAR * 4);
 
@@ -131,8 +123,6 @@ Font::Font(const string& filename, unsigned int h)
 
 Font::~Font()
 {
-   glDeleteTextures(1, &m_texture);
-
    delete[] m_buf;
 
    if (--fontRefCount == 0) {
@@ -183,8 +173,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
 
    opengl.Reset();
    opengl.SetColour(m_colour);
-
-   glBindTexture(GL_TEXTURE_2D, m_texture);
+   opengl.SetTexture(m_texture);
 
    OpenGL::BindVertexBuffer bind(m_vbo);
 

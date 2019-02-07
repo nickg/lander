@@ -23,30 +23,77 @@
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 #include <SDL_image.h>
 
 using namespace std;
 
-// Cache of loaded textures
 namespace {
-   typedef map<string, Texture*> TextureCache;
+   typedef map<string, TextureHolder*> TextureCache;
    TextureCache theCache;
 }
 
-Texture* LoadTexture(const string& fileName)
-{
-   TextureCache::iterator it = theCache.find(fileName);
-   if (it != theCache.end())
-      return (*it).second;
-   else {
-      Texture* tex = new Texture(fileName.c_str());
-      theCache[fileName] = tex;
-      return tex;
+class RefCounted {
+public:
+   RefCounted()
+      : m_refcount(1)
+   {}
+
+   RefCounted(const RefCounted&) = delete;
+
+   virtual ~RefCounted()
+   {
+      assert(m_refcount == 0);
    }
+
+   void Ref()
+   {
+      assert(m_refcount > 0);
+      m_refcount++;
+   }
+
+   void Unref()
+   {
+      assert(m_refcount > 0);
+      if (--m_refcount == 0)
+         delete this;
+   }
+
+private:
+   int m_refcount;
+};
+
+class TextureHolder : public RefCounted {
+public:
+   TextureHolder(const string& file);
+   TextureHolder(int width, int height, const GLubyte *data,
+                 GLuint fmt, GLuint filter);
+   TextureHolder(const TextureHolder&) = delete;
+   ~TextureHolder();
+
+   GLuint GetGLTexture() const { return m_texture; }
+   int GetWidth() const { return m_width; }
+   int GetHeight() const { return m_height; }
+
+private:
+   GLuint m_texture;
+   int m_width, m_height;
+};
+
+static bool IsPowerOfTwo(int n)
+{
+   int pop = 0;
+   for (unsigned i = 0, bit = 1;
+        i < sizeof(int)*8;
+        i++, bit <<= 1) {
+      if (n & bit)
+         pop++;
+   }
+   return pop == 1;
 }
 
-Texture::Texture(const string& file)
+TextureHolder::TextureHolder(const string& file)
 {
    SDL_Surface* surface = IMG_Load(LocateResource(file).c_str());
    if (NULL == surface)
@@ -96,25 +143,113 @@ Texture::Texture(const string& file)
    SDL_FreeSurface(surface);
 }
 
-Texture::~Texture()
+TextureHolder::TextureHolder(int width, int height, const GLubyte *data,
+                             GLuint fmt, GLuint filter)
+{
+   glGenTextures(1, &m_texture);
+   glBindTexture(GL_TEXTURE_2D, m_texture);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+                fmt, GL_UNSIGNED_BYTE, data);
+}
+
+TextureHolder::~TextureHolder()
 {
    glDeleteTextures(1, &m_texture);
 }
 
-bool Texture::IsPowerOfTwo(int n)
+Texture Texture::Load(const string& fileName)
 {
-   int pop = 0;
-   for (unsigned i = 0, bit = 1;
-        i < sizeof(int)*8;
-        i++, bit <<= 1) {
-      if (n & bit)
-         pop++;
+   TextureCache::iterator it = theCache.find(fileName);
+   if (it != theCache.end()) {
+      (*it).second->Ref();
+      return Texture((*it).second);
    }
-   return pop == 1;
+   else {
+      TextureHolder *holder = new TextureHolder(fileName);
+      holder->Ref();
+      theCache[fileName] = holder;
+      return Texture(holder);
+   }
+}
+
+Texture Texture::Make(int width, int height, const GLubyte *data,
+                      GLuint fmt, GLuint filter)
+{
+   return Texture(new TextureHolder(width, height, data, fmt, filter));
+}
+
+Texture::Texture(TextureHolder *holder)
+   : m_holder(holder)
+{
+}
+
+Texture::Texture(Texture&& other)
+   : m_holder(other.m_holder)
+{
+   other.m_holder = nullptr;
+}
+
+Texture::Texture(const Texture& other)
+   : m_holder(other.m_holder)
+{
+   if (m_holder != nullptr)
+      m_holder->Ref();
+}
+
+Texture::~Texture()
+{
+   if (m_holder != nullptr)
+      m_holder->Unref();
+}
+
+Texture& Texture::operator=(const Texture& other)
+{
+   if (m_holder != nullptr)
+      m_holder->Unref();
+
+   m_holder = other.m_holder;
+
+   if (m_holder != nullptr)
+      m_holder->Ref();
+
+   return *this;
 }
 
 void Texture::Bind(int textureUnit)
 {
    glActiveTexture(textureUnit);
-   glBindTexture(GL_TEXTURE_2D, m_texture);
+   if (m_holder != nullptr)
+      glBindTexture(GL_TEXTURE_2D, m_holder->GetGLTexture());
+   else
+      glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+GLuint Texture::GetGLTexture() const
+{
+   if (m_holder == nullptr)
+      return 0;
+   else
+      return m_holder->GetGLTexture();
+}
+
+int Texture::GetWidth() const
+{
+   if (m_holder == nullptr)
+      return 0;
+   else
+      return m_holder->GetWidth();
+}
+
+int Texture::GetHeight() const
+{
+   if (m_holder == nullptr)
+      return 0;
+   else
+      return m_holder->GetHeight();
 }

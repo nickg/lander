@@ -26,12 +26,13 @@ const int Surface::MIN_SURFACE_HEIGHT(10);
 const int Surface::SURFACE_SIZE(20);
 
 Surface::Surface(Viewport* v)
-   :  viewport(v), surface(NULL)
+   : viewport(v),
+     surface(NULL)
 {
-   surfTexture[0] = LoadTexture("images/dirt_surface.png");
-   surfTexture[1] = LoadTexture("images/snow_surface.png");
-   surfTexture[2] = LoadTexture("images/red_rock_surface.png");
-   surfTexture[3] = LoadTexture("images/rock_surface.png");
+   surfTexture[0] = Texture::Load("images/dirt_surface.png");
+   surfTexture[1] = Texture::Load("images/snow_surface.png");
+   surfTexture[2] = Texture::Load("images/red_rock_surface.png");
+   surfTexture[3] = Texture::Load("images/rock_surface.png");
 }
 
 Surface::~Surface()
@@ -59,7 +60,7 @@ void Surface::Generate(int surftex, LandingPadList& pads)
 
       surface[i].points[0].x = 0;
       surface[i].points[0].y = MAX_SURFACE_HEIGHT;
-		
+
       // See if we want to place a landing pad here
       LandingPad* padHere = NULL;
       for (LandingPadListIt it = pads.begin(); it != pads.end(); ++it) {
@@ -81,7 +82,7 @@ void Surface::Generate(int surftex, LandingPadList& pads)
             change = rand()%MAX_SURFACE_HEIGHT;
          surface[i].points[1].x = 0;
          surface[i].points[1].y = change;
-         
+
          do
             change = surface[i].points[1].y + (rand()%VARIANCE-(VARIANCE/2));
          while (change > MAX_SURFACE_HEIGHT || change < MIN_SURFACE_HEIGHT);
@@ -101,10 +102,10 @@ void Surface::Generate(int surftex, LandingPadList& pads)
          surface[i].points[1].y = change;
          surface[i].points[2].x = SURFACE_SIZE;
          surface[i].points[2].y = change;
-         
+
          padHere->SetYPos(change);
       }
-      
+
       surface[i].points[3].x = SURFACE_SIZE;
       surface[i].points[3].y = MAX_SURFACE_HEIGHT;
    }
@@ -117,17 +118,17 @@ void Surface::Display()
    int max = viewport->GetLevelWidth()/SURFACE_SIZE;
    if (right > max)
       right = max;
-   
+
    glDisable(GL_BLEND);
    glEnable(GL_TEXTURE_2D);
    glColor4d(1.0, 1.0, 1.0, 1.0);
-   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx]->GetGLTexture());
-      
+   glBindTexture(GL_TEXTURE_2D, surfTexture[texidx].GetGLTexture());
+
    for (int i = left; i < right; i++) {
       double xpos = i*SURFACE_SIZE - viewport->GetXAdjust();
       double ypos = viewport->GetLevelHeight()
          - viewport->GetYAdjust() - MAX_SURFACE_HEIGHT;
-      
+
       glLoadIdentity();
       glTranslated(xpos, ypos, 0.0);
       glBegin(GL_QUADS);
@@ -158,15 +159,15 @@ bool Surface::CheckCollisions(Ship& ship, LandingPadList& pads, int* padIndex)
 
    if (ship.GetY() < viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT)
       return false;
-   
+
    *padIndex = -1;
-   
+
    for (int i = lookmin; i <= lookmax; i++) {
       l.p1.x = i*SURFACE_SIZE;
       l.p1.y = viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[1].y;
       l.p2.x = (i+1)*SURFACE_SIZE;
       l.p2.y = viewport->GetLevelHeight() - MAX_SURFACE_HEIGHT + surface[i].points[2].y;
-      
+
       // Look through each hot spot and check for collisions
       if (ship.HotSpotCollision(l)) {
          // See if this is a landing pad

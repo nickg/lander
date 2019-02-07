@@ -41,7 +41,7 @@ Emitter::Emitter(int x, int y, float r, float g, float b, bool createnew,
   : partsize(size), r(r), g(g), b(b), deviation(deviation), xg(xg), yg(yg),
     life(life), maxspeed(max_speed), xpos((float)x), ypos((float)y),
     slowdown(slowdown), createrate(128.0f), xi_bias(0.0f), yi_bias(0.0f),
-    texture_(LoadTexture("images/particle.png"))
+    m_texture(Texture::Load("images/particle.png"))
 {
    // Set up the particles
    for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -105,7 +105,7 @@ void Emitter::Draw(float adjust_x, float adjust_y) const
    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
    glLoadIdentity();
 
-   glBindTexture(GL_TEXTURE_2D, texture_->GetGLTexture());
+   glBindTexture(GL_TEXTURE_2D, m_texture.GetGLTexture());
 
    for (int i = 0; i < MAX_PARTICLES; i++)	{
       if (particle[i].active)	{

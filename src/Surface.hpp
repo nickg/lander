@@ -36,17 +36,17 @@ public:
    static const int MAX_SURFACE_HEIGHT;
    static const int MIN_SURFACE_HEIGHT;
    static const int VARIANCE;
-   
+
 private:
-   Texture* surfTexture[NUM_SURF_TEX];
-   
+   Texture surfTexture[NUM_SURF_TEX];
+
    int texidx;
    Viewport* viewport;
 
    struct SurfaceSection {
       double texX, texwidth;
       Point points[4];
-   };   
+   };
    SurfaceSection* surface;
 };
 
