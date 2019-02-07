@@ -34,37 +34,7 @@ namespace {
    TextureCache theCache;
 }
 
-class RefCounted {
-public:
-   RefCounted()
-      : m_refcount(1)
-   {}
-
-   RefCounted(const RefCounted&) = delete;
-
-   virtual ~RefCounted()
-   {
-      assert(m_refcount == 0);
-   }
-
-   void Ref()
-   {
-      assert(m_refcount > 0);
-      m_refcount++;
-   }
-
-   void Unref()
-   {
-      assert(m_refcount > 0);
-      if (--m_refcount == 0)
-         delete this;
-   }
-
-private:
-   int m_refcount;
-};
-
-class TextureHolder : public RefCounted {
+class TextureHolder {
 public:
    TextureHolder(const string& file);
    TextureHolder(int width, int height, const GLubyte *data,
@@ -166,58 +136,48 @@ TextureHolder::~TextureHolder()
 Texture Texture::Load(const string& fileName)
 {
    TextureCache::iterator it = theCache.find(fileName);
-   if (it != theCache.end()) {
-      (*it).second->Ref();
-      return Texture((*it).second);
-   }
+   if (it != theCache.end())
+      return Texture((*it).second, false);
    else {
       TextureHolder *holder = new TextureHolder(fileName);
-      holder->Ref();
       theCache[fileName] = holder;
-      return Texture(holder);
+      return Texture(holder, false);
    }
 }
 
 Texture Texture::Make(int width, int height, const GLubyte *data,
                       GLuint fmt, GLuint filter)
 {
-   return Texture(new TextureHolder(width, height, data, fmt, filter));
+   return Texture(new TextureHolder(width, height, data, fmt, filter),
 }
 
-Texture::Texture(TextureHolder *holder)
-   : m_holder(holder)
+Texture::Texture(TextureHolder *holder, bool owner)
+   : m_holder(holder),
+     m_owner(owner)
 {
 }
 
 Texture::Texture(Texture&& other)
-   : m_holder(other.m_holder)
+   : m_holder(other.m_holder),
+     m_owner(other.m_owner)
 {
    other.m_holder = nullptr;
-}
-
-Texture::Texture(const Texture& other)
-   : m_holder(other.m_holder)
-{
-   if (m_holder != nullptr)
-      m_holder->Ref();
+   other.m_owner = false;
 }
 
 Texture::~Texture()
 {
-   if (m_holder != nullptr)
-      m_holder->Unref();
+   if (m_holder != nullptr && m_owner)
+      delete m_holder;
 }
 
-Texture& Texture::operator=(const Texture& other)
+Texture& Texture::operator=(Texture&& other)
 {
-   if (m_holder != nullptr)
-      m_holder->Unref();
-
+   assert(m_holder == nullptr);
    m_holder = other.m_holder;
-
-   if (m_holder != nullptr)
-      m_holder->Ref();
-
+   m_owner = other.m_owner;
+   other.m_holder = nullptr;
+   other.m_owner = false;
    return *this;
 }
 

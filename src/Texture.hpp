@@ -24,11 +24,11 @@ class TextureHolder;
 class Texture {
 public:
    Texture() = default;
-   Texture(const Texture&);
+   Texture(const Texture&) = delete;
    Texture(Texture&&);
    ~Texture();
 
-   Texture& operator=(const Texture& other);
+   Texture& operator=(Texture&& other);
 
    void Bind(int textureUnit=0);
 
@@ -42,7 +42,8 @@ public:
                        GLuint fmt, GLuint filter=GL_LINEAR);
 
 private:
-   Texture(TextureHolder *holder);
+   Texture(TextureHolder *holder, bool owner);
 
    TextureHolder *m_holder = nullptr;
+   bool m_owner = false;
 };

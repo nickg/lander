@@ -1,5 +1,5 @@
 //  AnimatedImage.hpp -- Images with multiple frames.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef INC_ANIMATED_IMAGE_HPP
-#define INC_ANIMATED_IMAGE_HPP
+#pragma once
 
 #include "Image.hpp"
 
@@ -24,7 +23,7 @@ class AnimatedImage : public Image {
 public:
    AnimatedImage(const string& fileName, int frameWidth,
                  int frameHeight, int frameCount=0);
-   
+
    void Draw(int x, int y, double rotate=0.0, double scale=1.0,
              double alpha=1.0, double white=1.0) const;
    void DrawFrame(int frame, int x, int y, double rotate=0.0, double scale=1.0,
@@ -38,9 +37,7 @@ public:
 private:
    int FramesPerRow() const;
    int FramesPerCol() const;
-   
+
    int frameWidth, frameHeight, frameCount;
    int currFrame;
 };
-
-#endif

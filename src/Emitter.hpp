@@ -35,6 +35,7 @@ public:
            float deviation=0.0f, float xg=0.0f, float yg=0.0f,
            float life=1.0f, float max_speed=10.0f, float size=2.0f,
            float slowdown=2.0f);
+   Emitter(Emitter&&) = default;
    virtual ~Emitter() { }
 
    void Draw(float adjust_x=0.0f, float adjust_y=0.0f) const;
@@ -72,6 +73,7 @@ class SmokeTrail : public Emitter {
 public:
    SmokeTrail(float r, float g, float b,
               float dr, float dg, float db);
+   SmokeTrail(SmokeTrail&&) = default;
    virtual ~SmokeTrail() { }
 
    void ProcessEffect(int particle);
