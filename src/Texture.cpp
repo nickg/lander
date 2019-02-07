@@ -148,7 +148,7 @@ Texture Texture::Load(const string& fileName)
 Texture Texture::Make(int width, int height, const GLubyte *data,
                       GLuint fmt, GLuint filter)
 {
-   return Texture(new TextureHolder(width, height, data, fmt, filter),
+   return Texture(new TextureHolder(width, height, data, fmt, filter), true);
 }
 
 Texture::Texture(TextureHolder *holder, bool owner)

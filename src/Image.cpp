@@ -22,11 +22,10 @@
 Image::Image(const string& fileName)
    : m_texture(Texture::Load(fileName))
 {
+   const int width = GetWidth();
+   const int height = GetHeight();
 
-   const float width = GetWidth();
-   const float height = GetHeight();
-
-   const VertexF vertices[4] = {
+   const VertexI vertices[4] = {
       { -(width/2), -(height/2), 0.0f, 0.0f },
       { -(width/2), height/2, 0.0f, 1.0f },
       { width/2, height/2, 1.0f, 1.0f },
@@ -34,10 +33,6 @@ Image::Image(const string& fileName)
    };
 
    m_vbo = VertexBuffer::Make(vertices, 4);
-}
-
-Image::~Image()
-{
 }
 
 void Image::Draw(int x, int y, float rotate, float scale,

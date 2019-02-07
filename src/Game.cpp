@@ -747,7 +747,7 @@ void Game::Display()
    else {
       int i = 0;
       for (KeyListIt it = keys.begin(); it != keys.end(); ++it) {
-         (*it).DrawIcon(offset + i*32, 0.0f);
+         (*it).DrawIcon(offset + i, 0.0f);
          i += 32;
       }
 

@@ -26,7 +26,7 @@ public:
    explicit Image(const string& fileName);
    Image(const Image&) = delete;
    Image(Image&&) = default;
-   virtual ~Image();
+   virtual ~Image() = default;
 
    void Draw(int x, int y, float rotate=0.0f, float scale=1.0f,
              float alpha=1.0f, float white=1.0f) const;

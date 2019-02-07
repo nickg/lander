@@ -23,72 +23,84 @@
 
 AnimatedImage::AnimatedImage(const string& fileName, int frameWidth,
                              int frameHeight, int frameCount)
-   : Image(fileName), frameWidth(frameWidth), frameHeight(frameHeight),
-     frameCount(frameCount), currFrame(0)
+   : frameWidth(frameWidth),
+     frameHeight(frameHeight),
+     frameCount(frameCount),
+     currFrame(0),
+     m_texture(Texture::Load(fileName))
 {
    if (frameCount == 0) {
-      if (Image::GetWidth() % frameWidth != 0) {
+      if (m_texture.GetWidth() % frameWidth != 0) {
          cerr << "Warning: " << fileName << " with frame width " << frameWidth
               << " does not have whole number of frames" << endl;
       }
-      if (Image::GetHeight() % frameHeight != 0) {
+      if (m_texture.GetHeight() % frameHeight != 0) {
          cerr << "Warning: " << fileName << " with frame height " << frameHeight
               << " does not have whole number of frames" << endl;
       }
       this->frameCount = FramesPerRow() * FramesPerCol();
    }
+
+   VertexI *vertexBuf = new VertexI[4 * frameCount];
+
+   const int texWidth = m_texture.GetWidth();
+   const int texHeight = m_texture.GetHeight();
+
+   for (int i = 0; i < frameCount; i++) {
+      int frameX = i % FramesPerRow();
+      int frameY = i / FramesPerRow();
+
+      float tex_l = ((float)(frameX * frameWidth))/(float)texWidth;
+      float tex_r = tex_l + (float)frameWidth/(float)texWidth;
+
+      float tex_t = ((float)(frameY * frameHeight))/(float)texHeight;
+      float tex_b = tex_t + (float)frameHeight/(float)texHeight;
+
+      const VertexI vertices[4] = {
+         { -(frameWidth/2), -(frameHeight/2), tex_l, tex_t },
+         { -(frameWidth/2), frameHeight/2, tex_l, tex_b },
+         { frameWidth/2, frameHeight/2, tex_r, tex_b },
+         { frameWidth/2, -frameHeight/2, tex_r, tex_t }
+      };
+
+      copy(vertices, vertices + 4, vertexBuf + i*4);
+   }
+
+   m_vbo = VertexBuffer::Make(vertexBuf, 4 * frameCount);
 }
 
 // Draw a particular frame
-void AnimatedImage::DrawFrame(int frame, int x, int y, double rotate, double scale,
-                              double alpha, double white) const
+void AnimatedImage::DrawFrame(int frame, int x, int y, float rotate,
+                              float scale, float alpha, float white) const
 {
    assert(frame >= 0 && frame < frameCount);
 
-   int frameX = frame % FramesPerRow();
-   int frameY = frame / FramesPerRow();
+   OpenGL& opengl = OpenGL::GetInstance();
 
-   int width = Image::GetWidth();
-   int height = Image::GetHeight();
+   opengl.SetTexture(m_texture);
+   opengl.SetScale(scale);
+   opengl.SetColour(white, white, white, alpha);
+   opengl.SetRotation(rotate);
+   opengl.SetTranslation(x + frameWidth/2, y + frameHeight/2);
 
-   glEnable(GL_TEXTURE_2D);
-   glEnable(GL_BLEND);
-   glBindTexture(GL_TEXTURE_2D, GetTexture().GetGLTexture());
-   glLoadIdentity();
-   glTranslated((double)(x + frameWidth/2), (double)(y + frameHeight/2), 0.0);
-   glScaled(scale, scale, 0);
-   glRotated(rotate, 0.0, 0.0, 1.0);
-   glColor4d(white, white, white, alpha);
-
-   double tex_l = ((double)(frameX * frameWidth))/(double)width;
-   double tex_r = tex_l + (double)frameWidth/(double)width;
-
-   double tex_t = ((double)(frameY * frameHeight))/(double)height;
-   double tex_b = tex_t + (double)frameHeight/(double)height;
-
-   glBegin(GL_QUADS);
-   glTexCoord2d(tex_l, tex_t); glVertex2i(-(frameWidth/2), -(frameHeight/2));
-   glTexCoord2d(tex_l, tex_b); glVertex2i(-(frameWidth/2), frameHeight/2);
-   glTexCoord2d(tex_r, tex_b); glVertex2i(frameWidth/2, frameHeight/2);
-   glTexCoord2d(tex_r, tex_t); glVertex2i(frameWidth/2, -(frameHeight/2));
-   glEnd();
+   opengl.Draw(m_vbo, frame * 4, 4);
 }
 
 // Draw the current frame
-void AnimatedImage::Draw(int x, int y, double rotate, double scale,
-                         double alpha, double white) const
+void AnimatedImage::Draw(int x, int y, float rotate, float scale,
+                         float alpha, float white) const
 {
    DrawFrame(currFrame, x, y, rotate, scale, alpha, white);
 }
 
 int AnimatedImage::FramesPerRow() const
 {
-   return Image::GetWidth() / frameWidth;
+   return m_texture.GetWidth() / frameWidth;
 }
 
 int AnimatedImage::FramesPerCol() const
 {
-   return Image::GetHeight() / frameHeight;
+   return m_texture.GetHeight() / frameHeight;
 }
 
 void AnimatedImage::NextFrame()
