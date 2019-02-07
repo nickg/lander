@@ -182,7 +182,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
    va_end(ap);
 
    opengl.Reset();
-   opengl.Colour(m_colour);
+   opengl.SetColour(m_colour);
 
    glBindTexture(GL_TEXTURE_2D, m_texture);
 
@@ -193,7 +193,7 @@ void Font::Print(int x, int y, const char* fmt, ...)
       float offset = 0.0f;
       for (; *p != '\0'; p++) {
          if ((int)*p < MAX_CHAR) {
-            opengl.Translate(x + offset, y - h*i);
+            opengl.SetTranslation(x + offset, y - h*i);
             opengl.Draw(m_vbo, *p * 4, 4);
 
             offset += m_widths[(int)*p];

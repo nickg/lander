@@ -427,35 +427,46 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
 
 void OpenGL::Reset()
 {
-   Translate(0.0f, 0.0f);
-   Scale(1.0f);
-   Colour(1.0f, 1.0f, 1.0f);
-   Rotate(0.0f);
+   SetTranslation(0.0f, 0.0f);
+   SetScale(1.0f);
+   SetColour(1.0f, 1.0f, 1.0f);
+   SetRotation(0.0f);
+   SetTexture(0);
 }
 
-void OpenGL::Translate(float x, float y)
+void OpenGL::SetTranslation(float x, float y)
 {
    glUniform2f(m_translateLocation, x, y);
 }
 
-void OpenGL::Rotate(float angle)
+void OpenGL::SetRotation(float angle)
 {
    glUniform1f(m_angleLocation, angle * (M_PI / 180));
 }
 
-void OpenGL::Scale(float scale)
+void OpenGL::SetScale(float scale)
 {
    glUniform1f(m_scaleLocation, scale);
 }
 
-void OpenGL::Colour(float r, float g, float b, float a)
+void OpenGL::SetColour(float r, float g, float b, float a)
 {
    glUniform4f(m_colourLocation, r, g, b, a);
 }
 
-void OpenGL::Colour(const ::Colour& colour)
+void OpenGL::SetColour(const Colour& colour)
 {
-   Colour(colour.r, colour.g, colour.b, colour.a);
+   SetColour(colour.r, colour.g, colour.b, colour.a);
+}
+
+void OpenGL::SetTexture(GLuint texture)
+{
+   glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void OpenGL::SetTexture(const Texture& texture)
+{
+   glBindTexture(GL_TEXTURE_2D, texture.GetGLTexture());
 }
 
 int OpenGL::GetFPS()

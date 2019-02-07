@@ -86,9 +86,7 @@ void Fade::Display() const
 {
    OpenGL& opengl = OpenGL::GetInstance();
 
-   glBindTexture(GL_TEXTURE_2D, 0);
-
    opengl.Reset();
-   opengl.Colour(0.0f, 0.0f, 0.0f, m_alpha);
+   opengl.SetColour(0.0f, 0.0f, 0.0f, m_alpha);
    opengl.Draw(m_vbo);
 }

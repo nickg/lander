@@ -47,14 +47,13 @@ void Image::Draw(int x, int y, float rotate, float scale,
    int width = GetWidth();
    int height = GetHeight();
 
-   glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
-
    OpenGL& opengl = OpenGL::GetInstance();
 
-   opengl.Colour(white, white, white, alpha);
-   opengl.Translate(x + width/2, y + height/2);
-   opengl.Scale(scale);
-   opengl.Rotate(rotate);
+   opengl.SetTexture(*m_texture);
+   opengl.SetColour(white, white, white, alpha);
+   opengl.SetTranslation(x + width/2, y + height/2);
+   opengl.SetScale(scale);
+   opengl.SetRotation(rotate);
    opengl.Draw(m_vbo);
 }
 

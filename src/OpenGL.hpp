@@ -1,6 +1,6 @@
 //
 // OpenGL.hpp - Definition of OpenGL wrapper class.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 #include "Platform.hpp"
 #include "Geometry.hpp"
+#include "Texture.hpp"
 
 #include <vector>
 
@@ -117,11 +118,13 @@ public:
    void Draw(const VertexBuffer& vbo, int start, int count);
    void Draw(const VertexBuffer& vbo);
    void Reset();
-   void Translate(float x, float y);
-   void Scale(float scale);
-   void Rotate(float angle);
-   void Colour(float r, float g, float b, float a=1.0f);
-   void Colour(const ::Colour& colour);
+   void SetTranslation(float x, float y);
+   void SetScale(float scale);
+   void SetRotation(float angle);
+   void SetColour(float r, float g, float b, float a=1.0f);
+   void SetColour(const Colour& colour);
+   void SetTexture(GLuint texture);
+   void SetTexture(const Texture& texture);
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }

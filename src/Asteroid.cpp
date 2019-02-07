@@ -197,7 +197,7 @@ void Asteroid::Draw(int viewadjust_x, int viewadjust_y) const
    OpenGL& opengl = OpenGL::GetInstance();
 
    opengl.Reset();
-   opengl.Translate(ix, iy);
+   opengl.SetTranslation(ix, iy);
 
    glBindTexture(GL_TEXTURE_2D, m_texture->GetGLTexture());
 
