@@ -75,7 +75,8 @@ private:
 
    static const float LAND_SPEED;
 
-   ColourQuad speedbar;
+   VertexBuffer m_vbo;
+   Texture m_texture;
    Ship* ship;
 };
 

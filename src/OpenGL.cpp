@@ -34,7 +34,7 @@ static const char *g_vertexShader =
    "in vec2 TexCoord;\n"
    "uniform vec2 WindowSize;\n"
    "uniform vec2 Translate;\n"
-   "uniform float Scale;\n"
+   "uniform vec2 Scale;\n"
    "uniform float Angle;\n"
    "out vec2 TexCoord0;\n"
    "void main()\n"
@@ -200,8 +200,6 @@ void OpenGL::CompileShaders()
    m_scaleLocation = GetUniformLocation("Scale");
    m_colourLocation = GetUniformLocation("Colour");
    m_angleLocation = GetUniformLocation("Angle");
-
-   //glUniform1i(GetUniformLocation("Sampler"), 0);
 }
 
 GLuint OpenGL::GetUniformLocation(const char *name)
@@ -444,9 +442,14 @@ void OpenGL::SetRotation(float angle)
    glUniform1f(m_angleLocation, angle * (M_PI / 180));
 }
 
+void OpenGL::SetScale(float scaleX, float scaleY)
+{
+   glUniform2f(m_scaleLocation, scaleX, scaleY);
+}
+
 void OpenGL::SetScale(float scale)
 {
-   glUniform1f(m_scaleLocation, scale);
+   SetScale(scale, scale);
 }
 
 void OpenGL::SetColour(float r, float g, float b, float a)
@@ -501,42 +504,6 @@ void OpenGL::EnumResolutions(std::vector<Resolution>& out) const
    }
 
    std::copy(accum.rbegin(), accum.rend(), std::back_inserter(out));
-}
-
-Renderable::Renderable(int x, int y, int width, int height,
-                       float r, float g, float b)
-   : x(x), y(y), width(width), height(height), red(r),
-     green(g), blue(b)
-{
-
-}
-
-void Renderable::TranslateTo()
-{
-   glTranslatef((float)(x + width/2), (float)(y + height/2), 0.0f);
-}
-
-void Renderable::ApplyColour(float alpha)
-{
-   glColor4f(red, green, blue, alpha);
-}
-
-ColourQuad::ColourQuad(int x, int y, int width, int height,
-                       float r, float g, float b)
-   : Renderable(x, y, width, height, r, g, b)
-{
-
-}
-
-void ColourQuad::Render()
-{
-   glDisable(GL_TEXTURE_2D);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(width/2), height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(width/2, height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(width/2, -(height/2));
-   glEnd();
 }
 
 OpenGL::Resolution::Resolution(int w, int h)

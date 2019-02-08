@@ -70,27 +70,6 @@ struct Colour {
    static const Colour BLACK;
 };
 
-struct Renderable {
-   Renderable(int x, int y, int width, int height,
-              float r, float g, float b);
-   virtual ~Renderable() {}
-
-   virtual void Render() = 0;
-
-   void TranslateTo();
-   void ApplyColour(float alpha=1.0f);
-
-   int x, y, width, height;
-   float red, green, blue;
-};
-
-struct ColourQuad : Renderable {
-   ColourQuad(int x=0, int y=0, int width=0, int height=0,
-              float r=1, float g=1, float b=1);
-   void Render();
-
-};
-
 //
 // A wrapper around common 2D OpenGL functions.
 //
@@ -109,6 +88,7 @@ public:
    void Reset();
    void SetTranslation(float x, float y);
    void SetScale(float scale);
+   void SetScale(float scaleX, float scaleY);
    void SetRotation(float angle);
    void SetColour(float r, float g, float b, float a=1.0f);
    void SetColour(const Colour& colour);

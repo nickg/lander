@@ -32,10 +32,10 @@ LandingPad::LandingPad(Viewport* v, int index, int length)
    const int height = 16;
 
    const VertexI vertices[4] = {
-     { 0, height, 0.0f, 0.0f },
-     { 0, 0, 0.0f, 1.0f },
-     { width, 0, 1.0f, 1.0f },
-     { width, 16, 1.0f, 0.0f }
+      { 0, height, 0.0f, 0.0f },
+      { 0, 0, 0.0f, 1.0f },
+      { width, 0, 1.0f, 1.0f },
+      { width, height, 1.0f, 0.0f }
    };
 
    m_vbo = VertexBuffer::Make(vertices, 4);

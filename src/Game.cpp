@@ -864,13 +864,20 @@ SpeedMeter::SpeedMeter(Ship* ship)
    : speedMeterImage("images/speedmeter.png"),
      ship(ship)
 {
-   speedbar.x = 12;
-   speedbar.y = 40;
-   speedbar.width = 124;
-   speedbar.height = 16;
-   speedbar.red = 1.0f;
-   speedbar.green = 0.0f;
-   speedbar.blue = 0.0f;
+   const int width = 124;
+   const int height = 16;
+
+   const VertexI vertices[4] = {
+      { 0, height, 0.0f, 0.0f },
+      { 0, 0, 0.0f, 1.0f },
+      { width, 0, 1.0f, 1.0f },
+      { width, height, 1.0f, 0.0f }
+   };
+
+   m_vbo = VertexBuffer::Make(vertices, 4);
+
+   const GLubyte textureData[] = { 0xff };
+   m_texture = Texture::Make(1, 1, textureData, GL_LUMINANCE);
 }
 
 void SpeedMeter::Display()
@@ -882,12 +889,15 @@ void SpeedMeter::Display()
       width = 0;
    if (width > 124)
       width = 124;
-   speedbar.blue = 0.0f;
-   speedbar.red = (float)width/124.0f;
-   speedbar.green = 1.0f - (float)width/124.0f;
-   speedbar.width = width;
 
-   //OpenGL::GetInstance().Draw(&speedbar);
+   OpenGL& opengl = OpenGL::GetInstance();
+
+   opengl.Reset();
+   opengl.SetColour(width / 124.0f, 1.0f - width/124.0f, 0.0f);
+   opengl.SetScale(width / 124.0f, 1.0f);
+   opengl.SetTexture(m_texture);
+   opengl.SetTranslation(12, 40);
+   opengl.Draw(m_vbo);
 
    speedMeterImage.Draw(10, 40);
 }
