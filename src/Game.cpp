@@ -815,7 +815,7 @@ void FuelMeter::Display()
 
    opengl.Reset();
    opengl.SetTexture(fuelBarTexture);
-   opengl.SetScale((float)m_fule / (float)maxfuel, 1.0f);
+   opengl.SetScale((float)m_fuel / (float)maxfuel, 1.0f);
 
 #if 0
    int fbsize = (int)((m_fuel/(float)maxfuel)*(256-FUELBAR_OFFSET));
