@@ -1,6 +1,6 @@
 //
 // OpenGL.cpp - Implementation of OpenGL wrapper class.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -577,6 +577,18 @@ VertexBuffer VertexBuffer::Make(const VertexI *vertices, int count)
                 vertices, GL_STATIC_DRAW);
 
    return vb;
+}
+
+VertexBuffer VertexBuffer::MakeQuad(int width, int height)
+{
+   const VertexI vertices[4] = {
+      { 0, height, 0.0f, 0.0f },
+      { 0, 0, 0.0f, 1.0f },
+      { width, 0, 1.0f, 1.0f },
+      { width, height, 1.0f, 0.0f }
+   };
+
+   return VertexBuffer::Make(vertices, 4);
 }
 
 VertexBuffer::VertexBuffer(GLuint stride, GLuint vertType, GLuint texType,

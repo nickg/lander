@@ -56,6 +56,7 @@ public:
 private:
    Image fuelMeterImage;
    Texture fuelBarTexture;
+   VertexBuffer m_vbo;
 
    static const int FUELBAR_Y, FUELBAR_OFFSET;
 

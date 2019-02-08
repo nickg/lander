@@ -806,13 +806,18 @@ FuelMeter::FuelMeter()
      fuelBarTexture(Texture::Load("images/fuelbar.png")),
      maxfuel(1)
 {
-
+   m_vbo = VertexBuffer::MakeQuad(256 - FUELBAR_OFFSET, 16);
 }
 
 void FuelMeter::Display()
 {
    OpenGL& opengl = OpenGL::GetInstance();
 
+   opengl.Reset();
+   opengl.SetTexture(fuelBarTexture);
+   opengl.SetScale((float)m_fule / (float)maxfuel, 1.0f);
+
+#if 0
    int fbsize = (int)((m_fuel/(float)maxfuel)*(256-FUELBAR_OFFSET));
    float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
    glEnable(GL_BLEND);
@@ -834,6 +839,7 @@ void FuelMeter::Display()
    int draw_x = opengl.GetWidth() - fuelMeterImage.GetWidth() - 10;
    int draw_y = FUELBAR_Y;
    fuelMeterImage.Draw(draw_x, draw_y);
+#endif
 }
 
 void FuelMeter::Refuel(int howmuch)
@@ -864,17 +870,7 @@ SpeedMeter::SpeedMeter(Ship* ship)
    : speedMeterImage("images/speedmeter.png"),
      ship(ship)
 {
-   const int width = 124;
-   const int height = 16;
-
-   const VertexI vertices[4] = {
-      { 0, height, 0.0f, 0.0f },
-      { 0, 0, 0.0f, 1.0f },
-      { width, 0, 1.0f, 1.0f },
-      { width, height, 1.0f, 0.0f }
-   };
-
-   m_vbo = VertexBuffer::Make(vertices, 4);
+   m_vbo = VertexBuffer::MakeQuad(124, 16);
 
    const GLubyte textureData[] = { 0xff };
    m_texture = Texture::Make(1, 1, textureData, GL_LUMINANCE);

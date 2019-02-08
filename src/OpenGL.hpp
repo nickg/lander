@@ -38,6 +38,7 @@ class VertexBuffer {
 public:
    static VertexBuffer Make(const VertexI *vertices, int count);
    static VertexBuffer Make(const VertexF *vertices, int count);
+   static VertexBuffer MakeQuad(int width, int height);
    static VertexBuffer Invalid();
 
    VertexBuffer() = default;
