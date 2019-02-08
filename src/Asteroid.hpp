@@ -19,7 +19,6 @@
 #pragma once
 
 #include "GameObjFwd.hpp"
-#include "GraphicsFwd.hpp"
 #include "Surface.hpp"
 #include "ObjectGrid.hpp"
 

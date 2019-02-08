@@ -92,17 +92,6 @@ struct ColourQuad : Renderable {
 };
 
 //
-// A polygon with four points and a texture.
-//
-struct TextureQuad : Renderable {
-   TextureQuad(int qx=0, int qy=0, int width=0, int height=0, GLuint tex=0,
-               float r=1, float g=1, float b=1);
-   void Render();
-
-   GLuint uTexture;
-};
-
-//
 // A wrapper around common 2D OpenGL functions.
 //
 class OpenGL {
@@ -164,11 +153,10 @@ public:
 
 private:
    OpenGL();
+   OpenGL(const OpenGL&) = delete;
    ~OpenGL();
 
    GLvoid ResizeGLScene(GLsizei width, GLsizei height);
-   GLuint BindTexture(unsigned char* data, int width, int height, int fmt);
-   GLubyte* BuildAlphaChannel(const unsigned char* pixels, int width, int height);
    bool InitGL();
    void DrawGLScene();
    void TakeScreenShot() const;

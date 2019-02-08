@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "GraphicsFwd.hpp"
 #include "GameObjFwd.hpp"
 #include "LandingPad.hpp"
 

@@ -1,6 +1,6 @@
 //
 // Game.hpp -- Definition of core game classes.
-// Copyright (C) 2006-2009  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,8 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
 
-#ifndef INC_GAME_HPP
-#define INC_GAME_HPP
+#pragma once
 
 #include "Platform.hpp"
 #include "OpenGL.hpp"
@@ -62,7 +61,6 @@ private:
 
    int maxfuel;
    float m_fuel = 0.0f;
-   TextureQuad border;
 };
 
 class SpeedMeter {
@@ -184,5 +182,3 @@ private:
    typedef MissileList::iterator MissileListIt;
    MissileList missiles;
 };
-
-#endif

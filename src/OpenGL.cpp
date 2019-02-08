@@ -521,25 +521,6 @@ void Renderable::ApplyColour(float alpha)
    glColor4f(red, green, blue, alpha);
 }
 
-TextureQuad::TextureQuad(int qx, int qy, int width, int height, GLuint tex,
-                         float r, float g, float b)
-   : Renderable(qx, qy, width, height, r, g, b), uTexture(tex)
-{
-
-}
-
-void TextureQuad::Render()
-{
-   glEnable(GL_TEXTURE_2D);
-   glBindTexture(GL_TEXTURE_2D, uTexture);
-   glBegin(GL_QUADS);
-   glTexCoord2f(0.0f, 1.0f); glVertex2i(-(width/2), -(height/2));
-   glTexCoord2f(0.0f, 0.0f); glVertex2i(-(width/2), height/2);
-   glTexCoord2f(1.0f, 0.0f); glVertex2i(width/2, height/2);
-   glTexCoord2f(1.0f, 1.0f); glVertex2i(width/2, -(height/2));
-   glEnd();
-}
-
 ColourQuad::ColourQuad(int x, int y, int width, int height,
                        float r, float g, float b)
    : Renderable(x, y, width, height, r, g, b)

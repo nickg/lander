@@ -20,7 +20,6 @@
 #define INC_LANDINGPAD_HPP
 
 #include "GameObjFwd.hpp"
-#include "GraphicsFwd.hpp"
 #include "OpenGL.hpp"
 
 #include <vector>
@@ -29,19 +28,19 @@ class LandingPad {
 public:
    LandingPad(Viewport* v, int index, int length);
 
-   void Draw(bool locked);
+   void Draw(bool locked) const;
    void SetYPos(int ypos) { this->ypos = ypos; }
 
    int GetLength() const { return length; }
    int GetIndex() const { return index; }
 
 private:
-   TextureQuad quad;
    int index, length, ypos;
    Viewport* viewport;
 
    Texture m_landTexture;
    Texture m_noLandTexture;
+   VertexBuffer m_vbo;
 };
 
 typedef vector<LandingPad> LandingPadList;

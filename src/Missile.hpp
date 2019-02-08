@@ -19,7 +19,6 @@
 #pragma once
 
 #include "GameObjFwd.hpp"
-#include "GraphicsFwd.hpp"
 #include "Emitter.hpp"
 #include "SoundEffect.hpp"
 #include "Image.hpp"

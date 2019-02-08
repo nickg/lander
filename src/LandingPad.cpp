@@ -28,21 +28,31 @@ LandingPad::LandingPad(Viewport* v, int index, int length)
      m_landTexture(Texture::Load("images/landingpad.png")),
      m_noLandTexture(Texture::Load("images/landingpadred.png"))
 {
-   quad.x = index * Surface::SURFACE_SIZE;
-   quad.width = length * Surface::SURFACE_SIZE;
-   quad.height = 16;
-   quad.uTexture = m_landTexture.GetGLTexture();
+   const int width = length * Surface::SURFACE_SIZE;
+   const int height = 16;
+
+   const VertexI vertices[4] = {
+     { 0, height, 0.0f, 0.0f },
+     { 0, 0, 0.0f, 1.0f },
+     { width, 0, 1.0f, 1.0f },
+     { width, 16, 1.0f, 0.0f }
+   };
+
+   m_vbo = VertexBuffer::Make(vertices, 4);
 }
 
 //
 // Draws the landing pad in the current frame.
 //	locked -> If true, pads a drawn with the red texture.
 //
-void LandingPad::Draw(bool locked)
+void LandingPad::Draw(bool locked) const
 {
-   quad.uTexture = (locked ? m_noLandTexture : m_landTexture).GetGLTexture();
-   quad.x = index * Surface::SURFACE_SIZE - viewport->GetXAdjust();
-   quad.y = viewport->GetLevelHeight() - viewport->GetYAdjust()
-      - Surface::MAX_SURFACE_HEIGHT + ypos;
-   //OpenGL::GetInstance().Draw(&quad);
+   OpenGL& opengl = OpenGL::GetInstance();
+
+   opengl.Reset();
+   opengl.SetTexture(locked ? m_noLandTexture : m_landTexture);
+   opengl.SetTranslation(index * Surface::SURFACE_SIZE - viewport->GetXAdjust(),
+                         viewport->GetLevelHeight() - viewport->GetYAdjust()
+                         - Surface::MAX_SURFACE_HEIGHT + ypos);
+   opengl.Draw(m_vbo);
 }
