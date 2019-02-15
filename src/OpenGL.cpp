@@ -430,6 +430,7 @@ void OpenGL::Reset()
    SetColour(1.0f, 1.0f, 1.0f);
    SetRotation(0.0f);
    SetTexture(0);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void OpenGL::SetTranslation(float x, float y)

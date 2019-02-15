@@ -41,7 +41,8 @@ Emitter::Emitter(int x, int y, float r, float g, float b, bool createnew,
   : partsize(size), r(r), g(g), b(b), deviation(deviation), xg(xg), yg(yg),
     life(life), maxspeed(max_speed), xpos((float)x), ypos((float)y),
     slowdown(slowdown), createrate(128.0f), xi_bias(0.0f), yi_bias(0.0f),
-    m_texture(Texture::Load("images/particle.png"))
+    m_texture(Texture::Load("images/particle.png")),
+    m_vbo(VertexBuffer::MakeQuad(partsize, partsize))
 {
    // Set up the particles
    for (int i = 0; i < MAX_PARTICLES; i++) {
@@ -100,31 +101,22 @@ void Emitter::NewCluster(int x, int y)
 //
 void Emitter::Draw(float adjust_x, float adjust_y) const
 {
-   glEnable(GL_TEXTURE_2D);
-   glEnable(GL_BLEND);
+   OpenGL& opengl = OpenGL::GetInstance();
+   opengl.Reset();
+   opengl.SetTexture(m_texture);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-   glLoadIdentity();
-
-   glBindTexture(GL_TEXTURE_2D, m_texture.GetGLTexture());
 
    for (int i = 0; i < MAX_PARTICLES; i++)	{
       if (particle[i].active)	{
-         float x = particle[i].x - adjust_x;
-         float y = particle[i].y - adjust_y;
+         float x = particle[i].x - adjust_x - partsize/2;
+         float y = particle[i].y - adjust_y - partsize/2;
 
-         glColor4f(particle[i].r, particle[i].g, particle[i].b, particle[i].life);
-         glBegin(GL_TRIANGLE_STRIP);
-         glTexCoord2d(1, 1); glVertex3f(x+partsize, y+partsize, 0);
-         glTexCoord2d(0, 1); glVertex3f(x-partsize, y+partsize, 0);
-         glTexCoord2d(1, 0); glVertex3f(x+partsize, y-partsize, 0);
-         glTexCoord2d(0, 0); glVertex3f(x-partsize, y-partsize, 0);
-         glEnd();
-
-
+         opengl.SetTranslation(x, y);
+         opengl.SetColour(particle[i].r, particle[i].g, particle[i].b,
+                          particle[i].life);
+         opengl.Draw(m_vbo);
       }
    }
-
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Emitter::Process(bool createnew, bool evolve)

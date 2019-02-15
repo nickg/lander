@@ -30,7 +30,7 @@ Asteroid::Asteroid(int x, int y, int width, int surftex)
 {
    assert(width > 0);
 
-   const int texLoopInit = random() % 10;
+   const int texLoopInit = rand() % 10;
 
    int change, texloop = texLoopInit;
 

@@ -22,6 +22,7 @@
 
 #include "Platform.hpp"
 #include "Texture.hpp"
+#include "OpenGL.hpp"
 
 #define MAX_PARTICLES 512
 
@@ -63,6 +64,7 @@ protected:
    } particle[MAX_PARTICLES];
 
    Texture m_texture;
+   VertexBuffer m_vbo;
 };
 
 
