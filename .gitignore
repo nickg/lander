@@ -25,3 +25,4 @@ po/Rules-quot
 GPATH
 GRTAGS
 GTAGS
+compile_commands.json

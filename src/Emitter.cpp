@@ -104,7 +104,7 @@ void Emitter::Draw(float adjust_x, float adjust_y) const
    OpenGL& opengl = OpenGL::GetInstance();
    opengl.Reset();
    opengl.SetTexture(m_texture);
-   glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+   opengl.SetBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
    for (int i = 0; i < MAX_PARTICLES; i++)	{
       if (particle[i].active)	{

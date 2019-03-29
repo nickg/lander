@@ -43,6 +43,7 @@ void Image::Draw(int x, int y, float rotate, float scale,
 
    OpenGL& opengl = OpenGL::GetInstance();
 
+   opengl.Reset();
    opengl.SetTexture(m_texture);
    opengl.SetColour(white, white, white, alpha);
    opengl.SetTranslation(x + width/2, y + height/2);

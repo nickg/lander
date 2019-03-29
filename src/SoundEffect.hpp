@@ -1,6 +1,6 @@
 //
 //  SoundEffect.hpp -- SDL Mixer wrapper.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 class SoundEffect {
 public:
    SoundEffect(const string& filename, Uint8 volume = MIX_MAX_VOLUME);
+   SoundEffect(const SoundEffect&) = delete;
    ~SoundEffect();
 
    static void SetEnabled(bool state) { enabled = state; }

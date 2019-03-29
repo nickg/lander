@@ -430,7 +430,7 @@ void OpenGL::Reset()
    SetColour(1.0f, 1.0f, 1.0f);
    SetRotation(0.0f);
    SetTexture(0);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   SetBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void OpenGL::SetTranslation(float x, float y)
@@ -471,6 +471,11 @@ void OpenGL::SetTexture(GLuint texture)
 void OpenGL::SetTexture(const Texture& texture)
 {
    glBindTexture(GL_TEXTURE_2D, texture.GetGLTexture());
+}
+
+void OpenGL::SetBlendFunc(GLenum sfactor, GLenum dfactor)
+{
+   glBlendFunc(sfactor, dfactor);
 }
 
 int OpenGL::GetFPS()

@@ -95,6 +95,7 @@ public:
    void SetColour(const Colour& colour);
    void SetTexture(GLuint texture);
    void SetTexture(const Texture& texture);
+   void SetBlendFunc(GLenum sfactor, GLenum dfactor);
 
    int GetWidth() const { return screen_width; }
    int GetHeight() const { return screen_height; }
