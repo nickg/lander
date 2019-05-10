@@ -1,6 +1,8 @@
 project('lander', 'cpp',
         default_options : ['cpp_std=c++14'])
 
+subdir('po')
+
 src = [ 'src/Main.cpp',
         'src/Game.cpp',
         'src/OpenGL.cpp',

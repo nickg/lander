@@ -1,0 +1,1 @@
+find src -name '*.[ch]pp' > po/POTFILES
