@@ -20,9 +20,7 @@
 #ifndef INC_PLATFORM_HPP
 #define INC_PLATFORM_HPP
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #ifndef DATADIR
 #define DATADIR "."

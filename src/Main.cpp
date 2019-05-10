@@ -1,6 +1,6 @@
 //
 // Main.cpp - Program entry point.
-// Copyright (C) 2006-2013  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 #include "SoundEffect.hpp"
 
 #include <iostream>
-#include <experimental/filesystem>
+#include <boost/filesystem.hpp>
 
 #ifdef MACOSX
 namespace CF {
@@ -79,7 +79,7 @@ static void MigrateConfigFiles()
    // user's home directory. Now use use the XDG-compliant .config/lander
    // directory but we should move old configs and high scores there first
 
-   using std::experimental::filesystem::path;
+   using boost::filesystem::path;
 
    const path cfg = GetConfigDir();
    const path home = getenv("HOME");
@@ -200,7 +200,23 @@ string LocateResource(const string& file)
 #endif
 
 #ifdef DATADIR
-   return string(DATADIR) + "/" + file;
+   using boost::filesystem::path;
+
+   static path datadir;
+
+   if (datadir.empty()) {
+      const char *meson_src = getenv("MESON_SOURCE_ROOT");
+      if (meson_src != NULL) {
+         cout << "Using data from source directory: " << meson_src << endl;
+         datadir = path(meson_src) / "data";
+      }
+      else {
+         cout << "Using data from installation directory: " << DATADIR << endl;
+         datadir = DATADIR;
+      }
+   }
+
+   return (datadir / file).string();
 #else
    return file;
 #endif
@@ -209,7 +225,7 @@ string LocateResource(const string& file)
 string GetConfigDir()
 {
 #if defined UNIX
-   using std::experimental::filesystem::path;
+   using boost::filesystem::path;
 
    path p;
    const char *config = getenv("XDG_CONFIG_HOME");
@@ -229,7 +245,7 @@ string GetConfigDir()
 
    return p.string() + "/";
 #elif defined WIN32
-   using std::experimental::filesystem::path;
+   using boost::filesystem::path;
 
    path appdata(getenv("APPDATA"));
    appdata /= "doof.me.uk";

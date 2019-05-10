@@ -23,7 +23,7 @@
 
 #include <fstream>
 #include <algorithm>
-#include <experimental/filesystem>
+#include <boost/filesystem.hpp>
 
 const float HighScores::FADE_IN_SPEED(0.2f);
 const float HighScores::FADE_OUT_SPEED(-0.02f);
@@ -308,7 +308,7 @@ void ScoreFile::Load()
 #ifndef EMSCRIPTEN
    // Check for file's existence
    string hsname(GetHighScoreFile());
-   if (!std::experimental::filesystem::exists(hsname)) {
+   if (!boost::filesystem::exists(hsname)) {
       // Write a dummy score file
       Save();
    }
