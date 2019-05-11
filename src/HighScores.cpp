@@ -345,7 +345,7 @@ void ScoreFile::Insert(const string& name, int score)
 ScoreFile::ScoreEntry::ScoreEntry(const char* name, int score)
    : score(score)
 {
-   strncpy(this->name, name, MAX_NAME);
+   strncpy(this->name, name, MAX_NAME - 1);
 }
 
 void ScoreFile::ScoreEntry::WriteOnStream(ostream& os)

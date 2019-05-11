@@ -119,12 +119,11 @@ public:
    };
 
    struct Resolution {
-      Resolution(int w, int h);
-      Resolution(const std::pair<int, int>& p);
-
       const int width, height;
+      const bool allow_fullscreen;
    };
-   void EnumResolutions(vector<Resolution>& out) const;
+   typedef std::vector<Resolution> ResolutionList;
+   void EnumResolutions(ResolutionList& out) const;
 
    bool IsTextureSizeSupported(int width, int height, int ncols=4,
                                GLenum format=GL_RGBA);

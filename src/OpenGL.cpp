@@ -496,9 +496,10 @@ void OpenGL::SkipDisplay()
    dodisplay = false;
 }
 
-void OpenGL::EnumResolutions(std::vector<Resolution>& out) const
+void OpenGL::EnumResolutions(ResolutionList& out) const
 {
-   std::set<std::pair<int, int>> accum;
+   out.push_back(Resolution { 800, 600, false });
+   out.push_back(Resolution { 1024, 768, false });
 
    const int numDisplayModes = SDL_GetNumDisplayModes(0);
    for (int i = 0; i < numDisplayModes; i++) {
@@ -506,22 +507,8 @@ void OpenGL::EnumResolutions(std::vector<Resolution>& out) const
       if (SDL_GetDisplayMode(0, i, &mode) != 0)
          Die("SDL_GetDisplayMode failed: %s", SDL_GetError());
 
-      accum.insert(std::make_pair(mode.w, mode.h));
+      out.push_back(Resolution { mode.w, mode.h, true });
    }
-
-   std::copy(accum.rbegin(), accum.rend(), std::back_inserter(out));
-}
-
-OpenGL::Resolution::Resolution(int w, int h)
-   : width(w), height(h)
-{
-
-}
-
-OpenGL::Resolution::Resolution(const std::pair<int, int>& p)
-   : width(p.first), height(p.second)
-{
-
 }
 
 OpenGL::BindVertexBuffer::BindVertexBuffer(const VertexBuffer& vbo)

@@ -47,12 +47,7 @@ Options::Options()
    const int min_height = 480;
 
    Item resolution = { "Resolution", 0 };
-   for (vector<OpenGL::Resolution>::reverse_iterator it = available.rbegin();
-        it != available.rend();
-        ++it) {
-
-      const OpenGL::Resolution& r = *it;
-
+   for (const auto& r : available) {
       if (r.width >= min_width && r.height >= min_height) {
          ostringstream ss;
          ss << r.width << "x" << r.height;

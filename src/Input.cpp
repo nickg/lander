@@ -118,7 +118,6 @@ void Input::Update()
 
       case SDL_JOYAXISMOTION:
          // Joystick was moved
-         //printf("e.jaxis.value=%d e.jaxis.axis=%d\n", e.jaxis.value, e.jaxis.axis);
          if (e.jaxis.axis == 0) {
             if (abs(e.jaxis.value) < JOYSTICK_DEADZONE) {
                joyLeft = false;

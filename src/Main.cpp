@@ -109,13 +109,13 @@ int main(int argc, char **argv)
    textdomain(PACKAGE);
 #endif
 
-   const int DEFAULT_HRES = 800;
-   const int DEFAULT_VRES = 600;
+   const int DEFAULT_HRES = 1024;
+   const int DEFAULT_VRES = 768;
    const int DEFAULT_FSCREEN = false;
    const int DEFAULT_SOUND = true;
 
    cout << "Lunar Lander " << VERSION << endl << endl
-        << "Copyright (C) 2006-2013 Nick Gasson" << endl
+        << "Copyright (C) 2006-2019 Nick Gasson" << endl
         << "This program comes with ABSOLUTELY NO WARRANTY. This is free "
         << "software, and" << endl
         << "you are welcome to redistribute it under certain conditions. "
