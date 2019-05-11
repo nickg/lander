@@ -1,6 +1,6 @@
 //
 // Input.cpp - Implementation of SDL input wrapper.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ Input::Input()
       cout << i << ": " << SDL_JoystickNameForIndex(i) << endl;
 
    // Only use the first joystick
-   if (SDL_NumJoysticks() > 0)	{
+   if (SDL_NumJoysticks() > 0)  {
       SDL_JoystickEventState(SDL_ENABLE);
       joystick = SDL_JoystickOpen(0);
    }
@@ -81,14 +81,14 @@ void Input::Update()
 {
    SDL_Event e;
 
-   while (SDL_PollEvent(&e))	{
-      switch (e.type)	{
-			case SDL_QUIT:
+   while (SDL_PollEvent(&e))    {
+      switch (e.type)   {
+      case SDL_QUIT:
          // End the game
          OpenGL::GetInstance().Stop();
          break;
 
-			case SDL_KEYDOWN:
+      case SDL_KEYDOWN:
          // Type a character in text input mode
          if (textinput) {
             if ((e.key.keysym.sym >= SDLK_a && e.key.keysym.sym <= SDLK_z)
@@ -116,34 +116,32 @@ void Input::Update()
          }
          break;
 
-			case SDL_JOYAXISMOTION:
+      case SDL_JOYAXISMOTION:
          // Joystick was moved
-         if ((e.jaxis.value < -3500) || (e.jaxis.value > 3500)) {
-            if (e.jaxis.axis == 0) {
-               // Left-right movement code goes here
-               if (e.jaxis.value < 0)
-                  joyLeft = true;
-               else
-                  joyRight = true;
+         //printf("e.jaxis.value=%d e.jaxis.axis=%d\n", e.jaxis.value, e.jaxis.axis);
+         if (e.jaxis.axis == 0) {
+            if (abs(e.jaxis.value) < JOYSTICK_DEADZONE) {
+               joyLeft = false;
+               joyRight = false;
             }
-
-            if (e.jaxis.axis == 1) {
-               // Up-Down movement code goes here
-               if (e.jaxis.value < 0)
-                  joyUp = true;
-               else
-                  joyDown = true;
+            else {
+               joyLeft = e.jaxis.value < 0;
+               joyRight = e.jaxis.value > 0;
             }
          }
-         else {
-            joyLeft = false;
-            joyRight = false;
-            joyUp = false;
-            joyDown = false;
+         else if (e.jaxis.axis == 1) {
+            if (abs(e.jaxis.value) < JOYSTICK_DEADZONE) {
+               joyUp = false;
+               joyDown = false;
+            }
+            else {
+               joyUp = e.jaxis.value < 0;
+               joyDown = e.jaxis.value > 0;
+            }
          }
          break;
 
-			case SDL_JOYBUTTONDOWN:
+      case SDL_JOYBUTTONDOWN:
          // Joystick button was pressed
          // Button is e.jbutton.button
          switch (e.jbutton.button) {
@@ -156,7 +154,7 @@ void Input::Update()
          }
          break;
 
-			case SDL_JOYBUTTONUP:
+      case SDL_JOYBUTTONUP:
          // Joystick button was released
          switch (e.jbutton.button) {
          case 0:
@@ -236,7 +234,7 @@ void Input::ResetAction(Action a)
 
 //
 // Starts reading keyboard data into a buffer.
-//	max -> Maximum number of characters to read.
+//      max -> Maximum number of characters to read.
 //
 void Input::OpenCharBuffer(int max)
 {

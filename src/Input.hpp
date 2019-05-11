@@ -1,6 +1,6 @@
 //
 // Input.hpp -- Definition of input manager class.
-// Copyright (C) 2006  Nick Gasson
+// Copyright (C) 2006-2019  Nick Gasson
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 #include "Platform.hpp"
 
-// 
+//
 // A singleton class to manage SDL input.
 //
 class Input {
@@ -34,7 +34,7 @@ public:
       SCREENSHOT,
       NUM_ACTIONS // Must be last
    };
-   
+
    static Input& GetInstance();
 
    bool QueryAction(Action a) const;
@@ -49,7 +49,7 @@ public:
 private:
    Input();
    ~Input();
-   
+
    static const int RESET_TIMEOUT;		// Frames between key presses
 
    SDL_Joystick* joystick;
@@ -63,6 +63,8 @@ private:
 
    // Record joystick state
    bool joyLeft, joyRight, joyUp, joyDown, joyButton0, joyButton1;
+
+   static const int JOYSTICK_DEADZONE = 3500;
 };
 
 #endif
