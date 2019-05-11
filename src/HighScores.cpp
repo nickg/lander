@@ -172,7 +172,7 @@ void HighScores::Display()
       int x = (opengl.GetWidth() - 280) / 2;
       int y = (opengl.GetHeight() - 250) / 2;
 
-      glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
+      scoreNameFont.SetColour(0.0f, 1.0f, 0.0f, flAlpha);
       for (int i = 0; i < 10; i++) {
          scoreNameFont.Print(x, y + 22*i, scoreFile[i].GetName());
          scoreNameFont.Print(x + 230, y + 22*i, "%d", scoreFile[i].GetScore());
@@ -189,7 +189,7 @@ void HighScores::Display()
       int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsnext)) / 2;
       int y = opengl.GetHeight() - 50;
 
-      glColor4f(0.0f, 0.5f, 1.0f, flAlpha);
+      largeFont.SetColour(0.0f, 0.5f, 1.0f, flAlpha);
       largeFont.Print(x, y, hsnext);
    }
    else if (state == hssEnterName)	{
@@ -197,7 +197,7 @@ void HighScores::Display()
 
       const char* hsscore = i18n("Well done - You got a high score");
       int x = (opengl.GetWidth() - largeFont.GetStringWidth(hsscore)) / 2;
-      glColor4f(0.0f, 1.0f, 0.0f, flAlpha);
+      largeFont.SetColour(0.0f, 1.0f, 0.0f, flAlpha);
       largeFont.Print(x, 100, hsscore);
 
       const char* hscont = i18n("Press ENTER or FIRE to continue");
@@ -209,7 +209,7 @@ void HighScores::Display()
       const char* hsname = i18n("Name?  %s");
       x = (opengl.GetWidth() - largeFont.GetStringWidth(hsname, name.c_str())) / 2;
       y = (opengl.GetHeight() - 50) / 2;
-      glColor4f(0.8f, 0.0f, 1.0f, flAlpha);
+      largeFont.SetColour(0.8f, 0.0f, 1.0f, flAlpha);
       largeFont.Print(x, y, hsname, name.c_str());
    }
 }

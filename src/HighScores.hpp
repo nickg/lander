@@ -45,7 +45,7 @@ public:
 
       const char* GetName() const { return name; }
       int GetScore() const { return score; }
-      
+
       void WriteOnStream(ostream& os);
       void ReadFromStream(istream& is);
 
@@ -53,30 +53,30 @@ public:
 
    private:
       char name[MAX_NAME];
-      int score;    
+      int score;
    };
-   
+
    static const int NUM_SCORES = 10;
-   
+
    const ScoreEntry& operator[](int n) const { return scores[n]; }
-      
+
 private:
    void Sort();
    void SwapScores(int a, int b);
-   
+
    static string GetHighScoreFile();
-   
+
    bool needsWrite;
    typedef vector<ScoreEntry> ScoreEntryVec;
-   typedef ScoreEntryVec::iterator ScoreEntryVecIt; 
-   ScoreEntryVec scores;;
+   typedef ScoreEntryVec::iterator ScoreEntryVecIt;
+   ScoreEntryVec scores;
 };
 
 class HighScores : public Screen {
 public:
    HighScores();
    virtual ~HighScores() { }
-	
+
    void Load();
    void Process();
    void Display();
@@ -84,10 +84,10 @@ public:
    void WriteHighScores();
    void DisplayScores();
    void CheckScore(int score);
-   
-private:	
+
+private:
    enum HighScoreState { hssDisplay, hssEnterName };
-	
+
    int newscore;
    Image hscoreImage;
    float flAlpha, fade;
@@ -97,21 +97,21 @@ private:
    SoundEffect fwBang;
 
    static const float FADE_IN_SPEED, FADE_OUT_SPEED;
-   
+
    // Fireworks
    static const int MAX_FIREWORKS = 7;
    class Firework {
    public:
       Firework() : active(false)
-      { 
+      {
          em = new Emitter(-100, -100, 1.0f, 1.0f, 1.0f);
       }
-		
+
       ~Firework()
-      { 
-         delete em; 
+      {
+         delete em;
       }
-		
+
       Emitter* em;
       int x, y, speed, life, timeout;
       bool active;
