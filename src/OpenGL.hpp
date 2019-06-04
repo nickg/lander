@@ -36,8 +36,10 @@ typedef Vertex<float> VertexF;
 
 class VertexBuffer {
 public:
-   static VertexBuffer Make(const VertexI *vertices, int count);
-   static VertexBuffer Make(const VertexF *vertices, int count);
+   static VertexBuffer Make(const VertexI *vertices, int count,
+                            GLenum mode=GL_QUADS);
+   static VertexBuffer Make(const VertexF *vertices, int count,
+                            GLenum mode=GL_QUADS);
    static VertexBuffer MakeQuad(int width, int height);
    static VertexBuffer Invalid();
 
@@ -51,7 +53,7 @@ private:
    friend class OpenGL;
 
    VertexBuffer(GLuint stride, GLuint vertType, GLuint texType,
-                GLvoid *texOffset, int count);
+                GLvoid *texOffset, int count, GLenum mode);
    VertexBuffer(const VertexBuffer&) = delete;
 
    GLuint m_vbo = 0;
@@ -60,6 +62,7 @@ private:
    GLuint m_texType = 0;
    GLvoid *m_texOffset = nullptr;
    int m_count = 0;
+   GLenum m_mode = GL_QUADS;
 };
 
 struct Colour {

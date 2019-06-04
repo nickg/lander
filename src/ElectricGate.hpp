@@ -1,6 +1,6 @@
 //
 //  ElectricGate.hpp -- Electric gateway thingys.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -31,27 +31,26 @@
 //
 class LightLineStrip {
 public:
-   LightLineStrip() : swapXandY(false) {}
+   LightLineStrip();
 
-   void AddPoint(double x, double y);
-   void Draw() const;
+   void Draw(int x, int y) const;
    void SwapXandY(bool b) { swapXandY = b; }
-   void Clear() { points.clear(); }
+   void Build(const VertexF *vertices, int count);
 private:
-   void DrawWithOffset(double off, double r, double g, double b,
-                       double a) const;
+   void DrawWithOffset(int x, int y, float off, float r, float g, float b,
+                       float a) const;
 
-   typedef pair<double, double> Point_t;
-   list<Point_t> points;
    bool swapXandY;
+   VertexBuffer m_vbo;
+   Texture m_texture;
 };
 
 class Lightning {
 public:
    void Build(int length, bool vertical);
-   void Draw() const;
+   void Draw(int x, int y) const;
 private:
-   LightLineStrip line;
+   LightLineStrip m_line;
 };
 
 

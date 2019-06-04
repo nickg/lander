@@ -1,6 +1,6 @@
 //
 //  ElectricGate.cpp -- Electric gateway thingys.
-//  Copyright (C) 2008  Nick Gasson
+//  Copyright (C) 2008-2019  Nick Gasson
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -80,12 +80,10 @@ void ElectricGate::Draw()
    // Draw the electricity stuff
    m_timer -= OpenGL::GetInstance().GetTimeScale();
    if (m_timer < GATEWAY_ACTIVE) {
-      double x = xpos*OBJ_GRID_SIZE + 16 - viewport->GetXAdjust();
-      double y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();
+      float x = xpos*OBJ_GRID_SIZE + 16 - viewport->GetXAdjust();
+      float y = ypos*OBJ_GRID_SIZE + OBJ_GRID_TOP + 16 - viewport->GetYAdjust();
 
-      glLoadIdentity();
-      glTranslated(x, y, 0.0);
-      lightning.Draw();
+      lightning.Draw(x, y);
 
       if (static_cast<int>(m_timer) % 5 == 0)
          lightning.Build(length * OBJ_GRID_SIZE, vertical);
@@ -98,76 +96,81 @@ void ElectricGate::Draw()
 
 void Lightning::Build(int length, bool vertical)
 {
-   line.SwapXandY(vertical);
-   line.Clear();
+   m_line.SwapXandY(vertical);
 
    const int POINT_STEP = 20;
    int npoints = (length / POINT_STEP) + 1;
-   double delta = (double)length / (double)(npoints - 1);
+   float delta = (float)length / (float)(npoints - 1);
 
-   const double SWING_SIZE = 5;
-   const double MAX_OUT = 25;
-   double y = 0;
+   VertexF *vertices = new VertexF[npoints];
+
+   const float SWING_SIZE = 5;
+   const float MAX_OUT = 25;
+   float y = 0;
    for (int i = 0; i < npoints; i++) {
       if (i == npoints - 1)
          y = 0;
 
-      line.AddPoint(i*delta, y);
+      if (vertical)
+         vertices[i] = VertexF{y, i * delta};
+      else
+         vertices[i] = VertexF{i * delta, y};
 
-      double swing = rand() % 2 == 0 ? -1 : 1;
-      y += swing * SWING_SIZE * (double)(rand() % 4);
+      float swing = rand() % 2 == 0 ? -1 : 1;
+      y += swing * SWING_SIZE * (float)(rand() % 4);
       if (y > MAX_OUT)
          y = MAX_OUT - swing * SWING_SIZE;
       else if (y < -MAX_OUT)
          y = -MAX_OUT + swing * SWING_SIZE;
    }
+
+   m_line.Build(vertices, npoints);
+
+   delete[] vertices;
 }
 
-void Lightning::Draw() const
+void Lightning::Draw(int x, int y) const
 {
-   glDisable(GL_TEXTURE_2D);
-   glEnable(GL_BLEND);
-
-   line.Draw();
+   m_line.Draw(x, y);
 }
 
-void LightLineStrip::AddPoint(double x, double y)
+LightLineStrip::LightLineStrip()
+   : swapXandY(false)
 {
-   if (swapXandY)
-      points.push_back(Point_t(y, x));
-   else
-      points.push_back(Point_t(x, y));
+   GLubyte white = 255;
+   m_texture = Texture::Make(1, 1, &white, GL_LUMINANCE);
 }
 
-void LightLineStrip::Draw() const
+void LightLineStrip::Build(const VertexF *vertices, int count)
 {
-   DrawWithOffset(0, 1, 1, 1, 1);
-
-   DrawWithOffset(1, 0.8, 0.8, 1, 0.8);
-   DrawWithOffset(-1, 0.8, 0.8, 1, 0.8);
-
-   DrawWithOffset(2, 0.6, 0.6, 1, 0.6);
-   DrawWithOffset(-2, 0.6, 0.6, 1, 0.6);
-
-   DrawWithOffset(3, 0.4, 0.4, 1, 0.4);
-   DrawWithOffset(-3, 0.4, 0.4, 1, 0.4);
-
-   DrawWithOffset(4, 0.2, 0.2, 1, 0.2);
-   DrawWithOffset(-4, 0.2, 0.2, 1, 0.2);
+   m_vbo = VertexBuffer::Make(vertices, count, GL_LINE_STRIP);
 }
 
-void LightLineStrip::DrawWithOffset(double off, double r, double g, double b,
-                                    double a) const
+void LightLineStrip::Draw(int x, int y) const
 {
-   double y_off = swapXandY ? 0 : off;
-   double x_off = swapXandY ? off : 0;
+   DrawWithOffset(x, y, 0, 1, 1, 1, 1);
 
-   glColor4d(r, g, b, a);
-   glBegin(GL_LINE_STRIP);
+   DrawWithOffset(x, y, 1, 0.8, 0.8, 1, 0.8);
+   DrawWithOffset(x, y, -1, 0.8, 0.8, 1, 0.8);
 
-   list<Point_t>::const_iterator it;
-   for (it = points.begin(); it != points.end(); ++it)
-      glVertex2d((*it).first + x_off, (*it).second + y_off);
+   DrawWithOffset(x, y, 2, 0.6, 0.6, 1, 0.6);
+   DrawWithOffset(x, y, -2, 0.6, 0.6, 1, 0.6);
 
-   glEnd();
+   DrawWithOffset(x, y, 3, 0.4, 0.4, 1, 0.4);
+   DrawWithOffset(x, y, -3, 0.4, 0.4, 1, 0.4);
+
+   DrawWithOffset(x, y, 4, 0.2, 0.2, 1, 0.2);
+   DrawWithOffset(x, y, -4, 0.2, 0.2, 1, 0.2);
+}
+
+void LightLineStrip::DrawWithOffset(int x, int y, float off, float r,
+                                    float g, float b, float a) const
+{
+   OpenGL& opengl = OpenGL::GetInstance();
+
+   opengl.Reset();
+   opengl.SetColour(r, g, b, a);
+   opengl.SetTranslation(x + (swapXandY ? off : 0), y + (swapXandY ? 0 : off));
+   opengl.SetTexture(m_texture);
+   opengl.Draw(m_vbo);
 }

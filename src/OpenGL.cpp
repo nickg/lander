@@ -350,7 +350,7 @@ void OpenGL::Draw(const VertexBuffer& vbo, int first, int count)
    assert(first + count <= vbo.m_count);
 
    BindVertexBuffer bind(vbo);
-   glDrawArrays(GL_QUADS, first, count);
+   glDrawArrays(vbo.m_mode, first, count);
 }
 
 void OpenGL::Draw(const VertexBuffer& vbo)
@@ -548,10 +548,10 @@ Colour Colour::Make(float r, float g, float b, float a)
    return c;
 }
 
-VertexBuffer VertexBuffer::Make(const VertexF *vertices, int count)
+VertexBuffer VertexBuffer::Make(const VertexF *vertices, int count, GLenum mode)
 {
    VertexBuffer vb(sizeof(VertexF), GL_FLOAT, GL_FLOAT,
-                   (GLvoid*)offsetof(VertexF, tx), count);
+                   (GLvoid*)offsetof(VertexF, tx), count, mode);
 
    glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexF),
@@ -560,10 +560,10 @@ VertexBuffer VertexBuffer::Make(const VertexF *vertices, int count)
    return vb;
 }
 
-VertexBuffer VertexBuffer::Make(const VertexI *vertices, int count)
+VertexBuffer VertexBuffer::Make(const VertexI *vertices, int count, GLenum mode)
 {
    VertexBuffer vb(sizeof(VertexI), GL_INT, GL_FLOAT,
-                   (GLvoid*)offsetof(VertexI, tx), count);
+                   (GLvoid*)offsetof(VertexI, tx), count, mode);
 
    glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexI),
@@ -585,12 +585,13 @@ VertexBuffer VertexBuffer::MakeQuad(int width, int height)
 }
 
 VertexBuffer::VertexBuffer(GLuint stride, GLuint vertType, GLuint texType,
-                           GLvoid *texOffset, int count)
+                           GLvoid *texOffset, int count, GLenum mode)
    : m_stride(stride),
      m_vertType(vertType),
      m_texType(texType),
      m_texOffset(texOffset),
-     m_count(count)
+     m_count(count),
+     m_mode(mode)
 {
    glGenBuffers(1, &m_vbo);
 }
@@ -601,7 +602,8 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other)
      m_vertType(other.m_vertType),
      m_texType(other.m_texType),
      m_texOffset(other.m_texOffset),
-     m_count(other.m_count)
+     m_count(other.m_count),
+     m_mode(other.m_mode)
 {
    other.m_vbo = 0;
 }
@@ -624,6 +626,7 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other)
       m_texType = other.m_texType;
       m_texOffset = other.m_texOffset;
       m_count = other.m_count;
+      m_mode = other.m_mode;
 
       other.m_vbo = 0;
    }
