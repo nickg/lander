@@ -30,8 +30,8 @@ const float HighScores::FADE_OUT_SPEED(-0.02f);
 
 HighScores::HighScores()
    : hscoreImage("images/hscore.png"),
-     largeFont(LocateResource("Default_Font.ttf"), 15),
-     scoreNameFont(LocateResource("Default_Font.ttf"), 14),
+     largeFont(LocateResource("fonts/VeraBd.ttf"), 15),
+     scoreNameFont(LocateResource("fonts/VeraBd.ttf"), 14),
      fwBang(LocateResource("sounds/firework_1.wav"))
 {
 

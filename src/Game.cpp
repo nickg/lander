@@ -70,9 +70,9 @@ Game::Game()
      smallShip("images/shipsmall.png"),
      starImage("images/star.png"),
      gameOver("images/gameover.png"),
-     normalFont(LocateResource("Default_Font.ttf"), 11),
-     scoreFont(LocateResource("Default_Font.ttf"), 16),
-     bigFont(LocateResource("Default_Font.ttf"), 20),
+     normalFont(LocateResource("fonts/VeraBd.ttf"), 11),
+     scoreFont(LocateResource("fonts/VeraBd.ttf"), 16),
+     bigFont(LocateResource("fonts/VeraBd.ttf"), 20),
      impactSound(LocateResource("sounds/bomb_explosion.wav")),
      collectSound(LocateResource("sounds/collect.wav"))
 {

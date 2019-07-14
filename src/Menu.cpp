@@ -45,7 +45,7 @@ MainMenu::MainMenu()
      optionsOpt("images/options_option.png", OPTIONS_OFFSET, 2),
      exitOpt("images/exit_option.png", OPTIONS_OFFSET, 3),
      titleImage("images/title.png"),
-     hintFont(LocateResource("Default_Font.ttf"), 11)
+     hintFont(LocateResource("fonts/VeraBd.ttf"), 11)
 {
 
 }

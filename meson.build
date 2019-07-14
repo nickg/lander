@@ -59,6 +59,6 @@ lander = executable('lander', src, install : true,
 
 install_subdir('data/images', install_dir : pkgdatadir)
 install_subdir('data/sounds', install_dir : pkgdatadir)
-install_data('data/Default_Font.ttf', install_dir : pkgdatadir)
+install_data('data/fonts/VeraBd.ttf', install_dir : pkgdatadir)
 
 run_target('run', command : lander)

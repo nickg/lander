@@ -30,8 +30,8 @@ const double Options::FADE_SPEED = 0.1;
 
 Options::Options()
    : state(optFadeIn),
-     helpFont(LocateResource("Default_Font.ttf"), 12),
-     itemFont(LocateResource("Default_Font.ttf"), 16),
+     helpFont(LocateResource("fonts/VeraBd.ttf"), 12),
+     itemFont(LocateResource("fonts/VeraBd.ttf"), 16),
      fadeAlpha(0.0),
      selected(0)
 {
