@@ -806,7 +806,25 @@ FuelMeter::FuelMeter()
      fuelBarTexture(Texture::Load("images/fuelbar.png")),
      maxfuel(1)
 {
-   m_vbo = VertexBuffer::MakeQuad(256 - FUELBAR_OFFSET, 16);
+   RebuildVBO();
+}
+
+void FuelMeter::RebuildVBO()
+{
+   const int maxWidth = 256 - FUELBAR_OFFSET;
+
+   int fbsize = (int)((m_fuel/(float)maxfuel)*maxWidth);
+   float texsize = fbsize/(float)maxWidth;
+   const int height = 32;
+
+   const VertexI vertices[4] = {
+      { maxWidth - fbsize, height, 1.0f - texsize, 0.0f },
+      { maxWidth - fbsize, 0, 1.0f - texsize, 1.0f },
+      { maxWidth, 0, 1.0f, 1.0f },
+      { maxWidth, height, 1.0f, 0.0f }
+   };
+
+   m_vbo = VertexBuffer::Make(vertices, 4);
 }
 
 void FuelMeter::Display()
@@ -815,37 +833,20 @@ void FuelMeter::Display()
 
    opengl.Reset();
    opengl.SetTexture(fuelBarTexture);
-   opengl.SetScale((float)m_fuel / (float)maxfuel, 1.0f);
-
-#if 0
-   int fbsize = (int)((m_fuel/(float)maxfuel)*(256-FUELBAR_OFFSET));
-   float texsize = fbsize/(256.0f-FUELBAR_OFFSET);
-   glEnable(GL_BLEND);
-   glDisable(GL_DEPTH_TEST);
-   glColor3f(1.0f, 1.0f, 1.0f);
-   glBindTexture(GL_TEXTURE_2D, fuelBarTexture.GetGLTexture());
-   glLoadIdentity();
-   glBegin(GL_QUADS);
-     glTexCoord2f(1.0f-texsize, 1.0f);
-     glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y);
-     glTexCoord2f(1.0f, 1.0f);
-     glVertex2i(opengl.GetWidth()-10, FUELBAR_Y);
-     glTexCoord2f(1.0f, 0.0f);
-     glVertex2i(opengl.GetWidth()-10, FUELBAR_Y + 32);
-     glTexCoord2f(1.0f-texsize, 0.0f);
-     glVertex2i(opengl.GetWidth()-fbsize-10, FUELBAR_Y + 32);
-   glEnd();
+   opengl.SetTranslation(opengl.GetWidth()+FUELBAR_OFFSET-256-10, FUELBAR_Y);
+   opengl.Draw(m_vbo);
 
    int draw_x = opengl.GetWidth() - fuelMeterImage.GetWidth() - 10;
    int draw_y = FUELBAR_Y;
    fuelMeterImage.Draw(draw_x, draw_y);
-#endif
 }
 
 void FuelMeter::Refuel(int howmuch)
 {
    maxfuel = howmuch;
    m_fuel = maxfuel;
+
+   RebuildVBO();
 }
 
 void FuelMeter::BurnFuel()
@@ -854,6 +855,8 @@ void FuelMeter::BurnFuel()
    m_fuel -= OpenGL::GetInstance().GetTimeScale();
    if (m_fuel < 0.0f)
       m_fuel = 0.0f;
+
+   RebuildVBO();
 }
 
 int FuelMeter::GetFuel() const

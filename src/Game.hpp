@@ -54,6 +54,8 @@ public:
    int GetFuel() const;
 
 private:
+   void RebuildVBO();
+
    Image fuelMeterImage;
    Texture fuelBarTexture;
    VertexBuffer m_vbo;

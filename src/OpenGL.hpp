@@ -47,6 +47,11 @@ public:
    VertexBuffer(VertexBuffer&& other);
    ~VertexBuffer();
 
+   void Upload(const VertexI *vertices, int count,
+               GLenum mode=GL_QUADS);
+   void Upload(const VertexF *vertices, int count,
+               GLenum mode=GL_QUADS);
+
    VertexBuffer& operator=(VertexBuffer&& other);
 
 private:

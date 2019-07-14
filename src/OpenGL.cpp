@@ -552,24 +552,32 @@ VertexBuffer VertexBuffer::Make(const VertexF *vertices, int count, GLenum mode)
 {
    VertexBuffer vb(sizeof(VertexF), GL_FLOAT, GL_FLOAT,
                    (GLvoid*)offsetof(VertexF, tx), count, mode);
-
-   glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexF),
-                vertices, GL_STATIC_DRAW);
+   vb.Upload(vertices, count, mode);
 
    return vb;
+}
+
+void VertexBuffer::Upload(const VertexF *vertices, int count, GLenum mode)
+{
+   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexF),
+                vertices, GL_STATIC_DRAW);
 }
 
 VertexBuffer VertexBuffer::Make(const VertexI *vertices, int count, GLenum mode)
 {
    VertexBuffer vb(sizeof(VertexI), GL_INT, GL_FLOAT,
                    (GLvoid*)offsetof(VertexI, tx), count, mode);
-
-   glBindBuffer(GL_ARRAY_BUFFER, vb.m_vbo);
-   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexI),
-                vertices, GL_STATIC_DRAW);
+   vb.Upload(vertices, count, mode);
 
    return vb;
+}
+
+void VertexBuffer::Upload(const VertexI *vertices, int count, GLenum mode)
+{
+   glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+   glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexI),
+                vertices, GL_STATIC_DRAW);
 }
 
 VertexBuffer VertexBuffer::MakeQuad(int width, int height)
