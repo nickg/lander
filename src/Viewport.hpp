@@ -35,10 +35,9 @@ public:
 
    bool ObjectInScreen(int xpos, int ypos, int width, int height);
    bool PointInScreen(int xpos, int ypos, int width, int height);
-   
+
 private:
    int adjustX, adjustY;
-   int screenWidth, screenHeight;
    int levelWidth, levelHeight;
 };
 

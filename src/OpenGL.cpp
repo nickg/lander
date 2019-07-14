@@ -420,6 +420,8 @@ GLvoid OpenGL::ResizeGLScene(GLsizei width, GLsizei height)
    GLuint windowSizeU = GetUniformLocation("WindowSize");
    glUniform2f(windowSizeU, width, height);
 
+   glViewport(0, 0, width, height);
+
    CheckError("ResizeGLScene");
 }
 

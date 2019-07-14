@@ -49,8 +49,9 @@ public:
    void Display(bool selected, double bigness, double fade) const;
 
 private:
-   Image image;
-   int y;
+   Image m_image;
+   int m_off;
+   int m_order;
 
    static const double SEL_ENLARGE, UNSEL_DIM;
 };

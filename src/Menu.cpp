@@ -315,15 +315,18 @@ bool MenuStar::Move()
 }
 
 MenuOption::MenuOption(const char* imgFile, int off, int order)
-   : image(imgFile)
+   : m_image(imgFile),
+     m_off(off),
+     m_order(order)
 {
-   y = (OpenGL::GetInstance().GetHeight() - off) / 2 + (order*image.GetHeight());
 }
 
 void MenuOption::Display(bool selected, double bigness, double fade) const
 {
-   int x = (OpenGL::GetInstance().GetWidth() - image.GetWidth()) / 2;
+   OpenGL& opengl = OpenGL::GetInstance();
+   int x = (opengl.GetWidth() - m_image.GetWidth()) / 2;
+   int y = (opengl.GetHeight() - m_off) / 2 + (m_order*m_image.GetHeight());
    double scale = selected ? (bigness > SEL_ENLARGE ? bigness : SEL_ENLARGE) : 1.0;
    double white = selected ? 1.0 : UNSEL_DIM;
-   image.Draw(x, y, 0.0, scale, fade, white);
+   m_image.Draw(x, y, 0.0, scale, fade, white);
 }
