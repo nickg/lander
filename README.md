@@ -7,6 +7,7 @@ levels are randomly generated and become progressively harder.
 
 # Controls
 
+|--------------|---------------------|
 | Left arrow   | Turn left           |
 | Right arrow  | Turn right          |
 | Up arrow     | Thrust              |
