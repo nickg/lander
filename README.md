@@ -31,7 +31,7 @@ Lander uses the [Meson](https://mesonbuild.com/) build system.
 
 # About
 
-Developed by Nick Gasson <nick@nickg.me.uk>.
+Developed by [Nick Gasson](mailto:nick+github@nickg.me.uk).
 
 This code is distributed under the GNU General Public license. See the
 file COPYING for more details.
