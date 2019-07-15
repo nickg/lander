@@ -15,10 +15,10 @@ matrix:
       BITS: 32
 
 install:
-  - ps: IF "%BITS%" == "32" SET ARCH=i686
-  - ps: IF "%BITS%" == "64" SET ARCH=x86_64
-  - ps: SET PATH=C:\msys64\mingw%BITS%\bin;C:\msys64\usr\bin;%PATH%
-  - ps: >
+  - cmd: IF "%BITS%" == "32" SET ARCH=i686
+  - cmd: IF "%BITS%" == "64" SET ARCH=x86_64
+  - cmd: SET PATH=C:\msys64\mingw%BITS%\bin;C:\msys64\usr\bin;%PATH%
+  - cmd: >
       pacman --noconfirm -S
       mingw-w64-%ARCH%-{meson,boost,SDL2,SDL2_mixer,SDL2_image,freetype,glew}
   - sh: >
