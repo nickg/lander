@@ -2,7 +2,7 @@ version: 0.7.0-{build}
 
 image:
 - Visual Studio 2015
-- Ubuntu
+- Ubuntu1804
 
 environment:
   matrix:
@@ -23,7 +23,7 @@ install:
       mingw-w64-%ARCH%-{meson,boost,SDL2,SDL2_mixer,SDL2_image,freetype,glew}
   - sh: >
       sudo apt-get install -y libsdl2-mixer-dev libsdl2-image-dev
-      libsdl2-dev meson ninja libfreetype6-dev libglew-dev
+      libsdl2-dev meson ninja-build libfreetype6-dev libglew-dev
 
 build_script:
   - pwd
