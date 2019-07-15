@@ -2,7 +2,7 @@ project('lander', 'cpp',
         default_options : [ 'cpp_std=c++14',
                             'buildtype=release'
                           ],
-       version : '0.7')
+       version : '0.7.0')
 
 subdir('po')
 
@@ -69,6 +69,7 @@ lander = executable('lander', src, install : true,
 
 install_subdir('data/images', install_dir : pkgdatadir)
 install_subdir('data/sounds', install_dir : pkgdatadir)
-install_data('data/fonts/VeraBd.ttf', install_dir : pkgdatadir)
+install_data('data/fonts/VeraBd.ttf',
+             install_dir : join_paths(pkgdatadir, 'fonts'))
 
 run_target('run', command : lander)
