@@ -1,5 +1,7 @@
 # Lander
 
+[![Build status](https://ci.appveyor.com/api/projects/status/jgav1m9w56s6h3u2?svg=true)](https://ci.appveyor.com/project/nickg72247/lander)
+
 This is a lunar lander style game for Linux and Windows. Use the arrow
 keys to move the ship and avoid crashing into obstacles. Collect all the
 spinning keys and then land the ship on one of the landing pads. The
