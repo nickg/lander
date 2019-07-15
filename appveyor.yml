@@ -1,0 +1,21 @@
+environment:
+  matrix:
+    - SYSTEM: MSYS
+      BITS: 64
+    - SYSTEM: MSYS
+      BITS: 32
+
+install: 
+  - IF "%BITS%" == "32" SET ARCH=i686
+  - IF "%BITS%" == "64" SET ARCH=x86_64
+  - SET PATH=C:\msys64\mingw%BITS%\bin;C:\msys64\usr\bin;%PATH%
+  - pacman --noconfirm -S mingw-w64-%ARCH%-{meson,boost,SDL2,SDL2_mixer,SDL2_image} 
+
+build_script:
+  - pwd
+  - mkdir build
+  - cd build
+  - meson ..
+  - ninja
+
+test: false
