@@ -1,4 +1,6 @@
 #mesondefine UNIX
 #mesondefine LINUX
+#mesondefine WIN32
+#mesondefine MACOSX
 #mesondefine VERSION
 #mesondefine DATADIR
