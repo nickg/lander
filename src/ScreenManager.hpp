@@ -49,15 +49,15 @@ public:
 
    void AddScreen(Screen* ptr);
    void SetTestDriver(TestDriver *driver);
-   void SelectScreen(const char *id);
+   void SelectScreen(const string& id);
    void Process();
    void Display();
    void RemoveAllScreens();
-   Screen* GetScreenById(const char *id) const;
+   Screen* GetScreenById(const string& id) const;
    Screen* GetActiveScreen() const;
 
 private:
-   Screen* SearchScreenById(const char *id) const;
+   Screen* SearchScreenById(const string& id) const;
 
    static const int MAX_SCREENS = 8;
 

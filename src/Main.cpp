@@ -144,6 +144,7 @@ int main(int argc, char **argv)
    opengl.Run();
 
    DestroyScreens();
+   Texture::UnloadAll();
 
    return 0;
 }

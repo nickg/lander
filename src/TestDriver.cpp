@@ -30,12 +30,12 @@ void TestDriver::Poll()
       m_sleep -= delta;
 }
 
-void TestDriver::AssertScreen(const char *name)
+void TestDriver::AssertScreen(const string& id)
 {
    Screen *s = ScreenManager::GetInstance().GetActiveScreen();
-   if (strcmp(s->GetName(), name) != 0)
+   if (id != s->GetName())
       Die("[TEST] expected active screen to be %s but is %s",
-          name, s->GetName());
+          id.c_str(), s->GetName());
 }
 
 void TestDriver::WaitFor(float seconds)

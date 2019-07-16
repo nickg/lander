@@ -39,7 +39,7 @@ Screen* ScreenManager::GetActiveScreen() const
    return m_active;
 }
 
-void ScreenManager::SelectScreen(const char *id)
+void ScreenManager::SelectScreen(const string& id)
 {
    m_active = GetScreenById(id);
    m_active->Load();
@@ -48,21 +48,21 @@ void ScreenManager::SelectScreen(const char *id)
    OpenGL::GetInstance().SkipDisplay();
 }
 
-Screen* ScreenManager::SearchScreenById(const char *id) const
+Screen* ScreenManager::SearchScreenById(const string& id) const
 {
    for (int i = 0; i < m_screenCount; i++) {
-      if (strcmp(id, m_screens[i]->GetName()) == 0)
+      if (id == m_screens[i]->GetName())
          return m_screens[i];
    }
 
    return nullptr;
 }
 
-Screen* ScreenManager::GetScreenById(const char *id) const
+Screen* ScreenManager::GetScreenById(const string& id) const
 {
    Screen *s = SearchScreenById(id);
    if (s == nullptr)
-      Die("Screen %s does not exist", id);
+      Die("Screen %s does not exist", id.c_str());
 
    return s;
 }

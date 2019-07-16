@@ -1,18 +1,6 @@
-//  Texture.cpp -- Wrapper for OpenGL textures.
-//  Copyright (C) 2008-2019  Nick Gasson
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2008-2019  Nick Gasson
+// SPDX-License-Identifier: GPL-3.0-or-later
 //
 
 #include "Texture.hpp"
@@ -20,7 +8,6 @@
 
 #include <map>
 #include <string>
-#include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <cassert>
@@ -149,6 +136,14 @@ Texture Texture::Make(int width, int height, const GLubyte *data,
                       GLuint fmt, GLuint filter)
 {
    return Texture(new TextureHolder(width, height, data, fmt, filter), true);
+}
+
+void Texture::UnloadAll()
+{
+   for (auto& it : theCache)
+      delete it.second;
+
+   theCache.clear();
 }
 
 Texture::Texture(TextureHolder *holder, bool owner)
