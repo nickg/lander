@@ -18,6 +18,7 @@ protected:
    TestDriver();
 
    void WaitFor(float seconds);
+   void AssertScreen(const char *name);
 
    virtual void Process() {}
 

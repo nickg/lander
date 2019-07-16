@@ -52,10 +52,10 @@ static void RecreateScreens()
    options = new Options();
 
    ScreenManager& sm = ScreenManager::GetInstance();
-   sm.AddScreen("MAIN MENU", menu);
-   sm.AddScreen("GAME", game);
-   sm.AddScreen("HIGH SCORES", scores);
-   sm.AddScreen("OPTIONS", options);
+   sm.AddScreen(menu);
+   sm.AddScreen(game);
+   sm.AddScreen(scores);
+   sm.AddScreen(options);
 }
 
 #ifdef UNIX

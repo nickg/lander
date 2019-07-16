@@ -24,7 +24,9 @@ install:
   - sh: sudo apt-get -y update
   - sh: >
       sudo apt-get -y install libsdl2-mixer-dev libsdl2-image-dev
-      libsdl2-dev meson ninja-build libfreetype6-dev libglew-dev libboost-dev
+      libsdl2-dev meson ninja-build libfreetype6-dev libglew-dev
+      libboost-dev libboost-filesystem-dev libboost-system-dev
+      
 
 build_script:
   - pwd

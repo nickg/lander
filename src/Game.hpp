@@ -94,6 +94,8 @@ public:
    void NewGame();
    void StartLevel();
 
+   const char *GetName() const override { return "GAME"; }
+
 private:
    static const float TURN_ANGLE, DEATH_SPIN_RATE;
    static const int FUEL_BASE, FUEL_PER_LEVEL;

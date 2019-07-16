@@ -23,8 +23,6 @@
 #include "Platform.hpp"
 #include "TestDriver.hpp"
 
-#include <map>
-
 //
 // A screen within the game that can be displayed.
 //
@@ -37,6 +35,8 @@ public:
    virtual void Load() { }
    virtual void Display() { }
    virtual void Process() { }
+
+   virtual const char *GetName() const = 0;
 };
 
 
@@ -47,20 +47,23 @@ class ScreenManager {
 public:
    static ScreenManager& GetInstance();
 
-   void AddScreen(const string& id, Screen* ptr);
+   void AddScreen(Screen* ptr);
    void SetTestDriver(TestDriver *driver);
-   void SelectScreen(const string& id);
+   void SelectScreen(const char *id);
    void Process();
    void Display();
    void RemoveAllScreens();
-   Screen* GetScreenById(const string& id) const;
+   Screen* GetScreenById(const char *id) const;
+   Screen* GetActiveScreen() const;
 
 private:
-   typedef map<string, Screen*> ScreenMap;
-   typedef ScreenMap::iterator ScreenMapIt;
+   Screen* SearchScreenById(const char *id) const;
 
-   ScreenMap m_screens;
-   Screen *m_active;
+   static const int MAX_SCREENS = 8;
+
+   Screen *m_screens[MAX_SCREENS];
+   int m_screenCount = 0;
+   Screen *m_active = nullptr;
    TestDriver *m_testDriver;
 };
 

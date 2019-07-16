@@ -7,6 +7,7 @@
 #include "TestDriver.hpp"
 #include "OpenGL.hpp"
 #include "Input.hpp"
+#include "ScreenManager.hpp"
 
 #include <iostream>
 
@@ -27,6 +28,14 @@ void TestDriver::Poll()
    }
    else
       m_sleep -= delta;
+}
+
+void TestDriver::AssertScreen(const char *name)
+{
+   Screen *s = ScreenManager::GetInstance().GetActiveScreen();
+   if (strcmp(s->GetName(), name) != 0)
+      Die("[TEST] expected active screen to be %s but is %s",
+          name, s->GetName());
 }
 
 void TestDriver::WaitFor(float seconds)
@@ -56,18 +65,21 @@ void SanityTestDriver::Process()
    switch (m_state) {
    case INIT:
       cout << "[TEST] startup" << endl;
+      AssertScreen("MAIN MENU");
       m_state = MENU;
       WaitFor(2.0f);
       break;
 
    case MENU:
       cout << "[TEST] menu" << endl;
+      AssertScreen("MAIN MENU");
       Input::GetInstance().FakeAction(Input::FIRE);
       m_state = THRUST_UP;
       WaitFor(1.0f);
       break;
 
    case THRUST_UP:
+      AssertScreen("GAME");
       Input::GetInstance().FakeAction(Input::THRUST);
       if (m_thrustCount++ >= 100) {
          m_state = ESCAPE;
@@ -77,6 +89,7 @@ void SanityTestDriver::Process()
 
    case ESCAPE:
       cout << "[TEST] escape" << endl;
+      AssertScreen("GAME");
       Input::GetInstance().FakeAction(Input::ABORT);
       m_state = HIGH_SCORE;
       WaitFor(1.0f);
@@ -84,6 +97,7 @@ void SanityTestDriver::Process()
 
    case HIGH_SCORE:
       cout << "[TEST] go to high score" << endl;
+      AssertScreen("GAME");
       Input::GetInstance().FakeAction(Input::SKIP);
       m_state = RETURN_MENU;
       WaitFor(2.5f);
@@ -91,6 +105,7 @@ void SanityTestDriver::Process()
 
    case RETURN_MENU:
       cout << "[TEST] return to menu" << endl;
+      AssertScreen("HIGH SCORES");
       Input::GetInstance().FakeAction(Input::FIRE);
       m_state = DOWN1;
       WaitFor(2.0f);
@@ -98,6 +113,7 @@ void SanityTestDriver::Process()
 
    case DOWN1:
       cout << "[TEST] down 1" << endl;
+      AssertScreen("MAIN MENU");
       Input::GetInstance().FakeAction(Input::DOWN);
       m_state = DOWN2;
       WaitFor(0.5f);
@@ -105,6 +121,7 @@ void SanityTestDriver::Process()
 
    case DOWN2:
       cout << "[TEST] down 2" << endl;
+      AssertScreen("MAIN MENU");
       Input::GetInstance().FakeAction(Input::DOWN);
       m_state = DOWN3;
       WaitFor(0.5f);
@@ -112,6 +129,7 @@ void SanityTestDriver::Process()
 
    case DOWN3:
       cout << "[TEST] down 3" << endl;
+      AssertScreen("MAIN MENU");
       Input::GetInstance().FakeAction(Input::DOWN);
       m_state = QUIT;
       WaitFor(0.5f);
@@ -119,6 +137,7 @@ void SanityTestDriver::Process()
 
    case QUIT:
       cout << "[TEST] quit" << endl;
+      AssertScreen("MAIN MENU");
       Input::GetInstance().FakeAction(Input::FIRE);
       WaitFor(5.0f);
       m_state = BAD;

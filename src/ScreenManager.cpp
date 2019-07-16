@@ -6,7 +6,6 @@
 #include "ScreenManager.hpp"
 #include "OpenGL.hpp"
 
-#include <string>
 #include <cassert>
 
 ScreenManager& ScreenManager::GetInstance()
@@ -21,39 +20,51 @@ void ScreenManager::SetTestDriver(TestDriver *driver)
    m_testDriver = driver;
 }
 
-void ScreenManager::AddScreen(const string& id, Screen* ptr)
+void ScreenManager::AddScreen(Screen* ptr)
 {
-   if (m_screens.find(id) != m_screens.end())
-      Die("Screen already registered: %s", id.c_str());
+   if (m_screenCount == MAX_SCREENS)
+      Die("Too many screens");
 
-   m_screens[id] = ptr;
+   if (SearchScreenById(ptr->GetName()) != nullptr)
+      Die("Screen already registered: %s", ptr->GetName());
+
+   m_screens[m_screenCount++] = ptr;
 }
 
-void ScreenManager::SelectScreen(const string& id)
+Screen* ScreenManager::GetActiveScreen() const
 {
-   ScreenMapIt it = m_screens.find(id);
+   if (m_active == nullptr)
+      Die("No active screen");
 
-   if (it == m_screens.end())
-      Die("Screen does not exist: %s", id.c_str());
+   return m_active;
+}
 
-   m_active = (*it).second;
+void ScreenManager::SelectScreen(const char *id)
+{
+   m_active = GetScreenById(id);
    m_active->Load();
-
-   m_screens[id] = m_active;
 
    // Allow the new screen to generate a frame
    OpenGL::GetInstance().SkipDisplay();
 }
 
-Screen* ScreenManager::GetScreenById(const string& id) const
+Screen* ScreenManager::SearchScreenById(const char *id) const
 {
-   ScreenMap::const_iterator it;
+   for (int i = 0; i < m_screenCount; i++) {
+      if (strcmp(id, m_screens[i]->GetName()) == 0)
+         return m_screens[i];
+   }
 
-   it = m_screens.find(id);
-   if (it == m_screens.end())
-      Die("Screen %s does not exist", id.c_str());
-   else
-      return (*it).second;
+   return nullptr;
+}
+
+Screen* ScreenManager::GetScreenById(const char *id) const
+{
+   Screen *s = SearchScreenById(id);
+   if (s == nullptr)
+      Die("Screen %s does not exist", id);
+
+   return s;
 }
 
 void ScreenManager::Process()
@@ -74,5 +85,8 @@ void ScreenManager::Display()
 
 void ScreenManager::RemoveAllScreens()
 {
-   m_screens.clear();
+   for (int i = 0; i < m_screenCount; i++)
+      m_screens[i] = nullptr;
+   m_active = nullptr;
+   m_screenCount = 0;
 }

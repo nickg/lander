@@ -30,6 +30,9 @@ public:
    void Load();
    void Process();
    void Display();
+
+   const char *GetName() const override { return "OPTIONS"; }
+
 private:
    void ProcessFadeIn();
    void ProcessMain();

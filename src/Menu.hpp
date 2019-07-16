@@ -66,6 +66,8 @@ public:
    void DisplayStars() const;
    void MoveStars();
 
+   const char *GetName() const override { return "MAIN MENU"; }
+
 private:
    enum MenuState { msFadeIn, msInMenu, msFadeToStart,
                     msFadeToHigh, msFadeToOpt, msFadeToExit };
