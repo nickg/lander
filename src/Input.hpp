@@ -1,24 +1,9 @@
 //
-// Input.hpp -- Definition of input manager class.
 // Copyright (C) 2006-2019  Nick Gasson
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+// SPDX-License-Identifier: GPL-3.0-or-later
 //
 
-#ifndef INC_INPUT_HPP
-#define INC_INPUT_HPP
+#pragma once
 
 #include "Platform.hpp"
 
@@ -41,6 +26,7 @@ public:
    bool QueryResetAction(Action a);
    void ResetAction(Action a);
    void Update();
+   void FakeAction(Action a);
 
    void OpenCharBuffer(int max=256);
    void CloseCharBuffer();
@@ -64,7 +50,7 @@ private:
    // Record joystick state
    bool joyLeft, joyRight, joyUp, joyDown, joyButton0, joyButton1;
 
+   Action m_fakeAction = NUM_ACTIONS;
+
    static const int JOYSTICK_DEADZONE = 3500;
 };
-
-#endif

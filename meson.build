@@ -6,35 +6,37 @@ project('lander', 'cpp',
 
 subdir('po')
 
-src = [ 'src/Main.cpp',
-        'src/Game.cpp',
-        'src/OpenGL.cpp',
-        'src/Texture.cpp',
-        'src/Input.cpp',
-        'src/ScreenManager.cpp',
-        'src/Input.cpp',
-        'src/Emitter.cpp',
-        'src/Font.cpp',
-        'src/Image.cpp',
-        'src/Key.cpp',
-        'src/Ship.cpp',
-        'src/Missile.cpp',
-        'src/ObjectGrid.cpp',
-        'src/Surface.cpp',
-        'src/Viewport.cpp',
-        'src/Menu.cpp',
-        'src/SoundEffect.cpp',
-        'src/AnimatedImage.cpp',
-        'src/ElectricGate.cpp',
-        'src/LandingPad.cpp',
-        'src/Fade.cpp',
-        'src/HighScores.cpp',
-        'src/InterfaceSounds.cpp',
-        'src/Asteroid.cpp',
-        'src/ConfigFile.cpp',
-        'src/Mine.cpp',
-        'src/Options.cpp',
-      ]
+src = [
+  'src/AnimatedImage.cpp',
+  'src/Asteroid.cpp',
+  'src/ConfigFile.cpp',
+  'src/ElectricGate.cpp',
+  'src/Emitter.cpp',
+  'src/Fade.cpp',
+  'src/Font.cpp',
+  'src/Game.cpp',
+  'src/HighScores.cpp',
+  'src/Image.cpp',
+  'src/Input.cpp',
+  'src/Input.cpp',
+  'src/InterfaceSounds.cpp',
+  'src/Key.cpp',
+  'src/LandingPad.cpp',
+  'src/Main.cpp',
+  'src/Menu.cpp',
+  'src/Mine.cpp',
+  'src/Missile.cpp',
+  'src/ObjectGrid.cpp',
+  'src/OpenGL.cpp',
+  'src/Options.cpp',
+  'src/ScreenManager.cpp',
+  'src/Ship.cpp',
+  'src/SoundEffect.cpp',
+  'src/Surface.cpp',
+  'src/TestDriver.cpp',
+  'src/Texture.cpp',
+  'src/Viewport.cpp',
+]
 
 freetype = dependency('freetype2')
 sdl2 = dependency('sdl2')
@@ -73,3 +75,6 @@ install_data('data/fonts/VeraBd.ttf',
              install_dir : join_paths(pkgdatadir, 'fonts'))
 
 run_target('run', command : lander)
+
+test('sanity', lander, args : ['test'],
+     env : ['MESON_SOURCE_ROOT=' + meson.source_root()])

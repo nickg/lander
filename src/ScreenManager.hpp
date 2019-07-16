@@ -21,6 +21,7 @@
 #define INC_SCREENS_HPP
 
 #include "Platform.hpp"
+#include "TestDriver.hpp"
 
 #include <map>
 
@@ -47,6 +48,7 @@ public:
    static ScreenManager& GetInstance();
 
    void AddScreen(const string& id, Screen* ptr);
+   void SetTestDriver(TestDriver *driver);
    void SelectScreen(const string& id);
    void Process();
    void Display();
@@ -54,14 +56,12 @@ public:
    Screen* GetScreenById(const string& id) const;
 
 private:
-   ScreenManager();
-   ~ScreenManager();
-
    typedef map<string, Screen*> ScreenMap;
    typedef ScreenMap::iterator ScreenMapIt;
 
    ScreenMap m_screens;
    Screen *m_active;
+   TestDriver *m_testDriver;
 };
 
 #endif

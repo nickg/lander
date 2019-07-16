@@ -139,6 +139,7 @@ public:
    static void CheckError(const char *text=NULL);
 
    static const GLuint INVALID_TEXTURE = 0xFFFFFFFF;
+   static const int VIRTUAL_FRAME_RATE = 35;
 
 private:
    OpenGL();
@@ -152,8 +153,6 @@ private:
    void AddShader(GLuint program, const char* text, GLenum type);
    void CompileShaders();
    GLuint GetUniformLocation(const char *name);
-
-   static const int VIRTUAL_FRAME_RATE = 35;
 
    // Window related variables
    int screen_width, screen_height;

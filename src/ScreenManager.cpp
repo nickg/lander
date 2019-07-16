@@ -1,20 +1,6 @@
 //
-// Screen.cpp - Implementation of the ScreenManager class.
-// Copyright (C) 2006, 2011  Nick Gasson
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+// Copyright (C) 2006-2019  Nick Gasson
+// SPDX-License-Identifier: GPL-3.0-or-later
 //
 
 #include "ScreenManager.hpp"
@@ -22,22 +8,17 @@
 
 #include <string>
 #include <cassert>
-#include <stdexcept>
-
-ScreenManager::ScreenManager()
-   : m_active(NULL)
-{
-}
-
-ScreenManager::~ScreenManager()
-{
-
-}
 
 ScreenManager& ScreenManager::GetInstance()
 {
    static ScreenManager sm;
    return sm;
+}
+
+void ScreenManager::SetTestDriver(TestDriver *driver)
+{
+   assert(m_testDriver == nullptr);
+   m_testDriver = driver;
 }
 
 void ScreenManager::AddScreen(const string& id, Screen* ptr)
@@ -77,13 +58,17 @@ Screen* ScreenManager::GetScreenById(const string& id) const
 
 void ScreenManager::Process()
 {
-   if (m_active != NULL)
+   if (m_active != nullptr) {
+      if (m_testDriver != nullptr)
+         m_testDriver->Poll();
+
       m_active->Process();
+   }
 }
 
 void ScreenManager::Display()
 {
-   if (m_active != NULL)
+   if (m_active != nullptr)
       m_active->Display();
 }
 
