@@ -2,7 +2,7 @@ version: 0.7.0-{build}
 
 image:
 - Visual Studio 2015
-- Ubuntu
+- Ubuntu1804
 
 environment:
   matrix:
@@ -11,7 +11,7 @@ environment:
 
 matrix:
   exclude:
-    - image: Ubuntu
+    - image: Ubuntu1804
       BITS: 32
 
 install:
