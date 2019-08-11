@@ -1,6 +1,7 @@
 project('lander', 'cpp',
         default_options : [ 'cpp_std=c++14',
-                            'buildtype=release'
+                            'buildtype=release',
+                            'warnlevel=3'
                           ],
        version : '0.7.0')
 
