@@ -235,7 +235,7 @@ string GetConfigDir()
 
    return p.string() + "/";
 #elif defined WIN32
-   using boost::filesystem::path;
+   using experimental::filesystem::path;
 
    path appdata(getenv("APPDATA"));
    appdata /= "doof.me.uk";
