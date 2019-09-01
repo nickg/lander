@@ -1,7 +1,6 @@
 project('lander', 'cpp',
-        default_options : [ 'cpp_std=c++14',
+        default_options : [ 'cpp_std=c++17',
                             'buildtype=release',
-                            'warnlevel=3'
                           ],
        version : '0.7.0')
 
@@ -44,8 +43,9 @@ sdl2 = dependency('sdl2')
 gl = dependency('gl')
 glew = dependency('glew')
 mixer = dependency('SDL2_mixer')
-boost = dependency('boost', modules : ['filesystem', 'system'])
 image = dependency('SDL2_image')
+
+add_project_link_arguments(['-lstdc++fs'], language : 'cpp')
 
 pkgdatadir = join_paths(get_option('datadir'), 'lander')
 
@@ -68,7 +68,7 @@ configure_file(input : 'config.h.in',
                configuration : conf_data)
 
 lander = executable('lander', src, install : true,
-                    dependencies : [freetype, sdl2, gl, glew, mixer, boost, image])
+                    dependencies : [freetype, sdl2, gl, glew, mixer, image])
 
 install_subdir('data/images', install_dir : pkgdatadir)
 install_subdir('data/sounds', install_dir : pkgdatadir)

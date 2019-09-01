@@ -12,7 +12,7 @@
 #include "SoundEffect.hpp"
 
 #include <iostream>
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 
 #ifdef MACOSX
 namespace CF {
@@ -65,7 +65,7 @@ static void MigrateConfigFiles()
    // user's home directory. Now use use the XDG-compliant .config/lander
    // directory but we should move old configs and high scores there first
 
-   using boost::filesystem::path;
+   using experimental::filesystem::path;
 
    const path cfg = GetConfigDir();
    const path home = getenv("HOME");
@@ -190,7 +190,7 @@ string LocateResource(const string& file)
 #endif
 
 #ifdef DATADIR
-   using boost::filesystem::path;
+   using experimental::filesystem::path;
 
    static path datadir;
 
@@ -215,7 +215,7 @@ string LocateResource(const string& file)
 string GetConfigDir()
 {
 #if defined UNIX
-   using boost::filesystem::path;
+   using experimental::filesystem::path;
 
    path p;
    const char *config = getenv("XDG_CONFIG_HOME");
