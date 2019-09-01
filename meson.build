@@ -72,8 +72,13 @@ lander = executable('lander', src, install : true,
 
 install_subdir('data/images', install_dir : pkgdatadir)
 install_subdir('data/sounds', install_dir : pkgdatadir)
+install_subdir('data/sounds', install_dir : pkgdatadir)
+install_subdir('data/icons/hicolor',
+               install_dir : join_paths(get_option('datadir'), 'icons'))
 install_data('data/fonts/VeraBd.ttf',
              install_dir : join_paths(pkgdatadir, 'fonts'))
+install_data('lander.desktop',
+             install_dir : join_paths(get_option('datadir'), 'applications'))
 
 run_target('run', command : lander)
 

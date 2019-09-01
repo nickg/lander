@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Lunar Lander
+Exec=lander
+Icon=lander
+Type=Application
+Categories=Game;ArcadeGame;
