@@ -14,8 +14,8 @@
 //
 const Point Ship::hotspots[] = {
    {2, 31}, {2, 26}, {4, 14}, {16, 0},
-   {29, 14}, {31, 26}, {31, 31}, {17, 31} };
-
+   {29, 14}, {31, 26}, {31, 31}, {17, 31}
+};
 
 Ship::Ship(Viewport* v)
    : shipImage("images/ship.png"),
@@ -82,9 +82,9 @@ void Ship::Move()
    exhaust.ypos = ypos + shipImage.GetHeight()/2
       + (shipImage.GetHeight()/2)*cos(angle*(M_PI/180));
 
-   const float SCALE = 1.0f;
-   exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
+   const float SCALE = 6.0f;
    exhaust.xi_bias = SCALE * -sinf(angle*M_PI/180) + speedX;
+   exhaust.yi_bias = SCALE * cosf(angle*M_PI/180) + speedY;
 
    explosion.xpos = xpos + shipImage.GetWidth()/2;
    explosion.ypos = ypos + shipImage.GetHeight()/2;

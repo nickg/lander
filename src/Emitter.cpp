@@ -190,7 +190,7 @@ SmokeTrail::SmokeTrail(float r, float g, float b,
   : Emitter(0, 0, r, g, b,
             false, 0.2f,
             0.0f, 0.0f,
-            0.3f, 0.0f, 4.0f, 0.001f),
+            0.3f, 0.0f, 6.0f, 0.001f),
     dr(dr), dg(dg), db(db)
 {
    createrate = 64.0f;
@@ -199,7 +199,6 @@ SmokeTrail::SmokeTrail(float r, float g, float b,
 BlueSmokeTrail::BlueSmokeTrail()
    : SmokeTrail(0.6f, 0.6f, 0.9f, 0.03f, 0.03f, 0.02f)
 {
-
 }
 
 OrangeSmokeTrail::OrangeSmokeTrail()
