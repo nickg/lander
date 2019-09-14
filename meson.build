@@ -77,8 +77,10 @@ install_subdir('data/icons/hicolor',
                install_dir : join_paths(get_option('datadir'), 'icons'))
 install_data('data/fonts/VeraBd.ttf',
              install_dir : join_paths(pkgdatadir, 'fonts'))
-install_data('lander.desktop',
+install_data('data/meta/uk.me.doof.Lander.desktop',
              install_dir : join_paths(get_option('datadir'), 'applications'))
+install_data('data/meta/uk.me.doof.Lander.appdata.xml',
+             install_dir : join_paths(get_option('datadir'), 'metainfo'))
 
 run_target('run', command : lander)
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Nick Gasson -->
+<component type="desktop-application">
+  <id>uk.me.doof.Lander</id>
+​  <metadata_license>FSFAP</metadata_license>
+​  <project_license>GPL-3.0-or-later</project_license>
+​  <name>Lander</name>
+​  <summary>Lunar lander game</summary>
+​
+​  <description>
+    <p>
+      This is a lunar lander style arcade game. Use the arrow
+      keys to move the ship and avoid crashing into obstacles. Collect all the
+      spinning keys and then land the ship on one of the landing pads. The
+      levels are randomly generated and become progressively harder.
+​    </p>
+​  </description>
+​
+​  <launchable type="desktop-id">uk.me.doof.Lander.desktop</launchable>
+​
+​  <screenshots>
+​    <screenshot type="default">
+​      <image>http://www.nickg.me.uk/images/lander3.png</image>
+​    </screenshot>
+​    <screenshot>
+​      <image>http://www.nickg.me.uk/images/lander2.png</image>
+​    </screenshot>
+​    <screenshot>
+​      <image>http://www.nickg.me.uk/images/lander4.png</image>
+​    </screenshot>
+​    <screenshot>
+​      <image>http://www.nickg.me.uk/images/lander1.png</image>
+​    </screenshot>
+​  </screenshots>
+​
+​  <url type="homepage">https://www.doof.me.uk/lunar-lander/</url>
+  <url type="bugtracker">https://github.com/nickg/lander/issues</url>
+​
+​  <provides>
+​    <binary>lander</binary>
+​  </provides>
+​
+​  <releases>
+​    <release version="3.12.2" date="2013-04-12">
+​      <description>
+​        <p>Fixes issues X, Y and Z</p>
+​      </description>
+​    </release>
+​  </releases>
+​</component>
