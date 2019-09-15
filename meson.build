@@ -2,7 +2,7 @@ project('lander', 'cpp',
         default_options : [ 'cpp_std=c++17',
                             'buildtype=release',
                           ],
-       version : '0.7.0')
+       version : '0.7.1')
 
 subdir('po')
 

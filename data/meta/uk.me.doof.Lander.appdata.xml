@@ -41,6 +41,11 @@
   </provides>
 
   <releases>
+    <release version="0.7.1" date="2019-09-15">
+      <description>
+        <p>Minor build fixes.</p>
+      </description>
+    </release>
     <release version="0.7.0" date="2019-09-15">
     </release>
   </releases>
