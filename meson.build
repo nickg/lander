@@ -45,9 +45,6 @@ glew = dependency('glew')
 mixer = dependency('SDL2_mixer')
 image = dependency('SDL2_image')
 
-cpp = meson.get_compiler('cpp')
-stdcppfs = cpp.find_library('stdc++fs', required : false)
-
 pkgdatadir = join_paths(get_option('datadir'), 'lander')
 
 conf_data = configuration_data()
@@ -69,8 +66,7 @@ configure_file(input : 'config.h.in',
                configuration : conf_data)
 
 lander = executable('lander', src, install : true,
-                    dependencies : [freetype, sdl2, gl, glew, mixer,
-                                    image, stdcppfs])
+                    dependencies : [freetype, sdl2, gl, glew, mixer, image])
 
 install_subdir('data/images', install_dir : pkgdatadir)
 install_subdir('data/sounds', install_dir : pkgdatadir)
