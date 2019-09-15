@@ -33,6 +33,8 @@ SoundEffect::SoundEffect(const string& filename, Uint8 volume)
 
       // Get the actual settings used
       Mix_QuerySpec(&audioRate, &audioFormat, &audioChannels);
+
+      Mix_Volume(-1, MIX_MAX_VOLUME / 2);
    }
 
    if (!enabled) return;
