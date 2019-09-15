@@ -7,6 +7,7 @@
   <project_license>GPL-3.0-or-later</project_license>
   <name>Lander</name>
   <summary>Lunar Lander Game</summary>
+  <content_rating type="oars-1.1" />
 
   <description>
     <p>
