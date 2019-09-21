@@ -6,8 +6,9 @@
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Lander</name>
-  <summary>Lunar Lander Game</summary>
+  <summary>Lunar Lander style arcade game.</summary>
   <content_rating type="oars-1.1" />
+  <developer_name>Nick Gasson</developer_name>
 
   <description>
     <p>
