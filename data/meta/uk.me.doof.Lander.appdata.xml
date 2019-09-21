@@ -42,6 +42,11 @@
   </provides>
 
   <releases>
+    <release version="0.7.2" date="2019-09-21">
+      <description>
+        <p>Add developer name to metadata.</p>
+      </description>
+    </release>
     <release version="0.7.1" date="2019-09-15">
       <description>
         <p>Minor build fixes.</p>
