@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2006-2019  Nick Gasson
+// Copyright (C) 2006-2020  Nick Gasson
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
 
@@ -64,7 +64,8 @@ Font::Font(const string& filename, unsigned int h)
       for (unsigned y = 0; y < cellSize; y++) {
          for (unsigned x = 0; x < cellSize; x++) {
             const int offset = 2 * (x + i*cellSize + y*textureWidth);
-            textureData[offset] = textureData[offset + 1] =
+            textureData[offset] = 255;
+            textureData[offset + 1] =
                (x >= bitmap.width || y >= bitmap.rows)
                ? 0
                : bitmap.buffer[x + bitmap.width*y];
