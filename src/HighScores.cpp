@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2006-2019  Nick Gasson
+// Copyright (C) 2006-2020  Nick Gasson
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
 

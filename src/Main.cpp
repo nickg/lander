@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2006-2019  Nick Gasson
+// Copyright (C) 2006-2020  Nick Gasson
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
 
@@ -13,12 +13,6 @@
 
 #include <iostream>
 #include <filesystem>
-
-#ifdef MACOSX
-namespace CF {
-#include "CoreFoundation/CoreFoundation.h"
-}
-#endif
 
 #include <SDL_main.h>
 
@@ -235,7 +229,7 @@ string GetConfigDir()
 
    return p.string() + "/";
 #elif defined WIN32
-   using experimental::filesystem::path;
+   using filesystem::path;
 
    path appdata(getenv("APPDATA"));
    appdata /= "doof.me.uk";
