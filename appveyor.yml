@@ -2,7 +2,7 @@ version: 0.7.0-{build}
 
 image:
 - Visual Studio 2015
-- Ubuntu1804
+- Ubuntu2004
 
 environment:
   matrix:
@@ -11,7 +11,7 @@ environment:
 
 matrix:
   exclude:
-    - image: Ubuntu1804
+    - image: Ubuntu2004
       BITS: 32
 
 install:
@@ -25,6 +25,7 @@ install:
   - sh: >
       sudo apt-get -y install libsdl2-mixer-dev libsdl2-image-dev
       libsdl2-dev meson ninja-build libfreetype6-dev libglew-dev
+  - sh: sudo update-alternatives --set gcc /usr/bin/gcc-9
 
 build_script:
   - pwd

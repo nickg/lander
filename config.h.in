@@ -4,3 +4,5 @@
 #mesondefine MACOSX
 #mesondefine VERSION
 #mesondefine DATADIR
+#mesondefine HAS_FILESYSTEM_H
+#mesondefine HAS_EXPERIMENTAL_FILESYSTEM_H
