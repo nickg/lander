@@ -174,7 +174,7 @@ string LocateResource(const string& file)
    resURL = CFBundleCopyResourceURL(mainBundle, cfBase, cfExt, NULL);
 
    if (resURL == NULL)
-      throw runtime_error("Failed to locate " + string(file));
+      Die("Failed to locate %s", file);
 
    cfPath = CFURLCopyPath(resURL);
 
